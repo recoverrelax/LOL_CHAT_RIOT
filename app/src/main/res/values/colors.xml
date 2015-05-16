@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Primary Color is the Material500 Color and used as primaryColor,
+     for big components.
+     The actionBar color is 700 version of the primary Color-->
+
+    <color name="white">#FFFFFF</color>
+    <color name="whiteT">#beffffff</color>
+    <color name="black">#000</color>
+
+    <color name="primaryColor">#03a9f4</color>
+    <color name="primaryColorDark">#0288d1</color>
+
+
+    <color name="accentColor">#941C2F</color>
+
+    <color name="colorSecondaryText">#727272</color>
+    <color name="colorHighlight">#B6B6B6</color>
+
+    <color name="white50Alpha">#7dffffff</color>
+    <color name="primaryColor50Alpha">#7d03a9f4</color>
+    <color name="primaryColorDarkAlpha50">#7d0288d1</color>
+
+</resources>

@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">MyBaseApp</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="next">Next</string>
+    <string name="title_activity_sub">SubActivity</string>
+
+    <string name="drawer_opened">Opened</string>
+    <string name="drawer_closed">Closed</string>
+
+    <!--Drawer List Item Names-->
+    <string name="navdrawer_item0">MainActivity</string>
+    <string name="navdrawer_item1">SubActivity</string>
+    <string name="navdrawer_item2">Item 2</string>
+    <string name="navdrawer_item3">Item 3</string>
+    <string name="navdrawer_item4">Item 4</string>
+    <string name="navdrawer_item5">Item 5</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="htm5_text">HTML5 everywhere: How and why YouTube uses the Web platform</string>
+    <string name="htm5_date">Qua, 13:00–13:45 na Room 3</string>
+    <string name="htm5_book">Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.
+    For some time, YouTube has offered its HTML5 beta, but not all videos were able to be served with it.\n\nIn particular, support in HTML5 for Encrypted Media Extensions (EME) has allowed YouTube to provide a ubiquitous digital rights management solution.
+    The last holdout on EME, Mozilla, folded on the issue in May last year.
+    /n/n
+    Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.
+    For some time, YouTube has offered its HTML5 beta, but not all videos were able to be served with it.\n\nIn particular, support in HTML5 for Encrypted Media Extensions (EME) has allowed YouTube to provide a ubiquitous digital rights management solution.
+    The last holdout on EME, Mozilla, folded on the issue in May last year.
+    \n\n
+    Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.
+    For some time, YouTube has offered its HTML5 beta, but not all videos were able to be served with it.\n\nIn particular, support in HTML5 for Encrypted Media Extensions (EME) has allowed YouTube to provide a ubiquitous digital rights management solution.
+    The last holdout on EME, Mozilla, folded on the issue in May last year.
+    /n/n
+    Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.
+    For some time, YouTube has offered its HTML5 beta, but not all videos were able to be served with it.\n\nIn particular, support in HTML5 for Encrypted Media Extensions (EME) has allowed YouTube to provide a ubiquitous digital rights management solution.
+    The last holdout on EME, Mozilla, folded on the issue in May last year.</string>
+
+    <string name="youtube_title">Youtube</string>
+    <string name="youtube_text">Lastest videos just now!</string>
+
+    <string name="facebook_title">Facebook</string>
+    <string name="facebook_text">Mark is nice!</string>
+
+    <string name="twitter_title">Twitter</string>
+    <string name="twitter_text">Twitch me Voyboy!</string>
+
+    <string name="hi5_title">Hi5</string>
+    <string name="hi5_text">Yo Four!</string>
+
+    <string name="lol_title">League of Legends</string>
+    <string name="lol_text">Caption Teemo on Duty!</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
+    <!--LOGIN ACTIVITY-->
+    <string name="activity_login_login_title">Login</string>
+    <string name="acitivty_login_username_hint">username</string>
+    <string name="activity_login_password_hint">Password</string>
+    <string name="activity_login_label_connect_button">Connect</string>
+
+
+</resources>
