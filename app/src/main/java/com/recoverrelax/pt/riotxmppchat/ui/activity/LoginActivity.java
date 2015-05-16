@@ -59,7 +59,9 @@ public class LoginActivity extends BaseActivity {
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setServiceName(serverDomain)
                 .setHost(serverHost)
-   
+                        /**
+                         * TODO: username and pw here...
+                         */
                 .setPort(serverPort)
                 .build();
 //
