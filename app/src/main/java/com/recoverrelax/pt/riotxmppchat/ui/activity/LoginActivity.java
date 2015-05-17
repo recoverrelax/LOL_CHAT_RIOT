@@ -1,40 +1,39 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
-
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-
-import java.io.IOException;
-
-import javax.net.ssl.SSLSocketFactory;
+import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements RiotXmppConnection.RiotXmppConnectionCallbacks{
 
     private final String TAG = "LoginActivity";
+
+    private RiotXmppConnection xmppConnection;
+
+    @InjectView(R.id.username)
+    EditText username;
+
+    @InjectView(R.id.password)
+    EditText password;
 
     @InjectView(R.id.progressBarCircularIndeterminate)
     ProgressBarCircularIndeterminate progressBar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showProgresBar(false);
+        showProgressBar(false);
     }
 
     @Override
@@ -54,56 +53,43 @@ public class LoginActivity extends BaseActivity {
         int serverPort = RiotGlobals.Riot_Port;
         String serverDomain = RiotGlobals.Riot_Domain;
 
-        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                .setSocketFactory(SSLSocketFactory.getDefault())
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-                .setServiceName(serverDomain)
-                .setHost(serverHost)
-                        /**
-                         * TODO: username and pw here...
-                         */
-                .setPort(serverPort)
-                .build();
-//
-        final AbstractXMPPConnection connection = new XMPPTCPConnection(config);
+        String username = this.username.getText().toString();
+        String password = this.password.getText().toString();
 
-        new AsyncTask<Void, Void, Boolean>() {
+        xmppConnection = new RiotXmppConnection(serverHost, serverPort, serverDomain,
+                username, password);
+        xmppConnection.init(this);
+        xmppConnection.connect();
 
-            @Override
-            protected void onPreExecute() {
-                showProgresBar(true);
-            }
-
-            @Override
-            protected Boolean doInBackground(Void... voids) {
-                try {
-                    connection.connect();
-                    connection.login();
-                } catch (SmackException | IOException | XMPPException e) {
-                    e.printStackTrace();
-                }
-                return connection.isConnected() && connection.isAuthenticated();
-            }
-
-            @Override
-            protected void onPostExecute(Boolean aBoolean) {
-                if(aBoolean)
-                    onLogin();
-            }
-        }.execute();
-
-//        ConnectionConfiguration connConf = new ConnectionConfiguration(serverHost, serverPort, serverDomain);
-//        connConf.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-//        connConf.setSocketFactory(SSLSocketFactory.getDefault());
     }
 
-    private void onLogin() {
-        showProgresBar(false);
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        finish();
+    private void Login() {
+        xmppConnection.login();
     }
 
-    public void showProgresBar(boolean state){
+    @Override
+    public void showProgressBar(boolean state) {
         progressBar.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void onConnect() {
+             Login();
+    }
+
+    @Override
+    public void onError(int stringResourceId) {
+        new SnackBar.Builder(this)
+                .withMessageId(stringResourceId)
+                .withTextColorId(R.color.primaryColor)
+                .withDuration((short) 1000)
+                .show();
+    }
+
+    @Override
+    public void onLogin() {
+        showProgressBar(false);
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        this.finish();
     }
 }

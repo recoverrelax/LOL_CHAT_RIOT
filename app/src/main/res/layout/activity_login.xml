@@ -51,12 +51,19 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:hint="@string/activity_login_password_hint"
         android:id="@+id/password"
         android:gravity="center_horizontal" />
 
-        <Button
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_login_checkbox_margin_top"
+                android:text="@string/activity_login_checkbox_label"
+                android:id="@+id/checkBox" />
+
+            <Button
             style="@style/Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,6 +71,7 @@
             android:text="@string/activity_login_label_connect_button"
             android:id="@+id/connect"
             android:layout_gravity="center_horizontal" />
-    </LinearLayout>
+
+        </LinearLayout>
     </FrameLayout>
 </LinearLayout>

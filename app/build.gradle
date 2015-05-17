@@ -31,6 +31,7 @@ dependencies {
 
     compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     compile 'io.reactivex:rxandroid:0.24.0'
+    compile 'com.github.mrengineer13:snackbar:1.2.0'
 
     compile 'com.github.mrengineer13:snackbar:1.1.0'
     compile 'com.scottyab:secure-preferences-lib:0.0.4'
