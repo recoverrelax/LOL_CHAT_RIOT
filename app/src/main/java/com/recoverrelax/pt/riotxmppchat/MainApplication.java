@@ -1,25 +1,40 @@
 package com.recoverrelax.pt.riotxmppchat;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection;
+import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection.RiotXmppConnectionCallbacks;
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
 
     private static MainApplication instance;
-    private Context context;
-
-    public Context getContext() {
-        return context;
-    }
+    private RiotXmppConnection xmppConnection;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         DataStorage.init(this);
+    }
+
+    public void connectToRiotXmppServer(String serverHost, int serverPort, String serverDomain,
+                                         String username, String password, RiotXmppConnectionCallbacks cb){
+        xmppConnection = new RiotXmppConnection(serverHost, serverPort, serverDomain,
+                username, password);
+
+        xmppConnection.init(cb);
+        xmppConnection.connect();
+    }
+
+    public void login() {
+        xmppConnection.login();
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
     }
 
     public static MainApplication getInstance() {

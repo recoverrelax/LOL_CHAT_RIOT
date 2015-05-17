@@ -60,8 +60,12 @@
     <string name="activity_login_password_hint">Password</string>
     <string name="activity_login_label_connect_button">Connect</string>
     <string name="activity_login_checkbox_label">Save Credentials</string>
-    <string name="activity_login_cannot_connect">Connected to the server failed. Make sure you have internet connection or try again later</string>
-    <string name="activity_login_cannot_login">Login to the server failed. Make sure your credentials are legit and try again later.</string>
+    <string name="activity_login_cannot_connect">Connection to the server failed. Make sure you have internet connection</string>
+    <string name="activity_login_cannot_login">Login to the server failed. Make sure your credentials are legit and you have selected the right server.</string>
+    <string name="activity_login_progress_dialog_title">Attempting to Login</string>
+    <string name="activity_login_progress_dialog_message">Please wait …</string>
+    <string name="drawer_default_title">League of Legends \nFriends Alerter</string>
+    <string name="drawer_default_username_prefix">Logged in as: </string>
 
 
 </resources>

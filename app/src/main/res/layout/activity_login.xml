@@ -22,17 +22,6 @@
         android:id="@+id/textView2"
         android:gravity="center_vertical|center_horizontal" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-            android:id="@+id/progressBarCircularIndeterminate"
-            android:gravity="center_horizontal|center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#1E88E5" />
-
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,6 +45,13 @@
         android:id="@+id/password"
         android:gravity="center_horizontal" />
 
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_login_spinner_margin_top"
+                tools:listitem="@layout/spinner_layout"
+                android:id="@+id/serverSpinner" />
+
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,5 +69,4 @@
             android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
-    </FrameLayout>
 </LinearLayout>

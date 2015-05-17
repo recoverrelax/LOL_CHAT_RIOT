@@ -2,6 +2,20 @@
 <items version="2" >
 
     <item
+        jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\org.jxmpp\jxmpp-core\0.4.2-beta1\9a061ad6348aa8fec4337bfd33570737261d4e1c\jxmpp-core-0.4.2-beta1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="9a061ad6348aa8fec4337bfd33570737261d4e1c">
+        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\jxmpp-core-0.4.2-beta1-7e970cc45cc6ec2fafc14370ae6453c789fa455a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife\6.1.0\63735f48b82bcd24cdd33821342428252eb1ca5a\butterknife-6.1.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="63735f48b82bcd24cdd33821342428252eb1ca5a">
+        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\butterknife-6.1.0-301e215d3105455053c9de4e37907b0bdf8e1880.jar" />
+    </item>
+    <item
         jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\io.reactivex\rxandroid\0.24.0\42dab493b8f74b164e082f281480c9d493ff89da\rxandroid-0.24.0.jar"
         jumboMode="false"
         revision="22.0.1"
@@ -23,11 +37,25 @@
         <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\smack-resolver-minidns-4.1.0-686df1140150adcbdba562553468a7e660f81650.jar" />
     </item>
     <item
+        jar="D:\Programas\Android\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.1.1\support-annotations-22.1.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
+        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\support-annotations-22.1.1-e21f53c48f4128568dc2a8f1dbc61ed38a9b1fc5.jar" />
+    </item>
+    <item
         jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.1.1\classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
         <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-29a7b956b5a596ed46f8792681aac6c306e7c11c.jar" />
+    </item>
+    <item
+        jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\22.1.1\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="e0b0c35d02308b270015a74cada4887e2e49b889">
+        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-fbc20c7d5eac59b6b1ee613515fc4af95350db6d.jar" />
     </item>
     <item
         jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.1.1\libs\internal_impl-22.1.1.jar"
@@ -58,67 +86,18 @@
         <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-fcfd9248ce1bb0b8f5d291586835452deaff4be6.jar" />
     </item>
     <item
-        jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.github.mrengineer13\snackbar\1.2.0\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="cc35903814b2bf137fa6f1df823ed51cdce74977">
-        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-e5a8c2ccaf3e9e619e44d80383e020151be9ae75.jar" />
-    </item>
-    <item
-        jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\org.jxmpp\jxmpp-util-cache\0.4.2-beta1\82f7b38d30bc35ec2c68ca0184a6aecd8c4b16cb\jxmpp-util-cache-0.4.2-beta1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="82f7b38d30bc35ec2c68ca0184a6aecd8c4b16cb">
-        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\jxmpp-util-cache-0.4.2-beta1-99c2a4d857d4728af9cb64cb9634b9509843397f.jar" />
-    </item>
-    <item
-        jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.scottyab\secure-preferences-lib\0.0.4\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="4fb5974d7a5d918351902e5dcd1d324dcb1f32b6">
-        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-8ca0c62559a60f9527b66895952641b402c3dab3.jar" />
-    </item>
-    <item
-        jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.github.navasmdc\MaterialDesign\1.4\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="87405405e403de68f4057757b8a2e8de02bd65d0">
-        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-fd0a93938275168aee4ffeaccbcad94a63f64cbd.jar" />
-    </item>
-    <item
-        jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\org.jxmpp\jxmpp-core\0.4.2-beta1\9a061ad6348aa8fec4337bfd33570737261d4e1c\jxmpp-core-0.4.2-beta1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="9a061ad6348aa8fec4337bfd33570737261d4e1c">
-        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\jxmpp-core-0.4.2-beta1-7e970cc45cc6ec2fafc14370ae6453c789fa455a.jar" />
-    </item>
-    <item
-        jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife\6.1.0\63735f48b82bcd24cdd33821342428252eb1ca5a\butterknife-6.1.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="63735f48b82bcd24cdd33821342428252eb1ca5a">
-        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\butterknife-6.1.0-301e215d3105455053c9de4e37907b0bdf8e1880.jar" />
-    </item>
-    <item
-        jar="D:\Programas\Android\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.1.1\support-annotations-22.1.1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
-        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\support-annotations-22.1.1-e21f53c48f4128568dc2a8f1dbc61ed38a9b1fc5.jar" />
-    </item>
-    <item
-        jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\22.1.1\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="e0b0c35d02308b270015a74cada4887e2e49b889">
-        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-fbc20c7d5eac59b6b1ee613515fc4af95350db6d.jar" />
-    </item>
-    <item
         jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\org.igniterealtime.smack\smack-android\4.1.0\3da1ad907fe8eb0db80471b8837d3e51690fe13c\smack-android-4.1.0.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="3da1ad907fe8eb0db80471b8837d3e51690fe13c">
         <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\smack-android-4.1.0-97fb527c8687b6b8ca55b377bf711e18d2ecc5fe.jar" />
+    </item>
+    <item
+        jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.github.mrengineer13\snackbar\1.2.0\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="cc35903814b2bf137fa6f1df823ed51cdce74977">
+        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-e5a8c2ccaf3e9e619e44d80383e020151be9ae75.jar" />
     </item>
     <item
         jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\de.measite.minidns\minidns\0.1.7\993582d1455b93a5723d2af4b39d8679735b3550\minidns-0.1.7.jar"
@@ -140,6 +119,27 @@
         revision="22.0.1"
         sha1="ad5c17dc5fe7f383118c5a3f1818b8789b697930">
         <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\smack-core-4.1.0-5de600438124a4475f9ed76fd0f847e82504ed74.jar" />
+    </item>
+    <item
+        jar="C:\Users\Lider\.gradle\caches\modules-2\files-2.1\org.jxmpp\jxmpp-util-cache\0.4.2-beta1\82f7b38d30bc35ec2c68ca0184a6aecd8c4b16cb\jxmpp-util-cache-0.4.2-beta1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="82f7b38d30bc35ec2c68ca0184a6aecd8c4b16cb">
+        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\jxmpp-util-cache-0.4.2-beta1-99c2a4d857d4728af9cb64cb9634b9509843397f.jar" />
+    </item>
+    <item
+        jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.scottyab\secure-preferences-lib\0.0.4\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="4fb5974d7a5d918351902e5dcd1d324dcb1f32b6">
+        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-8ca0c62559a60f9527b66895952641b402c3dab3.jar" />
+    </item>
+    <item
+        jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.afollestad\material-dialogs\0.7.4.1\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="d255a721dd229574dfec5056df3764036c338dbe">
+        <dex dex="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\pre-dexed\debug\classes-a3ea7f9d76ea0e6a408251e49ced7e9cc048d257.jar" />
     </item>
     <item
         jar="D:\AndroidProjects\LOL_CHAT_RIOT\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\22.1.1\classes.jar"

@@ -1,7 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.Riot;
 
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
@@ -32,6 +34,8 @@ public class RiotXmppConnection {
 
     private String username;
     private String password;
+
+    private MaterialDialog materialDialog;
 
     public RiotXmppConnection(String serverHost, int serverPort, String serverDomain, String username, String password) {
         this.serverHost = serverHost;
@@ -69,7 +73,12 @@ public class RiotXmppConnection {
             @Override
             protected void onPreExecute() {
                 assertTrue("Must call init() First", callback != null);
-                callback.showProgressBar(true);
+
+                materialDialog = new MaterialDialog.Builder((AppCompatActivity) callback)
+                        .title(R.string.activity_login_progress_dialog_title)
+                        .content(R.string.activity_login_progress_dialog_message)
+                        .progress(true, 0)
+                        .show();
             }
 
             @Override
@@ -89,6 +98,7 @@ public class RiotXmppConnection {
                 if (aBoolean) {
                     callback.onConnect();
                 } else {
+                    materialDialog.dismiss();
                     callback.onError(R.string.activity_login_cannot_connect);
                 }
 
@@ -124,6 +134,7 @@ public class RiotXmppConnection {
                 @Override
                 protected void onPostExecute(Boolean aBoolean) {
                     assertTrue("Must call init() First", callback != null);
+                    materialDialog.dismiss();
 
                     if (aBoolean) {
                         callback.onLogin();
@@ -136,14 +147,8 @@ public class RiotXmppConnection {
     }
 
     public interface RiotXmppConnectionCallbacks {
-        void showProgressBar(boolean state);
-
         void onConnect();
-
         void onError(int stringResourceId);
-
         void onLogin();
     }
-
-
 }

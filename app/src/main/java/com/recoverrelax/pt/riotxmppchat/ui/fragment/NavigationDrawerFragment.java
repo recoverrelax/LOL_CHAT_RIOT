@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.Entities.DrawerItemsInfo;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DividerItemDecoration;
@@ -39,6 +40,12 @@ public class NavigationDrawerFragment extends Fragment implements DrawerItemSele
 
     @InjectView(R.id.drawerList)
     RecyclerView recyclerView;
+
+    @InjectView(R.id.drawer_title)
+    TextView drawer_title;
+
+    @InjectView(R.id.drawer_username)
+    TextView drawer_username;
 
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
@@ -97,6 +104,10 @@ public class NavigationDrawerFragment extends Fragment implements DrawerItemSele
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        drawer_title.setText(getResources().getString(R.string.drawer_default_title));
+        drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
+                DataStorage.getInstance().getUsername());
 
         adapter = new DrawerAdapter(getActivity(), getData(), this, DRAWER_POSITION);
         recyclerView.setAdapter(adapter);

@@ -43,12 +43,12 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/drawer_company_name"
+                android:id="@+id/drawer_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/drawer_vertical_keyline_left"
-                android:text="Edge Labs"
+                tools:text="@string/drawer_default_title"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_size_medium"
                 android:textColor="@color/white" />

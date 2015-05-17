@@ -29,7 +29,7 @@ dependencies {
     compile "org.igniterealtime.smack:smack-android:4.1.0"
     compile "org.igniterealtime.smack:smack-tcp:4.1.0"
 
-    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
+    compile 'com.afollestad:material-dialogs:0.7.4.1'
     compile 'io.reactivex:rxandroid:0.24.0'
     compile 'com.github.mrengineer13:snackbar:1.2.0'
 
