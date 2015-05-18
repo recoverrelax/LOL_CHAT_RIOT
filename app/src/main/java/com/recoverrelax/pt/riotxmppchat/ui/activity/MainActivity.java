@@ -2,19 +2,19 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
-
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.edgelabs.pt.mybaseapp.R;
-import com.github.mrengineer13.snackbar.SnackBar;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.MainFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends BaseActivity implements SnackBar.OnMessageClickListener {
+public class MainActivity extends BaseActivity {
 
     @InjectView(R.id.parent_view_group)
     RelativeLayout parent_view_group;
@@ -27,17 +27,16 @@ public class MainActivity extends BaseActivity implements SnackBar.OnMessageClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ButterKnife.inject(this);
 
-        new SnackBar.Builder(this.getApplicationContext(), parent_view_group)
-                .withOnClickListener(this)
-                .withMessage("This library is awesome!") // OR
-                .withActionMessage("Close") // OR
-                .withBackgroundColorId(R.color.primaryColor)
-                .withTextColorId(R.color.accentColor)
-                .withDuration((short) 10000)
-                .show();
+        if(savedInstanceState == null){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Fragment fragment = MainFragment.newInstance();
+//            fragment.setArguments(args);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .commit();
+        }
     }
 
     @Override
@@ -68,10 +67,5 @@ public class MainActivity extends BaseActivity implements SnackBar.OnMessageClic
             startActivity(new Intent(this, SubActivity.class));
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onMessageClick(Parcelable parcelable) {
-
     }
 }

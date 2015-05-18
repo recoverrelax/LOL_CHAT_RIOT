@@ -1,10 +1,11 @@
 package com.recoverrelax.pt.riotxmppchat;
 
+import android.app.Activity;
 import android.app.Application;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection;
-import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection.RiotXmppConnectionCallbacks;
+import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection.ConnectionAuthenticationLoader;
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
@@ -20,11 +21,11 @@ public class MainApplication extends Application {
     }
 
     public void connectToRiotXmppServer(String serverHost, int serverPort, String serverDomain,
-                                         String username, String password, RiotXmppConnectionCallbacks cb){
+                                         String username, String password, ConnectionAuthenticationLoader cb){
         xmppConnection = new RiotXmppConnection(serverHost, serverPort, serverDomain,
                 username, password);
 
-        xmppConnection.init(cb);
+        xmppConnection.init((Activity)cb, cb);
         xmppConnection.connect();
     }
 
@@ -41,4 +42,7 @@ public class MainApplication extends Application {
         return instance;
     }
 
+    public RiotXmppConnection getXmppConnection() {
+        return xmppConnection;
+    }
 }

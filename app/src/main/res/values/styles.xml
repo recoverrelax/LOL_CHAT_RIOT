@@ -33,6 +33,7 @@
     </style>
 
     <style name="login_textview">
+        <item name="android:alpha">0.8</item>
         <item name="android:textColor">@color/primaryColor</item>
         <item name="android:textColorHint">@color/primaryColor</item>
         <item name="android:background">@color/white</item>

@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Riot;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 
@@ -7,17 +8,33 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
+import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.net.ssl.SSLSocketFactory;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.app.AppObservable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func0;
+import rx.schedulers.Schedulers;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -30,12 +47,14 @@ public class RiotXmppConnection {
     private String serverDomain = RiotGlobals.Riot_Domain;
     private XMPPTCPConnectionConfiguration connectionConfig;
     private AbstractXMPPConnection connection;
-    private RiotXmppConnectionCallbacks callback;
 
     private String username;
     private String password;
 
     private MaterialDialog materialDialog;
+    private ConnectionAuthenticationLoader callback;
+    private Activity activity;
+    private Subscription mSubscription;
 
     public RiotXmppConnection(String serverHost, int serverPort, String serverDomain, String username, String password) {
         this.serverHost = serverHost;
@@ -46,8 +65,10 @@ public class RiotXmppConnection {
         this.password = password;
     }
 
-    public void init(RiotXmppConnectionCallbacks callback) {
+    public void init(Activity activity, ConnectionAuthenticationLoader callback) {
+        this.activity = activity;
         this.callback = callback;
+
         prepareConnectionConfig(serverDomain, serverHost, serverPort);
         connection = new XMPPTCPConnection(connectionConfig);
     }
@@ -68,6 +89,12 @@ public class RiotXmppConnection {
         assertTrue("To start a connection to the server, you must first call init() method!",
                 this.connectionConfig != null || this.connection != null);
 
+        materialDialog = new MaterialDialog.Builder(activity)
+                .title(R.string.activity_login_progress_dialog_title)
+                .content(R.string.activity_login_progress_dialog_message)
+                .progress(true, 0)
+                .show();
+
         new AsyncTask<Void, Void, Boolean>() {
 
             @Override
@@ -87,7 +114,6 @@ public class RiotXmppConnection {
                     connection.connect();
                 } catch (SmackException | IOException | XMPPException e) {
                     e.printStackTrace();
-                    return false;
                 }
                 return connection.isConnected();
             }
@@ -105,7 +131,6 @@ public class RiotXmppConnection {
 
             }
         }.execute();
-
     }
 
     public void login() {
@@ -148,9 +173,24 @@ public class RiotXmppConnection {
         }
     }
 
-    public interface RiotXmppConnectionCallbacks {
+    public ArrayList<Friend> getFriendsList(){
+        Roster roster = Roster.getInstanceFor(connection);
+        Collection<RosterEntry> entries = roster.getEntries();
+
+        ArrayList<Friend> friendList = new ArrayList<>();
+
+        for (RosterEntry entry : entries) {
+            friendList.add(new Friend(entry.getName()));
+        }
+        return friendList;
+    }
+
+
+    public interface ConnectionAuthenticationLoader {
         void onConnect();
+
         void onError(int stringResourceId);
+
         void onLogin();
     }
 }

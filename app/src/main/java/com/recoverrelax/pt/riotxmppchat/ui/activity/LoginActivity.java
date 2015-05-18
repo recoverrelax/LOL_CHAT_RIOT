@@ -24,7 +24,7 @@ import butterknife.OnTextChanged;
 
 import static junit.framework.Assert.assertTrue;
 
-public class LoginActivity extends BaseActivity implements RiotXmppConnection.RiotXmppConnectionCallbacks{
+public class LoginActivity extends BaseActivity implements RiotXmppConnection.ConnectionAuthenticationLoader {
 
     private final String TAG = "LoginActivity";
 
@@ -44,6 +44,7 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Ri
     CheckBox checkBox;
 
     private DataStorage mDataStorage;
+    private SnackBar snackBar;
 
     private boolean usernameLengthControl = false;
     private boolean passwordLengthControl = false;
@@ -113,7 +114,7 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Ri
 
     @Override
     public void onError(int stringResourceId) {
-        new SnackBar.Builder(this)
+        snackBar = new SnackBar.Builder(this)
                 .withMessageId(stringResourceId)
                 .withTextColorId(R.color.primaryColor)
                 .withDuration((short) 7000)
