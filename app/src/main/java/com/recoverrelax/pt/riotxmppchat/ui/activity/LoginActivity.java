@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.edgelabs.pt.mybaseapp.R;
 import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -17,6 +18,7 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection;
+import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppService;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -49,6 +51,7 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Co
     private boolean usernameLengthControl = false;
     private boolean passwordLengthControl = false;
     private MainApplication mainApplication;
+    private MaterialDialog materialDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,16 +94,29 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Co
 
     @OnClick(R.id.connect)
     public void onConnectClick(View v) {
+//        RiotServer riotServerByName = RiotServer.getRiotServerByName((String) serverSpinner.getSelectedItem());
 
-        RiotServer riotServerByName = RiotServer.getRiotServerByName((String) serverSpinner.getSelectedItem());
-
-        assertTrue("No server found with such name!", riotServerByName != null);
-        String serverHost = riotServerByName.getServerHost();
+//        assertTrue("No server found with such name!", riotServerByName != null);
+//        String serverHost = riotServerByName.getServerHost();
 
         int serverPort = RiotGlobals.Riot_Port;
         String serverDomain = RiotGlobals.Riot_Domain;
 
-        mainApplication.connectToRiotXmppServer(serverHost, serverPort, serverDomain, getUsername(), getPassword(), this);
+        materialDialog = new MaterialDialog.Builder(LoginActivity.this)
+                .title(R.string.activity_login_progress_dialog_title)
+                .content(R.string.activity_login_progress_dialog_message)
+                .progress(true, 0)
+                .show();
+
+//        mainApplication.connectToRiotXmppServer(serverHost, serverPort, serverDomain, getUsername(), getPassword(), this);
+
+        Intent service = new Intent(LoginActivity.this, RiotXmppService.class);
+        service.putExtra(RiotXmppService.INTENT_SERVER_HOST_CONST, (String) serverSpinner.getSelectedItem());
+        service.putExtra(RiotXmppService.INTENT_SERVER_USERNAME, getUsername());
+        service.putExtra(RiotXmppService.INTENT_SERVER_PASSWORD, getPassword());
+        RiotXmppService.callback = this;
+
+        startService(service);
     }
 
     private void Login() {
@@ -113,7 +129,15 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Co
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RiotXmppService.callback = null;
+        materialDialog.dismiss();
+    }
+
+    @Override
     public void onError(int stringResourceId) {
+        materialDialog.dismiss();
         snackBar = new SnackBar.Builder(this)
                 .withMessageId(stringResourceId)
                 .withTextColorId(R.color.primaryColor)
@@ -133,8 +157,14 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Co
         mDataStorage.setPassword(getPassword());
         mDataStorage.setServer(getServer());
 
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        startMainActivity();
+        materialDialog.dismiss();
         this.finish();
+    }
+
+    @Override
+    public void startMainActivity(){
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 
     public String getUsername(){

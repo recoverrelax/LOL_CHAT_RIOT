@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppTheme.Base">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="AppTheme.Base" parent ="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+        <item name="colorAccent">@color/primaryColor</item>
+    </style>
+
+    <!--ToolBar Style-->
+    <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/primaryColor</item>
+        <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
+    </style>
+
+    <style name="MyCustomToolBarThemeTransparent" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
+    </style>
+    <style name="MyCustomToolBarPopupTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item> <!-- ToobarPopup color text SecondaryPrimary-->
+    </style>
+
+</resources>

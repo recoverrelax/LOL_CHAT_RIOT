@@ -9,11 +9,39 @@
         <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/smack-tcp-4.1.0-ec943a543091ec9b14401fa8d4426a8553bebe08.jar" />
     </item>
     <item
+        jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/classes-16ca2ee20cf5ae481134399793c9a5c1d2142e30.jar" />
+    </item>
+    <item
+        jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a3ff3c506644c820eb2bdf06e8339f72be578551">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/classes-2885d408ea6cb91502c9fe15d139d54611422309.jar" />
+    </item>
+    <item
+        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-sasl-provided/4.1.0/74422a92b7bba8eb633ceecdb017530b67451731/smack-sasl-provided-4.1.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="74422a92b7bba8eb633ceecdb017530b67451731">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/smack-sasl-provided-4.1.0-1c1a7af4c38e893491894ac7b25bce2ec875eeff.jar" />
+    </item>
+    <item
         jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/libs/internal_impl-22.1.1.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
         <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/internal_impl-22.1.1-716243dec389bbcf33bb5e5ec6d2a41421b7025b.jar" />
+    </item>
+    <item
+        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-android/4.1.0/3da1ad907fe8eb0db80471b8837d3e51690fe13c/smack-android-4.1.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="3da1ad907fe8eb0db80471b8837d3e51690fe13c">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/smack-android-4.1.0-a284bb6ccfc862ffc335921cc0d1eb6953b2b363.jar" />
     </item>
     <item
         jar="/home/dev8/.gradle/caches/modules-2/files-2.1/de.measite.minidns/minidns/0.1.7/993582d1455b93a5723d2af4b39d8679735b3550/minidns-0.1.7.jar"
@@ -65,6 +93,20 @@
         <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/smack-resolver-minidns-4.1.0-c93044cefdc6449fa6b84c168005d072d40cb0df.jar" />
     </item>
     <item
+        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/io.reactivex/rxandroid/0.24.0/42dab493b8f74b164e082f281480c9d493ff89da/rxandroid-0.24.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="42dab493b8f74b164e082f281480c9d493ff89da">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/rxandroid-0.24.0-d173f2b9dfad3c02ae0c41e6177d30a73317b577.jar" />
+    </item>
+    <item
+        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/org.jxmpp/jxmpp-util-cache/0.4.2-beta1/82f7b38d30bc35ec2c68ca0184a6aecd8c4b16cb/jxmpp-util-cache-0.4.2-beta1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="82f7b38d30bc35ec2c68ca0184a6aecd8c4b16cb">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/jxmpp-util-cache-0.4.2-beta1-536d67f8112b2b6ce5a347994bcb91a7eb18a079.jar" />
+    </item>
+    <item
         jar="/home/dev8/.gradle/caches/modules-2/files-2.1/org.jxmpp/jxmpp-core/0.4.2-beta1/9a061ad6348aa8fec4337bfd33570737261d4e1c/jxmpp-core-0.4.2-beta1.jar"
         jumboMode="false"
         revision="22.0.1"
@@ -86,60 +128,25 @@
         <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/rxjava-1.0.4-1f0cd3dc3beb9d1c773728acad2050fbe5b2aab1.jar" />
     </item>
     <item
-        jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.1.1/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="e0b0c35d02308b270015a74cada4887e2e49b889">
-        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/classes-e35b90007e02ab651a2f2aebe8753feadfdf0fa0.jar" />
-    </item>
-    <item
-        jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.1.1/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
-        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/classes-16ca2ee20cf5ae481134399793c9a5c1d2142e30.jar" />
-    </item>
-    <item
-        jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.1.1/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="a3ff3c506644c820eb2bdf06e8339f72be578551">
-        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/classes-2885d408ea6cb91502c9fe15d139d54611422309.jar" />
-    </item>
-    <item
-        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-sasl-provided/4.1.0/74422a92b7bba8eb633ceecdb017530b67451731/smack-sasl-provided-4.1.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="74422a92b7bba8eb633ceecdb017530b67451731">
-        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/smack-sasl-provided-4.1.0-1c1a7af4c38e893491894ac7b25bce2ec875eeff.jar" />
-    </item>
-    <item
-        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-android/4.1.0/3da1ad907fe8eb0db80471b8837d3e51690fe13c/smack-android-4.1.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="3da1ad907fe8eb0db80471b8837d3e51690fe13c">
-        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/smack-android-4.1.0-a284bb6ccfc862ffc335921cc0d1eb6953b2b363.jar" />
-    </item>
-    <item
-        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/io.reactivex/rxandroid/0.24.0/42dab493b8f74b164e082f281480c9d493ff89da/rxandroid-0.24.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="42dab493b8f74b164e082f281480c9d493ff89da">
-        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/rxandroid-0.24.0-d173f2b9dfad3c02ae0c41e6177d30a73317b577.jar" />
-    </item>
-    <item
-        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/org.jxmpp/jxmpp-util-cache/0.4.2-beta1/82f7b38d30bc35ec2c68ca0184a6aecd8c4b16cb/jxmpp-util-cache-0.4.2-beta1.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="82f7b38d30bc35ec2c68ca0184a6aecd8c4b16cb">
-        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/jxmpp-util-cache-0.4.2-beta1-536d67f8112b2b6ce5a347994bcb91a7eb18a079.jar" />
-    </item>
-    <item
         jar="/home/dev8/.gradle/caches/modules-2/files-2.1/org.igniterealtime.smack/smack-core/4.1.0/ad5c17dc5fe7f383118c5a3f1818b8789b697930/smack-core-4.1.0.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="ad5c17dc5fe7f383118c5a3f1818b8789b697930">
         <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/smack-core-4.1.0-237668befbfa950f48f9d5c5cfd1417456e8c817.jar" />
+    </item>
+    <item
+        jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/uk.co.chrisjenx/calligraphy/2.1.0/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="e653e15e62e8a59ddd76cc7f827bf8bce38ae7bb">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/classes-c6f44fb7d59d6b940ef41e22125dd77c8526b088.jar" />
+    </item>
+    <item
+        jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.1.1/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="e0b0c35d02308b270015a74cada4887e2e49b889">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/classes-e35b90007e02ab651a2f2aebe8753feadfdf0fa0.jar" />
     </item>
     <item
         jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.scottyab/secure-preferences-lib/0.0.4/classes.jar"

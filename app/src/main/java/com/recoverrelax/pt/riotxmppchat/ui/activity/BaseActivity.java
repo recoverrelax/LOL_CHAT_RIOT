@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NavigationDrawerFragment;
 import com.edgelabs.pt.mybaseapp.R;
@@ -15,6 +17,8 @@ import com.edgelabs.pt.mybaseapp.R;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -83,5 +87,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @ColorRes
     int getColor(@ColorRes int color) {
         return getResources().getColor(color);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

@@ -29,6 +29,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         inflater= LayoutInflater.from(context);
         this.context = context;
         this.layout = layout;
+        this.callback = callback;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
-            itemView.setOnClickListener(this);
+            friendName.setOnClickListener(this);
         }
 
         @Override

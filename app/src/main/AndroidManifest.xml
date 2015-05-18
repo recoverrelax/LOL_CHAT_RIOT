@@ -12,7 +12,8 @@
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.MainActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity" >
+        <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,6 +31,10 @@
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+
+        <service android:name="com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppService"/>
+
+
     </application>
 
 </manifest>

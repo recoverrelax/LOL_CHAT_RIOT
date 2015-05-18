@@ -84,7 +84,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void showAfterSplashIntent() {
         finish();
         Intent it = new Intent(SplashScreenActivity.this,LoginActivity.class);
-        it.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        it.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(it);
         overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
     }

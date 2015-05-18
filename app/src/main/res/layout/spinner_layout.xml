@@ -14,6 +14,5 @@
         android:paddingBottom="@dimen/spinner_layout_margin_top_bottom"
         tools:text="Europe West"
         android:textColor="@color/primaryColor"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/server_textview" />
 </LinearLayout>

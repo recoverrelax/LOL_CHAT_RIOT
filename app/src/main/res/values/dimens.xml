@@ -35,5 +35,6 @@
     <dimen name="activity_login_spinner_margin_top">15dp</dimen>
     <dimen name="spinner_layout_margin_rigt_left">20dp</dimen>
     <dimen name="spinner_layout_margin_top_bottom">10dp</dimen>
+    <dimen name="friends_list_recycler_child_textview_padding">10dp</dimen>
 
 </resources>

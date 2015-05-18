@@ -28,7 +28,7 @@
             android:paddingRight="@dimen/activity_login_margin_lr">
 
             <EditText
-                style="@style/login_textview"
+                style="@style/login_edittext"
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                 android:inputType="textPersonName" />
 
             <EditText
-                style="@style/login_textview"
+                style="@style/login_edittext"
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

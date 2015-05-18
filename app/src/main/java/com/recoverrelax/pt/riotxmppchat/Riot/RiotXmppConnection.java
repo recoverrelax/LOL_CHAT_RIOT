@@ -51,7 +51,6 @@ public class RiotXmppConnection {
     private String username;
     private String password;
 
-    private MaterialDialog materialDialog;
     private ConnectionAuthenticationLoader callback;
     private Activity activity;
     private Subscription mSubscription;
@@ -65,12 +64,15 @@ public class RiotXmppConnection {
         this.password = password;
     }
 
+    public void init() {
+        prepareConnectionConfig(serverDomain, serverHost, serverPort);
+        connection = new XMPPTCPConnection(connectionConfig);
+    }
+
     public void init(Activity activity, ConnectionAuthenticationLoader callback) {
         this.activity = activity;
         this.callback = callback;
-
-        prepareConnectionConfig(serverDomain, serverHost, serverPort);
-        connection = new XMPPTCPConnection(connectionConfig);
+        init();
     }
 
     public void prepareConnectionConfig(String serverDomain, String serverHost, int serverPort) {
@@ -87,26 +89,9 @@ public class RiotXmppConnection {
     public void connect() {
 
         assertTrue("To start a connection to the server, you must first call init() method!",
-                this.connectionConfig != null || this.connection != null);
-
-        materialDialog = new MaterialDialog.Builder(activity)
-                .title(R.string.activity_login_progress_dialog_title)
-                .content(R.string.activity_login_progress_dialog_message)
-                .progress(true, 0)
-                .show();
+                this.connectionConfig != null);
 
         new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected void onPreExecute() {
-                assertTrue("Must call init() First", callback != null);
-
-                materialDialog = new MaterialDialog.Builder((AppCompatActivity) callback)
-                        .title(R.string.activity_login_progress_dialog_title)
-                        .content(R.string.activity_login_progress_dialog_message)
-                        .progress(true, 0)
-                        .show();
-            }
 
             @Override
             protected Boolean doInBackground(Void... voids) {
@@ -120,13 +105,18 @@ public class RiotXmppConnection {
 
             @Override
             protected void onPostExecute(Boolean aBoolean) {
-                assertTrue("Must call init() First", callback != null);
 
                 if (aBoolean) {
-                    callback.onConnect();
+                    if(callback != null)
+                        callback.onConnect();
+                    else
+                        login();
                 } else {
-                    materialDialog.dismiss();
-                    callback.onError(R.string.activity_login_cannot_connect);
+                    if(callback != null)
+                        callback.onError(R.string.activity_login_cannot_connect);
+                    /**
+                     * TODO: restart the service here in xxx seconds
+                     */
                 }
 
             }
@@ -143,9 +133,7 @@ public class RiotXmppConnection {
             new AsyncTask<Void, Void, Boolean>() {
 
                 @Override
-                protected void onPreExecute() {
-                    assertTrue("Must call init() First", callback != null);
-                }
+                protected void onPreExecute() {}
 
                 @Override
                 protected Boolean doInBackground(Void... voids) {
@@ -160,13 +148,16 @@ public class RiotXmppConnection {
 
                 @Override
                 protected void onPostExecute(Boolean aBoolean) {
-                    assertTrue("Must call init() First", callback != null);
-                    materialDialog.dismiss();
 
                     if (aBoolean) {
-                        callback.onLogin();
+                        if(callback != null)
+                            callback.onLogin();
                     } else {
-                        callback.onError(R.string.activity_login_cannot_connect);
+                        if(callback != null)
+                            callback.onError(R.string.activity_login_cannot_connect);
+                        /**
+                         * TODO: restart service in xxx seconds
+                         */
                     }
                 }
             }.execute();
@@ -185,6 +176,18 @@ public class RiotXmppConnection {
         return friendList;
     }
 
+    public boolean isConnected(){
+        return connection != null && connection.isConnected();
+    }
+
+    public boolean isAutheticated(){
+        return isConnected() && connection.isAuthenticated();
+    }
+
+    public void disconnect(){
+        connection.disconnect();
+    }
+
 
     public interface ConnectionAuthenticationLoader {
         void onConnect();
@@ -192,5 +195,6 @@ public class RiotXmppConnection {
         void onError(int stringResourceId);
 
         void onLogin();
+        void startMainActivity();
     }
 }

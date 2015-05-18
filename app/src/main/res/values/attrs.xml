@@ -4,5 +4,4 @@
     <declare-styleable name="MultiSwipeRefreshLayout">
         <attr name="foreground" format="reference" />
     </declare-styleable>
-
 </resources>
