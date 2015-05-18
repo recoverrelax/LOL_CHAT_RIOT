@@ -56,14 +56,14 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Ri
 
         checkBox.setChecked(mDataStorage.getSaveLoginCredentials());
 
+        serverSpinner.setAdapter(new ArrayAdapter<>(LoginActivity.this, R.layout.spinner_layout, R.id.server_textview, RiotServer.getServerList()));
+
         if(mDataStorage.getSaveLoginCredentials()){
             username.setText(mDataStorage.getUsername());
             password.setText(mDataStorage.getPassword());
             serverSpinner.setSelection(RiotServer.getServerPositionByName(mDataStorage.getServer()));
         }else
             connectbutton.setEnabled(false);
-
-        serverSpinner.setAdapter(new ArrayAdapter<>(LoginActivity.this, R.layout.spinner_layout, R.id.server_textview, RiotServer.getServerList()));
     }
 
     @OnTextChanged(R.id.username)

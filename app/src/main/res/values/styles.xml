@@ -8,7 +8,7 @@
     <style name="AppTheme.Base" parent ="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryColorDark</item>
-        <item name="colorAccent">@color/accentColor</item>
+        <item name="colorAccent">@color/primaryColor</item>
     </style>
 
     <!--ToolBar Style-->
@@ -32,4 +32,13 @@
         <item name="android:textColor">@drawable/button_text_selector</item>
     </style>
 
+    <style name="login_textview">
+        <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:textColorHint">@color/primaryColor</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingTop">@dimen/login_textview_padding_top_bottom</item>
+        <item name="android:paddingBottom">@dimen/login_textview_padding_top_bottom</item>
+    </style>
+
+    <dimen name="login_textview_padding_top_bottom">10dp</dimen>
 </resources>

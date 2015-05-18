@@ -87,6 +87,7 @@ public class RiotXmppConnection {
                     connection.connect();
                 } catch (SmackException | IOException | XMPPException e) {
                     e.printStackTrace();
+                    return false;
                 }
                 return connection.isConnected();
             }
@@ -127,6 +128,7 @@ public class RiotXmppConnection {
                         connection.login();
                     } catch (SmackException | IOException | XMPPException e) {
                         e.printStackTrace();
+                        return false;
                     }
                     return connection.isConnected() && connection.isAuthenticated();
                 }
@@ -139,7 +141,7 @@ public class RiotXmppConnection {
                     if (aBoolean) {
                         callback.onLogin();
                     } else {
-                        callback.onError(R.string.activity_login_cannot_login);
+                        callback.onError(R.string.activity_login_cannot_connect);
                     }
                 }
             }.execute();

@@ -1,72 +1,79 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login_screen"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    android:background="@color/primaryColor"
     tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity">
 
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_login_title_margin_bottom"
-        android:textColor="@color/white"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/activity_login_login_title"
-        android:id="@+id/textView2"
-        android:gravity="center_vertical|center_horizontal" />
+        android:src="@drawable/lol_logo"
+        android:layout_marginBottom="30dp"/>
 
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_login_margin_lr"
-        android:paddingRight="@dimen/activity_login_margin_lr"
-        android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/loginBackground"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_login_margin_lr"
+            android:paddingRight="@dimen/activity_login_margin_lr">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="@string/acitivty_login_username_hint"
-        android:id="@+id/username"
-        android:gravity="center_horizontal" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="@string/activity_login_password_hint"
-        android:id="@+id/password"
-        android:gravity="center_horizontal" />
-
-            <Spinner
+            <EditText
+                style="@style/login_textview"
+                android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_login_spinner_margin_top"
-                tools:listitem="@layout/spinner_layout"
-                android:id="@+id/serverSpinner" />
+                android:layout_marginTop="@dimen/activity_login_button_margin_tp"
+                android:layout_marginBottom="@dimen/activity_login_button_margin_tp"
+                android:gravity="center_horizontal"
+                android:hint="@string/acitivty_login_username_hint"
+                android:inputType="textPersonName" />
 
-            <CheckBox
+            <EditText
+                style="@style/login_textview"
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:hint="@string/activity_login_password_hint"
+                android:inputType="textPassword" />
+
+            <Spinner
+                android:id="@+id/serverSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:spinnerMode="dialog"
+                android:background="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/activity_login_spinner_margin_top"
+                tools:listitem="@layout/spinner_layout" />
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingRight="10dp"
                 android:layout_marginTop="@dimen/activity_login_checkbox_margin_top"
-                android:text="@string/activity_login_checkbox_label"
-                android:id="@+id/checkBox" />
+                android:text="@string/activity_login_checkbox_label" />
 
             <Button
-            style="@style/Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_login_button_margin_tp"
-            android:text="@string/activity_login_label_connect_button"
-            android:id="@+id/connect"
-            android:layout_gravity="center_horizontal" />
+                android:id="@+id/connect"
+                style="@style/Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/activity_login_button_margin_tp"
+                android:layout_marginBottom="@dimen/activity_login_button_margin_tp"
+                android:text="@string/activity_login_label_connect_button" />
 
         </LinearLayout>
 </LinearLayout>
