@@ -69,7 +69,7 @@ public class LogUtils {
     }
 
     public static void LOGI(final String tag, String message) {
-        if (BuildConfig.DEBUG && Log.isLoggable(tag, Log.VERBOSE)) {
+        if (BuildConfig.DEBUG) {
             Log.i(tag, message);
         }
     }

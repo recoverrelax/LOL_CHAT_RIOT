@@ -11,8 +11,6 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.MainActivity;
 
 public class RiotXmppService extends Service {
 
@@ -28,8 +26,8 @@ public class RiotXmppService extends Service {
     /**
      * Server Info
      */
-    private String serverDomain = RiotGlobals.Riot_Domain;
-    private int serverPort = RiotGlobals.Riot_Port;
+    private String serverDomain = RiotGlobals.RIOT_DOMAIN;
+    private int serverPort = RiotGlobals.RIOT_PORT;
     public static RiotXmppConnection.ConnectionAuthenticationLoader callback = null;
 
     @Override

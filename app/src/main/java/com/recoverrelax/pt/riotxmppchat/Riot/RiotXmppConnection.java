@@ -2,39 +2,23 @@ package com.recoverrelax.pt.riotxmppchat.Riot;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
-import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import javax.net.ssl.SSLSocketFactory;
 
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
 import rx.Subscription;
-import rx.android.app.AppObservable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func0;
-import rx.schedulers.Schedulers;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -43,8 +27,8 @@ public class RiotXmppConnection {
     private static final String TAG = "RiotXmppConnection";
 
     private String serverHost = RiotServer.EUW.serverHost;
-    private int serverPort = RiotGlobals.Riot_Port;
-    private String serverDomain = RiotGlobals.Riot_Domain;
+    private int serverPort = RiotGlobals.RIOT_PORT;
+    private String serverDomain = RiotGlobals.RIOT_DOMAIN;
     private XMPPTCPConnectionConfiguration connectionConfig;
     private AbstractXMPPConnection connection;
 

@@ -2,17 +2,25 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.squareup.picasso.Picasso;
+
+import org.jivesoftware.smack.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -36,7 +44,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=inflater.inflate(layout, parent,false);
+        View view=inflater.inflate(layout, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -46,15 +54,49 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         holder.current = friend;
         holder.friendName.setText(friend.getName());
 
-        holder.parent_row.setBackgroundColor(context.getResources().getColor(
+        holder.friends_list_cardview.setBackgroundColor(context.getResources().getColor(
                 friend.getUserRosterPresence().isAvailable()
-                ? R.color.online_alpha50
-                : R.color.offline_alpha50));
+                        ? R.color.online_alpha50
+                        : R.color.offline_alpha50));
+
+        if(friend.getUserRosterPresence().isAvailable())
+            holder.friendStatus.setText(friend.getFriendMode().toString());
+        else
+        holder.friendStatus.setText("");
+
+//        holder.friendMessage.setText(friend.getUserRosterPresence().getStatus());
+
+        /**
+         * Load Image from LolKing Server
+         */
+
+        if(friend.getProfileIconId().equals("")){
+            Picasso.with(context)
+                    .load(R.drawable.profile_icon_example)
+                    .into(holder.profileIcon);
+        }else{
+            Picasso pic = Picasso.with(context);
+            pic.load(RiotGlobals.LOLKING_PROFILE_ICON_URL + friend.getProfileIconId() + RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION)
+                    .placeholder(R.drawable.profile_icon_example)
+                    .error(R.drawable.profile_icon_example)
+                    .into(holder.profileIcon);
+        }
     }
 
     public void setItems(List<Friend> items) {
         friendsList = items;
+        sortFriendsList(SortMethod.ONLINE_FIRST);
         notifyDataSetChanged();
+    }
+
+    public void sortFriendsList(SortMethod sortedMethod){
+        if(sortedMethod.isSortOnlineFirst()){
+           Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
+        }else if(sortedMethod.isSortAlphabetically()){
+            Collections.sort(friendsList, new Friend.AlphabeticComparator());
+        }else{ // default
+            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
+        }
     }
 
     @Override
@@ -64,11 +106,20 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @InjectView(R.id.parent_row)
-        LinearLayout parent_row;
-
         @InjectView(R.id.friendName)
         TextView friendName;
+
+        @InjectView(R.id.friendStatus)
+        TextView friendStatus;
+
+        @InjectView(R.id.friendMessage)
+        TextView friendMessage;
+
+        @InjectView(R.id.profileIcon)
+        ImageView profileIcon;
+
+        @InjectView(R.id.friends_list_cardview)
+        CardView friends_list_cardview;
 
         Friend current;
 
@@ -85,5 +136,20 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     public interface OnItemClickAdapter{
         void onFriendClick(Friend friend);
+    }
+
+    public enum SortMethod{
+        ALPHABETICALLY,
+        ONLINE_FIRST,
+        OFFLINE_FIRST;
+
+        public boolean isSortAlphabetically(){
+            return this.equals(SortMethod.ALPHABETICALLY);
+        }
+
+        public boolean isSortOnlineFirst(){
+            return this.equals(SortMethod.ONLINE_FIRST);
+        }
+
     }
 }

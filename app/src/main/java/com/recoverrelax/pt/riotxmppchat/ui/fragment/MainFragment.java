@@ -4,6 +4,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,10 +25,14 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment implements FriendsListAdapter.OnItemClickAdapter, RosterDataLoaderCallback<List<Friend>> {
+
+    private final String TAG = MainFragment.this.getClass().getSimpleName();
 
     @InjectView(R.id.myFriendsListRecyclerView)
     RecyclerView myFriendsListRecyclerView;
@@ -70,7 +75,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
 
         adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child, this);
@@ -93,10 +98,15 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
     }
 
     @Override
-    public void onFailure(Throwable ex) {}
+    public void onFailure(Throwable ex) {
+        LOGI(TAG, "Failed to load friendsList! =(");
+        if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+    }
 
     @Override
     public void onSuccess(List<Friend> result) {
+        LOGI(TAG, "Loaded friendsList! =(");
         if (adapter != null) {
             adapter.setItems(result);
             if(swipeRefreshLayout.isRefreshing())

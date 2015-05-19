@@ -99,8 +99,8 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Co
 //        assertTrue("No server found with such name!", riotServerByName != null);
 //        String serverHost = riotServerByName.getServerHost();
 
-        int serverPort = RiotGlobals.Riot_Port;
-        String serverDomain = RiotGlobals.Riot_Domain;
+        int serverPort = RiotGlobals.RIOT_PORT;
+        String serverDomain = RiotGlobals.RIOT_DOMAIN;
 
         materialDialog = new MaterialDialog.Builder(LoginActivity.this)
                 .title(R.string.activity_login_progress_dialog_title)

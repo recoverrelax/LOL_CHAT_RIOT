@@ -114,6 +114,13 @@
         <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/jxmpp-core-0.4.2-beta1-8124d906fbbec351bbc687cafb64e8b667fe4c0e.jar" />
     </item>
     <item
+        jar="/home/dev8/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/pre-dexed/debug/picasso-2.5.2-6bbdf8466d1d1b7e5bcd10ec12cb8696039d8804.jar" />
+    </item>
+    <item
         jar="/home/dev8/Developer/AndroidStudioProjects/LOL_CHAT_RIOT/app/build/intermediates/exploded-aar/com.github.mrengineer13/snackbar/1.2.0/classes.jar"
         jumboMode="false"
         revision="22.0.1"
