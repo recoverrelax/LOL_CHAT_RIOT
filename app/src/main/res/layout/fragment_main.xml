@@ -4,10 +4,19 @@
     android:layout_height="match_parent"
     tools:context="com.recoverrelax.pt.riotxmppchat.ui.fragment.MainFragment">
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/swipeRefreshLayout">
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/myFriendsListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/friends_list_recyclerview_child"/>
+
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
@@ -25,11 +26,12 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     private OnItemClickAdapter callback;
     private @LayoutRes int layout;
 
-    public FriendsListAdapter(Context context, ArrayList<Friend> productList, int layout, OnItemClickAdapter callback){
+    public FriendsListAdapter(Context context, ArrayList<Friend> friendsList, int layout, OnItemClickAdapter callback){
         inflater= LayoutInflater.from(context);
         this.context = context;
         this.layout = layout;
         this.callback = callback;
+        this.friendsList = friendsList;
     }
 
     @Override
@@ -42,8 +44,12 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Friend friend = friendsList.get(position);
         holder.current = friend;
-
         holder.friendName.setText(friend.getName());
+
+        holder.parent_row.setBackgroundColor(context.getResources().getColor(
+                friend.getUserRosterPresence().isAvailable()
+                ? R.color.online_alpha50
+                : R.color.offline_alpha50));
     }
 
     public void setItems(List<Friend> items) {
@@ -58,6 +64,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        @InjectView(R.id.parent_row)
+        LinearLayout parent_row;
+
         @InjectView(R.id.friendName)
         TextView friendName;
 
@@ -66,12 +75,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
-            friendName.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            callback.onFriendClick(current);
+//            callback.onFriendClick(current);
         }
     }
 

@@ -13,6 +13,11 @@
     <color name="loginBackground">#37ff5722</color>
     <color name="primaryColorDark">#0288d1</color>
 
+    <color name="online">#ff00ff00</color>
+    <color name="offline">#ffff0000</color>
+    <color name="online_alpha50">#6400ff00</color>
+    <color name="offline_alpha50">#64ff0000</color>
+
 
     <color name="accentColor">#941C2F</color>
 

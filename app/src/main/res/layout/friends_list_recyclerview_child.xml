@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/parent_row"
+        android:gravity="center"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/friends_list_recycler_child_textview_padding"
         android:textAppearance="?android:textAppearanceMedium"
@@ -14,4 +20,6 @@
         tools:text="2Fast4You"
         android:id="@+id/friendName"
         android:gravity="center_vertical|center_horizontal" />
+
+    </LinearLayout>
 </LinearLayout>

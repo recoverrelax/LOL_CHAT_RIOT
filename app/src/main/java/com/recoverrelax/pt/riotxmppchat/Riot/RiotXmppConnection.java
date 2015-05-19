@@ -164,17 +164,7 @@ public class RiotXmppConnection {
         }
     }
 
-    public ArrayList<Friend> getFriendsList(){
-        Roster roster = Roster.getInstanceFor(connection);
-        Collection<RosterEntry> entries = roster.getEntries();
 
-        ArrayList<Friend> friendList = new ArrayList<>();
-
-        for (RosterEntry entry : entries) {
-            friendList.add(new Friend(entry.getName()));
-        }
-        return friendList;
-    }
 
     public boolean isConnected(){
         return connection != null && connection.isConnected();
@@ -188,6 +178,9 @@ public class RiotXmppConnection {
         connection.disconnect();
     }
 
+    public AbstractXMPPConnection getConnection() {
+        return connection;
+    }
 
     public interface ConnectionAuthenticationLoader {
         void onConnect();
