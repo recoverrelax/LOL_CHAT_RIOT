@@ -6,7 +6,7 @@
      The actionBar color is 700 version of the primary Color-->
 
     <color name="white">#FFFFFF</color>
-    <color name="whiteT">#beffffff</color>
+    <color name="whiteT">#d2ffffff</color>
     <color name="black">#000</color>
 
     <color name="primaryColor">#FF5722</color>

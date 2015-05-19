@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
@@ -16,12 +15,10 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.squareup.picasso.Picasso;
 
-import org.jivesoftware.smack.util.StringUtils;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -54,10 +51,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         holder.current = friend;
         holder.friendName.setText(friend.getName());
 
-        holder.friends_list_cardview.setBackgroundColor(context.getResources().getColor(
-                friend.getUserRosterPresence().isAvailable()
-                        ? R.color.online_alpha50
-                        : R.color.offline_alpha50));
+//        holder.friends_list_cardview.setCardBackgroundColor(context.getResources().getColor(
+//                friend.getUserRosterPresence().isAvailable()
+//                        ? R.color.online_alpha50
+//                        : R.color.offline_alpha50));
 
         if(friend.getUserRosterPresence().isAvailable())
             holder.friendStatus.setText(friend.getFriendMode().toString());
