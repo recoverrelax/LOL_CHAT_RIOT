@@ -31,6 +31,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     private OnItemClickAdapter callback;
     private @LayoutRes int layout;
 
+    private final String LEVEL_PREFIX = "L ";
+
     public FriendsListAdapter(Context context, ArrayList<Friend> friendsList, int layout, OnItemClickAdapter callback){
         inflater= LayoutInflater.from(context);
         this.context = context;
@@ -61,7 +63,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         else
         holder.friendStatus.setText("");
 
-//        holder.friendMessage.setText(friend.getUserRosterPresence().getStatus());
+        holder.wins.setText(friend.getWins());
+        holder.ranked_icon.setImageDrawable(context.getResources().getDrawable(friend.getProfileIconResId()));
+        holder.division_league.setText(friend.getLeagueDivisionAndTier().getDescriptiveName());
 
         /**
          * Load Image from LolKing Server
@@ -117,6 +121,15 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
         @InjectView(R.id.friends_list_cardview)
         CardView friends_list_cardview;
+
+        @InjectView(R.id.division_league)
+        TextView division_league;
+
+        @InjectView(R.id.wins)
+        TextView wins;
+
+        @InjectView(R.id.ranked_icon)
+        ImageView ranked_icon;
 
         Friend current;
 

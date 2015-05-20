@@ -6,6 +6,8 @@
     <dimen name="drawer_margin">10dp</dimen>
 
     <!--TEXT SIZES -->
+    <dimen name="text_size_micro">9sp</dimen>
+    <dimen name="text_size_macro">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_medium_x">18sp</dimen>

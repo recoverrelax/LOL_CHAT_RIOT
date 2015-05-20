@@ -16,13 +16,124 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            tools:src="@drawable/profile_icon_example"
-            android:id="@+id/profileIcon" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:layout_marginRight="10dp">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    tools:src="@drawable/profile_icon_example"
+                    android:id="@+id/profileIcon" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:gravity="right"
+                    android:layout_weight="1">
+
+                    <TextView
+                        style="@style/friend_list_cardview_league_division_textview"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:layout_height="match_parent"
+                        tools:text="Silver I"
+                        android:id="@+id/division_league"
+                        android:gravity="center" />
+
+                    <TextView
+                    style="@style/friend_list_cardview_win_loss_1_textview"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textColor="@color/win_color"
+                    android:text="1945"
+                    android:id="@+id/wins"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2.2">
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/ranked_icon"
+                            android:layout_width="wrap_content"
+                            android:scaleType="fitCenter"
+                            android:adjustViewBounds="true"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/master_1"
+                            android:layout_gravity="center_horizontal|top" />
+                    </FrameLayout>
+                    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="@style/friend_list_cardview_win_loss_2_textview"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="Ranked\nWins"/>&ndash;&gt;-->
+
+                    <TextView
+                    style="@style/friend_list_cardview_win_loss_2_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Ranked\nWins"
+                    android:gravity="center_horizontal|center" />
+
+                </LinearLayout>
+
+                <!--<LinearLayout-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_weight="1">-->
+
+                        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                            <!--&lt;!&ndash;style="@style/friend_list_cardview_win_loss_1_textview"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_weight="0.7"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:textStyle="bold"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:textColor="@color/win_color"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:text="1945"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:id="@+id/wins" />&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                            <!--&lt;!&ndash;style="@style/friend_list_cardview_win_loss_2_textview"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:text="Ranked\nWins"/>&ndash;&gt;-->
+
+                <!--</LinearLayout>-->
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/friendName"

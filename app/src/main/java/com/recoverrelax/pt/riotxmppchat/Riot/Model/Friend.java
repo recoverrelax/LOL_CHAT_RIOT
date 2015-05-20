@@ -1,5 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.Model;
 
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RankedLeagueTierDivision;
+
 import org.jivesoftware.smack.packet.Presence;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,6 +27,10 @@ public class Friend {
      * CONSTANTS
      */
     public static final String PROFILE_ICON = "profileIcon";
+    public static final String LEVEL = "level";
+    public static final String RANKED_WINS = "rankedWins";
+    public static final String RANKED_LEAGUE_TIER = "rankedLeagueTier";
+    public static final String RANKED_LEAGUE_DIVISION = "rankedLeagueDivision";
 
     public Friend(String name, String userXmppAddress, Presence userRosterPresence) {
         this.name = name;
@@ -86,6 +92,14 @@ public class Friend {
         return getStringFromXmlTag(PROFILE_ICON, rootElement);
     }
 
+    public String getLevel(){
+        return getStringFromXmlTag(LEVEL, rootElement);
+    }
+
+    public String getWins(){
+        return getStringFromXmlTag(RANKED_WINS, rootElement);
+    }
+
     /**
      * Mode only available for online users
      * @return
@@ -109,6 +123,22 @@ public class Friend {
      */
     public String getUserXmppAddress() {
         return userXmppAddress;
+    }
+
+    public String getRankedLeagueTier(){
+        return getStringFromXmlTag(RANKED_LEAGUE_TIER, rootElement);
+    }
+
+    public String getRankedLeagueDivision(){
+        return getStringFromXmlTag(RANKED_LEAGUE_DIVISION, rootElement);
+    }
+
+    public RankedLeagueTierDivision getLeagueDivisionAndTier(){
+        return RankedLeagueTierDivision.getIconDrawableByLeagueAndTier(getRankedLeagueTier(), getRankedLeagueDivision());
+    }
+
+    public int getProfileIconResId() {
+        return RankedLeagueTierDivision.getIconDrawableByLeagueAndTier(getRankedLeagueTier(), getRankedLeagueDivision()).getIconDrawable();
     }
 
     public static class OnlineOfflineComparator implements Comparator<Friend> {

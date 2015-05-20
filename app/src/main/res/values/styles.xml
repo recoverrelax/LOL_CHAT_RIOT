@@ -16,6 +16,21 @@
         <item name="android:paddingBottom">@dimen/login_textview_padding_top_bottom</item>
     </style>
 
+    <style name="friend_list_cardview_win_loss_1_textview">
+        <item name="android:textSize">@dimen/text_size_macro</item>
+        <item name="android:gravity">center_vertical|right</item>
+    </style>
+
+    <style name="friend_list_cardview_win_loss_2_textview">
+        <item name="android:textSize">@dimen/text_size_micro</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="friend_list_cardview_league_division_textview">
+        <item name="android:textSize">@dimen/text_size_micro</item>
+    </style>
+
     <dimen name="login_textview_padding_top_bottom">10dp</dimen>
 
     <!--<style name="AppTheme.Base.Widget.TextView" parent="android:Widget.Holo.Light.TextView">-->
