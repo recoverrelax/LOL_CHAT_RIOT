@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/friends_list_cardview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="5dp"
     card_view:cardBackgroundColor="@color/whiteT"
@@ -140,8 +140,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
-            android:padding="@dimen/friends_list_recycler_child_textview_padding"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
+            android:textAppearance="?android:textAppearanceSmall"
             tools:text="2Fast4You" />
 
         <TextView
@@ -149,8 +149,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
-            android:padding="@dimen/friends_list_recycler_child_textview_padding"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:background="@drawable/friend_list_status_rounded_background"
+            android:layout_marginLeft="@dimen/friends_list_recycler_child_textview_margin"
+            android:paddingLeft="@dimen/friends_list_recycler_child_textview_padding_lr"
+            android:paddingRight="@dimen/friends_list_recycler_child_textview_padding_lr"
+            android:paddingTop="@dimen/friends_list_recycler_child_textview_padding_tb"
+            android:paddingBottom="@dimen/friends_list_recycler_child_textview_padding_tb"
+            android:textAppearance="?android:textAppearanceSmall"
             tools:text="2Fast4You" />
 
         <TextView
@@ -158,8 +163,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
-            android:padding="@dimen/friends_list_recycler_child_textview_padding"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
+            android:textAppearance="?android:textAppearanceSmall"
             tools:text="2Fast4You" />
 
     </LinearLayout>

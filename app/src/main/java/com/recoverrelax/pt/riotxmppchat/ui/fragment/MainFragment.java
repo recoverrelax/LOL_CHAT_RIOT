@@ -90,6 +90,8 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
             }
         });
         rosterHelper.getFullFriendsList(MainApplication.getInstance().getXmppConnection().getConnection());
+
+
     }
 
     @Override

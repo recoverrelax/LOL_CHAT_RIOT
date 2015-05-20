@@ -8,6 +8,7 @@
     <color name="white">#FFFFFF</color>
     <color name="whiteT">#d2ffffff</color>
     <color name="black">#000</color>
+    <color name="black_50A">#14000000</color>
 
     <color name="primaryColor">#FF5722</color>
     <color name="loginBackground">#37ff5722</color>
@@ -31,4 +32,11 @@
     <color name="primaryColor50Alpha">#7d03a9f4</color>
     <color name="primaryColorDarkAlpha50">#7d0288d1</color>
     <color name="neutral_grey_disabled">#727272</color>
+
+    <color name="presence_mode_available">#64DD17</color>
+    <color name="presence_mode_away">#FDD835</color>
+    <color name="presence_mode_chat">#8BC34A</color>
+    <color name="presence_mode_dnd">#FF6F00</color>
+    <color name="presence_mode_xa">#BF360C</color>
+    <color name="presence_mode_unavailable">#DD2C00</color>
 </resources>

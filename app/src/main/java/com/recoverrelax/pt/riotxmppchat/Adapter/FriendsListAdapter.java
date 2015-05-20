@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.squareup.picasso.Picasso;
@@ -58,10 +60,15 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 //                        ? R.color.online_alpha50
 //                        : R.color.offline_alpha50));
 
-        if(friend.getUserRosterPresence().isAvailable())
-            holder.friendStatus.setText(friend.getFriendMode().toString());
-        else
-        holder.friendStatus.setText("");
+        PresenceMode friendMode = friend.getFriendMode();
+        holder.friendStatus.setText(friendMode.getDescriptiveName());
+        holder.friendStatus.setTextColor(context.getResources().getColor(R.color.white));
+
+
+//        holder.friendStatus.setBackgroundColor(context.getResources().getColor(R.color.black_50A));
+        GradientDrawable drawable = (GradientDrawable) holder.friendStatus.getBackground();
+        drawable.setColor(context.getResources().getColor(friendMode.getStatusColor()));
+
 
         holder.wins.setText(friend.getWins());
         holder.ranked_icon.setImageDrawable(context.getResources().getDrawable(friend.getProfileIconResId()));

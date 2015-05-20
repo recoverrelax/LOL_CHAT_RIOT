@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.Model;
 
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RankedLeagueTierDivision;
 
 import org.jivesoftware.smack.packet.Presence;
@@ -31,6 +32,8 @@ public class Friend {
     public static final String RANKED_WINS = "rankedWins";
     public static final String RANKED_LEAGUE_TIER = "rankedLeagueTier";
     public static final String RANKED_LEAGUE_DIVISION = "rankedLeagueDivision";
+
+    public static final String NO_WINS_RETURNED = "-";
 
     public Friend(String name, String userXmppAddress, Presence userRosterPresence) {
         this.name = name;
@@ -73,7 +76,7 @@ public class Friend {
      */
     private String getStringFromXmlTag(String tagName, Element rootElement) {
         if(rootElement == null)
-            return "";
+            return NO_WINS_RETURNED;
         else {
             NodeList list = rootElement.getElementsByTagName(tagName);
             if (list != null && list.getLength() > 0) {
@@ -83,7 +86,6 @@ public class Friend {
                     return subList.item(0).getNodeValue();
                 }
             }
-
             return null;
         }
     }
@@ -104,8 +106,12 @@ public class Friend {
      * Mode only available for online users
      * @return
      */
-    public Presence.Mode getFriendMode(){
-        return this.userRosterPresence.getMode();
+
+    public PresenceMode getFriendMode(){
+        if(!this.userRosterPresence.isAvailable())
+            return PresenceMode.UNAVAILABLE;
+        else
+            return PresenceMode.getPresenceModeFromSmack(this.userRosterPresence.getMode());
     }
 
     public Presence getUserRosterPresence(){
