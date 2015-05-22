@@ -37,7 +37,17 @@ public enum RiotServer {
             if(server.serverName.equals(serverName))
                 return server;
         }
-        return null;
+        throw new IllegalArgumentException("No RiotServer Enum for serverName: " + serverName);
+    }
+
+    public static RiotServer getRiotServerHost(String serverHost)
+    {
+        for(RiotServer server: RiotServer.values())
+        {
+            if(server.serverHost.equals(serverHost))
+                return server;
+        }
+        throw new IllegalArgumentException("No RiotServer Enum for serverHost: " + serverHost);
     }
 
     public int getPosition() {

@@ -17,16 +17,15 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
-import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection;
-import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
+import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppConnectionImpl;
+import com.recoverrelax.pt.riotxmppchat.Riot.Network.RiotXmppService;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-import static junit.framework.Assert.assertTrue;
-
-public class LoginActivity extends BaseActivity implements RiotXmppConnection.ConnectionAuthenticationLoader {
+public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCallback<RiotXmppConnectionImpl.RiotXmppOperations>, MainApplication.ActivityServerCallback {
 
     private final String TAG = "LoginActivity";
 
@@ -110,43 +109,16 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Co
 
 //        mainApplication.connectToRiotXmppServer(serverHost, serverPort, serverDomain, getUsername(), getPassword(), this);
 
-        Intent service = new Intent(LoginActivity.this, RiotXmppService.class);
-        service.putExtra(RiotXmppService.INTENT_SERVER_HOST_CONST, (String) serverSpinner.getSelectedItem());
-        service.putExtra(RiotXmppService.INTENT_SERVER_USERNAME, getUsername());
-        service.putExtra(RiotXmppService.INTENT_SERVER_PASSWORD, getPassword());
-        RiotXmppService.callback = this;
-
-        startService(service);
+        mainApplication.startRiotXmppService((String) serverSpinner.getSelectedItem(), getUsername(), getPassword(), this);
     }
 
-    private void Login() {
-        mainApplication.login();
-    }
-
-    @Override
-    public void onConnect() {
-             Login();
-    }
-
-    @Override
+        @Override
     protected void onDestroy() {
         super.onDestroy();
-        RiotXmppService.callback = null;
+        RiotXmppService.loginActilivyCallback = null;
         materialDialog.dismiss();
     }
-
-    @Override
-    public void onError(int stringResourceId) {
-        materialDialog.dismiss();
-        snackBar = new SnackBar.Builder(this)
-                .withMessageId(stringResourceId)
-                .withTextColorId(R.color.primaryColor)
-                .withDuration((short) 7000)
-                .show();
-    }
-
-    @Override
-    public void onLogin() {
+    public void onSuccessLogin() {
 
         if(checkBox.isChecked())
             mDataStorage.setSaveLoginCredentials(true);
@@ -157,14 +129,7 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Co
         mDataStorage.setPassword(getPassword());
         mDataStorage.setServer(getServer());
 
-        startMainActivity();
-        materialDialog.dismiss();
-        this.finish();
-    }
-
-    @Override
-    public void startMainActivity(){
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        mainApplication.bindService(this);
     }
 
     public String getUsername(){
@@ -177,5 +142,31 @@ public class LoginActivity extends BaseActivity implements RiotXmppConnection.Co
 
     public String getServer(){
         return (String) this.serverSpinner.getSelectedItem();
+    }
+
+    @Override public void onComplete() {}
+    @Override public void destroyLoader() {}
+
+    @Override public void onFailure(Throwable ex) {
+        materialDialog.dismiss();
+        snackBar = new SnackBar.Builder(this)
+                .withMessageId(R.string.activity_login_cannot_connect)
+                .withTextColorId(R.color.primaryColor)
+                .withDuration((short) 7000)
+                .show();
+    }
+
+    @Override
+    public void onSuccess(RiotXmppConnectionImpl.RiotXmppOperations result) {
+        if(result.equals(RiotXmppConnectionImpl.RiotXmppOperations.LOGGED_IN)){
+            onSuccessLogin();
+        }
+    }
+
+    @Override
+    public void onServiceBinded() {
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        materialDialog.dismiss();
+        this.finish();
     }
 }

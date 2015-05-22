@@ -54,7 +54,7 @@
 
     <string name="hello_world">Hello world!</string>
 
-    <!--LOGIN ACTIVITY-->
+    <!--LOGGED_IN ACTIVITY-->
     <string name="activity_login_login_title">Login</string>
     <string name="acitivty_login_username_hint">Username Here</string>
     <string name="activity_login_password_hint">Password Here</string>

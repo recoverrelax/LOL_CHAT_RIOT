@@ -86,7 +86,7 @@ public class Friend {
                     return subList.item(0).getNodeValue();
                 }
             }
-            return null;
+            return NO_WINS_RETURNED;
         }
     }
 
@@ -136,7 +136,8 @@ public class Friend {
     }
 
     public String getRankedLeagueDivision(){
-        return getStringFromXmlTag(RANKED_LEAGUE_DIVISION, rootElement);
+        String stringFromXmlTag = getStringFromXmlTag(RANKED_LEAGUE_DIVISION, rootElement);
+        return stringFromXmlTag;
     }
 
     public RankedLeagueTierDivision getLeagueDivisionAndTier(){

@@ -1,22 +1,31 @@
 package com.recoverrelax.pt.riotxmppchat;
 
-import android.app.Activity;
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection;
-import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppConnection.ConnectionAuthenticationLoader;
-import com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
+import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppConnectionImpl;
+import com.recoverrelax.pt.riotxmppchat.Riot.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
+
+import org.jivesoftware.smack.AbstractXMPPConnection;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
 
+    private RiotXmppService mService;
+    private boolean mBound = false;
+    private Intent intentService;
+    private ActivityServerCallback activityServerCallback;
+
     private static MainApplication instance;
-    private RiotXmppConnection xmppConnection;
 
     @Override
     public void onCreate() {
@@ -31,21 +40,62 @@ public class MainApplication extends Application {
         );
     }
 
-    public void connectToRiotXmppServer(String serverHost, int serverPort, String serverDomain,
-                                         String username, String password, ConnectionAuthenticationLoader cb){
-        xmppConnection = new RiotXmppConnection(serverHost, serverPort, serverDomain,
-                username, password);
+    /** Defines callbacks for intentService binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
 
-        xmppConnection.init((Activity) cb, cb);
-        xmppConnection.connect();
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder serviceBinder) {
+            RiotXmppService.MyBinder binder = (RiotXmppService.MyBinder) serviceBinder;
+            mService = binder.getService();
+            mBound = true;
+
+            getCallback().onServiceBinded();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBound = false;
+        }
+    };
+
+    public void setCallback(ActivityServerCallback activityServerCallback){
+        this.activityServerCallback = activityServerCallback;
     }
 
-    public void login() {
-        xmppConnection.login();
+    public ActivityServerCallback getCallback(){
+        return activityServerCallback;
+    }
+
+    public void startRiotXmppService(String selectedItem, String username, String password, RiotXmppDataLoaderCallback<RiotXmppConnectionImpl.RiotXmppOperations> loginActilivyCallback){
+        intentService = new Intent(this, RiotXmppService.class);
+        intentService.putExtra(RiotXmppService.INTENT_SERVER_HOST_CONST, selectedItem);
+        intentService.putExtra(RiotXmppService.INTENT_SERVER_USERNAME, username);
+        intentService.putExtra(RiotXmppService.INTENT_SERVER_PASSWORD, password);
+
+        RiotXmppService.loginActilivyCallback = loginActilivyCallback;
+
+        startService(intentService);
+    }
+
+    public RiotXmppService getRiotXmppService() {
+        return mService;
+    }
+
+    public AbstractXMPPConnection getConnection(){
+        return mService.getConnection();
+    }
+
+    public void bindService(LoginActivity loginActivity) {
+        setCallback(loginActivity);
+        bindService(intentService, mConnection, BIND_AUTO_CREATE);
     }
 
     @Override
     public void onTerminate() {
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
         super.onTerminate();
     }
 
@@ -53,7 +103,7 @@ public class MainApplication extends Application {
         return instance;
     }
 
-    public RiotXmppConnection getXmppConnection() {
-        return xmppConnection;
+    public interface ActivityServerCallback{
+        void onServiceBinded();
     }
 }

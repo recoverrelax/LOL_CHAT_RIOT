@@ -14,10 +14,10 @@ import android.view.ViewGroup;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RosterDataLoaderCallback;
-import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RosterHelper;
+import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
+import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.Riot.RosterXMPPImpl;
+import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppRiotXmppRosterImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment implements FriendsListAdapter.OnItemClickAdapter, RosterDataLoaderCallback<List<Friend>> {
+public class MainFragment extends Fragment implements FriendsListAdapter.OnItemClickAdapter, RiotXmppDataLoaderCallback<List<Friend>> {
 
     private final String TAG = MainFragment.this.getClass().getSimpleName();
 
@@ -51,7 +51,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
      * Data Loading
      */
 
-    private RosterHelper rosterHelper;
+    private RiotXmppRosterHelper riotXmppRosterHelper;
 
     public MainFragment() {
         // Required empty public constructor
@@ -74,24 +74,22 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+//
         layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
-
+//
         adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child, this);
         myFriendsListRecyclerView.setAdapter(adapter);
-
-        rosterHelper = new RosterXMPPImpl(MainFragment.this, this);
+//
+        riotXmppRosterHelper = new RiotXmppRiotXmppRosterImpl(MainFragment.this, this);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                rosterHelper.getFullFriendsList(MainApplication.getInstance().getXmppConnection().getConnection());
+                riotXmppRosterHelper.getFullFriendsList(MainApplication.getInstance().getConnection());
             }
         });
-        rosterHelper.getFullFriendsList(MainApplication.getInstance().getXmppConnection().getConnection());
-
-
+        riotXmppRosterHelper.getFullFriendsList(MainApplication.getInstance().getConnection());
     }
 
     @Override

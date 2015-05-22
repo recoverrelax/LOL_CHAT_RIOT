@@ -29,7 +29,7 @@
 
     <dimen name="cardview_margin">5dp</dimen>
 
-    <!--ACTIVITY LOGIN-->
+    <!--ACTIVITY LOGGED_IN-->
     <dimen name="activity_login_title_margin_bottom">40dp</dimen>
     <dimen name="activity_login_margin_lr">40dp</dimen>
     <dimen name="activity_login_button_margin_tp">30dp</dimen>

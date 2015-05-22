@@ -32,7 +32,7 @@
             android:label="@string/title_activity_login" >
         </activity>
 
-        <service android:name="com.recoverrelax.pt.riotxmppchat.Riot.RiotXmppService"/>
+        <service android:name="com.recoverrelax.pt.riotxmppchat.Riot.Network.RiotXmppService"/>
 
 
     </application>
