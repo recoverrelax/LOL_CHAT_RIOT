@@ -1,5 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.Model;
 
+import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RankedLeagueTierDivision;
 
@@ -32,8 +35,15 @@ public class Friend {
     public static final String RANKED_WINS = "rankedWins";
     public static final String RANKED_LEAGUE_TIER = "rankedLeagueTier";
     public static final String RANKED_LEAGUE_DIVISION = "rankedLeagueDivision";
+    public static final String STATUS_MSG = "statusMsg";
+    public static final String CHAMPION_MASTERY_SCORE = "championMasteryScore";
+    public static final String CHAMPION_NAME = "skinname";
+    public static final String TIME_STAMP = "timeStamp";
+    public static final String GAME_STATUS = "gameStatus";
+    public static final String GAME_STATUS_NO_VIEW = "-1";
+    public static final String PERSONAL_MESSAGE_NO_VIEW = "-1";
 
-    public static final String NO_WINS_RETURNED = "-";
+    public static final String NO_DATA = "-";
 
     public Friend(String name, String userXmppAddress, Presence userRosterPresence) {
         this.name = name;
@@ -48,7 +58,7 @@ public class Friend {
      */
     private Element buildCustomAttrFromStatusMessage() {
 
-        if(userRosterPresence.getStatus() == null)
+        if (userRosterPresence.getStatus() == null)
             return null;
         else {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -71,12 +81,11 @@ public class Friend {
     }
 
     /**
-     *
      * @return The extracted String or EMPTY_STRING ("")
      */
     private String getStringFromXmlTag(String tagName, Element rootElement) {
-        if(rootElement == null)
-            return NO_WINS_RETURNED;
+        if (rootElement == null)
+            return NO_DATA;
         else {
             NodeList list = rootElement.getElementsByTagName(tagName);
             if (list != null && list.getLength() > 0) {
@@ -86,45 +95,47 @@ public class Friend {
                     return subList.item(0).getNodeValue();
                 }
             }
-            return NO_WINS_RETURNED;
+            return NO_DATA;
         }
     }
 
-    public String getProfileIconId(){
+    public String getProfileIconId() {
         return getStringFromXmlTag(PROFILE_ICON, rootElement);
     }
 
-    public String getLevel(){
+    public String getLevel() {
         return getStringFromXmlTag(LEVEL, rootElement);
     }
 
-    public String getWins(){
+    public String getWins() {
         return getStringFromXmlTag(RANKED_WINS, rootElement);
     }
 
     /**
      * Mode only available for online users
+     *
      * @return
      */
 
-    public PresenceMode getFriendMode(){
-        if(!this.userRosterPresence.isAvailable())
+    public PresenceMode getFriendMode() {
+        if (!this.userRosterPresence.isAvailable())
             return PresenceMode.UNAVAILABLE;
         else
             return PresenceMode.getPresenceModeFromSmack(this.userRosterPresence.getMode());
     }
 
-    public boolean isOnline(){
+    public boolean isOnline() {
         return this.getUserRosterPresence() != null && this.getUserRosterPresence().isAvailable();
     }
 
-    public boolean isOffline(){
+    public boolean isOffline() {
         return this.getUserRosterPresence() != null && !this.getUserRosterPresence().isAvailable();
     }
 
-    public Presence getUserRosterPresence(){
+    public Presence getUserRosterPresence() {
         return userRosterPresence;
     }
+
     /**
      * @return A name assigned to the user (e.g. "Joe").
      */
@@ -139,16 +150,16 @@ public class Friend {
         return userXmppAddress;
     }
 
-    public String getRankedLeagueTier(){
+    public String getRankedLeagueTier() {
         return getStringFromXmlTag(RANKED_LEAGUE_TIER, rootElement);
     }
 
-    public String getRankedLeagueDivision(){
+    public String getRankedLeagueDivision() {
         String stringFromXmlTag = getStringFromXmlTag(RANKED_LEAGUE_DIVISION, rootElement);
         return stringFromXmlTag;
     }
 
-    public RankedLeagueTierDivision getLeagueDivisionAndTier(){
+    public RankedLeagueTierDivision getLeagueDivisionAndTier() {
         return RankedLeagueTierDivision.getIconDrawableByLeagueAndTier(getRankedLeagueTier(), getRankedLeagueDivision());
     }
 
@@ -156,26 +167,125 @@ public class Friend {
         return RankedLeagueTierDivision.getIconDrawableByLeagueAndTier(getRankedLeagueTier(), getRankedLeagueDivision()).getIconDrawable();
     }
 
+    public String getStatusMsg() {
+        String stringFromXmlTag = getStringFromXmlTag(STATUS_MSG, rootElement);
+        if (stringFromXmlTag.equals(NO_DATA)) {
+            return PERSONAL_MESSAGE_NO_VIEW;
+        } else {
+            return stringFromXmlTag;
+        }
+    }
+
+    public String getChampionMasteryScore() {
+        return getStringFromXmlTag(CHAMPION_MASTERY_SCORE, rootElement);
+    }
+
+    public GameStatus getGameStatus() {
+        String gameStatusXmpp = getStringFromXmlTag(GAME_STATUS, rootElement);
+        return GameStatus.getByXmppName(gameStatusXmpp);
+    }
+
+    /**
+     * @return The Game Status or "-1" to tell the view shud be View.GONE
+     */
+    public String getGameStatusToPrint() {
+        GameStatus gameStatus = getGameStatus();
+
+        switch (gameStatus) {
+            case OUT_OF_GAME:
+                return GAME_STATUS_NO_VIEW;
+            case CHAMPION_SELECT:
+               return formatChampionSelectText();
+            case INGAME:
+                return formatInGameText();
+            default:
+                return gameStatus.getDescriptiveText();
+        }
+    }
+
+    public String formatChampionSelectText(){
+        String timeStamp = getTimeStampDifference();
+        boolean noTimeStamp = timeStamp.equals(NO_DATA);
+        String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
+
+        String message = "";
+
+        if(noTimeStamp)
+            message = MainApplication.getInstance().getResources().getString(R.string.in_champion_select);
+        else
+            message = MainApplication.getInstance().getResources().getString(R.string.in_champion_select_for) + " " + timeStamp + " " + minutes;
+        return message;
+    }
+
+    public String getTimeStampDifference(){
+        long serverTimeStamp = Long.parseLong(getTimeStamp());
+        long nowTimeStamp = System.currentTimeMillis();
+
+        long difference = (nowTimeStamp - serverTimeStamp) / 1000L;// / 60;
+//         return getTimeStamp();
+        return String.valueOf(difference);
+    }
+
+    public String formatInGameText(){
+        String timeStamp = getTimeStampDifference();
+        boolean noTimeStamp = timeStamp.equals(NO_DATA);
+
+        String championName = getChampionName();
+        boolean noChampionName = championName.equals(NO_DATA);
+
+        String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
+
+        String playingAs = MainApplication.getInstance().getResources().getString(R.string.ingame_playing_as) + " ";
+        String playingAsFor = MainApplication.getInstance().getResources().getString(R.string.ingame_playing_as_for) + " ";
+
+       if(noTimeStamp){
+            if(noChampionName){
+                // !TIMESTAMP - !CHAMPIONNAME
+                return GameStatus.INGAME.getDescriptiveText();
+            }else{
+                // !TIMESTAMP - CHAMPIONNAME
+                return playingAs + championName;
+            }
+        }else{
+            if(noChampionName){
+                // TIMESTAMP - !CHAMPIONNAME
+                return GameStatus.INGAME.getDescriptiveText() + " " + playingAsFor + " " + timeStamp + " " + minutes;
+            }else{
+                // TIMESTAMP - CHAMPIONNAME
+                return playingAs + championName + " " + playingAsFor + timeStamp + " " + minutes;
+            }
+        }
+    }
+
+    public String getChampionName(){
+        return getStringFromXmlTag(CHAMPION_NAME, rootElement);
+    }
+
+    public String getTimeStamp() {
+        return getStringFromXmlTag(TIME_STAMP, rootElement);
+    }
+
     public static class OnlineOfflineComparator implements Comparator<Friend> {
         @Override
         public int compare(Friend a, Friend b) {
-            if(samePresence(a, b))
+            if (samePresence(a, b))
                 return 0;
-            else if(a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable())
+            else if (a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable())
                 return -1;
             else
                 return 1;
         }
 
-        public boolean samePresence(Friend a, Friend b){
-            if(a.getUserRosterPresence().isAvailable() && b.getUserRosterPresence().isAvailable())
+        public boolean samePresence(Friend a, Friend b) {
+            if (a.getUserRosterPresence().isAvailable() && b.getUserRosterPresence().isAvailable())
                 return true;
-            else if(!a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable()){
+            else if (!a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable()) {
                 return true;
             }
             return false;
         }
     }
+
     public static class AlphabeticComparator implements Comparator<Friend> {
         @Override
         public int compare(Friend a, Friend b) {
@@ -185,11 +295,10 @@ public class Friend {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof Friend) {
+        if (o instanceof Friend) {
             Friend f = (Friend) o;
             return this.getUserXmppAddress().equals(f.getUserXmppAddress());
-        }
-        else
+        } else
             return false;
     }
 }

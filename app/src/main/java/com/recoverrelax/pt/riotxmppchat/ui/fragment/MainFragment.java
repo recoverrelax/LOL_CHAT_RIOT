@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,6 +26,7 @@ import org.jivesoftware.smack.roster.RosterListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -44,6 +46,8 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
 
     @InjectView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
+
+
 
     private RecyclerView.LayoutManager layoutManager;
 
@@ -66,6 +70,11 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
         return new MainFragment();
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,30 +105,14 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
         });
         riotXmppRosterHelper.getFullFriendsList();
 
+        /**
+         * Handler to Update the TimeStamp
+         * of friends Playing or inQueue
+         */
+  }
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApplication.getInstance().getRiotXmppService().addRosterListener(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApplication.getInstance().getRiotXmppService().removeRosterListener(this);
-    }
-
-    @Override
-    public void onFriendClick(Friend friend) {
-
-    }
-
-    @Override
-    public void onCompleted() {
-
-    }
+     @Override public void onFriendClick(Friend friend) {}
+    @Override public void onCompleted() {}
 
     @Override
     public void onError(Throwable e) {
@@ -180,7 +173,5 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
                 riotXmppRosterHelper.getPresenceChanged(presence);
             }
         });
-
-
     }
 }

@@ -10,8 +10,8 @@ public enum PresenceMode {
     AVAILABLE("Online", R.color.presence_mode_available),
     AWAY("Away", R.color.presence_mode_away),
     CHAT("Chatting", R.color.presence_mode_chat),
-    DND("Do not disturn", R.color.presence_mode_dnd),
-    XA("Extended away", R.color.presence_mode_xa),
+    DND("DN Disturb", R.color.presence_mode_dnd),
+    XA("E-Away", R.color.presence_mode_xa),
     UNAVAILABLE("Offline", R.color.presence_mode_unavailable);
 
     private String descriptiveName;

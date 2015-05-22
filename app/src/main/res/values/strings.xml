@@ -65,6 +65,12 @@
     <string name="activity_login_progress_dialog_message">Please wait …</string>
     <string name="drawer_default_title">League of Legends \nFriends Alerter</string>
     <string name="drawer_default_username_prefix">Logged in as: </string>
+    <string name="in_champion_select_for">In champion select for </string>
+    <string name="in_champion_select">In champion select</string>
+
+    <string name="ingame_playing_as">Playing as</string>
+    <string name="ingame_playing_as_for">for</string>
+    <string name="minutes">minutes</string>
 
 
 </resources>

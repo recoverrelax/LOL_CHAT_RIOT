@@ -14,6 +14,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -145,7 +146,7 @@
             tools:text="2Fast4You" />
 
         <TextView
-            android:id="@+id/friendStatus"
+            android:id="@+id/friendPresenceMode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
@@ -159,12 +160,21 @@
             tools:text="2Fast4You" />
 
         <TextView
-            android:id="@+id/friendMessage"
+            android:id="@+id/statusMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
             android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
-            android:textAppearance="?android:textAppearanceSmall"
+            android:textSize="@dimen/text_size_micro"
+            tools:text="2Fast4You" />
+
+        <TextView
+            android:id="@+id/gameStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
+            android:textSize="@dimen/text_size_micro"
             tools:text="2Fast4You" />
 
     </LinearLayout>

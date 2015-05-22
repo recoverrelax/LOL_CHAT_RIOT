@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
@@ -28,6 +30,8 @@ import butterknife.InjectView;
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.MyViewHolder> {
 
     List<Friend> friendsList;
+    ArrayList<Integer> friendsPlayingOrInQueueAdapterPosition;
+
     private LayoutInflater inflater;
     private Context context;
     private OnItemClickAdapter callback;
@@ -45,6 +49,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         this.callback = callback;
         this.friendsList = friendsList;
         this.myRecycer = myRecycer;
+
+        friendsPlayingOrInQueueAdapterPosition = new ArrayList<>();
     }
 
     @Override
@@ -59,24 +65,49 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         holder.current = friend;
         holder.friendName.setText(friend.getName());
 
-//        holder.friends_list_cardview.setCardBackgroundColor(context.getResources().getColor(
-//                friend.getUserRosterPresence().isAvailable()
-//                        ? R.color.online_alpha50
-//                        : R.color.offline_alpha50));
+        if (friend.getGameStatus().equals(GameStatus.IN_QUEUE) || friend.getGameStatus().equals(GameStatus.INGAME)) {
+            holder.startRepeatingTask();
+        } else {
+            holder.stopRepeatingTask();
+        }
+
+        /**
+         * Check if the user is currently playing
+         */
 
         PresenceMode friendMode = friend.getFriendMode();
-        holder.friendStatus.setText(friendMode.getDescriptiveName());
-        holder.friendStatus.setTextColor(context.getResources().getColor(R.color.white));
+        holder.friendPresenceMode.setText(friendMode.getDescriptiveName());
+        holder.friendPresenceMode.setTextColor(context.getResources().getColor(R.color.white));
 
 
-//        holder.friendStatus.setBackgroundColor(context.getResources().getColor(R.color.black_50A));
-        GradientDrawable drawable = (GradientDrawable) holder.friendStatus.getBackground();
+//        holder.friendPresenceMode.setBackgroundColor(context.getResources().getColor(R.color.black_50A));
+        GradientDrawable drawable = (GradientDrawable) holder.friendPresenceMode.getBackground();
         drawable.setColor(context.getResources().getColor(friendMode.getStatusColor()));
 
 
         holder.wins.setText(friend.getWins());
         holder.ranked_icon.setImageDrawable(context.getResources().getDrawable(friend.getProfileIconResId()));
         holder.division_league.setText(friend.getLeagueDivisionAndTier().getDescriptiveName());
+
+        /**
+         * Set The Status Message
+         */
+        String statusMsg = friend.getStatusMsg();
+        if (!statusMsg.equals(Friend.PERSONAL_MESSAGE_NO_VIEW)) {
+            holder.statusMsg.setText(statusMsg);
+            holder.statusMsg.setVisibility(View.VISIBLE);
+        } else
+            holder.statusMsg.setVisibility(View.INVISIBLE);
+
+        /**
+         * Set the Game Status
+         */
+        String gameStatusToPrint = friend.getGameStatusToPrint();
+        if (!gameStatusToPrint.equals(Friend.GAME_STATUS_NO_VIEW)) {
+            holder.gameStatus.setText(gameStatusToPrint);
+            holder.gameStatus.setVisibility(View.VISIBLE);
+        } else
+            holder.gameStatus.setVisibility(View.GONE);
 
         /**
          * Load Image from LolKing Server
@@ -123,7 +154,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
                     friendsList.remove(positionFriend);
                     friendsList.add(0, newFriend);
                     notifyItemInserted(0);
-                    notifyItemRemoved(positionFriend+1);
+                    notifyItemRemoved(positionFriend + 1);
                     myRecycer.scrollToPosition(0);
                 }
             } else { // NEW FRIEND OFFLINE
@@ -160,11 +191,14 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         @InjectView(R.id.friendName)
         TextView friendName;
 
-        @InjectView(R.id.friendStatus)
-        TextView friendStatus;
+        @InjectView(R.id.friendPresenceMode)
+        TextView friendPresenceMode;
 
-        @InjectView(R.id.friendMessage)
-        TextView friendMessage;
+        @InjectView(R.id.statusMsg)
+        TextView statusMsg;
+
+        @InjectView(R.id.gameStatus)
+        TextView gameStatus;
 
         @InjectView(R.id.profileIcon)
         ImageView profileIcon;
@@ -183,15 +217,38 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
         Friend current;
 
+        private final int mHandlerInterval = 6000;
+        private Handler mHandler;
+        private Runnable mStatusChecker;
+
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
+            mHandler = new Handler();
+            mStatusChecker = new Runnable() {
+                @Override
+                public void run() {
+                    String gameStatusToPrint = current.getGameStatusToPrint();
+                    gameStatus.setText(gameStatusToPrint);
+                    mHandler.postDelayed(mStatusChecker, mHandlerInterval);
+                }
+            };
         }
 
         @Override
         public void onClick(View view) {
-//            callback.onFriendClick(current);
+
         }
+
+        public void startRepeatingTask() {
+            mStatusChecker.run();
+        }
+
+        void stopRepeatingTask() {
+            mHandler.removeCallbacks(mStatusChecker);
+        }
+
+
     }
 
     public interface OnItemClickAdapter {
