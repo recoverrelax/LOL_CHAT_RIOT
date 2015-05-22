@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppRiotXmppRosterImpl;
+import com.recoverrelax.pt.riotxmppchat.Riot.Network.RiotXmppService;
 
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.RosterListener;
@@ -81,7 +83,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
         layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
 //
-        adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child, this);
+        adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child, this, myFriendsListRecyclerView);
         myFriendsListRecyclerView.setAdapter(adapter);
 //
         riotXmppRosterHelper = new RiotXmppRiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
@@ -93,18 +95,20 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
             }
         });
         riotXmppRosterHelper.getFullFriendsList();
-        MainApplication.getInstance().getRiotXmppService().addRosterListener(this);
+
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        MainApplication.getInstance().getRiotXmppService().addRosterListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        MainApplication.getInstance().getRiotXmppService().removeRosterListener(this);
     }
 
     @Override
@@ -169,6 +173,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
 
     @Override
     public void presenceChanged(final Presence presence) {
+        LogUtils.LOGI(TAG, "Callback called on the activity!");
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

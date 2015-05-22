@@ -4,9 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
@@ -16,10 +18,14 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppConnectionIm
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.net.ssl.SSLSocketFactory;
 
@@ -27,7 +33,9 @@ import rx.Observer;
 
 import static junit.framework.Assert.assertTrue;
 
-public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations> {
+public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations>, RosterListener {
+
+    private static final String TAG = RiotXmppService.class.getSimpleName();
 
     private final IBinder mBinder = new MyBinder();
     private DataStorage dataStorage;
@@ -36,6 +44,8 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     public static final String INTENT_SERVER_HOST_CONST = "server";
     public static final String INTENT_SERVER_USERNAME = "username";
     public static final String INTENT_SERVER_PASSWORD = "password";
+
+    private static final long DELAY_BEFORE_ROSTER_LISTENER = 5000;
 
     public static RiotXmppDataLoaderCallback<RiotXmppConnectionImpl.RiotXmppOperations> loginActilivyCallback;
 
@@ -53,6 +63,8 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     private AbstractXMPPConnection connection;
     private RiotXmppConnectionHelper connectionHelper;
     private Roster roster;
+    private RosterListener rosterListener;
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -172,19 +184,27 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
                 if (loginActilivyCallback != null) {
                     loginActilivyCallback.onSuccess(result);
                 }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        addRosterListener(RiotXmppService.this);
+                    }
+                }, DELAY_BEFORE_ROSTER_LISTENER);
+
                 break;
         }
     }
 
-    public void addRosterListener(RosterListener listener) {
+    public void addRosterListener(RosterListener rosterListener) {
         if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
             this.roster = Roster.getInstanceFor(connection);
-            roster.addRosterListener(listener);
+            this.roster.addRosterListener(rosterListener);
         }
     }
-    public void removeRosterListener(RosterListener listener) {
-        if (roster != null && listener != null) {
-            roster.removeRosterListener(listener);
+
+    public void removeRosterListener(RosterListener rosterListener) {
+        if (roster != null && rosterListener != null) {
+            roster.removeRosterListener(rosterListener);
         }
     }
 
@@ -198,6 +218,26 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
             connection.disconnect();
         connection = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void entriesAdded(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void entriesUpdated(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void entriesDeleted(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void presenceChanged(Presence presence) {
+        LogUtils.LOGI(TAG, "Callback called on the service");
     }
 
     public class MyBinder extends Binder {

@@ -31,21 +31,25 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     private LayoutInflater inflater;
     private Context context;
     private OnItemClickAdapter callback;
-    private @LayoutRes int layout;
+    private RecyclerView myRecycer;
+    private
+    @LayoutRes
+    int layout;
 
     private final String LEVEL_PREFIX = "L ";
 
-    public FriendsListAdapter(Context context, ArrayList<Friend> friendsList, int layout, OnItemClickAdapter callback){
-        inflater= LayoutInflater.from(context);
+    public FriendsListAdapter(Context context, ArrayList<Friend> friendsList, int layout, OnItemClickAdapter callback, RecyclerView myRecycer) {
+        inflater = LayoutInflater.from(context);
         this.context = context;
         this.layout = layout;
         this.callback = callback;
         this.friendsList = friendsList;
+        this.myRecycer = myRecycer;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=inflater.inflate(layout, parent, false);
+        View view = inflater.inflate(layout, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -78,11 +82,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
          * Load Image from LolKing Server
          */
 
-        if(friend.getProfileIconId().equals("")){
+        if (friend.getProfileIconId().equals("")) {
             Picasso.with(context)
                     .load(R.drawable.profile_icon_example)
                     .into(holder.profileIcon);
-        }else{
+        } else {
             Picasso pic = Picasso.with(context);
             pic.load(RiotGlobals.LOLKING_PROFILE_ICON_URL + friend.getProfileIconId() + RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION)
                     .placeholder(R.drawable.profile_icon_example)
@@ -97,22 +101,51 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         notifyDataSetChanged();
     }
 
-    public void setFriendChanged(Friend friend){
-        if(friendsList.contains(friend)){
-            int position = friendsList.indexOf(friend);
-            Friend friend1 = friendsList.get(position);
-            friendsList.remove(position);
-            friendsList.add(position, friend);
-            notifyItemChanged(position);
+    /**
+     * Two types of Changed:
+     * - User changed Presence.Type
+     * - User changed Presence.Mode
+     */
+    public void setFriendChanged(Friend newFriend) {
+        if (friendsList.contains(newFriend)) {
+            int positionFriend = friendsList.indexOf(newFriend);
+
+            Friend oldFriend = friendsList.get(positionFriend);
+
+            if (newFriend.isOnline()) { // NEW FRIEND ONLINE
+                if (oldFriend.isOnline()) {
+                    // ONLINE - ONLINE
+                    friendsList.remove(positionFriend);
+                    friendsList.add(positionFriend, newFriend);
+                    notifyItemChanged(positionFriend);
+                } else {
+                    // OFFLINE - ONLINE
+                    friendsList.remove(positionFriend);
+                    friendsList.add(0, newFriend);
+                    notifyItemInserted(0);
+                    notifyItemRemoved(positionFriend+1);
+                    myRecycer.scrollToPosition(0);
+                }
+            } else { // NEW FRIEND OFFLINE
+                if (oldFriend.isOnline()) {
+                    // ONLINE - OFFLINE
+                    friendsList.remove(positionFriend);
+                    friendsList.add(newFriend);
+                    notifyItemRemoved(positionFriend);
+                } else {
+                    // OFFLINE - OFFLINE
+                    // do nothing!
+                }
+            }
         }
     }
 
-    public void sortFriendsList(SortMethod sortedMethod){
-        if(sortedMethod.isSortOnlineFirst()){
-           Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
-        }else if(sortedMethod.isSortAlphabetically()){
+    public void sortFriendsList(SortMethod sortedMethod) {
+        if (sortedMethod.isSortOnlineFirst()) {
+            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
+        } else if (sortedMethod.isSortAlphabetically()) {
             Collections.sort(friendsList, new Friend.AlphabeticComparator());
-        }else{ // default
+        } else { // default
             Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
         }
     }
@@ -161,20 +194,20 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         }
     }
 
-    public interface OnItemClickAdapter{
+    public interface OnItemClickAdapter {
         void onFriendClick(Friend friend);
     }
 
-    public enum SortMethod{
+    public enum SortMethod {
         ALPHABETICALLY,
         ONLINE_FIRST,
         OFFLINE_FIRST;
 
-        public boolean isSortAlphabetically(){
+        public boolean isSortAlphabetically() {
             return this.equals(SortMethod.ALPHABETICALLY);
         }
 
-        public boolean isSortOnlineFirst(){
+        public boolean isSortOnlineFirst() {
             return this.equals(SortMethod.ONLINE_FIRST);
         }
 

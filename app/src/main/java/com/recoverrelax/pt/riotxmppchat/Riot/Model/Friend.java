@@ -114,6 +114,14 @@ public class Friend {
             return PresenceMode.getPresenceModeFromSmack(this.userRosterPresence.getMode());
     }
 
+    public boolean isOnline(){
+        return this.getUserRosterPresence() != null && this.getUserRosterPresence().isAvailable();
+    }
+
+    public boolean isOffline(){
+        return this.getUserRosterPresence() != null && !this.getUserRosterPresence().isAvailable();
+    }
+
     public Presence getUserRosterPresence(){
         return userRosterPresence;
     }
