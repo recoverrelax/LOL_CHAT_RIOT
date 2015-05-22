@@ -16,6 +16,8 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppConnectionIm
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
@@ -50,6 +52,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     private XMPPTCPConnectionConfiguration connectionConfig;
     private AbstractXMPPConnection connection;
     private RiotXmppConnectionHelper connectionHelper;
+    private Roster roster;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -58,12 +61,12 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         /**
          * Get credentials from intent
          */
-        if(intent != null) {
+        if (intent != null) {
             Bundle extras = intent.getExtras();
             username = extras.getString(INTENT_SERVER_USERNAME, null);
             password = extras.getString(INTENT_SERVER_PASSWORD, null);
             serverHost = (RiotServer.getRiotServerByName(extras.getString(INTENT_SERVER_HOST_CONST, null))).getServerHost();
-        }else {
+        } else {
             /**
              * Get credentials from SharedPreferences
              */
@@ -72,12 +75,12 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
             serverHost = (RiotServer.getRiotServerByName((dataStorage.getServer())).getServerHost());
         }
 
-        if(intent != null && isUserAlreadyLogged(username, password, serverHost)) {
+        if (intent != null && isUserAlreadyLogged(username, password, serverHost)) {
             /**
              * USER LOGGED IN, JUST START THE APP
              */
             onNext(RiotXmppConnectionImpl.RiotXmppOperations.LOGGED_IN);
-        }else {
+        } else {
             /**
              * USER NOT LOGGED IN
              * ---- DO LOGGED_IN
@@ -88,7 +91,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     }
 
     private boolean isUserAlreadyLogged(String username, String password, String serverHost) {
-        if(connection != null && connection.isConnected() && connection.isAuthenticated()) {
+        if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
             if (dataStorage.getUsername().equals(username) && dataStorage.getPassword().equals(password) && dataStorage.getServer().equals(RiotServer.getRiotServerHost(serverHost).getServerName())) {
                 /**
                  * USER ALREADY LOGGED IN
@@ -98,14 +101,14 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
                 /**
                  * USER NOT LOGGED IN OR ANOTHER USER LOGGED IN
                  */
-            return false;
+                return false;
             }
         } else
             return false;
     }
 
     public void connectToRiotXmppServer(String serverHost, int serverPort, String serverDomain,
-                                        String username, String password){
+                                        String username, String password) {
 
         this.serverHost = serverHost;
         this.serverPort = serverPort;
@@ -148,24 +151,40 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         connectionHelper.login(connection);
     }
 
-    @Override public void onCompleted() {}
-    @Override public void onError(Throwable e) {
-        if(loginActilivyCallback != null){
+    @Override
+    public void onCompleted() {
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        if (loginActilivyCallback != null) {
             loginActilivyCallback.onFailure(e);
         }
     }
 
     @Override
     public void onNext(RiotXmppConnectionImpl.RiotXmppOperations result) {
-        switch (result){
+        switch (result) {
             case CONNECTED:
                 login();
                 break;
             case LOGGED_IN:
-                if(loginActilivyCallback != null){
+                if (loginActilivyCallback != null) {
                     loginActilivyCallback.onSuccess(result);
                 }
                 break;
+        }
+    }
+
+    public void addRosterListener(RosterListener listener) {
+        if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
+            this.roster = Roster.getInstanceFor(connection);
+            roster.addRosterListener(listener);
+        }
+    }
+    public void removeRosterListener(RosterListener listener) {
+        if (roster != null && listener != null) {
+            roster.removeRosterListener(listener);
         }
     }
 
@@ -175,7 +194,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     @Override
     public void onDestroy() {
-        if(connection != null)
+        if (connection != null)
             connection.disconnect();
         connection = null;
         super.onDestroy();

@@ -1,7 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.Interface;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.packet.Presence;
 
 public interface RiotXmppRosterHelper {
-    void getFullFriendsList(AbstractXMPPConnection connection);
+    void getFullFriendsList();
+    void getPresenceChanged(Presence presence);
 }

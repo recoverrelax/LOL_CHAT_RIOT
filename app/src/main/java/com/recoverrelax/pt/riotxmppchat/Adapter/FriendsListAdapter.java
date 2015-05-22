@@ -97,6 +97,16 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         notifyDataSetChanged();
     }
 
+    public void setFriendChanged(Friend friend){
+        if(friendsList.contains(friend)){
+            int position = friendsList.indexOf(friend);
+            Friend friend1 = friendsList.get(position);
+            friendsList.remove(position);
+            friendsList.add(position, friend);
+            notifyItemChanged(position);
+        }
+    }
+
     public void sortFriendsList(SortMethod sortedMethod){
         if(sortedMethod.isSortOnlineFirst()){
            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());

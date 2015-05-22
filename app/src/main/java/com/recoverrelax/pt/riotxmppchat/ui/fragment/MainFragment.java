@@ -14,23 +14,26 @@ import android.view.ViewGroup;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppRiotXmppRosterImpl;
 
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.RosterListener;
+
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import rx.Observer;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment implements FriendsListAdapter.OnItemClickAdapter, RiotXmppDataLoaderCallback<List<Friend>> {
+public class MainFragment extends Fragment implements FriendsListAdapter.OnItemClickAdapter, Observer<RiotXmppRiotXmppRosterImpl.FriendList>, RosterListener {
 
     private final String TAG = MainFragment.this.getClass().getSimpleName();
 
@@ -81,15 +84,27 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
         adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child, this);
         myFriendsListRecyclerView.setAdapter(adapter);
 //
-        riotXmppRosterHelper = new RiotXmppRiotXmppRosterImpl(MainFragment.this, this);
+        riotXmppRosterHelper = new RiotXmppRiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                riotXmppRosterHelper.getFullFriendsList(MainApplication.getInstance().getConnection());
+                riotXmppRosterHelper.getFullFriendsList();
             }
         });
-        riotXmppRosterHelper.getFullFriendsList(MainApplication.getInstance().getConnection());
+        riotXmppRosterHelper.getFullFriendsList();
+        MainApplication.getInstance().getRiotXmppService().addRosterListener(this);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -98,29 +113,69 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
     }
 
     @Override
-    public void onFailure(Throwable ex) {
+    public void onCompleted() {
+
+    }
+
+    @Override
+    public void onError(Throwable e) {
         LOGI(TAG, "Failed to load friendsList! =(");
         if(swipeRefreshLayout.isRefreshing())
             swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onSuccess(List<Friend> result) {
-        LOGI(TAG, "Loaded friendsList! =(");
+    public void onNext(RiotXmppRiotXmppRosterImpl.FriendList friendList) {
         if (adapter != null) {
-            adapter.setItems(result);
+
+            switch(friendList.getOperation()){
+                case FRIEND_ADD:
+                    break;
+                case FRIEND_CHANGED:
+                    Friend friend = friendList.getFriendList().get(0);
+                    if(friend != null){
+                        adapter.setFriendChanged(friend);
+                    }
+
+                    break;
+                case FRIEND_DELETE:
+                    break;
+                case FRIEND_LIST:
+                    adapter.setItems(friendList.getFriendList());
+                    break;
+                case FRIEND_UPDATE:
+                    break;
+            }
+
             if(swipeRefreshLayout.isRefreshing())
                 swipeRefreshLayout.setRefreshing(false);
         }
     }
 
     @Override
-    public void onComplete() {
+    public void entriesAdded(Collection<String> addresses) {
 
     }
 
     @Override
-    public void destroyLoader() {
+    public void entriesUpdated(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void entriesDeleted(Collection<String> addresses) {
+
+    }
+
+    @Override
+    public void presenceChanged(final Presence presence) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                riotXmppRosterHelper.getPresenceChanged(presence);
+            }
+        });
+
 
     }
 }

@@ -174,4 +174,14 @@ public class Friend {
             return a.getName().compareTo(b.getName());
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Friend) {
+            Friend f = (Friend) o;
+            return this.getUserXmppAddress().equals(f.getUserXmppAddress());
+        }
+        else
+            return false;
+    }
 }
