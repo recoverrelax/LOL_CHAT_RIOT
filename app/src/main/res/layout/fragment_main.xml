@@ -1,23 +1,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_screen"
     tools:context="com.recoverrelax.pt.riotxmppchat.ui.fragment.MainFragment">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/swipeRefreshLayout">
+        android:layout_height="match_parent">
+
+        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+            android:id="@+id/progressBarCircularIndeterminate"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:background="@color/primaryColor"
+            materialdesign:animate="false" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/myFriendsListRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/friends_list_recyclerview_child" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/myFriendsListRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/friends_list_recyclerview_child"/>
-
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </FrameLayout>
 
 </LinearLayout>

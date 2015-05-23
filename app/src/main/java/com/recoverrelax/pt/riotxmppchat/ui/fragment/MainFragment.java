@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,20 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppRiotXmppRosterImpl;
-import com.recoverrelax.pt.riotxmppchat.Riot.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRiotXmppRosterImpl;
 
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.RosterListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -47,9 +45,12 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
     @InjectView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @InjectView(R.id.progressBarCircularIndeterminate)
+    ProgressBarCircularIndeterminate progressBarCircularIndeterminate;
 
 
     private RecyclerView.LayoutManager layoutManager;
+    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
     /**
      * Adapter
@@ -66,7 +67,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
         // Required empty public constructor
     }
 
-    public static MainFragment newInstance(){
+    public static MainFragment newInstance() {
         return new MainFragment();
     }
 
@@ -88,49 +89,70 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//
+
         layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
-//
-        adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child, this, myFriendsListRecyclerView);
+        adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, this, myFriendsListRecyclerView);
         myFriendsListRecyclerView.setAdapter(adapter);
-//
+
         riotXmppRosterHelper = new RiotXmppRiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 riotXmppRosterHelper.getFullFriendsList();
             }
-        });
+        };
         riotXmppRosterHelper.getFullFriendsList();
 
         /**
          * Handler to Update the TimeStamp
          * of friends Playing or inQueue
          */
-  }
+        showProgressBar(true);
+    }
 
-     @Override public void onFriendClick(Friend friend) {}
-    @Override public void onCompleted() {}
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApplication.getInstance().getRiotXmppService().addRosterListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApplication.getInstance().getRiotXmppService().removeRosterListener(this);
+    }
+
+    @Override
+    public void onFriendClick(Friend friend) {
+    }
+
+    @Override
+    public void onCompleted() {
+    }
 
     @Override
     public void onError(Throwable e) {
         LOGI(TAG, "Failed to load friendsList! =(");
-        if(swipeRefreshLayout.isRefreshing())
+        if (swipeRefreshLayout.isRefreshing())
             swipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void showProgressBar(boolean state){
+        progressBarCircularIndeterminate.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
     public void onNext(RiotXmppRiotXmppRosterImpl.FriendList friendList) {
         if (adapter != null) {
 
-            switch(friendList.getOperation()){
+            switch (friendList.getOperation()) {
                 case FRIEND_ADD:
                     break;
                 case FRIEND_CHANGED:
                     Friend friend = friendList.getFriendList().get(0);
-                    if(friend != null){
+                    if (friend != null) {
                         adapter.setFriendChanged(friend);
                     }
 
@@ -139,13 +161,16 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
                     break;
                 case FRIEND_LIST:
                     adapter.setItems(friendList.getFriendList());
+
+                    swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
                     break;
                 case FRIEND_UPDATE:
                     break;
             }
 
-            if(swipeRefreshLayout.isRefreshing())
+            if (swipeRefreshLayout.isRefreshing())
                 swipeRefreshLayout.setRefreshing(false);
+            showProgressBar(false);
         }
     }
 

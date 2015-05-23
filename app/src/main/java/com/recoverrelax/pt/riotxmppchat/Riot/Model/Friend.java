@@ -155,8 +155,7 @@ public class Friend {
     }
 
     public String getRankedLeagueDivision() {
-        String stringFromXmlTag = getStringFromXmlTag(RANKED_LEAGUE_DIVISION, rootElement);
-        return stringFromXmlTag;
+        return getStringFromXmlTag(RANKED_LEAGUE_DIVISION, rootElement);
     }
 
     public RankedLeagueTierDivision getLeagueDivisionAndTier() {
@@ -221,8 +220,7 @@ public class Friend {
         long serverTimeStamp = Long.parseLong(getTimeStamp());
         long nowTimeStamp = System.currentTimeMillis();
 
-        long difference = (nowTimeStamp - serverTimeStamp) / 1000L;// / 60;
-//         return getTimeStamp();
+        long difference = ((nowTimeStamp - serverTimeStamp) / 1000L / 60L) - 2L;
         return String.valueOf(difference);
     }
 

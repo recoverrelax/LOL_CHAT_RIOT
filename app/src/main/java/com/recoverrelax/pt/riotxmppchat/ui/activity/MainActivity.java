@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
+
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.MainFragment;
 
@@ -42,11 +42,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    protected int getSelfNavDrawerItem() {
-        return ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId();
     }
 
     @Override

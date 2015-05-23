@@ -13,13 +13,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.edgelabs.pt.mybaseapp.R;
 import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
+import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
-import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppConnectionImpl;
-import com.recoverrelax.pt.riotxmppchat.Riot.Network.RiotXmppService;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -84,11 +83,6 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
     @Override
     public int getLayoutResources() {
         return R.layout.activity_login;
-    }
-
-    @Override
-    protected int getSelfNavDrawerItem() {
-        return ENavDrawer.NAVDRAWER_NO_DRAWER.getNavDrawerId();
     }
 
     @OnClick(R.id.connect)

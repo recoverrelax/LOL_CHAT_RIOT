@@ -9,10 +9,10 @@ import com.edgelabs.pt.mybaseapp.R;
 public enum ENavDrawer {
     NAVDRAWER_ITEM_0(0, R.string.navdrawer_item0, R.drawable.ic_number1, R.drawable.ic_number1_selected),
     NAVDRAWER_ITEM_1(1, R.string.navdrawer_item1, R.drawable.ic_number1, R.drawable.ic_number1_selected),
-    NAVDRAWER_ITEM_2(2, R.string.navdrawer_item2, R.drawable.ic_number1, R.drawable.ic_number1_selected),
-    NAVDRAWER_ITEM_3(3, R.string.navdrawer_item3, R.drawable.ic_number1, R.drawable.ic_number1_selected),
-    NAVDRAWER_ITEM_4(4, R.string.navdrawer_item4, R.drawable.ic_number1, R.drawable.ic_number1_selected),
-    NAVDRAWER_NO_DRAWER(-1);
+//    NAVDRAWER_ITEM_2(2, R.string.navdrawer_item2, R.drawable.ic_number1, R.drawable.ic_number1_selected),
+//    NAVDRAWER_ITEM_3(3, R.string.navdrawer_item3, R.drawable.ic_number1, R.drawable.ic_number1_selected),
+//    NAVDRAWER_ITEM_4(4, R.string.navdrawer_item4, R.drawable.ic_number1, R.drawable.ic_number1_selected),
+    NAVDRAWER_SAME_POSITION(-1);
 
     private int navDrawerId, navDrawerTitleId, navDrawerDrawableId, navDrawerDrawableTranspId;
     public static final int SIZE = ENavDrawer.values().length;

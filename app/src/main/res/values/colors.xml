@@ -10,6 +10,7 @@
     <color name="black">#000</color>
     <color name="black_50A">#14000000</color>
 
+    <color name="primaryColor190T">#beff5722</color>
     <color name="primaryColor">#FF5722</color>
     <color name="loginBackground">#37ff5722</color>
     <color name="primaryColorDark">#0288d1</color>

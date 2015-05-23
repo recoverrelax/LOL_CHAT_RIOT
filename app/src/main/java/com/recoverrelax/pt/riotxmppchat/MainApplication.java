@@ -4,17 +4,20 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
-import com.recoverrelax.pt.riotxmppchat.Riot.Network.Helper.RiotXmppConnectionImpl;
-import com.recoverrelax.pt.riotxmppchat.Riot.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
+import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 
+import LolChatRiotDb.DaoMaster;
+import LolChatRiotDb.DaoSession;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class MainApplication extends Application {
@@ -24,6 +27,7 @@ public class MainApplication extends Application {
     private boolean mBound = false;
     private Intent intentService;
     private ActivityServerCallback activityServerCallback;
+    private DaoSession daoSession;
 
     private static MainApplication instance;
 
@@ -38,6 +42,14 @@ public class MainApplication extends Application {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+        setupDatabase();
+    }
+
+    private void setupDatabase() {
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "example-db", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
     }
 
     /** Defines callbacks for intentService binding, passed to bindService() */
@@ -105,5 +117,9 @@ public class MainApplication extends Application {
 
     public interface ActivityServerCallback{
         void onServiceBinded();
+    }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
     }
 }

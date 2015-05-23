@@ -9,16 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.NavigationDrawerFragment;
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.NavigationDrawerFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -48,18 +46,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             NavigationDrawerFragment navigationDrawerFragment = (NavigationDrawerFragment)
                     getSupportFragmentManager().findFragmentById(R.id.nav_drawer_fragment);
 
-            navigationDrawerFragment.setup(R.id.nav_drawer_fragment, drawer_layout, toolbar, getSelfNavDrawerItem());
+            navigationDrawerFragment.setup(R.id.nav_drawer_fragment, drawer_layout, toolbar);
         }
     }
 
     public abstract @LayoutRes int getLayoutResources();
-
-    /**
-     * Returns the navigation drawer item that corresponds to this Activity. Subclasses
-     * of BaseActivity override this to indicate what nav drawer item corresponds to them
-     * Return -1 to mean that this Activity should not have a Nav Drawer.
-     */
-    protected abstract int getSelfNavDrawerItem();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

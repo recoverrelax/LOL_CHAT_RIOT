@@ -24,19 +24,15 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
     private LayoutInflater inflater;
     private Context context;
     private DrawerItemSelectedCallback drawerItemSelectedCallback;
-    private int CURRENT_POSITION = 0;
+    private int CURRENT_POSITION;
 
-    public DrawerAdapter(Context context, List<DrawerItemsInfo> data, DrawerItemSelectedCallback drawerItemSelectedCallback, int currentPosition){
+    public DrawerAdapter(Context context, List<DrawerItemsInfo> data, DrawerItemSelectedCallback drawerItemSelectedCallback){
         this.context=context;
 
         inflater=LayoutInflater.from(context);
         this.data=data;
         this.drawerItemSelectedCallback = drawerItemSelectedCallback;
-        this.CURRENT_POSITION = currentPosition;
-    }
-
-    public void setCurrentPosition(int position){
-        this.CURRENT_POSITION = position;
+        this.CURRENT_POSITION = 0;
     }
 
     public void delete(int position){
@@ -59,6 +55,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
         if(holder.position == CURRENT_POSITION) {
             holder.icon.setImageResource(current.iconTId);
             holder.title.setTextColor(context.getResources().getColor(R.color.primaryColor));
+        }else{
+            holder.icon.setImageResource(current.iconId);
+            holder.title.setTextColor(context.getResources().getColor(R.color.black));
         }
     }
 
@@ -86,8 +85,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
             if(CURRENT_POSITION != position) {
                 CURRENT_POSITION = position;
                 drawerItemSelectedCallback.onDrawerItemSelected(position);
+                notifyDataSetChanged();
             }else
-                drawerItemSelectedCallback.onDrawerItemSelected(ENavDrawer.NAVDRAWER_NO_DRAWER.getNavDrawerId());
+                drawerItemSelectedCallback.onDrawerItemSelected(ENavDrawer.NAVDRAWER_SAME_POSITION.getNavDrawerId());
         }
     }
 }

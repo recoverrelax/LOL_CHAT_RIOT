@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ScrollView;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.edgelabs.pt.mybaseapp.R;
 
 import butterknife.ButterKnife;
@@ -39,11 +38,6 @@ public class SubActivity extends BaseActivity {
     @Override
     public int getLayoutResources() {
         return R.layout.activity_sub;
-    }
-
-    @Override
-    protected int getSelfNavDrawerItem() {
-        return ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId();
     }
 
     @Override

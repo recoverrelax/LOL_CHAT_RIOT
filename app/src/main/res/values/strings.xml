@@ -9,8 +9,8 @@
     <string name="drawer_closed">Closed</string>
 
     <!--Drawer List Item Names-->
-    <string name="navdrawer_item0">MainActivity</string>
-    <string name="navdrawer_item1">SubActivity</string>
+    <string name="navdrawer_item0">Frieds List</string>
+    <string name="navdrawer_item1">Message List</string>
     <string name="navdrawer_item2">Item 2</string>
     <string name="navdrawer_item3">Item 3</string>
     <string name="navdrawer_item4">Item 4</string>
@@ -71,6 +71,7 @@
     <string name="ingame_playing_as">Playing as</string>
     <string name="ingame_playing_as_for">for</string>
     <string name="minutes">minutes</string>
+    <string name="friends_list_recycler_child_ranked_wins">Ranked\nWins</string>
 
 
 </resources>
