@@ -9,15 +9,19 @@ import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.MainFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements FriendMessageListFragment.FriendMessageListFragActivityCallback {
 
     @InjectView(R.id.parent_view_group)
     RelativeLayout parent_view_group;
+
+    public static final String INTENT_USER_XMPP_NAME = "intent_user_xmpp_name";
 
     @Override
     public int getLayoutResources() {
@@ -62,5 +66,19 @@ public class MainActivity extends BaseActivity {
             startActivity(new Intent(this, SubActivity.class));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void replaceFragment(String userXmppAddress) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = PersonalMessageFragment.newInstance();
+        Bundle args =  new Bundle();
+        args.putString(INTENT_USER_XMPP_NAME, userXmppAddress);
+
+        fragment.setArguments(args);
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

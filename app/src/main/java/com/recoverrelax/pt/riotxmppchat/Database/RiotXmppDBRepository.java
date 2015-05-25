@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Database;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 
 import java.util.List;
 
@@ -37,13 +38,15 @@ public class RiotXmppDBRepository {
         return qb.list();
     }
 
-    public static MessageDb getLastMessage(String userXmppName){
+    public static MessageDb getLastMessage(String connectedUser, String friendUser){
         MessageDbDao messageDao = getMessageDao();
 
         QueryBuilder qb = messageDao.queryBuilder();
 
         List list = qb
-                .where(MessageDbDao.Properties.Message_riotXmppUser.eq(userXmppName))
+                .where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
+                       MessageDbDao.Properties.Direction.eq(MessageDirection.FROM.getId()),
+                       MessageDbDao.Properties.FromTo.eq(friendUser))
                 .orderDesc(MessageDbDao.Properties.Id)
                 .limit(1).build().list();
         if(list.size() > 0)
@@ -52,14 +55,15 @@ public class RiotXmppDBRepository {
             return null;
     }
 
-    public static List<MessageDb> getLastXMessages(int x){
+    public static List<MessageDb> getLastXMessages(int x, String connectedUser){
 
         MessageDbDao messageDao = getMessageDao();
 
         QueryBuilder qb = messageDao.queryBuilder();
-        qb.orderDesc(MessageDbDao.Properties.Id)
+        qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser))
+                .orderDesc(MessageDbDao.Properties.Id)
                 .limit(x).build();
-
+        QueryBuilder.LOG_SQL = true;
         return qb.list();
     }
 }

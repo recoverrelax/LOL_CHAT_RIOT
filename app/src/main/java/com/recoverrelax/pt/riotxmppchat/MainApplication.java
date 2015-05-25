@@ -12,8 +12,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
-
 import org.jivesoftware.smack.AbstractXMPPConnection;
 
 import LolChatRiotDb.DaoMaster;
@@ -61,7 +59,8 @@ public class MainApplication extends Application {
             mService = binder.getService();
             mBound = true;
 
-            getCallback().onServiceBinded();
+            if(activityServerCallback != null)
+                activityServerCallback.onServiceBinded();
         }
 
         @Override
@@ -69,14 +68,6 @@ public class MainApplication extends Application {
             mBound = false;
         }
     };
-
-    public void setCallback(ActivityServerCallback activityServerCallback){
-        this.activityServerCallback = activityServerCallback;
-    }
-
-    public ActivityServerCallback getCallback(){
-        return activityServerCallback;
-    }
 
     public void startRiotXmppService(String selectedItem, String username, String password, RiotXmppDataLoaderCallback<RiotXmppConnectionImpl.RiotXmppOperations> loginActilivyCallback){
         intentService = new Intent(this, RiotXmppService.class);
@@ -97,9 +88,16 @@ public class MainApplication extends Application {
         return mService.getConnection();
     }
 
-    public void bindService(LoginActivity loginActivity) {
-        setCallback(loginActivity);
+    public void bindService(ActivityServerCallback callback) {
+        this.activityServerCallback = callback;
         bindService(intentService, mConnection, BIND_AUTO_CREATE);
+    }
+
+    public void unbindService() {
+        if(mConnection != null) {
+            unbindService(mConnection);
+            this.activityServerCallback = null;
+        }
     }
 
     @Override

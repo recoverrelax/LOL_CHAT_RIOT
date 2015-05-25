@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapterItemSelectedCallback;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NavigationDrawerFragment;
 
 import butterknife.ButterKnife;
@@ -18,7 +19,7 @@ import butterknife.InjectView;
 import butterknife.Optional;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements DrawerAdapterItemSelectedCallback{
 
     @Optional
     @InjectView(R.id.app_bar)
@@ -27,6 +28,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Optional
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawer_layout;
+
+    private NavigationDrawerFragment navigationDrawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         if (drawer_layout != null) {
-            NavigationDrawerFragment navigationDrawerFragment = (NavigationDrawerFragment)
+            navigationDrawerFragment = (NavigationDrawerFragment)
                     getSupportFragmentManager().findFragmentById(R.id.nav_drawer_fragment);
 
             navigationDrawerFragment.setup(R.id.nav_drawer_fragment, drawer_layout, toolbar);
@@ -80,8 +83,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         return getResources().getColor(color);
     }
 
+    public void onDrawerItemSelected(int position){
+        if(navigationDrawerFragment != null)
+            navigationDrawerFragment.onDrawerItemSelected(position);
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
 }

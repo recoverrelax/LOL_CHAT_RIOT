@@ -7,11 +7,12 @@ package LolChatRiotDb;
 public class MessageDb {
 
     private Long id;
-    private String message_riotXmppUser;
-    private Integer message_from_or_to;
-    private java.util.Date message_date;
-    private String message_message;
-    private Boolean message_was_readed;
+    private String userXmppId;
+    private String fromTo;
+    private Integer direction;
+    private java.util.Date date;
+    private String message;
+    private Boolean wasRead;
 
     public MessageDb() {
     }
@@ -20,13 +21,14 @@ public class MessageDb {
         this.id = id;
     }
 
-    public MessageDb(Long id, String message_riotXmppUser, Integer message_from_or_to, java.util.Date message_date, String message_message, Boolean message_was_readed) {
+    public MessageDb(Long id, String userXmppId, String fromTo, Integer direction, java.util.Date date, String message, Boolean wasRead) {
         this.id = id;
-        this.message_riotXmppUser = message_riotXmppUser;
-        this.message_from_or_to = message_from_or_to;
-        this.message_date = message_date;
-        this.message_message = message_message;
-        this.message_was_readed = message_was_readed;
+        this.userXmppId = userXmppId;
+        this.fromTo = fromTo;
+        this.direction = direction;
+        this.date = date;
+        this.message = message;
+        this.wasRead = wasRead;
     }
 
     public Long getId() {
@@ -37,44 +39,52 @@ public class MessageDb {
         this.id = id;
     }
 
-    public String getMessage_riotXmppUser() {
-        return message_riotXmppUser;
+    public String getUserXmppId() {
+        return userXmppId;
     }
 
-    public void setMessage_riotXmppUser(String message_riotXmppUser) {
-        this.message_riotXmppUser = message_riotXmppUser;
+    public void setUserXmppId(String userXmppId) {
+        this.userXmppId = userXmppId;
     }
 
-    public Integer getMessage_from_or_to() {
-        return message_from_or_to;
+    public String getFromTo() {
+        return fromTo;
     }
 
-    public void setMessage_from_or_to(Integer message_from_or_to) {
-        this.message_from_or_to = message_from_or_to;
+    public void setFromTo(String fromTo) {
+        this.fromTo = fromTo;
     }
 
-    public java.util.Date getMessage_date() {
-        return message_date;
+    public Integer getDirection() {
+        return direction;
     }
 
-    public void setMessage_date(java.util.Date message_date) {
-        this.message_date = message_date;
+    public void setDirection(Integer direction) {
+        this.direction = direction;
     }
 
-    public String getMessage_message() {
-        return message_message;
+    public java.util.Date getDate() {
+        return date;
     }
 
-    public void setMessage_message(String message_message) {
-        this.message_message = message_message;
+    public void setDate(java.util.Date date) {
+        this.date = date;
     }
 
-    public Boolean getMessage_was_readed() {
-        return message_was_readed;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMessage_was_readed(Boolean message_was_readed) {
-        this.message_was_readed = message_was_readed;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Boolean getWasRead() {
+        return wasRead;
+    }
+
+    public void setWasRead(Boolean wasRead) {
+        this.wasRead = wasRead;
     }
 
 }

@@ -18,6 +18,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
+
+import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment.*;
 
 
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
@@ -25,6 +28,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
     List<FriendListChat> friendMessageList;
     private LayoutInflater inflater;
     private Context context;
+    private FriendMessageListFragActivityCallback activityCallback;
 
     private @LayoutRes int layoutRes;
 
@@ -34,6 +38,13 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         this.context = context;
         this.layoutRes = layoutRes;
         this.friendMessageList = friendMessageList;
+
+        try {
+            activityCallback = (FriendMessageListFragActivityCallback) context;
+        }catch(ClassCastException e){
+            throw new ClassCastException("FriendMessageListAdapter requires the parent activity to implements its callback" +
+                    "for the clickListener: FriendMessageListFragActivityCallback");
+        }
     }
 
     @Override
@@ -105,6 +116,11 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
+        }
+
+        @OnClick(R.id.parent_row)
+        public void onRowClick(View view){
+            activityCallback.replaceFragment(friendListChat.getUserXmppAddress());
         }
     }
 }

@@ -24,11 +24,12 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Message_riotXmppUser = new Property(1, String.class, "message_riotXmppUser", false, "MESSAGE_RIOT_XMPP_USER");
-        public final static Property Message_from_or_to = new Property(2, Integer.class, "message_from_or_to", false, "MESSAGE_FROM_OR_TO");
-        public final static Property Message_date = new Property(3, java.util.Date.class, "message_date", false, "MESSAGE_DATE");
-        public final static Property Message_message = new Property(4, String.class, "message_message", false, "MESSAGE_MESSAGE");
-        public final static Property Message_was_readed = new Property(5, Boolean.class, "message_was_readed", false, "MESSAGE_WAS_READED");
+        public final static Property UserXmppId = new Property(1, String.class, "userXmppId", false, "USER_XMPP_ID");
+        public final static Property FromTo = new Property(2, String.class, "fromTo", false, "FROM_TO");
+        public final static Property Direction = new Property(3, Integer.class, "direction", false, "DIRECTION");
+        public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
+        public final static Property Message = new Property(5, String.class, "message", false, "MESSAGE");
+        public final static Property WasRead = new Property(6, Boolean.class, "wasRead", false, "WAS_READ");
     };
 
 
@@ -45,11 +46,12 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'MESSAGE_DB' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'MESSAGE_RIOT_XMPP_USER' TEXT," + // 1: message_riotXmppUser
-                "'MESSAGE_FROM_OR_TO' INTEGER," + // 2: message_from_or_to
-                "'MESSAGE_DATE' INTEGER," + // 3: message_date
-                "'MESSAGE_MESSAGE' TEXT," + // 4: message_message
-                "'MESSAGE_WAS_READED' INTEGER);"); // 5: message_was_readed
+                "'USER_XMPP_ID' TEXT," + // 1: userXmppId
+                "'FROM_TO' TEXT," + // 2: fromTo
+                "'DIRECTION' INTEGER," + // 3: direction
+                "'DATE' INTEGER," + // 4: date
+                "'MESSAGE' TEXT," + // 5: message
+                "'WAS_READ' INTEGER);"); // 6: wasRead
     }
 
     /** Drops the underlying database table. */
@@ -68,29 +70,34 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
             stmt.bindLong(1, id);
         }
  
-        String message_riotXmppUser = entity.getMessage_riotXmppUser();
-        if (message_riotXmppUser != null) {
-            stmt.bindString(2, message_riotXmppUser);
+        String userXmppId = entity.getUserXmppId();
+        if (userXmppId != null) {
+            stmt.bindString(2, userXmppId);
         }
  
-        Integer message_from_or_to = entity.getMessage_from_or_to();
-        if (message_from_or_to != null) {
-            stmt.bindLong(3, message_from_or_to);
+        String fromTo = entity.getFromTo();
+        if (fromTo != null) {
+            stmt.bindString(3, fromTo);
         }
  
-        java.util.Date message_date = entity.getMessage_date();
-        if (message_date != null) {
-            stmt.bindLong(4, message_date.getTime());
+        Integer direction = entity.getDirection();
+        if (direction != null) {
+            stmt.bindLong(4, direction);
         }
  
-        String message_message = entity.getMessage_message();
-        if (message_message != null) {
-            stmt.bindString(5, message_message);
+        java.util.Date date = entity.getDate();
+        if (date != null) {
+            stmt.bindLong(5, date.getTime());
         }
  
-        Boolean message_was_readed = entity.getMessage_was_readed();
-        if (message_was_readed != null) {
-            stmt.bindLong(6, message_was_readed ? 1l: 0l);
+        String message = entity.getMessage();
+        if (message != null) {
+            stmt.bindString(6, message);
+        }
+ 
+        Boolean wasRead = entity.getWasRead();
+        if (wasRead != null) {
+            stmt.bindLong(7, wasRead ? 1l: 0l);
         }
     }
 
@@ -105,11 +112,12 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
     public MessageDb readEntity(Cursor cursor, int offset) {
         MessageDb entity = new MessageDb( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // message_riotXmppUser
-            cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // message_from_or_to
-            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // message_date
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // message_message
-            cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0 // message_was_readed
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // userXmppId
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // fromTo
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // direction
+            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)), // date
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // message
+            cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0 // wasRead
         );
         return entity;
     }
@@ -118,11 +126,12 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
     @Override
     public void readEntity(Cursor cursor, MessageDb entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setMessage_riotXmppUser(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setMessage_from_or_to(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
-        entity.setMessage_date(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
-        entity.setMessage_message(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setMessage_was_readed(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
+        entity.setUserXmppId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setFromTo(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setDirection(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
+        entity.setDate(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setMessage(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setWasRead(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
      }
     
     /** @inheritdoc */

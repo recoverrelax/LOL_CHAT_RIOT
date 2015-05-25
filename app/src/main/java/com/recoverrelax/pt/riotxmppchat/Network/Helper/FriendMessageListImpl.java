@@ -22,23 +22,27 @@ import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class FriendMessageListImpl implements FriendMessageListHelper {
+public class FriendMessageListImpl implements FriendMessageListHelper, Observer<List<FriendListChat>> {
 
-    private Observer<List<FriendListChat>> mCallback;
+    private FriendMessageListImplCallback mCallback;
     private Subscription mSubscription;
     private Fragment mFragment;
     private Roster roster;
 
     private String TAG = this.getClass().getSimpleName();
 
-    public FriendMessageListImpl(Observer<List<FriendListChat>> mCallback, Roster roster) {
+    public FriendMessageListImpl(FriendMessageListImplCallback mCallback, Roster roster) {
         mFragment = (Fragment)mCallback;
         this.mCallback = mCallback;
         this.roster = roster;
     }
 
+    public void removeCallback(){
+        this.mCallback = null;
+    }
+
     @Override
-    public void getPersonalMessageList() {
+    public void getPersonalMessageList(final String connectedUser) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<List<FriendListChat>>() {
                     @Override
@@ -61,7 +65,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
                          */
 
                         for(Friend friend: friendList){
-                            MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());
+                            MessageDb message = RiotXmppDBRepository.getLastMessage(connectedUser, friend.getUserXmppAddress());
                             if(message != null)
                                 friendListChat.add(new FriendListChat(friend, message));
                         }
@@ -70,8 +74,25 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
                         subscriber.onCompleted();
                     }
                 }))
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mCallback);
+                .subscribe(this);
+    }
+
+    @Override
+    public void onCompleted() {}
+
+    @Override
+    public void onError(Throwable e) {
+    }
+
+    @Override
+    public void onNext(List<FriendListChat> friendListChats) {
+        if(mCallback != null)
+            mCallback.OnFriendsListReceived(friendListChats);
+    }
+
+    public interface FriendMessageListImplCallback{
+        void OnFriendsListReceived(List<FriendListChat> friendListChats);
     }
 }

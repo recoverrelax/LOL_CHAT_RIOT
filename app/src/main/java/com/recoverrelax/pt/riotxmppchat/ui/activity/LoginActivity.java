@@ -111,6 +111,7 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
         super.onDestroy();
         RiotXmppService.loginActilivyCallback = null;
         materialDialog.dismiss();
+        mainApplication.unbindService();
     }
     public void onSuccessLogin() {
 
@@ -159,7 +160,9 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
 
     @Override
     public void onServiceBinded() {
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         materialDialog.dismiss();
         this.finish();
     }

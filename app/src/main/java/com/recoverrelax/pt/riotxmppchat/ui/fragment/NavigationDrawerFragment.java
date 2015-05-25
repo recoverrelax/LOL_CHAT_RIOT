@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DividerItemDecoration;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapter;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerItemSelectedCallback;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapterItemSelectedCallback;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.Entities.DrawerItemsInfo;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
@@ -34,7 +34,7 @@ import butterknife.InjectView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NavigationDrawerFragment extends Fragment implements DrawerItemSelectedCallback {
+public class NavigationDrawerFragment extends Fragment implements DrawerAdapterItemSelectedCallback {
 
     @InjectView(R.id.drawerList)
     RecyclerView recyclerView;
@@ -55,9 +55,9 @@ public class NavigationDrawerFragment extends Fragment implements DrawerItemSele
     // delay to launch nav drawer item, to allow close animation to play
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
-
     private boolean userLearnedDrawer;
     private boolean fromSavedInstanceState;
+    private int CURRENT_SELECTED_ITEM = 0;
 
     public NavigationDrawerFragment() {
         // Required empty public constructor
@@ -106,15 +106,14 @@ public class NavigationDrawerFragment extends Fragment implements DrawerItemSele
         drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
                 DataStorage.getInstance().getUsername());
 
-        adapter = new DrawerAdapter(getActivity(), getData(), this);
+        adapter = new DrawerAdapter(getActivity(), getData(), this, CURRENT_SELECTED_ITEM);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // allows for optimizations if all item views are of the same size:
         recyclerView.setHasFixedSize(true);
         //recyclerView.addItemDecoration(new DividerItemDecoration(getResources().getDrawable(R.drawable.drawer_divider), 2));
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), null, 2));
-
-    }
+        }
 
     public void setup(int fragmentId, DrawerLayout dl, Toolbar tb) {
 
@@ -154,6 +153,7 @@ public class NavigationDrawerFragment extends Fragment implements DrawerItemSele
                 drawerToggle.syncState();
             }
         });
+//        onDrawerItemSelected(ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId());
     }
 
     /**
@@ -163,40 +163,21 @@ public class NavigationDrawerFragment extends Fragment implements DrawerItemSele
     @Override
     public void onDrawerItemSelected(final int position) {
 
-//        if(position == ENavDrawer.NAVDRAWER_SAME_POSITION.getNavDrawerId())
-//            drawerLayout.closeDrawer(Gravity.START);
-//        else {
-//
-//            mHandler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Intent intent = null;
-//                    intent = new Intent(getActivity(),
-//                            ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId() == position ?
-//                                    MainActivity.class : ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId() == position ?
-//                                    SubActivity.class : MainActivity.class);
-//
-//                    drawerLayout.closeDrawer(Gravity.START);
-//                    startActivity(intent);
-//                    getActivity().finish();
-//                }
-//            }, NAVDRAWER_LAUNCH_DELAY);
-//        }
         final FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         Fragment fragment = null;
 
-        if(position == ENavDrawer.NAVDRAWER_SAME_POSITION.getNavDrawerId()){
+        /**
+         * Detect if its the first time
+         */
+
+        if(CURRENT_SELECTED_ITEM == position){
             drawerLayout.closeDrawer(Gravity.START);
             return;
-        }else if(position == ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId()){
-            fragment = MainFragment.newInstance();
-        }else if(position == ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId()){
-//            fragment = PersonalMessageFragment.newInstance();
-            fragment = FriendMessageListFragment.newInstance();
+        }else {
+            fragment = ENavDrawer.getById(position).getFrag();
         }
 
         transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(null);
         drawerLayout.closeDrawer(Gravity.START);
 
         mHandler.postDelayed(new Runnable() {
@@ -205,5 +186,15 @@ public class NavigationDrawerFragment extends Fragment implements DrawerItemSele
                 transaction.commit();
             }
         }, NAVDRAWER_LAUNCH_DELAY);
+        setCurrentSelectedItem(position);
+    }
+
+    public int getCurrentSelectedItem() {
+        return CURRENT_SELECTED_ITEM;
+    }
+
+    public void setCurrentSelectedItem(int position) {
+        this.CURRENT_SELECTED_ITEM = position;
+        this.adapter.setCurrentPosition(position);
     }
 }

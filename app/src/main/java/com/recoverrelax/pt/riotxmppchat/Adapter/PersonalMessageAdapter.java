@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
-import com.recoverrelax.pt.riotxmppchat.Database.MessageToFrom;
+import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,18 +37,21 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final int VIEW_HOLDER_FROM_ID = 0;
     private final int VIEW_HOLDER_TO_ID = 1;
 
-    public PersonalMessageAdapter(Context context, ArrayList<MessageDb> personalMessageList, int layout_from, int layout_to) {
+    public PersonalMessageAdapter(Context context, ArrayList<MessageDb> personalMessageList, int layout_from, int layout_to, RecyclerView recycler) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.layout_from = layout_from;
         this.layout_to = layout_to;
         this.personalMessageList = personalMessageList;
+        this.recyclerView = recycler;
     }
+
+
 
     @Override
     public int getItemViewType(int position) {
 
-        if (personalMessageList.get(position).getMessage_from_or_to().equals(MessageToFrom.FROM.getId()))
+        if (personalMessageList.get(position).getDirection().equals(MessageDirection.FROM.getId()))
             return VIEW_HOLDER_FROM_ID;
         else
             return VIEW_HOLDER_TO_ID;
@@ -78,7 +82,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 holderFrom.messageDb = message;
 
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(holderFrom.messageDb.getMessage_date());
+                calendar.setTime(holderFrom.messageDb.getDate());
 
                 int hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int minutes = calendar.get(Calendar.MINUTE);
@@ -86,7 +90,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 String formatedDate = "[" + hour + ":" + minutes + "]";
                 holderFrom.date.setText(formatedDate);
 
-                holderFrom.message.setText(message.getMessage_message());
+                holderFrom.message.setText(message.getMessage());
                 break;
 
             case VIEW_HOLDER_TO_ID:
@@ -94,7 +98,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 holderTo.messageDb = message;
 
 
-                holderTo.message.setText(message.getMessage_message());
+                holderTo.message.setText(message.getMessage());
                 break;
         }
     }
@@ -102,6 +106,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void setItems(List<MessageDb> items) {
         personalMessageList = items;
         notifyDataSetChanged();
+        this.recyclerView.scrollToPosition(personalMessageList.size()-1);
     }
 
     @Override

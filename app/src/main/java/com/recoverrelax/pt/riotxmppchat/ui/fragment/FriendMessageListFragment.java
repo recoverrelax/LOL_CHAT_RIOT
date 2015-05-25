@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,24 +15,29 @@ import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
+import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import rx.Observer;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendMessageListFragment extends Fragment implements Observer<List<FriendListChat>> {
+public class FriendMessageListFragment extends Fragment implements FriendMessageListImpl.FriendMessageListImplCallback, RiotXmppService.NewMessageNotification {
 
     @InjectView(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
 
+    private final String TAG = FriendMessageListFragment.this.getClass().getSimpleName();
     private RecyclerView.LayoutManager layoutManager;
+
+    /**
+     * Activity Callback
+     */
+    private FriendMessageListFragActivityCallback friendMessageListFragActivityCallback;
 
     /**
      * Adapter
@@ -75,20 +81,46 @@ public class FriendMessageListFragment extends Fragment implements Observer<List
         messageRecyclerView.setAdapter(adapter);
 
         friendMessageListHelper = new FriendMessageListImpl(this, MainApplication.getInstance().getRiotXmppService().getRoster());
-        friendMessageListHelper.getPersonalMessageList();
+        friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
     }
 
     @Override
-    public void onCompleted() {}
-
-    @Override
-    public void onError(Throwable e) {
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            friendMessageListFragActivityCallback = (FriendMessageListFragActivityCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activities containing FriendMessaListFragment must implement FriendMessageListFragActivityCallback");
+        }
     }
 
     @Override
-    public void onNext(List<FriendListChat> friendListChats) {
+    public void OnFriendsListReceived(List<FriendListChat> friendListChats) {
         adapter.setItems(friendListChats);
-
     }
 
+    public interface FriendMessageListFragActivityCallback {
+        void replaceFragment(String userXmppName);
+    }
+
+//    public void OnNewMessageReceived(OnNewMessageReceived from){
+//        friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+//    }
+
+    @Override
+    public void OnNewMessageNotification(String from) {
+        friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApplication.getInstance().getRiotXmppService().addNotificationObserver(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApplication.getInstance().getRiotXmppService().removeNotificationObserver(this);
+    }
 }

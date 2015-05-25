@@ -13,9 +13,10 @@ import android.widget.EditText;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.Globals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +26,13 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import rx.Observer;
 
+import static com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService.*;
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.MainActivity.*;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PersonalMessageFragment extends Fragment implements Observer<List<MessageDb>> {
+public class PersonalMessageFragment extends Fragment implements Observer<List<MessageDb>>, NewMessageNotification {
 
     @InjectView(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
@@ -36,14 +40,17 @@ public class PersonalMessageFragment extends Fragment implements Observer<List<M
     @InjectView(R.id.chatEditText)
     EditText chatEditText;
 
+    private static final String TAG = PersonalMessageFragment.class.getSimpleName();
+
     private RecyclerView.LayoutManager layoutManager;
 
     /**
      * Adapter
      */
     private PersonalMessageAdapter adapter;
-
     private PersonalMessageHelper personalMessageHelper;
+
+    private String userXmppName;
 
 
     public PersonalMessageFragment() {
@@ -73,14 +80,24 @@ public class PersonalMessageFragment extends Fragment implements Observer<List<M
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        Bundle extras = getArguments();
+        if(extras==null || !extras.containsKey(INTENT_USER_XMPP_NAME)){
+            getActivity().finish();
+            LogUtils.LOGE(TAG, "Something went wrong, we haven't got a xmppName");
+        }
+        else {
+                userXmppName = extras.getString(INTENT_USER_XMPP_NAME);
+        }
+
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         messageRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<MessageDb>(), R.layout.personal_message_from, R.layout.personal_message_to);
+        adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<MessageDb>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
         messageRecyclerView.setAdapter(adapter);
 
         personalMessageHelper = new PersonalMessageImpl(this);
-        personalMessageHelper.getPersonalMessageList();
+        personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
+                MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
     }
 
     @OnClick(R.id.sendImageView)
@@ -99,5 +116,29 @@ public class PersonalMessageFragment extends Fragment implements Observer<List<M
     @Override
     public void onNext(List<MessageDb> messageDbs) {
         adapter.setItems(messageDbs);
+    }
+
+//     public void OnNewMessageReceived(OnNewMessageReceived from){
+//        if(userXmppName.equals(from.getFrom()))
+//            personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
+//                    MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+//    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApplication.getInstance().getRiotXmppService().addNotificationObserver(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApplication.getInstance().getRiotXmppService().removeNotificationObserver(this);
+    }
+
+    @Override
+    public void OnNewMessageNotification(String from) {
+        personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
+                    MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
     }
 }

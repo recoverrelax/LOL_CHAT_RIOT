@@ -20,28 +20,25 @@ import butterknife.OnClick;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHolder> {
 
-    List<DrawerItemsInfo> data= Collections.emptyList();
+    List<DrawerItemsInfo> data = Collections.emptyList();
     private LayoutInflater inflater;
     private Context context;
-    private DrawerItemSelectedCallback drawerItemSelectedCallback;
+    private DrawerAdapterItemSelectedCallback drawerAdapterItemSelectedCallback;
     private int CURRENT_POSITION;
 
-    public DrawerAdapter(Context context, List<DrawerItemsInfo> data, DrawerItemSelectedCallback drawerItemSelectedCallback){
-        this.context=context;
+    public DrawerAdapter(Context context, List<DrawerItemsInfo> data, DrawerAdapterItemSelectedCallback drawerAdapterItemSelectedCallback,
+                         int currentSelectedDrawerItem) {
+        this.context = context;
 
-        inflater=LayoutInflater.from(context);
-        this.data=data;
-        this.drawerItemSelectedCallback = drawerItemSelectedCallback;
-        this.CURRENT_POSITION = 0;
+        inflater = LayoutInflater.from(context);
+        this.data = data;
+        this.drawerAdapterItemSelectedCallback = drawerAdapterItemSelectedCallback;
+        this.CURRENT_POSITION = currentSelectedDrawerItem;
     }
 
-    public void delete(int position){
-        data.remove(position);
-        notifyItemRemoved(position);
-    }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=inflater.inflate(R.layout.custom_row, parent,false);
+        View view = inflater.inflate(R.layout.custom_row, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -52,10 +49,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
         holder.icon.setImageResource(current.iconId);
         holder.position = position;
 
-        if(holder.position == CURRENT_POSITION) {
+        if (holder.position == CURRENT_POSITION) {
             holder.icon.setImageResource(current.iconTId);
             holder.title.setTextColor(context.getResources().getColor(R.color.primaryColor));
-        }else{
+        } else {
             holder.icon.setImageResource(current.iconId);
             holder.title.setTextColor(context.getResources().getColor(R.color.black));
         }
@@ -81,13 +78,13 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.MyViewHold
         }
 
         @OnClick(R.id.drawer_list_item)
-        public void onRowClick(View v){
-            if(CURRENT_POSITION != position) {
-                CURRENT_POSITION = position;
-                drawerItemSelectedCallback.onDrawerItemSelected(position);
-                notifyDataSetChanged();
-            }else
-                drawerItemSelectedCallback.onDrawerItemSelected(ENavDrawer.NAVDRAWER_SAME_POSITION.getNavDrawerId());
+        public void onRowClick(View v) {
+            drawerAdapterItemSelectedCallback.onDrawerItemSelected(position);
         }
+    }
+
+    public void setCurrentPosition(int position){
+        this.CURRENT_POSITION = position;
+        notifyDataSetChanged();
     }
 }

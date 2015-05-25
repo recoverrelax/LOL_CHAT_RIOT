@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 
-import com.recoverrelax.pt.riotxmppchat.Database.MessageToFrom;
+import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.XmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
+import com.recoverrelax.pt.riotxmppchat.Network.Otto.OnNewMessageReceived;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
@@ -32,9 +34,11 @@ import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -77,6 +81,16 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     private ChatManager chatManager;
     private ChatManagerListener chatManagerListener;
     private Map<String, Chat> chatList;
+
+    /**
+     * Callbacks
+     */
+
+    /**
+     * New Message Notification
+     */
+
+    private List<NewMessageNotification> notificationObserverList;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -257,6 +271,10 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         return connection;
     }
 
+    public String getConnectedXmppUser(){
+        return XmppUtils.parseXmppAddress(connection.getUser());
+    }
+
     @Override
     public void onDestroy() {
         if (connection != null)
@@ -276,12 +294,10 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     @Override
     public void processMessage(Chat chat, Message message) {
-        String messageFrom = message.getFrom();
-        String REPLACE_THIS = "/xiff";
-        String REPLACE_TO_THIS = "";
+        String messageFrom = XmppUtils.parseXmppAddress(message.getFrom());
 
         if(this.chatList == null){
-            this.chatList = new HashMap<String, Chat>();
+            this.chatList = new HashMap<>();
         }
 
         if(!this.chatList.containsKey(messageFrom)){
@@ -289,8 +305,30 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         }
 
         if(message != null && messageFrom != null && message.getBody() != null){
-            RiotXmppDBRepository.insertMessage(
-                    new MessageDb(null, messageFrom.replace(REPLACE_THIS, REPLACE_TO_THIS), MessageToFrom.FROM.getId(), new Date(), message.getBody(), false));
+            MessageDb message1 = new MessageDb(null, getConnectedXmppUser(), messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
+            RiotXmppDBRepository.insertMessage(message1);
+            LogUtils.LOGI(TAG, "Iserted message in the db:\n + " + message1.toString());
+
+//            MainApplication.getInstance().getBus().post(new OnNewMessageReceived(messageFrom));
+            notifyNewMessage(messageFrom);
+        }
+    }
+
+    public void addNotificationObserver(NewMessageNotification observer){
+        if(notificationObserverList == null)
+            notificationObserverList = new ArrayList<>();
+
+        notificationObserverList.add(observer);
+    }
+
+    public void removeNotificationObserver(NewMessageNotification observer){
+        if(notificationObserverList != null)
+            notificationObserverList.remove(observer);
+    }
+
+    public void notifyNewMessage(String from){
+        for(NewMessageNotification observer: notificationObserverList){
+            observer.OnNewMessageNotification(from);
         }
     }
 
@@ -304,4 +342,9 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
+
+    public interface NewMessageNotification {
+        void OnNewMessageNotification(String from);
+    }
+
 }

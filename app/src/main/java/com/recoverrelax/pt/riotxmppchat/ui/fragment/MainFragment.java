@@ -18,7 +18,7 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRiotXmppRosterImpl;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.RosterListener;
@@ -35,7 +35,7 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment implements FriendsListAdapter.OnItemClickAdapter, Observer<RiotXmppRiotXmppRosterImpl.FriendList>, RosterListener {
+public class MainFragment extends Fragment implements FriendsListAdapter.OnItemClickAdapter, Observer<RiotXmppRosterImpl.FriendList>, RosterListener {
 
     private final String TAG = MainFragment.this.getClass().getSimpleName();
 
@@ -95,7 +95,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
         adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, this, myFriendsListRecyclerView);
         myFriendsListRecyclerView.setAdapter(adapter);
 
-        riotXmppRosterHelper = new RiotXmppRiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
+        riotXmppRosterHelper = new RiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
 
         swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -144,7 +144,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
     }
 
     @Override
-    public void onNext(RiotXmppRiotXmppRosterImpl.FriendList friendList) {
+    public void onNext(RiotXmppRosterImpl.FriendList friendList) {
         if (adapter != null) {
 
             switch (friendList.getOperation()) {

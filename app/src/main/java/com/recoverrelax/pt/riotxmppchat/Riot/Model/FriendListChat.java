@@ -20,16 +20,20 @@ public class FriendListChat {
         return this.friend.getName();
     }
 
+    public String getUserXmppAddress(){
+        return this.friend.getUserXmppAddress();
+    }
+
     public String getFriendLastMessage(){
         return this.lastMessage == null
                 ? EMPTY_MESSAGE
-                : this.lastMessage.getMessage_message();
+                : this.lastMessage.getMessage();
     }
 
     public Date getFriendLastMessageDate(){
         return this.lastMessage == null
                 ? null
-                : this.lastMessage.getMessage_date();
+                : this.lastMessage.getDate();
     }
 
     public String getFriendLastMessageDateAsString(){

@@ -30,38 +30,20 @@ public class PersonalMessageImpl implements PersonalMessageHelper {
     }
 
     @Override
-    public void getPersonalMessageList() {
+    public void getLastXPersonalMessageList(final int x, final String connectedUser) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<List<MessageDb>>() {
                     @Override
                     public void call(Subscriber<? super List<MessageDb>> subscriber) {
 
-                        List<MessageDb> messageList = RiotXmppDBRepository.getAllMessages();
-                        Collections.reverse(messageList);
-                        subscriber.onNext(messageList);
-                        subscriber.onCompleted();
-                    }
-                }))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mCallback);
-    }
-
-    @Override
-    public void getLastXPersonalMessageList(final int x) {
-        mSubscription = AppObservable.bindFragment(mFragment,
-                Observable.create(new Observable.OnSubscribe<List<MessageDb>>() {
-                    @Override
-                    public void call(Subscriber<? super List<MessageDb>> subscriber) {
-
-                        List<MessageDb> messageList = RiotXmppDBRepository.getLastXMessages(x);
+                        List<MessageDb> messageList = RiotXmppDBRepository.getLastXMessages(x, connectedUser);
                         Collections.reverse(messageList);
 
                         subscriber.onNext(messageList);
                         subscriber.onCompleted();
                     }
                 }))
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mCallback);
     }
