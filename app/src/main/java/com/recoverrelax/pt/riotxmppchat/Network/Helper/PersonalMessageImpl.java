@@ -37,6 +37,7 @@ public class PersonalMessageImpl implements PersonalMessageHelper {
                     public void call(Subscriber<? super List<MessageDb>> subscriber) {
 
                         List<MessageDb> messageList = RiotXmppDBRepository.getAllMessages();
+                        Collections.reverse(messageList);
                         subscriber.onNext(messageList);
                         subscriber.onCompleted();
                     }

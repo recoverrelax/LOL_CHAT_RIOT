@@ -12,14 +12,15 @@ import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
@@ -33,6 +34,8 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.SSLSocketFactory;
 
@@ -73,8 +76,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     private Roster roster;
     private ChatManager chatManager;
     private ChatManagerListener chatManagerListener;
-
-
+    private Map<String, Chat> chatList;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -226,6 +228,19 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         }
     }
 
+    public Roster getRoster() {
+        return roster;
+    }
+
+    public void sendMessage(String message, String userXmppName){
+        try {
+            Chat chat = this.chatList.get(userXmppName);
+            chat.sendMessage(message);
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void removeChatListener(){
         if (this.chatManager != null && this.chatManagerListener != null) {
             this.chatManager.removeChatListener(this.chatManagerListener);
@@ -261,13 +276,21 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     @Override
     public void processMessage(Chat chat, Message message) {
-        LogUtils.LOGI(TAG, "Received Message: " + message);
+        String messageFrom = message.getFrom();
+        String REPLACE_THIS = "/xiff";
+        String REPLACE_TO_THIS = "";
 
-        if(message != null && message.getFrom() != null && message.getBody() != null){
+        if(this.chatList == null){
+            this.chatList = new HashMap<String, Chat>();
+        }
+
+        if(!this.chatList.containsKey(messageFrom)){
+            this.chatList.put(messageFrom, chat);
+        }
+
+        if(message != null && messageFrom != null && message.getBody() != null){
             RiotXmppDBRepository.insertMessage(
-                    new MessageDb(null, message.getFrom(), MessageToFrom.FROM.getId(), new Date(), message.getBody()))
-            ;
-            LogUtils.LOGI(TAG, "Message Count: " + RiotXmppDBRepository.getMessageCount());
+                    new MessageDb(null, messageFrom.replace(REPLACE_THIS, REPLACE_TO_THIS), MessageToFrom.FROM.getId(), new Date(), message.getBody(), false));
         }
     }
 

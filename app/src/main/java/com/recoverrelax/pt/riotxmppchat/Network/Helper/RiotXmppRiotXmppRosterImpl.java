@@ -29,6 +29,7 @@ public class RiotXmppRiotXmppRosterImpl implements RiotXmppRosterHelper {
     private Fragment mFragment;
     private AbstractXMPPConnection connection;
 
+
     private String TAG = this.getClass().getSimpleName();
 
     public RiotXmppRiotXmppRosterImpl(Observer<FriendList> mCallback, AbstractXMPPConnection connection) {

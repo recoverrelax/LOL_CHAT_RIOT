@@ -11,6 +11,7 @@ public class MessageDb {
     private Integer message_from_or_to;
     private java.util.Date message_date;
     private String message_message;
+    private Boolean message_was_readed;
 
     public MessageDb() {
     }
@@ -19,12 +20,13 @@ public class MessageDb {
         this.id = id;
     }
 
-    public MessageDb(Long id, String message_riotXmppUser, Integer message_from_or_to, java.util.Date message_date, String message_message) {
+    public MessageDb(Long id, String message_riotXmppUser, Integer message_from_or_to, java.util.Date message_date, String message_message, Boolean message_was_readed) {
         this.id = id;
         this.message_riotXmppUser = message_riotXmppUser;
         this.message_from_or_to = message_from_or_to;
         this.message_date = message_date;
         this.message_message = message_message;
+        this.message_was_readed = message_was_readed;
     }
 
     public Long getId() {
@@ -65,6 +67,14 @@ public class MessageDb {
 
     public void setMessage_message(String message_message) {
         this.message_message = message_message;
+    }
+
+    public Boolean getMessage_was_readed() {
+        return message_was_readed;
+    }
+
+    public void setMessage_was_readed(Boolean message_was_readed) {
+        this.message_was_readed = message_was_readed;
     }
 
 }

@@ -8,9 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
 
@@ -20,6 +22,7 @@ import java.util.List;
 import LolChatRiotDb.MessageDb;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import rx.Observer;
 
 /**
@@ -29,6 +32,9 @@ public class PersonalMessageFragment extends Fragment implements Observer<List<M
 
     @InjectView(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
+
+    @InjectView(R.id.chatEditText)
+    EditText chatEditText;
 
     private RecyclerView.LayoutManager layoutManager;
 
@@ -59,6 +65,11 @@ public class PersonalMessageFragment extends Fragment implements Observer<List<M
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -69,7 +80,13 @@ public class PersonalMessageFragment extends Fragment implements Observer<List<M
         messageRecyclerView.setAdapter(adapter);
 
         personalMessageHelper = new PersonalMessageImpl(this);
-        personalMessageHelper.getLastXPersonalMessageList(5);
+        personalMessageHelper.getPersonalMessageList();
+    }
+
+    @OnClick(R.id.sendImageView)
+    public void sendMessageButton(View view){
+        MainApplication.getInstance().getRiotXmppService().sendMessage(chatEditText.getText().toString(), null);
+        chatEditText.setText("");
     }
 
     @Override

@@ -191,7 +191,8 @@ public class NavigationDrawerFragment extends Fragment implements DrawerItemSele
         }else if(position == ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId()){
             fragment = MainFragment.newInstance();
         }else if(position == ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId()){
-            fragment = PersonalMessageFragment.newInstance();
+//            fragment = PersonalMessageFragment.newInstance();
+            fragment = FriendMessageListFragment.newInstance();
         }
 
         transaction.replace(R.id.container, fragment);

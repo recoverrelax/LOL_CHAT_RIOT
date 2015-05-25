@@ -28,6 +28,7 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
         public final static Property Message_from_or_to = new Property(2, Integer.class, "message_from_or_to", false, "MESSAGE_FROM_OR_TO");
         public final static Property Message_date = new Property(3, java.util.Date.class, "message_date", false, "MESSAGE_DATE");
         public final static Property Message_message = new Property(4, String.class, "message_message", false, "MESSAGE_MESSAGE");
+        public final static Property Message_was_readed = new Property(5, Boolean.class, "message_was_readed", false, "MESSAGE_WAS_READED");
     };
 
 
@@ -47,7 +48,8 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
                 "'MESSAGE_RIOT_XMPP_USER' TEXT," + // 1: message_riotXmppUser
                 "'MESSAGE_FROM_OR_TO' INTEGER," + // 2: message_from_or_to
                 "'MESSAGE_DATE' INTEGER," + // 3: message_date
-                "'MESSAGE_MESSAGE' TEXT);"); // 4: message_message
+                "'MESSAGE_MESSAGE' TEXT," + // 4: message_message
+                "'MESSAGE_WAS_READED' INTEGER);"); // 5: message_was_readed
     }
 
     /** Drops the underlying database table. */
@@ -85,6 +87,11 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
         if (message_message != null) {
             stmt.bindString(5, message_message);
         }
+ 
+        Boolean message_was_readed = entity.getMessage_was_readed();
+        if (message_was_readed != null) {
+            stmt.bindLong(6, message_was_readed ? 1l: 0l);
+        }
     }
 
     /** @inheritdoc */
@@ -101,7 +108,8 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // message_riotXmppUser
             cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2), // message_from_or_to
             cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // message_date
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // message_message
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // message_message
+            cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0 // message_was_readed
         );
         return entity;
     }
@@ -114,6 +122,7 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
         entity.setMessage_from_or_to(cursor.isNull(offset + 2) ? null : cursor.getInt(offset + 2));
         entity.setMessage_date(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
         entity.setMessage_message(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setMessage_was_readed(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
      }
     
     /** @inheritdoc */
