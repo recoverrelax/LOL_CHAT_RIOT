@@ -76,7 +76,6 @@ public class MainApplication extends Application {
         intentService.putExtra(RiotXmppService.INTENT_SERVER_PASSWORD, password);
 
         RiotXmppService.loginActilivyCallback = loginActilivyCallback;
-
         startService(intentService);
     }
 

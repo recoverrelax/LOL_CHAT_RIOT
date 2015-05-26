@@ -30,13 +30,13 @@ public class PersonalMessageImpl implements PersonalMessageHelper {
     }
 
     @Override
-    public void getLastXPersonalMessageList(final int x, final String connectedUser) {
+    public void getLastXPersonalMessageList(final int x, final String connectedUser, final String userToGetMessagesFrom) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<List<MessageDb>>() {
                     @Override
                     public void call(Subscriber<? super List<MessageDb>> subscriber) {
 
-                        List<MessageDb> messageList = RiotXmppDBRepository.getLastXMessages(x, connectedUser);
+                        List<MessageDb> messageList = RiotXmppDBRepository.getLastXMessages(x, connectedUser, userToGetMessagesFrom);
                         Collections.reverse(messageList);
 
                         subscriber.onNext(messageList);

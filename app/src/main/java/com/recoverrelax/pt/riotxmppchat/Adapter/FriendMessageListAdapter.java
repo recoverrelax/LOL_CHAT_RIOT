@@ -6,10 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
+
+import org.jivesoftware.smack.packet.Message;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,6 +63,8 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         holder.friendListChat = friendListChat;
 
         holder.name.setText(friendListChat.getFriendName());
+
+
         holder.lastMessage.setText(friendListChat.getFriendLastMessage());
 
         /**
@@ -87,7 +93,18 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
             holder.date.setText(date);
 
         }else
-        holder.date.setText(friendListChat.getFriendLastMessageDateAsString());
+            holder.date.setText(friendListChat.getFriendLastMessageDateAsString());
+
+        /**
+         * Set Online Offline Status Color
+         */
+
+        Friend friend = holder.friendListChat.getFriend();
+        if(friend.isOnline()){
+            holder.friendStatus.setImageResource(R.color.online);
+        }else{
+            holder.friendStatus.setImageResource(R.color.transparent);
+        }
     }
 
     public void setItems(List<FriendListChat> items) {
@@ -110,6 +127,9 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @InjectView(R.id.date)
         TextView date;
+
+        @InjectView(R.id.friendStatus)
+        ImageView friendStatus;
 
         FriendListChat friendListChat;
 

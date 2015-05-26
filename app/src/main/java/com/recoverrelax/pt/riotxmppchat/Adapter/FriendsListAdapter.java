@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
@@ -27,11 +29,13 @@ import butterknife.InjectView;
 
 
 public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-//FriendsListAdapter.MyViewHolder
+
+    private static final String TAG = FriendsListAdapter.class.getSimpleName();
+
     List<Friend> friendsList;
     private LayoutInflater inflater;
     private Context context;
-    private OnItemClickAdapter callback;
+    private OnFriendClick onFriendClickCallback;
     private RecyclerView recyclerView;
     private
     @LayoutRes int layout_online;
@@ -41,14 +45,22 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final int VIEW_HOLDER_ONLINE_ID = 0;
     private final int VIEW_HOLDER_OFFLINE_ID = 1;
 
-    public FriendsListAdapter(Context context, ArrayList<Friend> friendsList, int layout_online, int  layout_offline, OnItemClickAdapter callback, RecyclerView recyclerView) {
-        inflater = LayoutInflater.from(context);
-        this.context = context;
+    public FriendsListAdapter(Fragment frag, ArrayList<Friend> friendsList, int layout_online, int  layout_offline, RecyclerView recyclerView) {
+
+        this.context = frag.getActivity();
+        inflater = LayoutInflater.from(this.context);
+
         this.layout_online = layout_online;
         this.layout_offline = layout_offline;
-        this.callback = callback;
         this.friendsList = friendsList;
         this.recyclerView = recyclerView;
+
+        try{
+            onFriendClickCallback = (OnFriendClick) frag;
+        }catch (ClassCastException e){
+            LogUtils.LOGE(TAG, "Fragment that use this adapter must implement its child click listener: OnFriendClick");
+        }
+
     }
 
     @Override
@@ -286,10 +298,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     mHandler.postDelayed(mStatusChecker, mHandlerInterval);
                 }
             };
-        }
 
-        @Override
-        public void onClick(View view) {}
+            itemView.setOnClickListener(this);
+        }
 
         public void startRepeatingTask() {
             mStatusChecker.run();
@@ -297,6 +308,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         void stopRepeatingTask() {
             mHandler.removeCallbacks(mStatusChecker);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onFriendClickCallback.onFriendClick(current);
         }
     }
 
@@ -320,11 +336,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Override
         public void onClick(View view) {
-
+            onFriendClickCallback.onFriendClick(current);
         }
     }
 
-    public interface OnItemClickAdapter {
+    public interface OnFriendClick {
         void onFriendClick(Friend friend);
     }
 

@@ -1,12 +1,15 @@
 package com.recoverrelax.pt.riotxmppchat.Network;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
+import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -14,7 +17,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.XmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
-import com.recoverrelax.pt.riotxmppchat.Network.Otto.OnNewMessageReceived;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
@@ -51,6 +53,7 @@ import static junit.framework.Assert.assertTrue;
 public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations>, RosterListener, ChatMessageListener {
 
     private static final String TAG = RiotXmppService.class.getSimpleName();
+    private static final int ONGOING_SERVICE_NOTIFICATION_ID = 12345;
 
     private final IBinder mBinder = new MyBinder();
     private DataStorage dataStorage;
@@ -90,7 +93,19 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
      * New Message Notification
      */
 
-    private List<NewMessageNotification> notificationObserverList;
+    private List<NewMessageObserver> newMessageObserver;
+    public class MyBinder extends Binder {
+        public RiotXmppService getService() {
+            return RiotXmppService.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -125,6 +140,17 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
              */
             connectToRiotXmppServer(serverHost, serverPort, serverDomain, username, password);
         }
+
+        NotificationCompat.Builder mNotificationBuilder =
+                new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.profile_icon_example)
+                .setContentTitle("Content Title")
+                .setContentText("Content  Text");
+
+
+        Notification notification = mNotificationBuilder.build();
+        startForeground(ONGOING_SERVICE_NOTIFICATION_ID, notification);
+
         return Service.START_STICKY;
     }
 
@@ -242,13 +268,54 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         }
     }
 
+    /**
+     * Chat Listener callback receiver
+     * @param chat
+     * @param message
+     */
+    @Override
+    public void processMessage(Chat chat, Message message) {
+        String messageFrom = XmppUtils.parseXmppAddress(message.getFrom());
+
+        addChat(chat, messageFrom);
+
+        if(message != null && messageFrom != null && message.getBody() != null){
+            MessageDb message1 = new MessageDb(null, getConnectedXmppUser(), messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
+            RiotXmppDBRepository.insertMessage(message1);
+            LogUtils.LOGI(TAG, "Iserted message in the db:\n + " + message1.toString());
+
+//            MainApplication.getInstance().getBus().post(new OnNewMessageReceived(messageFrom));
+            notifyNewMessage(message, messageFrom);
+        }
+    }
+
+    public void addChat(Chat chat, String messageFrom){
+        if(this.chatList == null){
+            this.chatList = new HashMap<>();
+        }
+
+        if(!this.chatList.containsKey(messageFrom)){
+            this.chatList.put(messageFrom, chat);
+        }
+    }
+
+    public Chat getChat(String userXmppName){
+            /**
+             * At this step means, there's no active chat for that user so it means you are starting the conversation
+             * and need to start a new chat  as well.
+             */
+            Chat chat = this.chatManager.createChat(userXmppName, RiotXmppService.this);
+            addChat(chat, userXmppName);
+            return chat;
+    }
+
     public Roster getRoster() {
         return roster;
     }
 
     public void sendMessage(String message, String userXmppName){
         try {
-            Chat chat = this.chatList.get(userXmppName);
+            Chat chat = getChat(userXmppName);
             chat.sendMessage(message);
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
@@ -283,6 +350,10 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         super.onDestroy();
     }
 
+    /**
+     * ROSTER CHANGES LISTENER
+     * @param addresses
+     */
     @Override public void entriesAdded(Collection<String> addresses) {}
     @Override public void entriesUpdated(Collection<String> addresses) {}
     @Override public void entriesDeleted(Collection<String> addresses) {}
@@ -292,59 +363,43 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         LogUtils.LOGI(TAG, "Callback called on the service");
     }
 
-    @Override
-    public void processMessage(Chat chat, Message message) {
-        String messageFrom = XmppUtils.parseXmppAddress(message.getFrom());
+    /**
+     * Add an observer to the list of observers
+     * @param observer
+     */
+    public void addNewMessageObserver(NewMessageObserver observer){
+        if(newMessageObserver == null)
+            newMessageObserver = new ArrayList<>();
 
-        if(this.chatList == null){
-            this.chatList = new HashMap<>();
-        }
-
-        if(!this.chatList.containsKey(messageFrom)){
-            this.chatList.put(messageFrom, chat);
-        }
-
-        if(message != null && messageFrom != null && message.getBody() != null){
-            MessageDb message1 = new MessageDb(null, getConnectedXmppUser(), messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
-            RiotXmppDBRepository.insertMessage(message1);
-            LogUtils.LOGI(TAG, "Iserted message in the db:\n + " + message1.toString());
-
-//            MainApplication.getInstance().getBus().post(new OnNewMessageReceived(messageFrom));
-            notifyNewMessage(messageFrom);
-        }
+        newMessageObserver.add(observer);
     }
 
-    public void addNotificationObserver(NewMessageNotification observer){
-        if(notificationObserverList == null)
-            notificationObserverList = new ArrayList<>();
-
-        notificationObserverList.add(observer);
+    /**
+     * Remove an observers from the list of observers
+     * @param observer
+     */
+    public void removeNewMessageObserver(NewMessageObserver observer){
+        if(newMessageObserver != null)
+            newMessageObserver.remove(observer);
     }
 
-    public void removeNotificationObserver(NewMessageNotification observer){
-        if(notificationObserverList != null)
-            notificationObserverList.remove(observer);
-    }
-
-    public void notifyNewMessage(String from){
-        for(NewMessageNotification observer: notificationObserverList){
-            observer.OnNewMessageNotification(from);
+    /**
+     * Notify all Observers of new messages
+     * @param message
+     * @param messageFrom
+     */
+    public void notifyNewMessage(Message message, String messageFrom){
+        for(NewMessageObserver observer: newMessageObserver){
+            observer.OnNewMessageNotification(message, messageFrom);
         }
     }
 
-    public class MyBinder extends Binder {
-        public RiotXmppService getService() {
-            return RiotXmppService.this;
-        }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    public interface NewMessageNotification {
-        void OnNewMessageNotification(String from);
+    /**
+     * New Message Notification Interface
+     * Used to notify observers of newly received messages
+     */
+    public interface NewMessageObserver {
+        void OnNewMessageNotification(Message message, String messageFrom);
     }
 
 }

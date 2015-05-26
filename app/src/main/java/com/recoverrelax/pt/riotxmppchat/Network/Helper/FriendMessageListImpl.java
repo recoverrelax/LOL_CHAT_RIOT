@@ -11,6 +11,7 @@ import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import LolChatRiotDb.MessageDb;
@@ -66,9 +67,11 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
 
                         for(Friend friend: friendList){
                             MessageDb message = RiotXmppDBRepository.getLastMessage(connectedUser, friend.getUserXmppAddress());
-                            if(message != null)
+//                            if(friend.isOnline())
                                 friendListChat.add(new FriendListChat(friend, message));
                         }
+                        Collections.sort(friendListChat, new FriendListChat.LastMessageComparable());
+                        Collections.reverse(friendListChat);
 
                         subscriber.onNext(friendListChat);
                         subscriber.onCompleted();

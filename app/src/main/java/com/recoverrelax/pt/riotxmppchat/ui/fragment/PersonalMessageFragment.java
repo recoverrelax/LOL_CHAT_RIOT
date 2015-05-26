@@ -12,12 +12,18 @@ import android.widget.EditText;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
+import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.Globals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
+
+import org.jivesoftware.smack.packet.Message;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import LolChatRiotDb.MessageDb;
@@ -32,7 +38,7 @@ import static com.recoverrelax.pt.riotxmppchat.ui.activity.MainActivity.*;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PersonalMessageFragment extends Fragment implements Observer<List<MessageDb>>, NewMessageNotification {
+public class PersonalMessageFragment extends Fragment implements Observer<List<MessageDb>>, NewMessageObserver {
 
     @InjectView(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
@@ -97,12 +103,18 @@ public class PersonalMessageFragment extends Fragment implements Observer<List<M
 
         personalMessageHelper = new PersonalMessageImpl(this);
         personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
-                MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+                MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), userXmppName);
     }
 
     @OnClick(R.id.sendImageView)
     public void sendMessageButton(View view){
-        MainApplication.getInstance().getRiotXmppService().sendMessage(chatEditText.getText().toString(), null);
+        String message = chatEditText.getText().toString();
+
+        MainApplication.getInstance().getRiotXmppService().sendMessage(message, userXmppName);
+        RiotXmppDBRepository.insertMessage(new MessageDb(null, MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
+                userXmppName, MessageDirection.TO.getId(), new Date(), message, false));
+        OnNewMessageNotification(null, null);
+        // clear text
         chatEditText.setText("");
     }
 
@@ -127,18 +139,28 @@ public class PersonalMessageFragment extends Fragment implements Observer<List<M
     @Override
     public void onResume() {
         super.onResume();
-        MainApplication.getInstance().getRiotXmppService().addNotificationObserver(this);
+        MainApplication.getInstance().getRiotXmppService().addNewMessageObserver(this);
+        personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
+                MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), userXmppName);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MainApplication.getInstance().getRiotXmppService().removeNotificationObserver(this);
+        MainApplication.getInstance().getRiotXmppService().removeNewMessageObserver(this);
     }
 
     @Override
-    public void OnNewMessageNotification(String from) {
-        personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
-                    MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+    public void OnNewMessageNotification(Message message, String messageFrom) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                /**
+                 * Change this to update only the corresponding item, not the whole list.
+                 */
+                personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
+                        MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), userXmppName);
+            }
+        });
     }
 }

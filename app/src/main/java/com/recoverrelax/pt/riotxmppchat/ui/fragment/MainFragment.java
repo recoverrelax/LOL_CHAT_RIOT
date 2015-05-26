@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,11 +32,12 @@ import butterknife.InjectView;
 import rx.Observer;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment.*;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragment extends Fragment implements FriendsListAdapter.OnItemClickAdapter, Observer<RiotXmppRosterImpl.FriendList>, RosterListener {
+public class MainFragment extends Fragment implements FriendsListAdapter.OnFriendClick, Observer<RiotXmppRosterImpl.FriendList>, RosterListener {
 
     private final String TAG = MainFragment.this.getClass().getSimpleName();
 
@@ -47,6 +49,11 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
 
     @InjectView(R.id.progressBarCircularIndeterminate)
     ProgressBarCircularIndeterminate progressBarCircularIndeterminate;
+
+    /**
+     * Activity Callback
+     */
+    private FriendMessageListFragActivityCallback friendMessageListFragActivityCallback;
 
 
     private RecyclerView.LayoutManager layoutManager;
@@ -92,7 +99,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
 
         layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
-        adapter = new FriendsListAdapter(getActivity(), new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, this, myFriendsListRecyclerView);
+        adapter = new FriendsListAdapter(this, new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, myFriendsListRecyclerView);
         myFriendsListRecyclerView.setAdapter(adapter);
 
         riotXmppRosterHelper = new RiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
@@ -126,7 +133,20 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
 
     @Override
     public void onFriendClick(Friend friend) {
+        friendMessageListFragActivityCallback.replaceFragment(friend.getUserXmppAddress());
     }
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            friendMessageListFragActivityCallback = (FriendMessageListFragActivityCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activities containing FriendMessaListFragment must implement FriendMessageListFragActivityCallback");
+        }
+    }
+
 
     @Override
     public void onCompleted() {
@@ -139,7 +159,7 @@ public class MainFragment extends Fragment implements FriendsListAdapter.OnItemC
             swipeRefreshLayout.setRefreshing(false);
     }
 
-    public void showProgressBar(boolean state){
+    public void showProgressBar(boolean state) {
         progressBarCircularIndeterminate.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
     }
 

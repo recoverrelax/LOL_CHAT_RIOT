@@ -7,7 +7,9 @@
 
     <color name="white">#FFFFFF</color>
     <color name="whiteT">#d2ffffff</color>
+    <color name="whiteT2X">#b4ffffff</color>
     <color name="black">#000</color>
+    <color name="blackT">#b4000000</color>
     <color name="black_50A">#14000000</color>
 
     <color name="primaryColor190T">#beff5722</color>

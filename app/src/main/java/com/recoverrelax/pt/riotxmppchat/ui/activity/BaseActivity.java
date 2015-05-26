@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
@@ -36,6 +37,13 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerAd
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResources());
         ButterKnife.inject(this);
+
+        if(getResources().getBoolean(R.bool.isTablet)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
+        else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        }
 
         /**
          * There must always be a toolbar, if it is not needed, it should be hidden but it

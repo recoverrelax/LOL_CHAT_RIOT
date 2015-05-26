@@ -45,7 +45,6 @@ public class RiotXmppDBRepository {
 
         List list = qb
                 .where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
-                       MessageDbDao.Properties.Direction.eq(MessageDirection.FROM.getId()),
                        MessageDbDao.Properties.FromTo.eq(friendUser))
                 .orderDesc(MessageDbDao.Properties.Id)
                 .limit(1).build().list();
@@ -55,12 +54,13 @@ public class RiotXmppDBRepository {
             return null;
     }
 
-    public static List<MessageDb> getLastXMessages(int x, String connectedUser){
+    public static List<MessageDb> getLastXMessages(int x, String connectedUser, String userToGetMessagesFrom){
 
         MessageDbDao messageDao = getMessageDao();
 
         QueryBuilder qb = messageDao.queryBuilder();
-        qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser))
+        qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
+                MessageDbDao.Properties.FromTo.eq(userToGetMessagesFrom))
                 .orderDesc(MessageDbDao.Properties.Id)
                 .limit(x).build();
         QueryBuilder.LOG_SQL = true;
