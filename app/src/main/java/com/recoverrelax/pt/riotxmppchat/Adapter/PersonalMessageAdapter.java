@@ -97,6 +97,15 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 MyViewHolderTo holderTo = (MyViewHolderTo) holder;
                 holderTo.messageDb = message;
 
+                Calendar calendar2 = Calendar.getInstance();
+                calendar2.setTime(holderTo.messageDb.getDate());
+
+                int hour2 = calendar2.get(Calendar.HOUR_OF_DAY);
+                int minutes2 = calendar2.get(Calendar.MINUTE);
+
+                String formatedDate2 = "[" + hour2 + ":" + minutes2 + "]";
+                holderTo.date.setText(formatedDate2);
+
 
                 holderTo.message.setText(message.getMessage());
                 break;
@@ -134,6 +143,9 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         @InjectView(R.id.message)
         TextView message;
+
+        @InjectView(R.id.date)
+        TextView date;
 
         MessageDb messageDb;
 

@@ -16,6 +16,7 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 
 import org.jivesoftware.smack.packet.Message;
@@ -40,7 +41,7 @@ public class FriendMessageListFragment extends Fragment implements FriendMessage
     /**
      * Activity Callback
      */
-    private FriendMessageListFragActivityCallback friendMessageListFragActivityCallback;
+    private FriendMessageListFragActivityCallback activityCallback;
 
     /**
      * Adapter
@@ -91,7 +92,7 @@ public class FriendMessageListFragment extends Fragment implements FriendMessage
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            friendMessageListFragActivityCallback = (FriendMessageListFragActivityCallback) activity;
+            activityCallback = (FriendMessageListFragActivityCallback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activities containing FriendMessaListFragment must implement FriendMessageListFragActivityCallback");
         }
@@ -129,6 +130,6 @@ public class FriendMessageListFragment extends Fragment implements FriendMessage
     }
 
     public interface FriendMessageListFragActivityCallback {
-        void replaceFragment(String userXmppName);
+        void replaceFragment(String friendName, String friendXmppName);
     }
 }

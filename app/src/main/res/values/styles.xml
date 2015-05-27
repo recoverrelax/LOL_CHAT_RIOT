@@ -38,6 +38,16 @@
         <item name="android:background">@color/transparent</item>
     </style>
 
+    <style name="normalToolbarStyle">
+        <item name="popupTheme">@style/MyCustomToolBarPopupTheme</item>
+        <item name="android:theme">@style/MyCustomToolBarTheme</item>
+    </style>
+
+    <style name="transparentToolbarStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="popupTheme">@style/MyCustomToolBarPopupTheme</item>
+        <item name="android:theme">@style/MyCustomToolBarThemeTransparent</item>
+    </style>
+
     <dimen name="login_textview_padding_top_bottom">10dp</dimen>
 
     <!--<style name="AppTheme.Base.Widget.TextView" parent="android:Widget.Holo.Light.TextView">-->

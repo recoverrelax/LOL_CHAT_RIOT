@@ -140,7 +140,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @OnClick(R.id.parent_row)
         public void onRowClick(View view){
-            activityCallback.replaceFragment(friendListChat.getUserXmppAddress());
+            activityCallback.replaceFragment(friendListChat.getFriendName(), friendListChat.getUserXmppAddress());
         }
     }
 }

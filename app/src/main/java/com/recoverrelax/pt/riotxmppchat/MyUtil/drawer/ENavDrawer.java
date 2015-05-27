@@ -1,13 +1,12 @@
 package com.recoverrelax.pt.riotxmppchat.MyUtil.drawer;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.MainFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 
 public enum ENavDrawer {
     NAVDRAWER_ITEM_0(0, R.string.navdrawer_item0, R.drawable.ic_number1, R.drawable.ic_number1_selected),
@@ -37,11 +36,11 @@ public enum ENavDrawer {
     public Fragment getFrag() {
         switch(this.navDrawerId){
             case 0:
-                return MainFragment.newInstance();
+                return FriendListFragment.newInstance();
             case 1:
                 return FriendMessageListFragment.newInstance();
             default:
-                return MainFragment.newInstance();
+                return FriendListFragment.newInstance();
         }
     }
 

@@ -199,8 +199,12 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
                 .build();
     }
 
+    /**
+     * Attempt to connect to the Riot Server. Success/Fail are reported back to
+     * {@link #onNext(RiotXmppConnectionImpl.RiotXmppOperations) onNext},
+     * {@link #onError(Throwable) onError};
+     */
     public void connect() {
-
         assertTrue("To start a connection to the server, you must first call init() method!",
                 this.connectionConfig != null);
 
@@ -215,17 +219,11 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         connectionHelper.login(connection);
     }
 
-    @Override
-    public void onCompleted() {
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        if (loginActilivyCallback != null) {
-            loginActilivyCallback.onFailure(e);
-        }
-    }
-
+    /**
+     * Observer callback for both connection and authentication to Riot Servers.
+     *
+     * @param result The parameter will tell which operation was successfull. Connection or Authentication.
+     */
     @Override
     public void onNext(RiotXmppConnectionImpl.RiotXmppOperations result) {
         switch (result) {
@@ -245,6 +243,15 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
                 }, DELAY_BEFORE_ROSTER_LISTENER);
 
                 break;
+        }
+    }
+
+    @Override public void onCompleted() {}
+
+    @Override
+    public void onError(Throwable e) {
+        if (loginActilivyCallback != null) {
+            loginActilivyCallback.onFailure(e);
         }
     }
 

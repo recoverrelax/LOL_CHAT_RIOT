@@ -1,9 +1,8 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/login_screen"
     android:orientation="vertical"
     tools:context="com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment">
         <android.support.v7.widget.RecyclerView
@@ -12,8 +11,25 @@
             android:layout_height="0dp"
             android:layout_weight="4"/>
 
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/expandButton"
+        tools:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_navdrawer_shopping_cart"
+        fab:fab_colorNormal="@color/primaryColor"
+        fab:fab_colorPressed="@color/accentColor"
+        fab:fab_colorRipple="@color/primaryColor"
+        fab:menu_showShadow="true"
+        android:translationY="30dp"
+        fab:fab_size="normal"
+        android:layout_marginRight="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_gravity="right" />
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        android:id="@+id/message_layout"
         android:background="@color/loginBackground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,26 +37,13 @@
 
         <EditText
             style="@style/chatEditText"
-            android:layout_width="0dp"
-            android:layout_weight="10"
+            android:layout_width="match_parent"
+            android:layout_marginRight="100dp"
             android:clickable="true"
             android:focusable="true"
             android:layout_height="match_parent"
-            android:text="Olá tudo bem?"
-            android:id="@+id/chatEditText" />
+            tools:text="Olá tudo bem?"
+            android:id="@+id/chatEditText"/>
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/abc_ic_go_search_api_mtrl_alpha"
-            android:id="@+id/sendImageView"/>
-        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

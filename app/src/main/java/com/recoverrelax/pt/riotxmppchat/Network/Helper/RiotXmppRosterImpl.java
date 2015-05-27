@@ -46,7 +46,6 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                     public void call(Subscriber<? super FriendList> subscriber) {
                         Roster roster = Roster.getInstanceFor(connection);
                         Collection<RosterEntry> entries = roster.getEntries();
-
                         FriendList friendList = new FriendList(new ArrayList<Friend>(), FriendListOperation.FRIEND_LIST);
 
                         for (RosterEntry entry : entries) {

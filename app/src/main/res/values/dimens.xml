@@ -19,7 +19,7 @@
     <dimen name="text_size_hyperlarge_x">55sp</dimen>
     <dimen name="drawer_vertical_keyline_left">16dp</dimen>
     <dimen name="drawer_info_margin_bottom">8dp</dimen>
-    <dimen name="drawer_image_width">100dp</dimen>
+    <dimen name="drawer_image_width">150dp</dimen>
     <dimen name="drawer_recyclerview_margin_top">16dp</dimen>
     <dimen name="html5_margin_top_bot">17dp</dimen>
     <dimen name="html5_margin_top1.5_bot">23dp</dimen>

@@ -9,8 +9,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.MainActivity"
-            android:label="@string/app_name" >
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity"
+            android:label="@string/friends_online" >
         </activity>
         <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"
             android:noHistory="true">
@@ -25,7 +25,7 @@
             android:label="@string/title_activity_sub" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.recoverrelax.pt.riotxmppchat.ui.activity.MainActivity" />
+                android:value="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity" />
         </activity>
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity"

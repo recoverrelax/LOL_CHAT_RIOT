@@ -39,9 +39,6 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
     @InjectView(R.id.drawerList)
     RecyclerView recyclerView;
 
-    @InjectView(R.id.drawer_title)
-    TextView drawer_title;
-
     @InjectView(R.id.drawer_username)
     TextView drawer_username;
 
@@ -102,7 +99,6 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        drawer_title.setText(getResources().getString(R.string.drawer_default_title));
         drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
                 DataStorage.getInstance().getUsername());
 
@@ -154,6 +150,8 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
             }
         });
 //        onDrawerItemSelected(ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId());
+
+        drawerLayout.setScrimColor(getResources().getColor(R.color.blackDrawerScrim));
     }
 
     /**

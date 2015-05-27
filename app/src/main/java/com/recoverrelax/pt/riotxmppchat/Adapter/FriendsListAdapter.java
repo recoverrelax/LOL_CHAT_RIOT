@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
@@ -203,6 +205,15 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
+    public int getOnlineFriendsCount(){
+        int count = 0;
+        for(Friend f: friendsList){
+            if(f.isOnline())
+                count++;
+        }
+        return count;
+    }
+
     /**
      * Two types of Changed:
      * - User changed Presence.Type
@@ -312,7 +323,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Override
         public void onClick(View view) {
-            onFriendClickCallback.onFriendClick(current);
+            onFriendClickCallback.onFriendClick(current.getName(), current.getUserXmppAddress());
         }
     }
 
@@ -332,16 +343,23 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public MyViewHolderOffline(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
+
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            onFriendClickCallback.onFriendClick(current);
+                    new SnackBar.Builder((Activity)context)
+                    .withMessage(current.getName() + " " + context.getResources().getString(R.string.cannot_chat_with))
+                    .withTextColorId(R.color.white)
+                    .withBackgroundColorId(R.color.drawer_top_background)
+                    .withDuration((short) 3000)
+                    .show();
         }
     }
 
     public interface OnFriendClick {
-        void onFriendClick(Friend friend);
+        void onFriendClick(String friendUsername, String friendXmppName);
     }
 
     public enum SortMethod {

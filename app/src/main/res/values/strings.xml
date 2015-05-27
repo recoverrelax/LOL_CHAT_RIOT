@@ -72,6 +72,9 @@
     <string name="ingame_playing_as_for">for</string>
     <string name="minutes">minutes</string>
     <string name="friends_list_recycler_child_ranked_wins">Ranked\nWins</string>
+    <string name="friends_online">Friends Online:</string>
+    <string name="chatting_with">"Chatting with: "</string>
+    <string name="cannot_chat_with">is Offline. Canno\'t chat with him/her atm</string>
 
 
 </resources>

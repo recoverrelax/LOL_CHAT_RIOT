@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -94,6 +95,10 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerAd
     public void onDrawerItemSelected(int position){
         if(navigationDrawerFragment != null)
             navigationDrawerFragment.onDrawerItemSelected(position);
+    }
+
+    public Toolbar getToolbar(){
+        return toolbar;
     }
 
     @Override
