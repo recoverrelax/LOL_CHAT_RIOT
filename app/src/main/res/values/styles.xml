@@ -1,0 +1,73 @@
+<resources>
+
+    <style name="Button" parent="Widget.AppCompat.Button">
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:background">@drawable/button_background_selector</item>
+        <item name="android:textColor">@drawable/button_text_selector</item>
+    </style>
+
+    <style name="login_edittext" parent="Widget.AppCompat.EditText">
+        <item name="android:alpha">0.8</item>
+        <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:textColorHint">@color/primaryColor</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingTop">@dimen/login_textview_padding_top_bottom</item>
+        <item name="android:paddingBottom">@dimen/login_textview_padding_top_bottom</item>
+    </style>
+
+    <style name="friend_list_cardview_win_loss_1_textview">
+        <item name="android:textSize">@dimen/text_size_macro</item>
+        <item name="android:gravity">center_vertical|right</item>
+    </style>
+
+    <style name="friend_list_cardview_win_loss_2_textview">
+        <item name="android:textSize">@dimen/text_size_micro</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="friend_list_cardview_league_division_textview">
+        <item name="android:textSize">@dimen/text_size_micro</item>
+    </style>
+
+    <style name="chatEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:gravity">top|left</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <style name="normalToolbarStyle">
+        <item name="popupTheme">@style/MyCustomToolBarPopupTheme</item>
+        <item name="android:theme">@style/MyCustomToolBarTheme</item>
+    </style>
+
+    <style name="transparentToolbarStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="popupTheme">@style/MyCustomToolBarPopupTheme</item>
+        <item name="android:theme">@style/MyCustomToolBarThemeTransparent</item>
+    </style>
+
+    <dimen name="login_textview_padding_top_bottom">10dp</dimen>
+
+    <!--<style name="AppTheme.Base.Widget.TextView" parent="android:Widget.Holo.Light.TextView">-->
+        <!--<item name="fontPath">@string/app_caligraphy_text</item>-->
+    <!--</style>-->
+    <!--<style name="AppTheme.Base.Widget.Button" parent="Widget.AppCompat.Button">-->
+        <!--<item name="fontPath">@string/app_caligraphy_text</item>-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme.Base.Widget.EditText" parent="Widget.AppCompat.EditText">-->
+        <!--<item name="fontPath">@string/app_caligraphy_text</item>-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme.Base.Widget.CheckBox" parent="Base.Widget.AppCompat.CompoundButton.CheckBox">-->
+        <!--<item name="fontPath">@string/app_caligraphy_text</item>-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme.Base.Widget.Spinner" parent="Base.Widget.AppCompat.Spinner">-->
+        <!--<item name="fontPath">@string/app_caligraphy_text</item>-->
+    <!--</style>-->
+    <string name="app_caligraphy_text" translatable="false">fonts/Roboto-Light.ttf</string>
+    <color name="transparent">#00000000</color>
+</resources>
