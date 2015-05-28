@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
@@ -31,6 +32,7 @@ public class FriendListActivity extends BaseActivity implements FriendMessageLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
+        MainApplication.getInstance().setApplicationClosed(false);
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -57,6 +59,7 @@ public class FriendListActivity extends BaseActivity implements FriendMessageLis
 
     @Override
     protected void onDestroy() {
+        MainApplication.getInstance().setApplicationClosed(true);
         super.onDestroy();
     }
 
@@ -65,15 +68,22 @@ public class FriendListActivity extends BaseActivity implements FriendMessageLis
 
         boolean onCreateOptionsMenu = super.onCreateOptionsMenu(menu);
 
-        menu.getItem(0).setVisible(true);
-        menu.getItem(1).setVisible(false).setEnabled(false);
+        menu.findItem(R.id.action_settings).setVisible(true);
+        menu.findItem(R.id.navigate).setVisible(false).setEnabled(false);
+        menu.findItem(R.id.newMessage).setVisible(false);
         return onCreateOptionsMenu;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
+
+        int id = item.getItemId();
+        if (id == R.id.newMessage){
+            navigationDrawerFragment.onDrawerItemSelected(ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId());
+            return true;
+        }else
+            return super.onOptionsItemSelected(item);
+        }
 
     @Override
     public void replaceFragment(String friendUsername, String friendXmppName) {

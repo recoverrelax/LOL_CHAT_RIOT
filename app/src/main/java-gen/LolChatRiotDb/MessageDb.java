@@ -87,4 +87,12 @@ public class MessageDb {
         this.wasRead = wasRead;
     }
 
+    @Override
+    public String toString() {
+        return "MessageDb{" +
+                "wasRead=" + wasRead +
+                ", message='" + message + '\'' +
+                ", userXmppId='" + userXmppId + '\'' +
+                '}';
+    }
 }

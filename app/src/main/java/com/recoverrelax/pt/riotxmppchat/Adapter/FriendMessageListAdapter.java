@@ -6,11 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 
@@ -97,6 +100,14 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         }else
             holder.date.setText(friendListChat.getFriendLastMessageDateAsString());
 
+        Boolean wasRead = holder.friendListChat.getLastMessage().getWasRead();
+        if(!wasRead){
+            holder.wasRead.setVisibility(View.VISIBLE);
+            AndroidUtils.setBlinkAnimation(holder.wasRead, true);
+        }else{
+            holder.wasRead.setVisibility(View.INVISIBLE);
+            AndroidUtils.setBlinkAnimation(holder.wasRead, false);
+        }
     }
 
     public void setItems(List<FriendListChat> items) {
@@ -135,10 +146,16 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         @InjectView(R.id.date)
         TextView date;
 
+        @InjectView(R.id.wasRead)
+        ImageView wasRead;
+
         FriendListChat friendListChat;
+        View itemView;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             ButterKnife.inject(this, itemView);
         }
 

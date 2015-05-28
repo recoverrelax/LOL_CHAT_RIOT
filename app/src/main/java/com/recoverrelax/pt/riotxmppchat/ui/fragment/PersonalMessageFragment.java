@@ -163,17 +163,22 @@ public class PersonalMessageFragment extends BaseFragment implements Observer<Li
     @Override
     public void onNext(List<MessageDb> messageDbs) {
 
+        if(messageDbs != null)
+            setAllMessagesReaded();
+
         adapter.setItems(messageDbs, swipeRefreshLayout.isRefreshing() ? null : PersonalMessageAdapter.ScrollTo.LAST_ITEM);
 
         if (swipeRefreshLayout.isRefreshing())
             swipeRefreshLayout.setRefreshing(false);
+
     }
 
-//     public void OnNewMessageReceived(OnNewMessageReceived from){
-//        if(userXmppName.equals(from.getFrom()))
-//            personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
-//                    MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
-//    }
+    private void setAllMessagesReaded() {
+        List<MessageDb> allMessages = adapter.getAllMessages();
+        for(MessageDb message: allMessages)
+            message.setWasRead(true);
+        RiotXmppDBRepository.updateMessages(allMessages);
+    }
 
     @Override
     public void onResume() {

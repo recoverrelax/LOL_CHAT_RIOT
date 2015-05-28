@@ -29,6 +29,7 @@ public class MainApplication extends Application {
     private DaoSession daoSession;
 
     private static MainApplication instance;
+    private boolean isApplicationClosed = true;
 
     @Override
     public void onCreate() {
@@ -69,6 +70,14 @@ public class MainApplication extends Application {
             mBound = false;
         }
     };
+
+    public boolean isApplicationClosed() {
+        return isApplicationClosed;
+    }
+
+    public void setApplicationClosed(boolean isApplicationClosed) {
+        this.isApplicationClosed = isApplicationClosed;
+    }
 
     public void startRiotXmppService(String selectedItem, String username, String password, RiotXmppDataLoaderCallback<RiotXmppConnectionImpl.RiotXmppOperations> loginActilivyCallback){
         intentService = new Intent(this, RiotXmppService.class);

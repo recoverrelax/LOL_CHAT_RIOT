@@ -57,6 +57,10 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return VIEW_HOLDER_TO_ID;
     }
 
+    public List<MessageDb> getAllMessages(){
+        return personalMessageList;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View viewFrom = inflater.inflate(layout_from, parent, false);

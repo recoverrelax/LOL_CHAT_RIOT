@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.Network;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,8 @@ import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.SoundNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.XmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
@@ -403,6 +406,21 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
      * @param messageFrom
      */
     public void notifyNewMessage(Message message, String messageFrom){
+
+        if(MainApplication.getInstance().isApplicationClosed()){
+            String username = roster.getEntry(messageFrom).getName();
+
+            new MessageNotification(this, message.getBody(), username).sendNotification();
+        }
+
+        /**
+         * Play a sound everytime!
+         */
+//            new SoundNotification(this, R.raw.teemo_new_message).play();
+
+        /**
+         * Deliver the new message to all the observers
+         */
         for(NewMessageObserver observer: newMessageObserver){
             observer.OnNewMessageNotification(message, messageFrom);
         }

@@ -9,9 +9,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.edgelabs.pt.mybaseapp.R;
@@ -20,14 +25,19 @@ import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
 
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.RosterListener;
 
@@ -44,7 +54,7 @@ import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFrag
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendListFragment extends BaseFragment implements FriendsListAdapter.OnFriendClick, Observer<RiotXmppRosterImpl.FriendList>, RosterListener, ObservableScrollViewCallbacks {
+public class FriendListFragment extends BaseFragment implements FriendsListAdapter.OnFriendClick, Observer<RiotXmppRosterImpl.FriendList>, RosterListener, ObservableScrollViewCallbacks, RiotXmppService.NewMessageObserver {
 
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
 
@@ -97,6 +107,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.friend_list_fragment, container, false);
         ButterKnife.inject(this, view);
+        setHasOptionsMenu(true);
         return view;
     }
 
@@ -132,12 +143,14 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     public void onResume() {
         super.onResume();
         MainApplication.getInstance().getRiotXmppService().addRosterListener(this);
+        MainApplication.getInstance().getRiotXmppService().addNewMessageObserver(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         MainApplication.getInstance().getRiotXmppService().removeRosterListener(this);
+        MainApplication.getInstance().getRiotXmppService().removeNewMessageObserver(this);
     }
 
     @Override
@@ -243,5 +256,33 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+
+        boolean hasUnreaded = RiotXmppDBRepository.hasUnreadedMessages(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+
+        MenuItem item = menu.findItem(R.id.newMessage);
+//        item.setActionView(R.layout.toolbar_new_message_view);
+
+        if(hasUnreaded) {
+//            AndroidUtils.setBlinkAnimation(item.getActionView(), true);
+            item.setVisible(true);
+        }else {
+            item.setVisible(false);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void OnNewMessageNotification(Message message, String messageFrom) {
+        getActivity().invalidateOptionsMenu();
     }
 }

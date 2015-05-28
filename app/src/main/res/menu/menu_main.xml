@@ -16,4 +16,12 @@
         android:icon="@drawable/ic_action_next_item"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
+
+    <item android:id="@+id/newMessage"
+        android:visible="false"
+        android:title="@string/new_message"
+        android:orderInCategory="300"
+        android:icon="@drawable/ic_ward"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
 </menu>

@@ -217,11 +217,15 @@ public class Friend {
     }
 
     public String getTimeStampDifference(){
-        long serverTimeStamp = Long.parseLong(getTimeStamp());
-        long nowTimeStamp = System.currentTimeMillis();
+        try {
+            long serverTimeStamp = Long.parseLong(getTimeStamp());
+            long nowTimeStamp = System.currentTimeMillis();
 
-        long difference = ((nowTimeStamp - serverTimeStamp) / 1000L / 60L) - 2L;
-        return String.valueOf(difference);
+            long difference = ((nowTimeStamp - serverTimeStamp) / 1000L / 60L) - 2L;
+            return String.valueOf(difference);
+        }catch(NumberFormatException e){
+            return "";
+        }
     }
 
     public String formatInGameText(){
