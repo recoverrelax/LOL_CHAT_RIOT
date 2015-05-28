@@ -46,7 +46,6 @@ Temporary Items
 build
 .gradle
 LOL_CHAT_RIOT.iml
-MyBaseApp.iml
 local.properties
 build
 gradle

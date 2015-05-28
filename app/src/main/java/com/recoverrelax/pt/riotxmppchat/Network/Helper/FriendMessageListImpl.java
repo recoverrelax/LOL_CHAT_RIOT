@@ -67,7 +67,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
 
                         for(Friend friend: friendList){
                             MessageDb message = RiotXmppDBRepository.getLastMessage(connectedUser, friend.getUserXmppAddress());
-//                            if(friend.isOnline())
+                            if(message != null)
                                 friendListChat.add(new FriendListChat(friend, message));
                         }
                         Collections.sort(friendListChat, new FriendListChat.LastMessageComparable());

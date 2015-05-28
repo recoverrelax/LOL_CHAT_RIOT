@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
@@ -37,6 +39,20 @@ public class FriendListActivity extends BaseActivity implements FriendMessageLis
                     .replace(R.id.container, fragment)
                     .commit();
         }
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if(navigationDrawerFragment != null) {
+                    Fragment frag = getSupportFragmentManager().findFragmentById(R.id.container);
+                    if (frag instanceof FriendListFragment) {
+                        // do something with f
+                        int positionByFrag = ENavDrawer.getPositionByFrag(frag);
+                        navigationDrawerFragment.setCurrentSelectedItem(positionByFrag);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -69,6 +85,8 @@ public class FriendListActivity extends BaseActivity implements FriendMessageLis
 
         fragment.setArguments(args);
         fragmentManager.beginTransaction()
+//                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .setCustomAnimations(R.anim.zoom_enter, R.anim.zoom_exit, R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.container, fragment)
                 .addToBackStack(null)
                 .commit();

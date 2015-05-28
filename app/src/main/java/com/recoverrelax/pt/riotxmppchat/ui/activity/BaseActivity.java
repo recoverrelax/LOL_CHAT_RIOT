@@ -31,7 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerAd
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawer_layout;
 
-    private NavigationDrawerFragment navigationDrawerFragment;
+    protected NavigationDrawerFragment navigationDrawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -77,4 +77,7 @@
     <string name="cannot_chat_with">is Offline. Canno\'t chat with him/her atm</string>
 
 
+    <string name="message_list_title">Last Friend\'s Messages</string>
+
+
 </resources>

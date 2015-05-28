@@ -352,7 +352,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     new SnackBar.Builder((Activity)context)
                     .withMessage(current.getName() + " " + context.getResources().getString(R.string.cannot_chat_with))
                     .withTextColorId(R.color.white)
-                    .withBackgroundColorId(R.color.drawer_top_background)
+                    .withBackgroundColorId(R.color.primaryColor190T)
                     .withDuration((short) 3000)
                     .show();
         }

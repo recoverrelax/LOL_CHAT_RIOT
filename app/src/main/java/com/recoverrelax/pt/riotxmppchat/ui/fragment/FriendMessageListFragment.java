@@ -30,7 +30,7 @@ import butterknife.InjectView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendMessageListFragment extends Fragment implements FriendMessageListImpl.FriendMessageListImplCallback, RiotXmppService.NewMessageObserver {
+public class FriendMessageListFragment extends BaseFragment implements FriendMessageListImpl.FriendMessageListImplCallback, RiotXmppService.NewMessageObserver {
 
     @InjectView(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
@@ -72,6 +72,7 @@ public class FriendMessageListFragment extends Fragment implements FriendMessage
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setToolbarTitle(getResources().getString(R.string.message_list_title));
     }
 
     @Override
@@ -114,6 +115,7 @@ public class FriendMessageListFragment extends Fragment implements FriendMessage
                 friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
             }
         });
+
     }
 
     @Override

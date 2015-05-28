@@ -144,8 +144,8 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         NotificationCompat.Builder mNotificationBuilder =
                 new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.profile_icon_example)
-                .setContentTitle("Content Title")
-                .setContentText("Content  Text");
+                .setContentTitle("Lol Friend's Alerter")
+                .setContentText("LOL Friend Alerter is now running.");
 
 
         Notification notification = mNotificationBuilder.build();
@@ -318,6 +318,13 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     public Roster getRoster() {
         return roster;
+    }
+
+    public Presence getRosterPresence(String xmppAddress){
+        if(roster != null){
+            return roster.getPresence(xmppAddress);
+        }
+        return null;
     }
 
     public void sendMessage(String message, String userXmppName){

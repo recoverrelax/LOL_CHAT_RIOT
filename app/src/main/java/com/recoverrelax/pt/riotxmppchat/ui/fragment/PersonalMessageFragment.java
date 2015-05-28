@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +49,9 @@ public class PersonalMessageFragment extends BaseFragment implements Observer<Li
     @InjectView(R.id.chatEditText)
     EditText chatEditText;
 
+    @InjectView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     private static final String TAG = PersonalMessageFragment.class.getSimpleName();
 
     private RecyclerView.LayoutManager layoutManager;
@@ -59,6 +64,9 @@ public class PersonalMessageFragment extends BaseFragment implements Observer<Li
 
     private String friendXmppName;
     private String friendUsername;
+    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
+
+    private int defaultMessageNrReturned = Globals.Message.DEFAULT_MESSAGES_RETURNED;
 
 
     public PersonalMessageFragment() {
@@ -74,7 +82,7 @@ public class PersonalMessageFragment extends BaseFragment implements Observer<Li
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_message, container, false);
+        View view = inflater.inflate(R.layout.fragment_personal_message, container, false);
         ButterKnife.inject(this, view);
         return view;
     }
@@ -105,22 +113,42 @@ public class PersonalMessageFragment extends BaseFragment implements Observer<Li
         messageRecyclerView.setAdapter(adapter);
 
         personalMessageHelper = new PersonalMessageImpl(this);
-        personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
+        personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned,
                 MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
 
         setToolbarTitle(getResources().getString(R.string.chatting_with) + " " + friendUsername);
+
+        swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                personalMessageHelper.getLastXPersonalMessageList(doubleLoadedItems(),
+                        MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
+            }
+        };
+
+        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
+    }
+
+    public int doubleLoadedItems(){
+        this.defaultMessageNrReturned = defaultMessageNrReturned*2;
+        return this.defaultMessageNrReturned;
     }
 
     @OnClick(R.id.expandButton)
     public void sendMessageButton(View view){
         String message = chatEditText.getText().toString();
+        Presence rosterPresence = MainApplication.getInstance().getRiotXmppService().getRosterPresence(friendXmppName);
 
-        MainApplication.getInstance().getRiotXmppService().sendMessage(message, friendXmppName);
-        RiotXmppDBRepository.insertMessage(new MessageDb(null, MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
-                friendXmppName, MessageDirection.TO.getId(), new Date(), message, false));
-        OnNewMessageNotification(null, null);
-        // clear text
-        chatEditText.setText("");
+        if (!message.equals("") && rosterPresence.isAvailable()) {
+
+            MainApplication.getInstance().getRiotXmppService().sendMessage(message, friendXmppName);
+            RiotXmppDBRepository.insertMessage(new MessageDb(null, MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
+                    friendXmppName, MessageDirection.TO.getId(), new Date(), message, false));
+            OnNewMessageNotification(null, null);
+            // clear text
+
+            chatEditText.setText("");
+        }
     }
 
     @Override
@@ -128,11 +156,17 @@ public class PersonalMessageFragment extends BaseFragment implements Observer<Li
 
     @Override
     public void onError(Throwable e) {
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onNext(List<MessageDb> messageDbs) {
-        adapter.setItems(messageDbs);
+
+        adapter.setItems(messageDbs, swipeRefreshLayout.isRefreshing() ? null : PersonalMessageAdapter.ScrollTo.LAST_ITEM);
+
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
     }
 
 //     public void OnNewMessageReceived(OnNewMessageReceived from){

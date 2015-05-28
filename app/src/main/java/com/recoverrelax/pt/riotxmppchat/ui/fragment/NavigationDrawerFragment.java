@@ -175,7 +175,10 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
             fragment = ENavDrawer.getById(position).getFrag();
         }
 
+        transaction.setCustomAnimations(R.anim.zoom_enter, R.anim.zoom_exit, R.anim.fade_in, R.anim.fade_out);
+        transaction.addToBackStack(null);
         transaction.replace(R.id.container, fragment);
+
         drawerLayout.closeDrawer(Gravity.START);
 
         mHandler.postDelayed(new Runnable() {

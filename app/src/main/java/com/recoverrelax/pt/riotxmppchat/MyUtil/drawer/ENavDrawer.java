@@ -44,6 +44,15 @@ public enum ENavDrawer {
         }
     }
 
+    public static int getPositionByFrag(Fragment frag){
+        if(frag instanceof FriendListFragment)
+            return ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId();
+        else if(frag instanceof FriendMessageListFragment)
+            return ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId();
+
+        return ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId();
+    }
+
     public int getNavDrawerId() {
         return navDrawerId;
     }

@@ -54,6 +54,10 @@ public class FriendListChat {
         return lastMessage;
     }
 
+    public void setMessage(MessageDb message){
+        this.lastMessage = message;
+    }
+
     public static class LastMessageComparable implements Comparator<FriendListChat> {
         @Override
         public int compare(FriendListChat f1, FriendListChat f2) {

@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        card_view:cardBackgroundColor="@color/blackT"
+        card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="9dp"
         card_view:cardElevation="10dp">
 
@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:paddingLeft="5dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/text_size_micro"
                 tools:text="[12/3 15:33]"
                 android:gravity="left" />
@@ -39,7 +39,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="left"
         android:paddingLeft="5dp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:paddingRight="5dp"
         android:textSize="@dimen/text_size_micro"
         tools:text="Olá! Estás ai?" />

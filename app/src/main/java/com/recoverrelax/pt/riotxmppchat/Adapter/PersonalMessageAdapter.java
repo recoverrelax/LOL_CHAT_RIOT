@@ -112,10 +112,20 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public void setItems(List<MessageDb> items) {
+    public void setItems(List<MessageDb> items, ScrollTo scrollTo) {
+        int sizeDifference = items.size() - personalMessageList.size();
         personalMessageList = items;
         notifyDataSetChanged();
-        this.recyclerView.scrollToPosition(personalMessageList.size()-1);
+
+        if(scrollTo != null)
+            this.recyclerView.scrollToPosition(scrollTo.equals(ScrollTo.FIRST_ITEM) ? 0 : personalMessageList.size()-1);
+        else
+            this.recyclerView.scrollToPosition(sizeDifference);
+    }
+
+    public enum ScrollTo{
+        LAST_ITEM,
+        FIRST_ITEM;
     }
 
     @Override

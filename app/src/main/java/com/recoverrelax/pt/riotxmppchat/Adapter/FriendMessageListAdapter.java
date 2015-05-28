@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 
@@ -20,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import LolChatRiotDb.MessageDb;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -95,21 +97,26 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         }else
             holder.date.setText(friendListChat.getFriendLastMessageDateAsString());
 
-        /**
-         * Set Online Offline Status Color
-         */
-
-        Friend friend = holder.friendListChat.getFriend();
-        if(friend.isOnline()){
-            holder.friendStatus.setImageResource(R.color.online);
-        }else{
-            holder.friendStatus.setImageResource(R.color.transparent);
-        }
     }
 
     public void setItems(List<FriendListChat> items) {
         friendMessageList = items;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Get the array position corresponding to the given xmppName of the user
+     * @param xmppName
+     * @return the position or -1 for cudn't fined
+     */
+    public int getFriendMessageListPositionByFriendName(String xmppName){
+        int friendMessageListSize = friendMessageList.size();
+
+        for(int i = 0 ; i < friendMessageListSize; i++){
+            if(friendMessageList.get(i).getFriend().getUserXmppAddress().equals(xmppName))
+                return i;
+        }
+        return -1;
     }
 
     @Override
@@ -127,9 +134,6 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @InjectView(R.id.date)
         TextView date;
-
-        @InjectView(R.id.friendStatus)
-        ImageView friendStatus;
 
         FriendListChat friendListChat;
 
