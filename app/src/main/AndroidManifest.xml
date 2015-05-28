@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.edgelabs.pt.mybaseapp" >
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:name="com.recoverrelax.pt.riotxmppchat.MainApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity"
+            android:label="@string/friends_online" >
+        </activity>
+        <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SubActivity"
+            android:label="@string/title_activity_sub" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity" />
+        </activity>
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity"
+            android:noHistory="true"
+            android:label="@string/title_activity_login" >
+        </activity>
+
+        <service android:name="com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService"/>
+
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="03b822a9367abbf243c012a679a4a286e0e56c7a" />
+    </application>
+
+</manifest>

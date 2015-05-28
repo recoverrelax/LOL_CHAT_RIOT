@@ -1,0 +1,31 @@
+package com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils;
+
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.support.annotation.RawRes;
+
+public class SoundNotification {
+
+    private Context context;
+
+    private @RawRes int soundID;
+
+    public SoundNotification(Context context, @RawRes int soundId){
+        this.context = context;
+        this.soundID = soundId;
+
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 10, 0);
+
+        final MediaPlayer mp = MediaPlayer.create(context, soundID);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mp.release();
+            }
+        });
+        mp.start();
+    }
+
+}
