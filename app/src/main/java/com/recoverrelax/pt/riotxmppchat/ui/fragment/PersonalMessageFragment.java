@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
@@ -23,7 +21,6 @@ import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
 
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,8 +32,9 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import rx.Observer;
 
-import static com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService.*;
-import static com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity.*;
+import static com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService.NewMessageObserver;
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity.INTENT_FRIEND_NAME;
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity.INTENT_FRIEND_XMPPNAME;
 
 /**
  * A simple {@link Fragment} subclass.

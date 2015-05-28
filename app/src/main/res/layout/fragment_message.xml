@@ -16,7 +16,7 @@
         tools:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_navdrawer_shopping_cart"
+        android:src="@drawable/ic_teemo"
         fab:fab_colorNormal="@color/primaryColor"
         fab:fab_colorPressed="@color/accentColor"
         fab:fab_colorRipple="@color/primaryColor"
