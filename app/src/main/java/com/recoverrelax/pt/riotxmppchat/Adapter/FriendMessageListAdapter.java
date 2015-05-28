@@ -71,7 +71,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
          */
         Date friendLastMessageDate = friendListChat.getFriendLastMessageDate();
         if(friendLastMessageDate != null) {
-
+            //..
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(friendLastMessageDate);
 
