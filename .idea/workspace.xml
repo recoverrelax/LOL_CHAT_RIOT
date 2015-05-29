@@ -41,16 +41,9 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de6acd81-b195-49a3-ab5a-46c53206eac6" name="Default" comment="- completed text&amp;sound notification system&#10;-- possibility to enable/disable sound and text notification when receiving a new message. Settings - Notifications&#10;- for now, just 1 sound available: teeto!">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_settings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/settings_notification_fragment.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/settings_notification_fragment.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/themes.xml" />
+    <list default="true" id="de6acd81-b195-49a3-ab5a-46c53206eac6" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java-gen/LolChatRiotDb/NotificationDb.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java-gen/LolChatRiotDb/NotificationDbDao.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="LOL_CHAT_RIOT.iws" />
@@ -3227,7 +3220,13 @@
       <option name="project" value="LOCAL" />
       <updated>1432920724736</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="- added a new Setting for theme because we needed a new checkBox color accent and wasn't possible with the same theme cause it uses accentColor and this can't be changed.">
+      <created>1432923233194</created>
+      <option name="number" value="00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1432923233194</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TodoView">
@@ -3298,7 +3297,8 @@
     <MESSAGE value="-- added stuff" />
     <MESSAGE value="- fixed a crash that wud be caused by a nullpointer of a material dialog in the login screen" />
     <MESSAGE value="- completed text&amp;sound notification system&#10;-- possibility to enable/disable sound and text notification when receiving a new message. Settings - Notifications&#10;- for now, just 1 sound available: teeto!" />
-    <option name="LAST_COMMIT_MESSAGE" value="- completed text&amp;sound notification system&#10;-- possibility to enable/disable sound and text notification when receiving a new message. Settings - Notifications&#10;- for now, just 1 sound available: teeto!" />
+    <MESSAGE value="- added a new Setting for theme because we needed a new checkBox color accent and wasn't possible with the same theme cause it uses accentColor and this can't be changed." />
+    <option name="LAST_COMMIT_MESSAGE" value="- added a new Setting for theme because we needed a new checkBox color accent and wasn't possible with the same theme cause it uses accentColor and this can't be changed." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
