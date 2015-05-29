@@ -12,6 +12,11 @@
         <item name="colorAccent">@color/primaryColor</item>
     </style>
 
+    <style name="AppTheme.Base.Settings" parent ="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorAccent">@color/primaryColorDark</item>
+    </style>
+
     <!--ToolBar Style-->
     <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:background">@color/transparent</item>

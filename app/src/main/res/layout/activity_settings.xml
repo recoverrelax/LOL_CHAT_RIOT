@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    app:theme="@style/AppTheme.Base.Settings"
     android:background="@drawable/login_screen"
     tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity">
 
@@ -16,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primaryColorDarkT2"
-            app:pstsIndicatorColor="@color/primaryColorDark"
+            app:pstsIndicatorColor="?attr/colorAccent"
             android:textColor="@color/whiteT"
             app:pstsTextColorSelected="@color/white"
             app:pstsIndicatorHeight="6dp"/>
