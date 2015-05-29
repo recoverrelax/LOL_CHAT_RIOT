@@ -5,16 +5,43 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.annotation.RawRes;
 
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
+
+import LolChatRiotDb.NotificationDb;
+
 public class SoundNotification {
 
     private Context context;
 
-    private @RawRes int soundID;
+    private
+    @RawRes
+    int soundID;
+    private NotificationType notificationType;
+    private NotificationDb notificationDb;
 
-    public SoundNotification(Context context, @RawRes int soundId){
+    public SoundNotification(Context context, @RawRes int soundId, NotificationType notificationType) {
         this.context = context;
         this.soundID = soundId;
+        this.notificationType = notificationType;
+        this.notificationDb = RiotXmppDBRepository.getNotification(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
 
+        switch (this.notificationType) {
+            case ONLINE:
+                if (this.notificationDb.getSoundNotificationOnline())
+                    sendNotification();
+                break;
+            case OFFLINE:
+                if (this.notificationDb.getSoundNotificationOffline())
+                    sendNotification();
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public void sendNotification() {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 10, 0);
 
@@ -28,4 +55,8 @@ public class SoundNotification {
         mp.start();
     }
 
+    public enum NotificationType {
+        ONLINE,
+        OFFLINE
+    }
 }

@@ -21,6 +21,15 @@ public class MyDaoGenerator {
         message.addStringProperty("message");
         message.addBooleanProperty("wasRead");
 
+        Entity notif = schema.addEntity("NotificationDb");
+        notif.addIdProperty();
+        notif.addStringProperty("userXmppId");
+        notif.addBooleanProperty("soundNotificationOnline");
+        notif.addBooleanProperty("soundNotificationOffline");
+        notif.addBooleanProperty("textNotificationOnline");
+        notif.addBooleanProperty("textNotificationOffline");
+
+
         new DaoGenerator().generateAll(schema, args[0]);
     }
 }

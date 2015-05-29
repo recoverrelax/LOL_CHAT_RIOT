@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
-import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
@@ -47,11 +46,8 @@ public class FriendListActivity extends BaseActivity implements FriendMessageLis
             public void onBackStackChanged() {
                 if(navigationDrawerFragment != null) {
                     Fragment frag = getSupportFragmentManager().findFragmentById(R.id.container);
-                    if (frag instanceof FriendListFragment) {
-                        // do something with f
                         int positionByFrag = ENavDrawer.getPositionByFrag(frag);
                         navigationDrawerFragment.setCurrentSelectedItem(positionByFrag);
-                    }
                 }
             }
         });
@@ -60,30 +56,9 @@ public class FriendListActivity extends BaseActivity implements FriendMessageLis
     @Override
     protected void onDestroy() {
         MainApplication.getInstance().setApplicationClosed(true);
+        Log.i("ASAS", "onDestroy FriendListActivity");
         super.onDestroy();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        boolean onCreateOptionsMenu = super.onCreateOptionsMenu(menu);
-
-        menu.findItem(R.id.action_settings).setVisible(true);
-        menu.findItem(R.id.navigate).setVisible(false).setEnabled(false);
-        menu.findItem(R.id.newMessage).setVisible(false);
-        return onCreateOptionsMenu;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        if (id == R.id.newMessage){
-            navigationDrawerFragment.onDrawerItemSelected(ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId());
-            return true;
-        }else
-            return super.onOptionsItemSelected(item);
-        }
 
     @Override
     public void replaceFragment(String friendUsername, String friendXmppName) {

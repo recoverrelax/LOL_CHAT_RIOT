@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
 public class SplashScreenActivity extends AppCompatActivity {
     // Splash screen timer
@@ -51,8 +52,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
             }.execute();
 
-
         }
+        MainApplication.getInstance().setConnectedXmppUser(null);
     }
 
     @Override

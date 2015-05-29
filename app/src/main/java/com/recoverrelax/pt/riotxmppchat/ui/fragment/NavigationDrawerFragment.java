@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -18,12 +19,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DividerItemDecoration;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapter;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapterItemSelectedCallback;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.Entities.DrawerItemsInfo;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,6 +174,15 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
         if(CURRENT_SELECTED_ITEM == position){
             drawerLayout.closeDrawer(Gravity.START);
             return;
+        }else if(position == ENavDrawer.NAVDRAWER_ITEM_2.getNavDrawerId()) {
+
+            Intent intent = new Intent(getActivity(), SettingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+            AndroidUtils.overridePendingTransitionAppDefault(getActivity());
+            drawerLayout.closeDrawer(Gravity.START);
+            return;
+
         }else {
             fragment = ENavDrawer.getById(position).getFrag();
         }

@@ -48,8 +48,10 @@ import java.util.Map;
 import javax.net.ssl.SSLSocketFactory;
 
 import LolChatRiotDb.MessageDb;
+import LolChatRiotDb.NotificationDb;
 import rx.Observer;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification.*;
 import static junit.framework.Assert.assertTrue;
 
 public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations>, RosterListener, ChatMessageListener {
@@ -96,6 +98,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
      */
 
     private List<NewMessageObserver> newMessageObserver;
+
     public class MyBinder extends Binder {
         public RiotXmppService getService() {
             return RiotXmppService.this;
@@ -106,7 +109,6 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
-
 
 
     @Override
@@ -145,9 +147,9 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
         NotificationCompat.Builder mNotificationBuilder =
                 new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.profile_icon_example)
-                .setContentTitle("Lol Friend's Alerter")
-                .setContentText("LOL Friend Alerter is now running.");
+                        .setSmallIcon(R.drawable.profile_icon_example)
+                        .setContentTitle("Lol Friend's Alerter")
+                        .setContentText("LOL Friend Alerter is now running.");
 
 
         Notification notification = mNotificationBuilder.build();
@@ -248,7 +250,9 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         }
     }
 
-    @Override public void onCompleted() {}
+    @Override
+    public void onCompleted() {
+    }
 
     @Override
     public void onError(Throwable e) {
@@ -279,16 +283,19 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     /**
      * Chat Listener callback receiver
+     *
      * @param chat
      * @param message
      */
     @Override
     public void processMessage(Chat chat, Message message) {
+        // sum1212121@riot.pt
+        // but we need sum1212121 ...
         String messageFrom = XmppUtils.parseXmppAddress(message.getFrom());
 
         addChat(chat, messageFrom);
 
-        if(message != null && messageFrom != null && message.getBody() != null){
+        if (message != null && messageFrom != null && message.getBody() != null) {
             MessageDb message1 = new MessageDb(null, getConnectedXmppUser(), messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
             RiotXmppDBRepository.insertMessage(message1);
             LogUtils.LOGI(TAG, "Iserted message in the db:\n + " + message1.toString());
@@ -298,38 +305,38 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         }
     }
 
-    public void addChat(Chat chat, String messageFrom){
-        if(this.chatList == null){
+    public void addChat(Chat chat, String messageFrom) {
+        if (this.chatList == null) {
             this.chatList = new HashMap<>();
         }
 
-        if(!this.chatList.containsKey(messageFrom)){
+        if (!this.chatList.containsKey(messageFrom)) {
             this.chatList.put(messageFrom, chat);
         }
     }
 
-    public Chat getChat(String userXmppName){
-            /**
-             * At this step means, there's no active chat for that user so it means you are starting the conversation
-             * and need to start a new chat  as well.
-             */
-            Chat chat = this.chatManager.createChat(userXmppName, RiotXmppService.this);
-            addChat(chat, userXmppName);
-            return chat;
+    public Chat getChat(String userXmppName) {
+        /**
+         * At this step means, there's no active chat for that user so it means you are starting the conversation
+         * and need to start a new chat  as well.
+         */
+        Chat chat = this.chatManager.createChat(userXmppName, RiotXmppService.this);
+        addChat(chat, userXmppName);
+        return chat;
     }
 
     public Roster getRoster() {
         return roster;
     }
 
-    public Presence getRosterPresence(String xmppAddress){
-        if(roster != null){
+    public Presence getRosterPresence(String xmppAddress) {
+        if (roster != null) {
             return roster.getPresence(xmppAddress);
         }
         return null;
     }
 
-    public void sendMessage(String message, String userXmppName){
+    public void sendMessage(String message, String userXmppName) {
         try {
             Chat chat = getChat(userXmppName);
             chat.sendMessage(message);
@@ -338,7 +345,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         }
     }
 
-    public void removeChatListener(){
+    public void removeChatListener() {
         if (this.chatManager != null && this.chatManagerListener != null) {
             this.chatManager.removeChatListener(this.chatManagerListener);
         }
@@ -354,8 +361,13 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         return connection;
     }
 
-    public String getConnectedXmppUser(){
-        return XmppUtils.parseXmppAddress(connection.getUser());
+    public String getConnectedXmppUser() {
+        MainApplication instance = MainApplication.getInstance();
+
+        if (instance.getConnectedXmppUser() == null) {
+            instance.setConnectedXmppUser(XmppUtils.parseXmppAddress(connection.getUser()));
+        }
+        return instance.getConnectedXmppUser();
     }
 
     @Override
@@ -368,11 +380,20 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     /**
      * ROSTER CHANGES LISTENER
+     *
      * @param addresses
      */
-    @Override public void entriesAdded(Collection<String> addresses) {}
-    @Override public void entriesUpdated(Collection<String> addresses) {}
-    @Override public void entriesDeleted(Collection<String> addresses) {}
+    @Override
+    public void entriesAdded(Collection<String> addresses) {
+    }
+
+    @Override
+    public void entriesUpdated(Collection<String> addresses) {
+    }
+
+    @Override
+    public void entriesDeleted(Collection<String> addresses) {
+    }
 
     @Override
     public void presenceChanged(Presence presence) {
@@ -381,10 +402,11 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     /**
      * Add an observer to the list of observers
+     *
      * @param observer
      */
-    public void addNewMessageObserver(NewMessageObserver observer){
-        if(newMessageObserver == null)
+    public void addNewMessageObserver(NewMessageObserver observer) {
+        if (newMessageObserver == null)
             newMessageObserver = new ArrayList<>();
 
         newMessageObserver.add(observer);
@@ -392,36 +414,39 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     /**
      * Remove an observers from the list of observers
+     *
      * @param observer
      */
-    public void removeNewMessageObserver(NewMessageObserver observer){
-        if(newMessageObserver != null)
+    public void removeNewMessageObserver(NewMessageObserver observer) {
+        if (newMessageObserver != null)
             newMessageObserver.remove(observer);
     }
 
     /**
      * Notify all Observers of new messages
+     *
      * @param message
-     * @param messageFrom
+     * @param userXmppAddress
      */
-    public void notifyNewMessage(Message message, String messageFrom){
+    public void notifyNewMessage(Message message, String userXmppAddress) {
 
-        if(MainApplication.getInstance().isApplicationClosed()){
-            String username = roster.getEntry(messageFrom).getName();
+        boolean applicationClosed = MainApplication.getInstance().isApplicationClosed();
 
-            new MessageNotification(this, message.getBody(), username).sendNotification();
+        if (applicationClosed) {
+            String username = roster.getEntry(userXmppAddress).getName();
+            new MessageNotification(this, message.getBody(), username, userXmppAddress, NotificationType.SYSTEM_NOTIFICATION);
         }
 
-        /**
-         * Play a sound everytime!
-         */
-            new SoundNotification(this, R.raw.teemo_new_message);
+        new SoundNotification(this, R.raw.teemo_new_message, applicationClosed
+                ? SoundNotification.NotificationType.OFFLINE
+                : SoundNotification.NotificationType.ONLINE);
+
 
         /**
          * Deliver the new message to all the observers
          */
-        for(NewMessageObserver observer: newMessageObserver){
-            observer.OnNewMessageNotification(message, messageFrom);
+        for (NewMessageObserver observer : newMessageObserver) {
+            observer.OnNewMessageNotification(message, userXmppAddress);
         }
     }
 
@@ -430,7 +455,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
      * Used to notify observers of newly received messages
      */
     public interface NewMessageObserver {
-        void OnNewMessageNotification(Message message, String messageFrom);
+        void OnNewMessageNotification(Message message, String userXmppAddress);
     }
 
 }

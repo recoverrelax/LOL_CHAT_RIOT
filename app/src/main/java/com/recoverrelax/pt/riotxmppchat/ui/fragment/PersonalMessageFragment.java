@@ -195,7 +195,7 @@ public class PersonalMessageFragment extends BaseFragment implements Observer<Li
     }
 
     @Override
-    public void OnNewMessageNotification(Message message, String messageFrom) {
+    public void OnNewMessageNotification(Message message, String userXmppAddress) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

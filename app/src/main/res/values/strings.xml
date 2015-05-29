@@ -11,7 +11,7 @@
     <!--Drawer List Item Names-->
     <string name="navdrawer_item0">Frieds List</string>
     <string name="navdrawer_item1">Message List</string>
-    <string name="navdrawer_item2">Item 2</string>
+    <string name="navdrawer_item2">Settings</string>
     <string name="navdrawer_item3">Item 3</string>
     <string name="navdrawer_item4">Item 4</string>
     <string name="navdrawer_item5">Item 5</string>

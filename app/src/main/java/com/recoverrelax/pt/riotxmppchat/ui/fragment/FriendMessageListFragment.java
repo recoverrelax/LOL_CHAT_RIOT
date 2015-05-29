@@ -105,7 +105,7 @@ public class FriendMessageListFragment extends BaseFragment implements FriendMes
     }
 
     @Override
-    public void OnNewMessageNotification(Message message, String messageFrom) {
+    public void OnNewMessageNotification(Message message, String userXmppAddress) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 
 import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
@@ -17,6 +19,7 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
+import LolChatRiotDb.NotificationDb;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class MainApplication extends Application {
@@ -27,6 +30,12 @@ public class MainApplication extends Application {
     private Intent intentService;
     private ActivityServerCallback activityServerCallback;
     private DaoSession daoSession;
+
+    /**
+     * This value is stored as a buffer because its accessed many times.
+     * When the app start, this value is reseted (set to null)
+     */
+    private String connectedXmppUser;
 
     private static MainApplication instance;
     private boolean isApplicationClosed = true;
@@ -43,6 +52,16 @@ public class MainApplication extends Application {
                         .build()
         );
         setupDatabase();
+    }
+
+    public void settings_init(String connectedXmppUser) {
+        if(!RiotXmppDBRepository.defaultSettingsNotificationsSetted(connectedXmppUser)){
+            NotificationDb notif = new NotificationDb(null, connectedXmppUser, false, false, false, false);
+            RiotXmppDBRepository.insertNotification(notif);
+            LogUtils.LOGI(TAG, "Setting NotificationDefaults for the first time");
+        }else{
+            LogUtils.LOGI(TAG, "NotificationDefaults already setted");
+        }
     }
 
     private void setupDatabase() {
@@ -99,7 +118,13 @@ public class MainApplication extends Application {
 
     public void bindService(ActivityServerCallback callback) {
         this.activityServerCallback = callback;
-        bindService(intentService, mConnection, BIND_AUTO_CREATE);
+
+        if(!mBound)
+            bindService(intentService, mConnection, BIND_AUTO_CREATE);
+        else {
+            if(activityServerCallback != null)
+                activityServerCallback.onServiceBinded();
+        }
     }
 
     public void unbindService() {
@@ -112,7 +137,7 @@ public class MainApplication extends Application {
     @Override
     public void onTerminate() {
         if (mBound) {
-            unbindService(mConnection);
+            unbindService();
             mBound = false;
         }
         super.onTerminate();
@@ -128,5 +153,13 @@ public class MainApplication extends Application {
 
     public DaoSession getDaoSession() {
         return daoSession;
+    }
+
+    public String getConnectedXmppUser() {
+        return connectedXmppUser;
+    }
+
+    public void setConnectedXmppUser(String connectedXmppUser) {
+        this.connectedXmppUser = connectedXmppUser;
     }
 }

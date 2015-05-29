@@ -11,9 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapterItemSelectedCallback;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NavigationDrawerFragment;
 
 import butterknife.ButterKnife;
@@ -21,7 +22,7 @@ import butterknife.InjectView;
 import butterknife.Optional;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity implements DrawerAdapterItemSelectedCallback{
+public abstract class BaseActivity extends AppCompatActivity {
 
     @Optional
     @InjectView(R.id.app_bar)
@@ -30,6 +31,10 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerAd
     @Optional
     @InjectView(R.id.drawer_layout)
     DrawerLayout drawer_layout;
+
+    @Optional
+    @InjectView(R.id.toolbar_title)
+    TextView toolbar_title;
 
     protected NavigationDrawerFragment navigationDrawerFragment;
 
@@ -52,6 +57,10 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerAd
          */
         if (toolbar != null) {
             setSupportActionBar(toolbar);
+            ActionBar supportActionBar = getSupportActionBar();
+
+            if(supportActionBar != null)
+                supportActionBar.setDisplayShowTitleEnabled(false);
         }
 
         if (drawer_layout != null) {
@@ -60,6 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerAd
 
             navigationDrawerFragment.setup(R.id.nav_drawer_fragment, drawer_layout, toolbar);
         }
+
     }
 
     public abstract @LayoutRes int getLayoutResources();
@@ -81,9 +91,18 @@ public abstract class BaseActivity extends AppCompatActivity implements DrawerAd
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if (id == R.id.newMessage){
+            navigationDrawerFragment.onDrawerItemSelected(ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId());
+            return true;
+        }else if(id == android.R.id.home){
+            onBackPressed();
         }
+            return super.onOptionsItemSelected(item);
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    public void setTitle(CharSequence title) {
+        toolbar_title.setText(title.toString());
     }
 
     public

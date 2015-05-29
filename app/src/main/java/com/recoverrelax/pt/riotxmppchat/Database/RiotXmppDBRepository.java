@@ -6,7 +6,11 @@ import java.util.List;
 
 import LolChatRiotDb.MessageDb;
 import LolChatRiotDb.MessageDbDao;
+import LolChatRiotDb.NotificationDb;
+import LolChatRiotDb.NotificationDbDao;
 import de.greenrobot.dao.query.QueryBuilder;
+
+import static junit.framework.Assert.assertTrue;
 
 
 public class RiotXmppDBRepository {
@@ -77,5 +81,41 @@ public class RiotXmppDBRepository {
                 MessageDbDao.Properties.WasRead.eq(false))
                 .build();
         return qb.list().size()>0;
+    }
+
+    /**
+     * Notification Dao
+     */
+
+    public static NotificationDbDao getNotificationDao(){
+        return MainApplication.getInstance().getDaoSession().getNotificationDbDao();
+    }
+
+    public static boolean defaultSettingsNotificationsSetted(String connectedXmppUser) {
+        List<NotificationDb> list = getNotificationDao().queryBuilder().where(
+                NotificationDbDao.Properties.UserXmppId.eq(connectedXmppUser))
+                .list();
+        assertTrue("Something went wrong. Same user can't have more that 1 defined SettingsNotifications",
+                list.size() < 2);
+
+        return list.size() == 1;
+    }
+
+    /**
+     * Just insert, no update ...
+     * @param notif
+     */
+    public static void insertNotification(NotificationDb notif){
+        getNotificationDao().insert(notif);
+    }
+
+    public static NotificationDb getNotification(String userXmppAddress){
+        List<NotificationDb> list = getNotificationDao().queryBuilder()
+                .where(NotificationDbDao.Properties.UserXmppId.eq(userXmppAddress)).list();
+        return list.get(0);
+    }
+
+    public static void updateNotification(NotificationDb notif){
+        getNotificationDao().update(notif);
     }
 }

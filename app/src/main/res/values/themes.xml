@@ -14,16 +14,12 @@
 
     <!--ToolBar Style-->
     <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:background">@color/primaryColor</item>
-        <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
-    </style>
-
-    <style name="MyCustomToolBarThemeTransparent" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@color/transparent</item>
         <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
         <item name="windowActionBarOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
     </style>
+
     <style name="MyCustomToolBarPopupTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/white</item>
         <item name="android:textColorPrimary">@color/black</item> <!-- ToobarPopup color text SecondaryPrimary-->

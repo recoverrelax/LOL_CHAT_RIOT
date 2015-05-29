@@ -25,6 +25,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
@@ -155,6 +156,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         super.onResume();
         MainApplication.getInstance().getRiotXmppService().addRosterListener(this);
         MainApplication.getInstance().getRiotXmppService().addNewMessageObserver(this);
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -293,8 +295,15 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     }
 
     @Override
-    public void OnNewMessageNotification(Message message, String messageFrom) {
-        Log.i(TAG, "here");
+    public void OnNewMessageNotification(final Message message, final String userXmppAddress) {
         getActivity().invalidateOptionsMenu();
+        final String username = MainApplication.getInstance().getRiotXmppService().getRoster().getEntry(userXmppAddress).getName();
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new MessageNotification(FriendListFragment.this.getActivity(), message.getBody(), username, userXmppAddress, MessageNotification.NotificationType.SNACKBAR).sendNotification();
+            }
+        });
     }
 }

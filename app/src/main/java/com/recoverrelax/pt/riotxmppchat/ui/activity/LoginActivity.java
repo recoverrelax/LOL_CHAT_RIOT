@@ -114,6 +114,7 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         materialDialog.dismiss();
+        MainApplication.getInstance().settings_init(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
         this.finish();
     }
 
@@ -158,6 +159,7 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
     protected void onDestroy() {
         super.onDestroy();
         RiotXmppService.loginActilivyCallback = null;
-        materialDialog.dismiss();
+        if(materialDialog != null)
+            materialDialog.dismiss();
     }
 }
