@@ -56,7 +56,7 @@ public class MainApplication extends Application {
 
     public void settings_init(String connectedXmppUser) {
         if(!RiotXmppDBRepository.defaultSettingsNotificationsSetted(connectedXmppUser)){
-            NotificationDb notif = new NotificationDb(null, connectedXmppUser, false, false, false, false);
+            NotificationDb notif = new NotificationDb(null, connectedXmppUser, true, true, true, true);
             RiotXmppDBRepository.insertNotification(notif);
             LogUtils.LOGI(TAG, "Setting NotificationDefaults for the first time");
         }else{
