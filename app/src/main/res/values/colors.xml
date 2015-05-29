@@ -16,6 +16,7 @@
     <color name="primaryColor190T">#beff5722</color>
     <color name="primaryColor">#FF5722</color>
     <color name="loginBackground">#37ff5722</color>
+    <color name="loginBackground2X">#6eff5722</color>
     <color name="drawer_top_background">#a0ff5722</color>
     <color name="primaryColorDark">#0288d1</color>
 

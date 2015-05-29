@@ -6,30 +6,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edgelabs.pt.mybaseapp.R;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
-
-import org.jivesoftware.smack.packet.Message;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import LolChatRiotDb.MessageDb;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment.*;
+import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment.FriendMessageListFragActivityCallback;
 
 
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
@@ -77,7 +71,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
          */
         Date friendLastMessageDate = friendListChat.getFriendLastMessageDate();
         if(friendLastMessageDate != null) {
-
+            //..
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(friendLastMessageDate);
 
@@ -101,7 +95,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
             holder.date.setText(friendListChat.getFriendLastMessageDateAsString());
 
         Boolean wasRead = holder.friendListChat.getLastMessage().getWasRead();
-        if(!wasRead){
+        if(!wasRead && holder.friendListChat.getLastMessage().getDirection() == MessageDirection.FROM.getId()){
             holder.wasRead.setVisibility(View.VISIBLE);
             AndroidUtils.setBlinkAnimation(holder.wasRead, true);
         }else{

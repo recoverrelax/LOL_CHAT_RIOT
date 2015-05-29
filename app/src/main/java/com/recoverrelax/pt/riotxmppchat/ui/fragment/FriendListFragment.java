@@ -3,12 +3,12 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,8 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.edgelabs.pt.mybaseapp.R;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
@@ -27,15 +25,11 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
 
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
@@ -49,13 +43,14 @@ import butterknife.InjectView;
 import rx.Observer;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
-import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment.*;
+import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment.FriendMessageListFragActivityCallback;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FriendListFragment extends BaseFragment implements FriendsListAdapter.OnFriendClick, Observer<RiotXmppRosterImpl.FriendList>, RosterListener, ObservableScrollViewCallbacks, RiotXmppService.NewMessageObserver {
 
+    private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
 
     @InjectView(R.id.myFriendsListRecyclerView)
@@ -66,6 +61,8 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
     @InjectView(R.id.progressBarCircularIndeterminate)
     ProgressBarCircularIndeterminate progressBarCircularIndeterminate;
+
+    private boolean firstTimeFragmentStart = true;
 
     /**
      * Activity Callback
@@ -108,6 +105,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         View view = inflater.inflate(R.layout.friend_list_fragment, container, false);
         ButterKnife.inject(this, view);
         setHasOptionsMenu(true);
+        showProgressBar(true);
         return view;
     }
 
@@ -130,13 +128,26 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
                 riotXmppRosterHelper.getFullFriendsList();
             }
         };
-        riotXmppRosterHelper.getFullFriendsList();
+        /**
+         * We need this. For some reason, the roster gets time to initialize so it wont return values after some time.
+         */
+
+        if(firstTimeFragmentStart) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    riotXmppRosterHelper.getFullFriendsList();
+                }
+            }, DELAY_BEFORE_LOAD_ITEMS);
+        }else
+            riotXmppRosterHelper.getFullFriendsList();
+
 
         /**
          * Handler to Update the TimeStamp
          * of friends Playing or inQueue
          */
-        showProgressBar(true);
+        firstTimeFragmentStart = false;
     }
 
     @Override
@@ -283,6 +294,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
     @Override
     public void OnNewMessageNotification(Message message, String messageFrom) {
+        Log.i(TAG, "here");
         getActivity().invalidateOptionsMenu();
     }
 }

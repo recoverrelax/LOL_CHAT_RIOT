@@ -36,6 +36,9 @@
         <service android:name="com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService"/>
 
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="03b822a9367abbf243c012a679a4a286e0e56c7a" />
     </application>
 
 </manifest>

@@ -1,15 +1,11 @@
 package com.recoverrelax.pt.riotxmppchat.Database;
 
-import android.util.Log;
-
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 
 import java.util.List;
 
 import LolChatRiotDb.MessageDb;
 import LolChatRiotDb.MessageDbDao;
-import de.greenrobot.dao.query.Query;
 import de.greenrobot.dao.query.QueryBuilder;
 
 
@@ -77,6 +73,7 @@ public class RiotXmppDBRepository {
     public static boolean hasUnreadedMessages(String connectedUser){
         QueryBuilder qb = getMessageDao().queryBuilder();
         qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
+                MessageDbDao.Properties.Direction.eq(MessageDirection.FROM.getId()),
                 MessageDbDao.Properties.WasRead.eq(false))
                 .build();
         return qb.list().size()>0;

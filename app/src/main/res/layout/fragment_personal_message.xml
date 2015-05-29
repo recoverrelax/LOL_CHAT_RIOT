@@ -27,7 +27,7 @@
         android:layout_marginRight="18dp"
         android:src="@drawable/ic_teemo"
         android:translationY="30dp"
-        fab:fab_colorNormal="@color/primaryColor"
+        fab:fab_colorNormal="@color/loginBackground"
         fab:fab_colorPressed="@color/accentColor"
         fab:fab_colorRipple="@color/primaryColor"
         fab:fab_size="normal"

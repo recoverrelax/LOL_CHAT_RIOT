@@ -1,12 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils;
 
-import android.app.NotificationManager;
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.annotation.RawRes;
-import android.support.v4.app.NotificationCompat;
-
-import com.edgelabs.pt.mybaseapp.R;
 
 public class SoundNotification {
 
@@ -14,16 +11,13 @@ public class SoundNotification {
 
     private @RawRes int soundID;
 
-    private MediaPlayer mp;
-
     public SoundNotification(Context context, @RawRes int soundId){
         this.context = context;
         this.soundID = soundId;
 
-        createNewSoundNotification();
-    }
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 10, 0);
 
-    private void createNewSoundNotification() {
         final MediaPlayer mp = MediaPlayer.create(context, soundID);
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -31,9 +25,7 @@ public class SoundNotification {
                 mp.release();
             }
         });
-    }
-
-    public void play(){
         mp.start();
     }
+
 }

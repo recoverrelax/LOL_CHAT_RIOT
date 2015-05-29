@@ -10,7 +10,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:background="@color/primaryColor"
+            android:background="@color/white"
             materialdesign:animate="false" />
 
         <android.support.v4.widget.SwipeRefreshLayout
