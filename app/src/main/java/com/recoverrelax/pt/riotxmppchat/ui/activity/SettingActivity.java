@@ -9,7 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;

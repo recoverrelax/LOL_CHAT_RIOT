@@ -2,9 +2,15 @@ package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 import android.support.v4.app.Fragment;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListFailedLoadingEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListLoadedEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
+import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
@@ -22,20 +28,20 @@ import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
+public class RiotXmppRosterImpl implements RiotXmppRosterHelper, Observer<RiotXmppRosterImpl.FriendList>{
 
-    private Observer<FriendList> mCallback;
     private Subscription mSubscription;
     private Fragment mFragment;
     private AbstractXMPPConnection connection;
+    private Bus busInstance;
 
 
     private String TAG = this.getClass().getSimpleName();
 
-    public RiotXmppRosterImpl(Observer<FriendList> mCallback, AbstractXMPPConnection connection) {
-        mFragment = (Fragment)mCallback;
-        this.mCallback = mCallback;
+    public RiotXmppRosterImpl(Fragment frag, AbstractXMPPConnection connection) {
+        mFragment = frag;
         this.connection = connection;
+        this.busInstance = MainApplication.getInstance().getBusInstance();
     }
 
     @Override
@@ -58,7 +64,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                 }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mCallback);
+                .subscribe(this);
     }
 
     @Override
@@ -95,7 +101,36 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                 }))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mCallback);
+                .subscribe(this);
+    }
+
+    @Override
+    public void onCompleted() {}
+
+    @Override
+    public void onError(Throwable e) {
+        busInstance.post(new OnFriendListFailedLoadingEvent());
+    }
+
+    @Override
+    public void onNext(FriendList friendList) {
+        
+        switch (friendList.getOperation()) {
+            case FRIEND_LIST:
+                /** {@link FriendListFragment#OnFriendListLoaded(OnFriendListLoadedEvent)}  **/
+                busInstance.post(new OnFriendListLoadedEvent(friendList));
+                break;
+            case FRIEND_ADD:
+                break;
+            case FRIEND_CHANGED:
+                /** {@link FriendListFragment#onFriendChanged(OnFriendChangedEvent)}  **/
+               busInstance.post(new OnFriendChangedEvent(friendList.getFriendList().get(0)));
+                break;
+            case FRIEND_DELETE:
+                break;
+            case FRIEND_UPDATE:
+                break;
+        }
     }
 
     public class FriendList {

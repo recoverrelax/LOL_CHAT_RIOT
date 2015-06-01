@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.R;
 
 import butterknife.ButterKnife;
 

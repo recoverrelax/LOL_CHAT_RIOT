@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DividerItemDecoration;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapter;

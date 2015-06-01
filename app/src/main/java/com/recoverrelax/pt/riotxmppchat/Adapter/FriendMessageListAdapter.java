@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReplaceMainFragmentEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 
 import java.util.ArrayList;
@@ -22,16 +24,11 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-
-import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment.FriendMessageListFragActivityCallback;
-
-
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
 
     List<FriendListChat> friendMessageList;
     private LayoutInflater inflater;
     private Context context;
-    private FriendMessageListFragActivityCallback activityCallback;
 
     private @LayoutRes int layoutRes;
 
@@ -41,13 +38,6 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         this.context = context;
         this.layoutRes = layoutRes;
         this.friendMessageList = friendMessageList;
-
-        try {
-            activityCallback = (FriendMessageListFragActivityCallback) context;
-        }catch(ClassCastException e){
-            throw new ClassCastException("FriendMessageListAdapter requires the parent activity to implements its callback" +
-                    "for the clickListener: FriendMessageListFragActivityCallback");
-        }
     }
 
     @Override
@@ -155,7 +145,8 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @OnClick(R.id.parent_row)
         public void onRowClick(View view){
-            activityCallback.replaceFragment(friendListChat.getFriendName(), friendListChat.getUserXmppAddress());
+            MainApplication.getInstance().getBusInstance().post(new OnReplaceMainFragmentEvent(friendListChat.getFriendName(),
+                    friendListChat.getUserXmppAddress()));
         }
     }
 }

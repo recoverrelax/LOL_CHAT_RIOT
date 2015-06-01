@@ -3,6 +3,9 @@ package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 import android.support.v4.app.Fragment;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.PersonalMessageList.OnLastXPersonalMessageListReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,17 +19,15 @@ import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class PersonalMessageImpl implements PersonalMessageHelper {
+public class PersonalMessageImpl implements PersonalMessageHelper, Observer<List<MessageDb>>{
 
-    private Observer<List<MessageDb>> mCallback;
     private Subscription mSubscription;
     private Fragment mFragment;
 
     private String TAG = this.getClass().getSimpleName();
 
-    public PersonalMessageImpl(Observer<List<MessageDb>> mCallback) {
-        mFragment = (Fragment)mCallback;
-        this.mCallback = mCallback;
+    public PersonalMessageImpl(Fragment frag) {
+        mFragment = frag;
     }
 
     @Override
@@ -45,6 +46,19 @@ public class PersonalMessageImpl implements PersonalMessageHelper {
                 }))
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mCallback);
+                .subscribe(this);
+    }
+
+    @Override
+    public void onCompleted() {}
+
+    @Override
+    public void onError(Throwable e) {
+    }
+
+    @Override
+    public void onNext(List<MessageDb> messageDbs) {
+        /** {@link PersonalMessageFragment#LastXMessageListReceived(OnLastXPersonalMessageListReceivedEvent)} **/
+        MainApplication.getInstance().getBusInstance().post(new OnLastXPersonalMessageListReceivedEvent(messageDbs));
     }
 }

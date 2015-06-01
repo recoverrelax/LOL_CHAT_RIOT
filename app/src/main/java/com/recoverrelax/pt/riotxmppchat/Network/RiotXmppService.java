@@ -9,7 +9,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -22,7 +27,11 @@ import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
-import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
+import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -48,7 +57,6 @@ import java.util.Map;
 import javax.net.ssl.SSLSocketFactory;
 
 import LolChatRiotDb.MessageDb;
-import LolChatRiotDb.NotificationDb;
 import rx.Observer;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification.*;
@@ -58,18 +66,16 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     private static final String TAG = RiotXmppService.class.getSimpleName();
     private static final int ONGOING_SERVICE_NOTIFICATION_ID = 12345;
+    private Bus busInstance;
 
     private final IBinder mBinder = new MyBinder();
     private DataStorage dataStorage;
-    private MainApplication mainApplication;
 
     public static final String INTENT_SERVER_HOST_CONST = "server";
     public static final String INTENT_SERVER_USERNAME = "username";
     public static final String INTENT_SERVER_PASSWORD = "password";
 
     private static final long DELAY_BEFORE_ROSTER_LISTENER = 5000;
-
-    public static RiotXmppDataLoaderCallback<RiotXmppConnectionImpl.RiotXmppOperations> loginActilivyCallback;
 
     /**
      * Server Info
@@ -97,8 +103,6 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
      * New Message Notification
      */
 
-    private List<NewMessageObserver> newMessageObserver;
-
     public class MyBinder extends Binder {
         public RiotXmppService getService() {
             return RiotXmppService.this;
@@ -114,7 +118,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         dataStorage = DataStorage.getInstance();
-
+        busInstance = MainApplication.getInstance().getBusInstance();
         /**
          * Get credentials from intent
          */
@@ -235,9 +239,9 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
                 login();
                 break;
             case LOGGED_IN:
-                if (loginActilivyCallback != null) {
-                    loginActilivyCallback.onSuccess(result);
-                }
+                /**{@link LoginActivity#onSuccessLogin(OnSuccessLoginEvent)} */
+                MainApplication.getInstance().getBusInstance().post(new OnSuccessLoginEvent());
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -251,14 +255,12 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     }
 
     @Override
-    public void onCompleted() {
-    }
+    public void onCompleted() {}
 
     @Override
     public void onError(Throwable e) {
-        if (loginActilivyCallback != null) {
-            loginActilivyCallback.onFailure(e);
-        }
+        /**{@link LoginActivity#onFailure(OnConnectionOrLoginFailureEvent)} */
+        MainApplication.getInstance().getBusInstance().post(new OnConnectionOrLoginFailureEvent());
     }
 
     public void addRosterListener(RosterListener rosterListener) {
@@ -378,48 +380,18 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         super.onDestroy();
     }
 
-    /**
-     * ROSTER CHANGES LISTENER
-     *
-     * @param addresses
-     */
     @Override
-    public void entriesAdded(Collection<String> addresses) {
-    }
-
+    public void entriesAdded(Collection<String> addresses) {}
     @Override
-    public void entriesUpdated(Collection<String> addresses) {
-    }
-
+    public void entriesUpdated(Collection<String> addresses) {}
     @Override
-    public void entriesDeleted(Collection<String> addresses) {
-    }
+    public void entriesDeleted(Collection<String> addresses) {}
 
+    /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)}**/
     @Override
     public void presenceChanged(Presence presence) {
         LogUtils.LOGI(TAG, "Callback called on the service");
-    }
-
-    /**
-     * Add an observer to the list of observers
-     *
-     * @param observer
-     */
-    public void addNewMessageObserver(NewMessageObserver observer) {
-        if (newMessageObserver == null)
-            newMessageObserver = new ArrayList<>();
-
-        newMessageObserver.add(observer);
-    }
-
-    /**
-     * Remove an observers from the list of observers
-     *
-     * @param observer
-     */
-    public void removeNewMessageObserver(NewMessageObserver observer) {
-        if (newMessageObserver != null)
-            newMessageObserver.remove(observer);
+        busInstance.post(new OnFriendPresenceChangedEvent(presence));
     }
 
     /**
@@ -444,18 +416,11 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
         /**
          * Deliver the new message to all the observers
+         *
+         * 1st: {@link FriendListFragment#OnNewMessageReceived(OnNewMessageReceivedEvent)}  }
+         * 2nd: {@link PersonalMessageFragment#OnNewMessageReceived(OnNewMessageReceivedEvent)}  }
+         * 3rd: {@link FriendMessageListFragment#OnNewMessageReceived(OnNewMessageReceivedEvent)}  }
          */
-        for (NewMessageObserver observer : newMessageObserver) {
-            observer.OnNewMessageNotification(message, userXmppAddress);
-        }
+        busInstance.post(new OnNewMessageReceivedEvent(message, userXmppAddress));
     }
-
-    /**
-     * New Message Notification Interface
-     * Used to notify observers of newly received messages
-     */
-    public interface NewMessageObserver {
-        void OnNewMessageNotification(Message message, String userXmppAddress);
-    }
-
 }

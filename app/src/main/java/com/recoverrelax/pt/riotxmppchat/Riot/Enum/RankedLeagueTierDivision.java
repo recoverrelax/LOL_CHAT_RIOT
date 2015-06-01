@@ -2,7 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Riot.Enum;
 
 import android.support.annotation.DrawableRes;
 
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.R;
 
 public enum RankedLeagueTierDivision {
 

@@ -3,8 +3,11 @@ package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 import android.support.v4.app.Fragment;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -25,21 +28,15 @@ import rx.schedulers.Schedulers;
 
 public class FriendMessageListImpl implements FriendMessageListHelper, Observer<List<FriendListChat>> {
 
-    private FriendMessageListImplCallback mCallback;
     private Subscription mSubscription;
     private Fragment mFragment;
     private Roster roster;
 
     private String TAG = this.getClass().getSimpleName();
 
-    public FriendMessageListImpl(FriendMessageListImplCallback mCallback, Roster roster) {
-        mFragment = (Fragment)mCallback;
-        this.mCallback = mCallback;
+    public FriendMessageListImpl(Fragment frag, Roster roster) {
+        mFragment = frag;
         this.roster = roster;
-    }
-
-    public void removeCallback(){
-        this.mCallback = null;
     }
 
     @Override
@@ -91,11 +88,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
 
     @Override
     public void onNext(List<FriendListChat> friendListChats) {
-        if(mCallback != null)
-            mCallback.OnFriendsListReceived(friendListChats);
-    }
-
-    public interface FriendMessageListImplCallback{
-        void OnFriendsListReceived(List<FriendListChat> friendListChats);
+        /** {@link FriendMessageListFragment#OnFriendsListReceived(OnMessageListReceivedEvent)} **/
+        MainApplication.getInstance().getBusInstance().post(new OnMessageListReceivedEvent(friendListChats));
     }
 }
