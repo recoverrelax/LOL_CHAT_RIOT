@@ -3,10 +3,13 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -40,6 +43,9 @@ public class LoginActivity extends BaseActivity {
     @InjectView(R.id.checkBox)
     CheckBox checkBox;
 
+    @InjectView(R.id.lol_logo)
+    ImageView logo;
+
     private DataStorage mDataStorage;
     private SnackBar snackBar;
 
@@ -53,6 +59,17 @@ public class LoginActivity extends BaseActivity {
         mainApplication = MainApplication.getInstance();
         mDataStorage = DataStorage.getInstance();
         mainApplication.getBusInstance().register(this);
+
+        logo.setTranslationY(-1.0f);
+
+        ScaleAnimation scaleAnimation = new ScaleAnimation(0.1f, 1f, 0.1f, 1f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+
+        logo.setAnimation(scaleAnimation);
+        scaleAnimation.setDuration(2000);
+        scaleAnimation.start();
+
+        MainApplication.getInstance().setConnectedXmppUser(null);
 
         checkBox.setChecked(mDataStorage.getSaveLoginCredentials());
 
