@@ -6,13 +6,13 @@ import java.util.List;
 
 public class OnMessageListReceivedEvent {
 
-    private List<FriendListChat> friendListChats;
+    private FriendListChat friendList;
 
-    public OnMessageListReceivedEvent(List<FriendListChat> friendListChats) {
-        this.friendListChats = friendListChats;
+    public OnMessageListReceivedEvent(FriendListChat friendListC) {
+        this.friendList = friendList;
     }
 
-    public List<FriendListChat> getFriendListChats() {
-        return friendListChats;
+    public FriendListChat getFriendList() {
+        return friendList;
     }
 }

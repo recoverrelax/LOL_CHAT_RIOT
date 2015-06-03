@@ -55,7 +55,12 @@ public class FriendListChat {
     }
 
     public void setMessage(MessageDb message){
-        this.lastMessage = message;
+        this.lastMessage.setUserXmppId(message.getUserXmppId());
+        this.lastMessage.setFromTo(message.getFromTo());
+        this.lastMessage.setDirection(message.getDirection());
+        this.lastMessage.setDate(message.getDate());
+        this.lastMessage.setMessage(message.getMessage());
+        this.lastMessage.setWasRead(message.getWasRead());
     }
 
     public static class LastMessageComparable implements Comparator<FriendListChat> {
@@ -107,5 +112,13 @@ public class FriendListChat {
                 return 1;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "FriendListChat{" +
+                "friend=" + friend +
+                ", lastMessage=" + lastMessage +
+                '}';
     }
 }

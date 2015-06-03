@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,11 @@ import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReplaceMainFragmentEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.XmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 
+import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -99,6 +102,17 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         notifyDataSetChanged();
     }
 
+    public void setItem(FriendListChat item) {
+        String userXmppAddress = XmppUtils.parseXmppAddress(item.getFriend().getUserXmppAddress());
+
+        int position = getFriendMessageListPositionByFriendName(userXmppAddress);
+        if(position != -1){
+            friendMessageList.get(position).setMessage(item.getLastMessage());
+            Log.i("ASAS", friendMessageList.get(position).toString());
+            notifyItemChanged(position);
+        }
+    }
+
     /**
      * Get the array position corresponding to the given xmppName of the user
      * @param xmppName
@@ -108,6 +122,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         int friendMessageListSize = friendMessageList.size();
 
         for(int i = 0 ; i < friendMessageListSize; i++){
+            Log.i("ASASAS", "1: " + friendMessageList.get(i).getFriend().getUserXmppAddress() + "\n2: " + xmppName);
             if(friendMessageList.get(i).getFriend().getUserXmppAddress().equals(xmppName))
                 return i;
         }

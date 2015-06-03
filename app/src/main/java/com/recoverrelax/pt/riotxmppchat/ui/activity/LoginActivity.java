@@ -118,22 +118,6 @@ public class LoginActivity extends BaseActivity {
             }
         },2000);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         MainApplication.getInstance().setConnectedXmppUser(null);
 
         checkBox.setChecked(mDataStorage.getSaveLoginCredentials());

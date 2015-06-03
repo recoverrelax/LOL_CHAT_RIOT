@@ -1,18 +1,18 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListListReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -78,19 +78,25 @@ public class FriendMessageListFragment extends BaseFragment {
         messageRecyclerView.setAdapter(adapter);
 
         friendMessageListHelper = new FriendMessageListImpl(this, MainApplication.getInstance().getRiotXmppService().getRoster());
-        friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+        friendMessageListHelper.getPersonalMessageListList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+    }
+
+    @Subscribe
+    public void OnFriendsListListReceived(OnMessageListListReceivedEvent event) {
+        adapter.setItems(event.getFriendListChats());
     }
 
     @Subscribe
     public void OnFriendsListReceived(OnMessageListReceivedEvent event) {
-        adapter.setItems(event.getFriendListChats());
+        Log.i("ASAS", event.getFriendList().toString());
+        adapter.setItem(event.getFriendList());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         MainApplication.getInstance().getBusInstance().register(this);
-        friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+        friendMessageListHelper.getPersonalMessageListList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
     }
 
     @Override
@@ -100,14 +106,15 @@ public class FriendMessageListFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void OnNewMessageReceived(OnNewMessageReceivedEvent messageReceived) {
+    public void OnNewMessageReceived(final OnNewMessageReceivedEvent messageReceived) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 /**
                  * TODO: change this to update a single item, and not whole list
                  */
-                friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+                friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
+                        messageReceived.getMessageFrom());
             }
         });
     }

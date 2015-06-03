@@ -2,6 +2,8 @@ package com.recoverrelax.pt.riotxmppchat.Database;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
+import org.jivesoftware.smack.packet.Message;
+
 import java.util.List;
 
 import LolChatRiotDb.MessageDb;
@@ -52,7 +54,23 @@ public class RiotXmppDBRepository {
                 .orderDesc(MessageDbDao.Properties.Id)
                 .limit(1).build().list();
         if(list.size() > 0)
-            return ((List<MessageDb>)list).get(0);
+            return (MessageDb) list.get(0);
+        else
+            return null;
+    }
+
+    public static List<MessageDb> getLastMessageAsList(String connectedUser, String friendUser){
+        MessageDbDao messageDao = getMessageDao();
+
+        QueryBuilder qb = messageDao.queryBuilder();
+
+        List list = qb
+                .where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
+                        MessageDbDao.Properties.FromTo.eq(friendUser))
+                .orderDesc(MessageDbDao.Properties.Id)
+                .limit(1).build().list();
+        if(list.size() > 0)
+            return (List<MessageDb>) list;
         else
             return null;
     }

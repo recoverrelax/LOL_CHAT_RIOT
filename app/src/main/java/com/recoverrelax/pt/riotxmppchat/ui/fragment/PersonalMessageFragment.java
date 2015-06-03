@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.PersonalMessageList.OnLastPersonalMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.PersonalMessageList.OnLastXPersonalMessageListReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
@@ -106,7 +107,7 @@ public class PersonalMessageFragment extends BaseFragment {
             friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
         }
 
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
         messageRecyclerView.setLayoutManager(layoutManager);
 
         adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<MessageDb>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
@@ -159,12 +160,26 @@ public class PersonalMessageFragment extends BaseFragment {
         if(messageDbs != null)
             setAllMessagesRead();
 
-        adapter.setItems(messageDbs, swipeRefreshLayout.isRefreshing() ? null : PersonalMessageAdapter.ScrollTo.LAST_ITEM);
+        adapter.setItems(messageDbs, swipeRefreshLayout.isRefreshing() ? null : PersonalMessageAdapter.ScrollTo.FIRST_ITEM);
 
         if (swipeRefreshLayout.isRefreshing())
             swipeRefreshLayout.setRefreshing(false);
 
     }
+    @Subscribe
+    public void LastMessageReceived(OnLastPersonalMessageReceivedEvent event) {
+
+        MessageDb message = event.getMessage();
+
+        if(message != null)
+            setAllMessagesRead();
+
+        adapter.addItem(message);
+
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+    }
+
 
     private void setAllMessagesRead() {
         List<MessageDb> allMessages = adapter.getAllMessages();
@@ -177,7 +192,7 @@ public class PersonalMessageFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         MainApplication.getInstance().getBusInstance().register(this);
-        personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
+        personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned,
                 MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
     }
 
@@ -192,8 +207,8 @@ public class PersonalMessageFragment extends BaseFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                personalMessageHelper.getLastXPersonalMessageList(Globals.Message.DEFAULT_MESSAGES_RETURNED,
-                        MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
+                personalMessageHelper.getLastPersonalMessage(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
+                        friendXmppName);
             }
         });
     }
