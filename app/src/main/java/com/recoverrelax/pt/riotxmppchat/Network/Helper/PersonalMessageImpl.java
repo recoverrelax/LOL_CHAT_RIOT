@@ -9,7 +9,6 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.PersonalMessageList.OnLast
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 
-import java.util.Collections;
 import java.util.List;
 
 import LolChatRiotDb.MessageDb;
@@ -19,7 +18,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class PersonalMessageImpl implements PersonalMessageHelper, Observer<Pair<PersonalMessageImpl.Method, List<MessageDb>>>{
 

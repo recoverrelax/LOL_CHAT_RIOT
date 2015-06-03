@@ -5,22 +5,23 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListListReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageSingleItemReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -39,6 +40,7 @@ public class FriendMessageListFragment extends BaseFragment {
      * Adapter
      */
     private FriendMessageListAdapter adapter;
+    private boolean firstTime = true;
 
     private FriendMessageListHelper friendMessageListHelper;
 
@@ -50,7 +52,6 @@ public class FriendMessageListFragment extends BaseFragment {
     public static FriendMessageListFragment newInstance() {
         return new FriendMessageListFragment();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,17 +79,18 @@ public class FriendMessageListFragment extends BaseFragment {
         messageRecyclerView.setAdapter(adapter);
 
         friendMessageListHelper = new FriendMessageListImpl(this, MainApplication.getInstance().getRiotXmppService().getRoster());
-        friendMessageListHelper.getPersonalMessageListList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+        /**
+         * TODO: fix bug, first time items are not being shown idk why. with a delay it works but ...
+         */
     }
 
     @Subscribe
-    public void OnFriendsListListReceived(OnMessageListListReceivedEvent event) {
-        adapter.setItems(event.getFriendListChats());
+    public void OnFriendsListListReceived(OnMessageListReceivedEvent event) {
+       adapter.setItems(event.getFriendListChats());
     }
 
     @Subscribe
-    public void OnFriendsListReceived(OnMessageListReceivedEvent event) {
-        Log.i("ASAS", event.getFriendList().toString());
+    public void OnFriendsListReceived(OnMessageSingleItemReceivedEvent event) {
         adapter.setItem(event.getFriendList());
     }
 
@@ -96,7 +98,7 @@ public class FriendMessageListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         MainApplication.getInstance().getBusInstance().register(this);
-        friendMessageListHelper.getPersonalMessageListList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+        friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
     }
 
     @Override
@@ -110,10 +112,7 @@ public class FriendMessageListFragment extends BaseFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                /**
-                 * TODO: change this to update a single item, and not whole list
-                 */
-                friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
+                friendMessageListHelper.getPersonalMessageSingleItem(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
                         messageReceived.getMessageFrom());
             }
         });

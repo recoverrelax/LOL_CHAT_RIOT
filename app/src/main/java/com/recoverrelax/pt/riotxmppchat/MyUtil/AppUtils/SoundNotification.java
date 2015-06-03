@@ -15,9 +15,7 @@ public class SoundNotification {
 
     private Context context;
 
-    private
-    @RawRes
-    int soundID;
+    private @RawRes int soundID;
     private NotificationType notificationType;
     private NotificationDb notificationDb;
 
@@ -52,6 +50,7 @@ public class SoundNotification {
             mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
+                    mp.reset();
                     mp.release();
                 }
             });

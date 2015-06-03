@@ -5,8 +5,8 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListListReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageSingleItemReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
@@ -42,13 +42,13 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
     }
 
     @Override
-    public void getPersonalMessageList(final String connectedUser, final String userToReturn) {
+    public void getPersonalMessageSingleItem(final String connectedUser, final String userToReturn) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
                     @Override
                     public void call(Subscriber<? super Pair<FriendMessageListImpl.Method, List<FriendListChat>>> subscriber) {
 
-                        List<FriendListChat> friendList = new ArrayList<FriendListChat>();
+                        List<FriendListChat> friendListChat = new ArrayList<>();
                         /**
                          * First get the friendsList
                          */
@@ -63,9 +63,9 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
 
                         MessageDb message = RiotXmppDBRepository.getLastMessage(connectedUser, friend.getUserXmppAddress());
                             if(message != null)
-                                friendList.add(new FriendListChat(friend, message));
+                                friendListChat.add(new FriendListChat(friend, message));
 
-                        subscriber.onNext(new Pair<Method, List<FriendListChat>>(Method.RETURN_SINGLE, friendList));
+                        subscriber.onNext(new Pair<Method, List<FriendListChat>>(Method.RETURN_SINGLE, friendListChat));
                         subscriber.onCompleted();
                     }
                 }))
@@ -75,7 +75,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
     }
 
     @Override
-    public void getPersonalMessageListList(final String connectedUser) {
+    public void getPersonalMessageList(final String connectedUser) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
                     @Override
@@ -99,8 +99,8 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
 
                         for(Friend friend: friendList){
                             MessageDb message = RiotXmppDBRepository.getLastMessage(connectedUser, friend.getUserXmppAddress());
-                            if(message != null)
-                                friendListChat.add(new FriendListChat(friend, message));
+                          if(message != null)
+                            friendListChat.add(new FriendListChat(friend, message));
                         }
                         Collections.sort(friendListChat, new FriendListChat.LastMessageComparable());
                         Collections.reverse(friendListChat);
@@ -125,12 +125,12 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
     public void onNext(Pair<FriendMessageListImpl.Method, List<FriendListChat>> pair) {
 
         if(pair.first.isReturnAll()) {
-            /** {@link FriendMessageListFragment#OnFriendsListReceived(OnMessageListListReceivedEvent)} **/
-            MainApplication.getInstance().getBusInstance().post(new OnMessageListListReceivedEvent(pair.second));
+            /** {@link FriendMessageListFragment#OnFriendsListListReceived(OnMessageListReceivedEvent)} **/
+            MainApplication.getInstance().getBusInstance().post(new OnMessageListReceivedEvent(pair.second));
         } else if(pair.first.isReturnSingle()){
-            /** {@link FriendMessageListFragment#OnFriendsListReceived(OnMessageListListReceivedEvent)} **/
-            MainApplication.getInstance().getBusInstance().post(new OnMessageListReceivedEvent(pair.second.get(0)));
-            Log.i("ASAS", "HERE");
+            /** {@link FriendMessageListFragment#OnFriendsListReceived(OnMessageSingleItemReceivedEvent)} **/
+            Log.i("ASAS2", "HERE");
+            MainApplication.getInstance().getBusInstance().post(new OnMessageSingleItemReceivedEvent(pair.second.get(0)));
         }
     }
 

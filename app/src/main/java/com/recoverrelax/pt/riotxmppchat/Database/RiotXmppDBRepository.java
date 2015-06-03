@@ -1,8 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.Database;
 
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import android.util.Log;
 
-import org.jivesoftware.smack.packet.Message;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
 import java.util.List;
 
@@ -53,6 +53,7 @@ public class RiotXmppDBRepository {
                        MessageDbDao.Properties.FromTo.eq(friendUser))
                 .orderDesc(MessageDbDao.Properties.Id)
                 .limit(1).build().list();
+        Log.i("AS123", list.size() + "");
         if(list.size() > 0)
             return (MessageDb) list.get(0);
         else
@@ -69,6 +70,7 @@ public class RiotXmppDBRepository {
                         MessageDbDao.Properties.FromTo.eq(friendUser))
                 .orderDesc(MessageDbDao.Properties.Id)
                 .limit(1).build().list();
+
         if(list.size() > 0)
             return (List<MessageDb>) list;
         else
