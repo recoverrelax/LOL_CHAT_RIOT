@@ -1,15 +1,19 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -46,6 +50,15 @@ public class LoginActivity extends BaseActivity {
     @InjectView(R.id.lol_logo)
     ImageView logo;
 
+    @InjectView(R.id.login_bottom_layout)
+    LinearLayout loginBottomLayout;
+
+    @InjectView(R.id.login_base_layout)
+    LinearLayout login_base_layout;
+
+    @InjectView(R.id.login_main_layout)
+    LinearLayout login_main_layout;
+
     private DataStorage mDataStorage;
     private SnackBar snackBar;
 
@@ -60,14 +73,66 @@ public class LoginActivity extends BaseActivity {
         mDataStorage = DataStorage.getInstance();
         mainApplication.getBusInstance().register(this);
 
-        logo.setTranslationY(-1.0f);
+        /**
+         * Set initial Title Scalling to 0.7f
+         */
+        logo.setScaleY(0.7f);
+        logo.setScaleX(0.7f);
 
-        ScaleAnimation scaleAnimation = new ScaleAnimation(0.1f, 1f, 0.1f, 1f,
-                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
-        logo.setAnimation(scaleAnimation);
-        scaleAnimation.setDuration(2000);
-        scaleAnimation.start();
+
+        ObjectAnimator titleSlideUp = ObjectAnimator.ofFloat(logo, "translationY", 1000, -100, 0)
+                                        .setDuration(3000);
+
+        ObjectAnimator fadingBackground = ObjectAnimator.ofPropertyValuesHolder(login_main_layout.getBackground(),
+                PropertyValuesHolder.ofInt("alpha", 0))
+                .setDuration(4000);
+
+        ObjectAnimator scalingTitleX = ObjectAnimator.ofFloat(logo, "scaleX", 0.7f, 0.8f, 0.9f, 1.0f);
+        ObjectAnimator scalingTitleY = ObjectAnimator.ofFloat(logo, "scaleY", 0.7f, 0.8f, 0.9f, 1.0f);
+
+
+        final ObjectAnimator credentialsFade = ObjectAnimator.ofFloat(loginBottomLayout, "alpha", 0.0f, 1.0f);
+        credentialsFade.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                loginBottomLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override public void onAnimationEnd(Animator animator) { }
+            @Override public void onAnimationCancel(Animator animator) { }
+            @Override public void onAnimationRepeat(Animator animator) { }
+        });
+
+        final AnimatorSet animatorSetSecondPart = new AnimatorSet();
+        animatorSetSecondPart.setDuration(1000);
+        animatorSetSecondPart.playTogether(scalingTitleX, scalingTitleY, credentialsFade);
+
+        titleSlideUp.start();
+        fadingBackground.start();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                animatorSetSecondPart.start();
+            }
+        },2000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         MainApplication.getInstance().setConnectedXmppUser(null);
 

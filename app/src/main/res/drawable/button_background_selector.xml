@@ -11,5 +11,5 @@
     <item android:state_enabled="false"
         android:drawable="@color/neutral_grey_disabled" /> <!-- hovered -->
 
-    <item android:drawable="@color/white" /> <!-- default -->
+    <item android:drawable="@color/primaryColor" /> <!-- default -->
 </selector>

@@ -16,13 +16,14 @@
     <color name="primaryColor190T">#beff5722</color>
     <color name="primaryColor">#FF5722</color>
     <color name="loginBackground">#37ff5722</color>
+    <color name="loginBackgroundBlack">#96000000</color>
     <color name="loginBackground2X">#6eff5722</color>
     <color name="drawer_top_background">#a0ff5722</color>
     <color name="primaryColorDark">#0288d1</color>
     <color name="primaryColorDarkT">#960288d1</color>
     <color name="primaryColorDarkT2">#370288d1</color>
     <color name="primaryColorDarkT3">#9b0288d1</color>
-
+    <color name="indigo">#3F51B5</color>
     <color name="online">#ff00ff00</color>
     <color name="offline">#ffff0000</color>
     <color name="online_alpha50">#3200ff00</color>
