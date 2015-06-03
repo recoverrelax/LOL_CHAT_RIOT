@@ -5,13 +5,12 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReplaceMainFragmentEvent;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
 
 import LolChatRiotDb.NotificationDb;
 
@@ -87,9 +86,7 @@ public class MessageNotification implements SnackBar.OnMessageClickListener {
 
     @Override
     public void onMessageClick(Parcelable parcelable) {
-        if(context instanceof FriendListActivity){
-            ((FriendListActivity) context).replaceFragment(username, userXmppNAme);
-        }
+        MainApplication.getInstance().getBusInstance().post(new OnReplaceMainFragmentEvent(username, userXmppNAme));
     }
 
     public enum NotificationType {

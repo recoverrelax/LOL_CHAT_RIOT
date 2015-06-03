@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
@@ -43,7 +43,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @LayoutRes int layout_online;
     @LayoutRes int layout_offline;
 
-    private final String LEVEL_PREFIX = "L ";
     private final int VIEW_HOLDER_ONLINE_ID = 0;
     private final int VIEW_HOLDER_OFFLINE_ID = 1;
 
@@ -56,13 +55,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.layout_offline = layout_offline;
         this.friendsList = friendsList;
         this.recyclerView = recyclerView;
+    }
 
-        try{
-            onFriendClickCallback = (OnFriendClick) frag;
-        }catch (ClassCastException e){
-            LogUtils.LOGE(TAG, "Fragment that use this adapter must implement its child click listener: OnFriendClick");
-        }
-
+    public void setOnChildClickListener(OnFriendClick onFriendClickCallback){
+        this.onFriendClickCallback = onFriendClickCallback;
     }
 
     @Override

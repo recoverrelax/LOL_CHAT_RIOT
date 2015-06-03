@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Vibrator;
 import android.support.annotation.RawRes;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
@@ -45,14 +46,21 @@ public class SoundNotification {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 10, 0);
 
-        final MediaPlayer mp = MediaPlayer.create(context, soundID);
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                mp.release();
-            }
-        });
-        mp.start();
+        if(audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+
+            final MediaPlayer mp = MediaPlayer.create(context, soundID);
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mp.release();
+                }
+            });
+            mp.start();
+        }else{
+            Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            v.vibrate(1000);
+        }
     }
 
     public enum NotificationType {

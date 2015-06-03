@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;

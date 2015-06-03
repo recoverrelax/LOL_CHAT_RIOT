@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 public interface FriendMessageListHelper {
-    void getPersonalMessageList(String connectedUser);
+    void getPersonalMessageListList(String connectedUser);
+    void getPersonalMessageList(String connectedUser, String userToReturn);
 }

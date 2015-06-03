@@ -1,10 +1,16 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.util.Pair;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListListReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -21,33 +27,59 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
-public class FriendMessageListImpl implements FriendMessageListHelper, Observer<List<FriendListChat>> {
+public class FriendMessageListImpl implements FriendMessageListHelper, Observer<Pair<FriendMessageListImpl.Method, List<FriendListChat>>> {
 
-    private FriendMessageListImplCallback mCallback;
     private Subscription mSubscription;
     private Fragment mFragment;
     private Roster roster;
 
     private String TAG = this.getClass().getSimpleName();
 
-    public FriendMessageListImpl(FriendMessageListImplCallback mCallback, Roster roster) {
-        mFragment = (Fragment)mCallback;
-        this.mCallback = mCallback;
+    public FriendMessageListImpl(Fragment frag, Roster roster) {
+        mFragment = frag;
         this.roster = roster;
     }
 
-    public void removeCallback(){
-        this.mCallback = null;
+    @Override
+    public void getPersonalMessageList(final String connectedUser, final String userToReturn) {
+        mSubscription = AppObservable.bindFragment(mFragment,
+                Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
+                    @Override
+                    public void call(Subscriber<? super Pair<FriendMessageListImpl.Method, List<FriendListChat>>> subscriber) {
+
+                        List<FriendListChat> friendList = new ArrayList<FriendListChat>();
+                        /**
+                         * First get the friendsList
+                         */
+
+                        RosterEntry entry = roster.getEntry(userToReturn);
+
+                        Friend friend = new Friend(entry.getName(), entry.getUser(), roster.getPresence(entry.getUser()));
+
+                        /**
+                         * For each friend, get the last message, if there is a last message
+                         */
+
+                        MessageDb message = RiotXmppDBRepository.getLastMessage(connectedUser, friend.getUserXmppAddress());
+                            if(message != null)
+                                friendList.add(new FriendListChat(friend, message));
+
+                        subscriber.onNext(new Pair<Method, List<FriendListChat>>(Method.RETURN_SINGLE, friendList));
+                        subscriber.onCompleted();
+                    }
+                }))
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this);
     }
 
     @Override
-    public void getPersonalMessageList(final String connectedUser) {
+    public void getPersonalMessageListList(final String connectedUser) {
         mSubscription = AppObservable.bindFragment(mFragment,
-                Observable.create(new Observable.OnSubscribe<List<FriendListChat>>() {
+                Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
                     @Override
-                    public void call(Subscriber<? super List<FriendListChat>> subscriber) {
+                    public void call(Subscriber<? super Pair<FriendMessageListImpl.Method, List<FriendListChat>>> subscriber) {
 
                         List<FriendListChat> friendListChat = new ArrayList<>();
                         /**
@@ -73,7 +105,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
                         Collections.sort(friendListChat, new FriendListChat.LastMessageComparable());
                         Collections.reverse(friendListChat);
 
-                        subscriber.onNext(friendListChat);
+                        subscriber.onNext(new Pair<Method, List<FriendListChat>>(Method.RETURN_ALL, friendListChat));
                         subscriber.onCompleted();
                     }
                 }))
@@ -90,12 +122,27 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
     }
 
     @Override
-    public void onNext(List<FriendListChat> friendListChats) {
-        if(mCallback != null)
-            mCallback.OnFriendsListReceived(friendListChats);
+    public void onNext(Pair<FriendMessageListImpl.Method, List<FriendListChat>> pair) {
+
+        if(pair.first.isReturnAll()) {
+            /** {@link FriendMessageListFragment#OnFriendsListReceived(OnMessageListListReceivedEvent)} **/
+            MainApplication.getInstance().getBusInstance().post(new OnMessageListListReceivedEvent(pair.second));
+        } else if(pair.first.isReturnSingle()){
+            /** {@link FriendMessageListFragment#OnFriendsListReceived(OnMessageListListReceivedEvent)} **/
+            MainApplication.getInstance().getBusInstance().post(new OnMessageListReceivedEvent(pair.second.get(0)));
+            Log.i("ASAS", "HERE");
+        }
     }
 
-    public interface FriendMessageListImplCallback{
-        void OnFriendsListReceived(List<FriendListChat> friendListChats);
+    public enum Method{
+        RETURN_ALL,
+        RETURN_SINGLE;
+
+        public boolean isReturnAll(){
+            return this.equals(Method.RETURN_ALL);
+        }
+        public boolean isReturnSingle(){
+            return this.equals(Method.RETURN_SINGLE);
+        }
     }
 }

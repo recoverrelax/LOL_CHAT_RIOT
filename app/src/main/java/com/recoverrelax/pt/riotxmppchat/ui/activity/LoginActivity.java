@@ -1,31 +1,37 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
-import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
-import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
+import com.squareup.otto.Subscribe;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
-import static com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl.*;
-
-public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCallback<RiotXmppConnectionImpl.RiotXmppOperations>, MainApplication.ActivityServerCallback {
+public class LoginActivity extends BaseActivity {
 
     private final String TAG = "LoginActivity";
 
@@ -41,6 +47,18 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
     @InjectView(R.id.checkBox)
     CheckBox checkBox;
 
+    @InjectView(R.id.lol_logo)
+    ImageView logo;
+
+    @InjectView(R.id.login_bottom_layout)
+    LinearLayout loginBottomLayout;
+
+    @InjectView(R.id.login_base_layout)
+    LinearLayout login_base_layout;
+
+    @InjectView(R.id.login_main_layout)
+    LinearLayout login_main_layout;
+
     private DataStorage mDataStorage;
     private SnackBar snackBar;
 
@@ -53,6 +71,54 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
         super.onCreate(savedInstanceState);
         mainApplication = MainApplication.getInstance();
         mDataStorage = DataStorage.getInstance();
+        mainApplication.getBusInstance().register(this);
+
+        /**
+         * Set initial Title Scalling to 0.7f
+         */
+        logo.setScaleY(0.7f);
+        logo.setScaleX(0.7f);
+
+
+
+        ObjectAnimator titleSlideUp = ObjectAnimator.ofFloat(logo, "translationY", 1000, -100, 0)
+                                        .setDuration(3000);
+
+        ObjectAnimator fadingBackground = ObjectAnimator.ofPropertyValuesHolder(login_main_layout.getBackground(),
+                PropertyValuesHolder.ofInt("alpha", 0))
+                .setDuration(4000);
+
+        ObjectAnimator scalingTitleX = ObjectAnimator.ofFloat(logo, "scaleX", 0.7f, 0.8f, 0.9f, 1.0f);
+        ObjectAnimator scalingTitleY = ObjectAnimator.ofFloat(logo, "scaleY", 0.7f, 0.8f, 0.9f, 1.0f);
+
+
+        final ObjectAnimator credentialsFade = ObjectAnimator.ofFloat(loginBottomLayout, "alpha", 0.0f, 1.0f);
+        credentialsFade.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                loginBottomLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override public void onAnimationEnd(Animator animator) { }
+            @Override public void onAnimationCancel(Animator animator) { }
+            @Override public void onAnimationRepeat(Animator animator) { }
+        });
+
+        final AnimatorSet animatorSetSecondPart = new AnimatorSet();
+        animatorSetSecondPart.setDuration(1000);
+        animatorSetSecondPart.playTogether(scalingTitleX, scalingTitleY, credentialsFade);
+
+        titleSlideUp.start();
+        fadingBackground.start();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                animatorSetSecondPart.start();
+            }
+        },2000);
+
+        MainApplication.getInstance().setConnectedXmppUser(null);
 
         checkBox.setChecked(mDataStorage.getSaveLoginCredentials());
 
@@ -65,6 +131,8 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
         } else
             connectbutton.setEnabled(false);
     }
+
+
 
     @OnTextChanged(R.id.username)
     public void onUsernameTextChanged(CharSequence cs) {
@@ -91,10 +159,11 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
                 .progress(true, 0)
                 .show();
 
-        mainApplication.startRiotXmppService((String) serverSpinner.getSelectedItem(), getUsername(), getPassword(), this);
+        mainApplication.startRiotXmppService((String) serverSpinner.getSelectedItem(), getUsername(), getPassword());
     }
 
-    public void onSuccessLogin() {
+    @Subscribe
+    public void onSuccessLogin(OnSuccessLoginEvent event) {
 
         if (checkBox.isChecked())
             mDataStorage.setSaveLoginCredentials(true);
@@ -105,16 +174,26 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
         mDataStorage.setPassword(getPassword());
         mDataStorage.setServer(getServer());
 
-        mainApplication.bindService(this);
+        mainApplication.bindService();
     }
 
-    @Override
-    public void onServiceBinded() {
+    @Subscribe
+    public void onFailure(OnConnectionOrLoginFailureEvent event) {
+        materialDialog.dismiss();
+        snackBar = new SnackBar.Builder(this)
+                .withMessageId(R.string.activity_login_cannot_connect)
+                .withTextColorId(R.color.primaryColor)
+                .withDuration((short) 7000)
+                .show();
+    }
+
+    @Subscribe
+    public void onServiceBinded(OnServiceBindedEvent event) {
         Intent intent = new Intent(LoginActivity.this, FriendListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         materialDialog.dismiss();
-        MainApplication.getInstance().settings_init(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+        MainApplication.getInstance().initSettings();
         this.finish();
     }
 
@@ -131,34 +210,10 @@ public class LoginActivity extends BaseActivity implements RiotXmppDataLoaderCal
     }
 
     @Override
-    public void onComplete() {
-    }
-
-    @Override
-    public void destroyLoader() {
-    }
-
-    @Override
-    public void onFailure(Throwable ex) {
-        materialDialog.dismiss();
-        snackBar = new SnackBar.Builder(this)
-                .withMessageId(R.string.activity_login_cannot_connect)
-                .withTextColorId(R.color.primaryColor)
-                .withDuration((short) 7000)
-                .show();
-    }
-
-    @Override
-    public void onSuccess(RiotXmppOperations result) {
-        if (result.equals(RiotXmppOperations.LOGGED_IN)) {
-            onSuccessLogin();
-        }
-    }
-    
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        RiotXmppService.loginActilivyCallback = null;
+        mainApplication.getBusInstance().unregister(this);
+
         if(materialDialog != null)
             materialDialog.dismiss();
     }

@@ -18,7 +18,7 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil.google;
 
 import android.util.Log;
 
-import com.edgelabs.pt.mybaseapp.BuildConfig;
+import com.recoverrelax.pt.riotxmppchat.BuildConfig;
 
 public class LogUtils {
     private static final String LOG_PREFIX = "appNameHere";

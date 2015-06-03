@@ -7,13 +7,14 @@ import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 
-import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
-import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppDataLoaderCallback;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 
@@ -28,8 +29,8 @@ public class MainApplication extends Application {
     private RiotXmppService mService;
     private boolean mBound = false;
     private Intent intentService;
-    private ActivityServerCallback activityServerCallback;
     private DaoSession daoSession;
+    private Bus bus;
 
     /**
      * This value is stored as a buffer because its accessed many times.
@@ -52,9 +53,13 @@ public class MainApplication extends Application {
                         .build()
         );
         setupDatabase();
+
+        bus = new Bus(ThreadEnforcer.ANY);
     }
 
-    public void settings_init(String connectedXmppUser) {
+    public void initSettings() {
+        String connectedXmppUser = getRiotXmppService().getConnectedXmppUser();
+
         if(!RiotXmppDBRepository.defaultSettingsNotificationsSetted(connectedXmppUser)){
             NotificationDb notif = new NotificationDb(null, connectedXmppUser, true, true, true, true);
             RiotXmppDBRepository.insertNotification(notif);
@@ -71,17 +76,15 @@ public class MainApplication extends Application {
         daoSession = daoMaster.newSession();
     }
 
-    /** Defines callbacks for intentService binding, passed to bindService() */
     private ServiceConnection mConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder serviceBinder) {
             RiotXmppService.MyBinder binder = (RiotXmppService.MyBinder) serviceBinder;
             mService = binder.getService();
             mBound = true;
 
-            if(activityServerCallback != null)
-                activityServerCallback.onServiceBinded();
+            /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
+            getBusInstance().post(new OnServiceBindedEvent());
         }
 
         @Override
@@ -98,13 +101,12 @@ public class MainApplication extends Application {
         this.isApplicationClosed = isApplicationClosed;
     }
 
-    public void startRiotXmppService(String selectedItem, String username, String password, RiotXmppDataLoaderCallback<RiotXmppConnectionImpl.RiotXmppOperations> loginActilivyCallback){
+    public void startRiotXmppService(String selectedItem, String username, String password){
         intentService = new Intent(this, RiotXmppService.class);
         intentService.putExtra(RiotXmppService.INTENT_SERVER_HOST_CONST, selectedItem);
         intentService.putExtra(RiotXmppService.INTENT_SERVER_USERNAME, username);
         intentService.putExtra(RiotXmppService.INTENT_SERVER_PASSWORD, password);
 
-        RiotXmppService.loginActilivyCallback = loginActilivyCallback;
         startService(intentService);
     }
 
@@ -116,21 +118,19 @@ public class MainApplication extends Application {
         return mService.getConnection();
     }
 
-    public void bindService(ActivityServerCallback callback) {
-        this.activityServerCallback = callback;
 
+    public void bindService() {
         if(!mBound)
             bindService(intentService, mConnection, BIND_AUTO_CREATE);
         else {
-            if(activityServerCallback != null)
-                activityServerCallback.onServiceBinded();
+            /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
+            getBusInstance().post(new OnServiceBindedEvent());
         }
     }
 
     public void unbindService() {
         if(mConnection != null) {
             unbindService(mConnection);
-            this.activityServerCallback = null;
         }
     }
 
@@ -147,10 +147,6 @@ public class MainApplication extends Application {
         return instance;
     }
 
-    public interface ActivityServerCallback{
-        void onServiceBinded();
-    }
-
     public DaoSession getDaoSession() {
         return daoSession;
     }
@@ -161,5 +157,9 @@ public class MainApplication extends Application {
 
     public void setConnectedXmppUser(String connectedXmppUser) {
         this.connectedXmppUser = connectedXmppUser;
+    }
+
+    public Bus getBusInstance(){
+        return this.bus;
     }
 }

@@ -3,17 +3,22 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.edgelabs.pt.mybaseapp.R;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReplaceMainFragmentEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.XmppUtils;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 
+import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,16 +27,11 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-
-import static com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment.FriendMessageListFragActivityCallback;
-
-
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
 
     List<FriendListChat> friendMessageList;
     private LayoutInflater inflater;
     private Context context;
-    private FriendMessageListFragActivityCallback activityCallback;
 
     private @LayoutRes int layoutRes;
 
@@ -41,13 +41,6 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         this.context = context;
         this.layoutRes = layoutRes;
         this.friendMessageList = friendMessageList;
-
-        try {
-            activityCallback = (FriendMessageListFragActivityCallback) context;
-        }catch(ClassCastException e){
-            throw new ClassCastException("FriendMessageListAdapter requires the parent activity to implements its callback" +
-                    "for the clickListener: FriendMessageListFragActivityCallback");
-        }
     }
 
     @Override
@@ -109,6 +102,17 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         notifyDataSetChanged();
     }
 
+    public void setItem(FriendListChat item) {
+        String userXmppAddress = XmppUtils.parseXmppAddress(item.getFriend().getUserXmppAddress());
+
+        int position = getFriendMessageListPositionByFriendName(userXmppAddress);
+        if(position != -1){
+            friendMessageList.get(position).setMessage(item.getLastMessage());
+            Log.i("ASAS", friendMessageList.get(position).toString());
+            notifyItemChanged(position);
+        }
+    }
+
     /**
      * Get the array position corresponding to the given xmppName of the user
      * @param xmppName
@@ -118,6 +122,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         int friendMessageListSize = friendMessageList.size();
 
         for(int i = 0 ; i < friendMessageListSize; i++){
+            Log.i("ASASAS", "1: " + friendMessageList.get(i).getFriend().getUserXmppAddress() + "\n2: " + xmppName);
             if(friendMessageList.get(i).getFriend().getUserXmppAddress().equals(xmppName))
                 return i;
         }
@@ -155,7 +160,8 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @OnClick(R.id.parent_row)
         public void onRowClick(View view){
-            activityCallback.replaceFragment(friendListChat.getFriendName(), friendListChat.getUserXmppAddress());
+            MainApplication.getInstance().getBusInstance().post(new OnReplaceMainFragmentEvent(friendListChat.getFriendName(),
+                    friendListChat.getUserXmppAddress()));
         }
     }
 }

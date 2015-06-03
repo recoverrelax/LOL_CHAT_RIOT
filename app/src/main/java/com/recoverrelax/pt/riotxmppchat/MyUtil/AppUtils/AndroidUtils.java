@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
-import com.edgelabs.pt.mybaseapp.R;
+import com.recoverrelax.pt.riotxmppchat.R;
 
 public class AndroidUtils {
     public static void setBlinkAnimation(final View view, boolean state) {
