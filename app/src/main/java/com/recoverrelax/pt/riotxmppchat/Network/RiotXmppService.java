@@ -75,7 +75,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     public static final String INTENT_SERVER_USERNAME = "username";
     public static final String INTENT_SERVER_PASSWORD = "password";
 
-    private static final long DELAY_BEFORE_ROSTER_LISTENER = 5000;
+    private static final long DELAY_BEFORE_ROSTER_LISTENER = 500;
 
     /**
      * Server Info

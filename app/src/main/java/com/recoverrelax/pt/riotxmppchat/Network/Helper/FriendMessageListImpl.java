@@ -119,6 +119,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
 
     @Override
     public void onError(Throwable e) {
+        e.printStackTrace();
     }
 
     @Override
@@ -129,7 +130,6 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
             MainApplication.getInstance().getBusInstance().post(new OnMessageListReceivedEvent(pair.second));
         } else if(pair.first.isReturnSingle()){
             /** {@link FriendMessageListFragment#OnFriendsListReceived(OnMessageSingleItemReceivedEvent)} **/
-            Log.i("ASAS2", "HERE");
             MainApplication.getInstance().getBusInstance().post(new OnMessageSingleItemReceivedEvent(pair.second.get(0)));
         }
     }

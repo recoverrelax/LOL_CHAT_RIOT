@@ -16,8 +16,6 @@
     <string name="navdrawer_item4">Item 4</string>
     <string name="navdrawer_item5">Item 5</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="htm5_text">HTML5 everywhere: How and why YouTube uses the Web platform</string>
     <string name="htm5_date">Qua, 13:00–13:45 na Room 3</string>
     <string name="htm5_book">Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.

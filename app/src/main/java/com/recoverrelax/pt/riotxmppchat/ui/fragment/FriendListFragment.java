@@ -128,7 +128,7 @@ public class FriendListFragment extends BaseFragment {
         /**
          * We need this. For some reason, the roster gets time to initialize so it wont return values after some time.
          */
-        showProgressBar(true);
+
         if(firstTimeFragmentStart) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -211,7 +211,12 @@ public class FriendListFragment extends BaseFragment {
     }
 
     public void showProgressBar(boolean state) {
-        progressBarCircularIndeterminate.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
+        progressBarCircularIndeterminate.setVisibility(state? View.VISIBLE : View.INVISIBLE);
+
+        if(state)
+            swipeRefreshLayout.setVisibility(View.GONE);
+        else
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
     }
 
     @Override

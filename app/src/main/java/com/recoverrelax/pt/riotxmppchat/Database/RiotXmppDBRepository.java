@@ -33,6 +33,7 @@ public class RiotXmppDBRepository {
         getMessageDao().insert(message);
     }
 
+    @SuppressWarnings("unchecked")
     public static List<MessageDb> getAllMessages(){
         MessageDbDao messageDao = getMessageDao();
 
@@ -53,13 +54,13 @@ public class RiotXmppDBRepository {
                        MessageDbDao.Properties.FromTo.eq(friendUser))
                 .orderDesc(MessageDbDao.Properties.Id)
                 .limit(1).build().list();
-        Log.i("AS123", list.size() + "");
         if(list.size() > 0)
             return (MessageDb) list.get(0);
         else
             return null;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<MessageDb> getLastMessageAsList(String connectedUser, String friendUser){
         MessageDbDao messageDao = getMessageDao();
 
@@ -77,6 +78,7 @@ public class RiotXmppDBRepository {
             return null;
     }
 
+    @SuppressWarnings("unchecked")
     public static List<MessageDb> getLastXMessages(int x, String connectedUser, String userToGetMessagesFrom){
 
         MessageDbDao messageDao = getMessageDao();
