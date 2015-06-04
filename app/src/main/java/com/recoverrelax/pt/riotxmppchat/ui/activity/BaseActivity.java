@@ -63,16 +63,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                 supportActionBar.setDisplayShowTitleEnabled(false);
         }
 
-        if (drawer_layout != null) {
+        if (drawer_layout != null && getNavigationDrawerPosition() != ENavDrawer.NAVDRAWER_ITEM_10.getNavDrawerId()) {
             navigationDrawerFragment = (NavigationDrawerFragment)
                     getSupportFragmentManager().findFragmentById(R.id.nav_drawer_fragment);
 
-            navigationDrawerFragment.setup(R.id.nav_drawer_fragment, drawer_layout, toolbar);
+            navigationDrawerFragment.setup(R.id.nav_drawer_fragment, drawer_layout, toolbar, getNavigationDrawerPosition());
         }
 
     }
 
     public abstract @LayoutRes int getLayoutResources();
+    public abstract int getNavigationDrawerPosition();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

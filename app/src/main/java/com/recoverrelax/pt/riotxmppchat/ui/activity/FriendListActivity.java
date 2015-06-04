@@ -16,14 +16,19 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 
-public class FriendListActivity extends BaseActivity {
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity.*;
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity.INTENT_FRIEND_NAME;
 
-    public static final String INTENT_FRIEND_NAME = "intent_friend_name";
-    public static final String INTENT_FRIEND_XMPPNAME = "intent_friend_xmppname";
+public class FriendListActivity extends BaseActivity {
 
     @Override
     public int getLayoutResources() {
         return R.layout.activity_friend_list;
+    }
+
+    @Override
+    public int getNavigationDrawerPosition() {
+        return ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId();
     }
 
     @Override
@@ -46,7 +51,7 @@ public class FriendListActivity extends BaseActivity {
                 if(navigationDrawerFragment != null) {
                     Fragment frag = getSupportFragmentManager().findFragmentById(R.id.container);
                         int positionByFrag = ENavDrawer.getPositionByFrag(frag);
-                        navigationDrawerFragment.setCurrentSelectedItem(positionByFrag);
+//                        navigationDrawerFragment.setCurrentSelectedItem(positionByFrag);
                 }
             }
         });

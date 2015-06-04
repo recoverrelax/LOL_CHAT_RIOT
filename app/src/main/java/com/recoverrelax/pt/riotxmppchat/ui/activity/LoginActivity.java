@@ -20,6 +20,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -149,6 +150,11 @@ public class LoginActivity extends BaseActivity {
     @Override
     public int getLayoutResources() {
         return R.layout.activity_login;
+    }
+
+    @Override
+    public int getNavigationDrawerPosition() {
+        return ENavDrawer.NAVDRAWER_ITEM_10.getNavDrawerId();
     }
 
     @OnClick(R.id.connect)

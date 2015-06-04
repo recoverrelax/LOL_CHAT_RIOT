@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.Pair;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;

@@ -26,6 +26,8 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapterItemSelectedC
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.Entities.DrawerItemsInfo;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendMessageListActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity;
 
 import java.util.ArrayList;
@@ -79,7 +81,7 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
         //load only static data inside a drawer
         List<DrawerItemsInfo> data = new ArrayList<>();
 
-        for(int i = 0; i < ENavDrawer.SIZE; i++) {
+        for(int i = 0; i < ENavDrawer.SIZE-1; i++) {
 //        for(int i = 0; i < 1; i++) {
             ENavDrawer navDrawerEnum = ENavDrawer.getById(i);
             if(navDrawerEnum != null)
@@ -114,9 +116,9 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), null, 2));
         }
 
-    public void setup(int fragmentId, DrawerLayout dl, Toolbar tb) {
-
+    public void setup(int fragmentId, DrawerLayout dl, Toolbar tb, int navDrawerPosition) {
         adapter.notifyDataSetChanged();
+        adapter.setCurrentPosition(navDrawerPosition);
         View containerView = ButterKnife.findById(getActivity(), fragmentId);
 
         drawerLayout = dl;
@@ -164,50 +166,31 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
     @Override
     public void onDrawerItemSelected(final int position) {
 
-        final FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        Fragment fragment = null;
+        Intent intent = null;
 
-        /**
-         * Detect if its the first time
-         */
-
-        if(CURRENT_SELECTED_ITEM == position){
-            drawerLayout.closeDrawer(Gravity.START);
-            return;
-        }else if(position == ENavDrawer.NAVDRAWER_ITEM_2.getNavDrawerId()) {
-
-            Intent intent = new Intent(getActivity(), SettingActivity.class);
+        if(position == ENavDrawer.NAVDRAWER_ITEM_2.getNavDrawerId()) {
+            intent = new Intent(getActivity(), SettingActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(intent);
-            AndroidUtils.overridePendingTransitionAppDefault(getActivity());
-            drawerLayout.closeDrawer(Gravity.START);
-            return;
-
-        }else {
-            fragment = ENavDrawer.getById(position).getFrag();
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        }else if(position == ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId()) {
+            intent = new Intent(getActivity(), FriendMessageListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }else if(position == ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId()) {
+            intent = new Intent(getActivity(), FriendListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
 
-        transaction.setCustomAnimations(R.anim.zoom_enter, R.anim.zoom_exit, R.anim.fade_in, R.anim.fade_out);
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.container, fragment);
-
-        drawerLayout.closeDrawer(Gravity.START);
-
+        final Intent finalIntent = intent;
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                transaction.commit();
+                if (finalIntent != null) {
+                    startActivity(finalIntent);
+                    AndroidUtils.overridePendingTransitionBackAppDefault(getActivity());
+                }
             }
         }, NAVDRAWER_LAUNCH_DELAY);
-        setCurrentSelectedItem(position);
-    }
-
-    public int getCurrentSelectedItem() {
-        return CURRENT_SELECTED_ITEM;
-    }
-
-    public void setCurrentSelectedItem(int position) {
-        this.CURRENT_SELECTED_ITEM = position;
-        this.adapter.setCurrentPosition(position);
     }
 }

@@ -1,6 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +19,8 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.XmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendMessageListActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
 
 import java.awt.font.TextAttribute;
 import java.util.ArrayList;
@@ -160,8 +164,14 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @OnClick(R.id.parent_row)
         public void onRowClick(View view){
-            MainApplication.getInstance().getBusInstance().post(new OnReplaceMainFragmentEvent(friendListChat.getFriendName(),
-                    friendListChat.getUserXmppAddress()));
+            Intent intent = new Intent(context, PersonalMessageActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.putExtra(PersonalMessageActivity.INTENT_FRIEND_NAME, friendListChat.getFriendName());
+            intent.putExtra(PersonalMessageActivity.INTENT_FRIEND_XMPPNAME, friendListChat.getUserXmppAddress());
+            context.startActivity(intent);
+            AndroidUtils.overridePendingTransitionBackAppDefault((Activity)context);
+
         }
     }
 }

@@ -12,7 +12,8 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 public enum ENavDrawer {
     NAVDRAWER_ITEM_0(0, R.string.navdrawer_item0, R.drawable.ic_number1, R.drawable.ic_number1_selected),
     NAVDRAWER_ITEM_1(1, R.string.navdrawer_item1, R.drawable.ic_number1, R.drawable.ic_number1_selected),
-    NAVDRAWER_ITEM_2(2, R.string.navdrawer_item2, R.drawable.ic_number1, R.drawable.ic_number1_selected);
+    NAVDRAWER_ITEM_2(2, R.string.navdrawer_item2, R.drawable.ic_number1, R.drawable.ic_number1_selected),
+    NAVDRAWER_ITEM_10(-1, 0, 0, 0);
 //    NAVDRAWER_ITEM_3(3, R.string.navdrawer_item3, R.drawable.ic_number1, R.drawable.ic_number1_selected),
 //    NAVDRAWER_ITEM_4(4, R.string.navdrawer_item4, R.drawable.ic_number1, R.drawable.ic_number1_selected),
 

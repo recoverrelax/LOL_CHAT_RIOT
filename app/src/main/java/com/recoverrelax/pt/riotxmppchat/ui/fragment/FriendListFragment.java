@@ -4,6 +4,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListFailedLoadingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListLoadedEvent;
@@ -32,6 +35,7 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.packet.Message;
@@ -44,7 +48,7 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendListFragment extends BaseFragment {
+public class FriendListFragment extends BaseFragment implements ObservableScrollViewCallbacks {
 
     private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
@@ -116,6 +120,7 @@ public class FriendListFragment extends BaseFragment {
         });
 
         myFriendsListRecyclerView.setAdapter(adapter);
+        myFriendsListRecyclerView.setScrollViewCallbacks(this);
 
         riotXmppRosterHelper = new RiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
 
@@ -211,7 +216,7 @@ public class FriendListFragment extends BaseFragment {
     }
 
     public void showProgressBar(boolean state) {
-        progressBarCircularIndeterminate.setVisibility(state? View.VISIBLE : View.INVISIBLE);
+        progressBarCircularIndeterminate.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
 
         if(state)
             swipeRefreshLayout.setVisibility(View.GONE);
@@ -254,5 +259,27 @@ public class FriendListFragment extends BaseFragment {
                 new MessageNotification(FriendListFragment.this.getActivity(), message.getBody(), username, userXmppAddress, MessageNotification.NotificationType.SNACKBAR);
             }
         });
+    }
+
+    @Override
+    public void onScrollChanged(int i, boolean b, boolean b1) {
+        BaseActivity parentActivity = getParentActivity();
+        if(parentActivity != null){
+        }
+    }
+
+    @Override
+    public void onDownMotionEvent() {
+
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+
+    }
+
+    public BaseActivity getParentActivity(){
+        FragmentActivity activity = this.getActivity();
+        return activity instanceof BaseActivity ? (BaseActivity) activity : null;
     }
 }

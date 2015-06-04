@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-import static com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity.INTENT_FRIEND_NAME;
-import static com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity.INTENT_FRIEND_XMPPNAME;
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,38 +96,38 @@ public class PersonalMessageFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.i("1234", "Passa Aki");
 
         Bundle extras = getArguments();
         if(extras==null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)){
-            getActivity().finish();
             LogUtils.LOGE(TAG, "Something went wrong, we haven't got a xmppName");
         }
         else {
             friendUsername = extras.getString(INTENT_FRIEND_NAME);
             friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
+
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
+            messageRecyclerView.setLayoutManager(layoutManager);
+
+            adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<MessageDb>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
+            messageRecyclerView.setAdapter(adapter);
+
+            personalMessageHelper = new PersonalMessageImpl(this);
+            personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned,
+                    MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
+
+//        setToolbarTitle(getResources().getString(R.string.chatting_with) + " " + friendUsername);
+
+            swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    personalMessageHelper.getLastXPersonalMessageList(doubleLoadedItems(),
+                            MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
+                }
+            };
+
+            swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
         }
-
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
-        messageRecyclerView.setLayoutManager(layoutManager);
-
-        adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<MessageDb>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
-        messageRecyclerView.setAdapter(adapter);
-
-        personalMessageHelper = new PersonalMessageImpl(this);
-        personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned,
-                MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
-
-        setToolbarTitle(getResources().getString(R.string.chatting_with) + " " + friendUsername);
-
-        swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                personalMessageHelper.getLastXPersonalMessageList(doubleLoadedItems(),
-                        MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
-            }
-        };
-
-        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
     }
 
     public int doubleLoadedItems(){
@@ -154,6 +154,7 @@ public class PersonalMessageFragment extends BaseFragment {
 
     @Subscribe
     public void LastXMessageListReceived(OnLastXPersonalMessageListReceivedEvent event) {
+        Log.i("1234", "passa aki");
 
         List<MessageDb> messageDbs = event.getMessageDbs();
 

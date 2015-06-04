@@ -13,6 +13,16 @@
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity"
             android:label="@string/friends_online" >
         </activity>
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendMessageListActivity"
+            android:label="@string/message_list_title" >
+        </activity>
+
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity"
+            android:label="@string/message_list_title" >
+        </activity>
+
         <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"
             android:noHistory="true">
 

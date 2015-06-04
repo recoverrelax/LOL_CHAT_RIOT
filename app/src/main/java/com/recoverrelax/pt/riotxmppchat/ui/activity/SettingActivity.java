@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
@@ -55,6 +56,11 @@ public class SettingActivity extends BaseActivity {
     @Override
     public int getLayoutResources() {
         return R.layout.activity_settings;
+    }
+
+    @Override
+    public int getNavigationDrawerPosition() {
+        return ENavDrawer.NAVDRAWER_ITEM_2.getNavDrawerId();
     }
 
     private class SettingsPagerAdapter extends FragmentStatePagerAdapter {

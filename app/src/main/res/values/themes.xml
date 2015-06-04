@@ -21,8 +21,6 @@
     <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:background">@color/transparent</item>
         <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
-        <item name="windowActionBarOverlay">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="MyCustomToolBarPopupTheme" parent="ThemeOverlay.AppCompat.Light">
