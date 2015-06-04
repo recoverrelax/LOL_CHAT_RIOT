@@ -65,7 +65,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
                             if(message != null)
                                 friendListChat.add(new FriendListChat(friend, message));
 
-                        subscriber.onNext(new Pair<Method, List<FriendListChat>>(Method.RETURN_SINGLE, friendListChat));
+                        subscriber.onNext(new Pair<>(Method.RETURN_SINGLE, friendListChat));
                         subscriber.onCompleted();
                     }
                 }))
@@ -105,7 +105,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
                         Collections.sort(friendListChat, new FriendListChat.LastMessageComparable());
                         Collections.reverse(friendListChat);
 
-                        subscriber.onNext(new Pair<Method, List<FriendListChat>>(Method.RETURN_ALL, friendListChat));
+                        subscriber.onNext(new Pair<>(Method.RETURN_ALL, friendListChat));
                         subscriber.onCompleted();
                     }
                 }))

@@ -163,20 +163,17 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     }
 
     private boolean isUserAlreadyLogged(String username, String password, String serverHost) {
-        if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
-            if (dataStorage.getUsername().equals(username) && dataStorage.getPassword().equals(password) && dataStorage.getServer().equals(RiotServer.getRiotServerHost(serverHost).getServerName())) {
-                /**
-                 * USER ALREADY LOGGED IN
-                 */
-                return true;
-            } else {
-                /**
-                 * USER NOT LOGGED IN OR ANOTHER USER LOGGED IN
-                 */
-                return false;
-            }
-        } else
-            return false;
+        /**
+         * USER ALREADY LOGGED IN
+         * OR
+         * USER NOT LOGGED IN OR ANOTHER USER LOGGED IN
+         */
+        return connection != null
+                && connection.isConnected()
+                && connection.isAuthenticated()
+                && dataStorage.getUsername().equals(username)
+                && dataStorage.getPassword().equals(password)
+                && dataStorage.getServer().equals(RiotServer.getRiotServerHost(serverHost).getServerName());
     }
 
     public void connectToRiotXmppServer(String serverHost, int serverPort, String serverDomain,
@@ -283,12 +280,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         }
     }
 
-    /**
-     * Chat Listener callback receiver
-     *
-     * @param chat
-     * @param message
-     */
+
     @Override
     public void processMessage(Chat chat, Message message) {
         // sum1212121@riot.pt
@@ -297,12 +289,11 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
         addChat(chat, messageFrom);
 
-        if (message != null && messageFrom != null && message.getBody() != null) {
+        if (messageFrom != null && message.getBody() != null) {
             MessageDb message1 = new MessageDb(null, getConnectedXmppUser(), messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
             RiotXmppDBRepository.insertMessage(message1);
             LogUtils.LOGI(TAG, "Iserted message in the db:\n + " + message1.toString());
 
-//            MainApplication.getInstance().getBus().post(new OnNewMessageReceived(messageFrom));
             notifyNewMessage(message, messageFrom);
         }
     }
@@ -397,8 +388,6 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     /**
      * Notify all Observers of new messages
      *
-     * @param message
-     * @param userXmppAddress
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
 

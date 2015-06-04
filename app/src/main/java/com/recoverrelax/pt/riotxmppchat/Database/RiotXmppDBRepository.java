@@ -123,10 +123,6 @@ public class RiotXmppDBRepository {
         return list.size() == 1;
     }
 
-    /**
-     * Just insert, no update ...
-     * @param notif
-     */
     public static void insertNotification(NotificationDb notif){
         getNotificationDao().insert(notif);
     }
