@@ -47,5 +47,4 @@ build
 .gradle
 LOL_CHAT_RIOT.iml
 local.properties
-build
 gradle

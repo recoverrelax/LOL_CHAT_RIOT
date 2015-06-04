@@ -121,6 +121,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return toolbar;
     }
 
+    public TextView getToolbarTitleTextView(){
+        return this.toolbar_title;
+    }
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));

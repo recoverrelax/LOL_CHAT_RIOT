@@ -4,11 +4,12 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,30 +17,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListFailedLoadingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListLoadedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReplaceMainFragmentEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.R;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.packet.Message;
+
 import java.util.ArrayList;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -71,6 +74,13 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
      * Adapter
      */
     private FriendsListAdapter adapter;
+    private boolean firstTimeOnCreate = true;
+
+    private Toolbar toolbar;
+    private ToolbarState toolbarState = ToolbarState.TOOLBAR_STATE_NORMAL;
+    private int lastScrollYDirection = 0;
+    private int toolbarColor;
+    private int oldScrollY = 0;
 
     /**
      * Data Loading
@@ -89,7 +99,14 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        toolbar = ((BaseActivity) getActivity()).getToolbar();
+        toolbar.setBackgroundColor(getResources().getColor(R.color.primaryColor));
 
+    }
+
+    public void setToolbarColor(ToolbarState state){
+            toolbar.setBackgroundColor(state.isTransparent() ? getResources().getColor(android.R.color.transparent) : toolbarColor);
+            toolbarState = state;
     }
 
     @Override
@@ -114,8 +131,7 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
         adapter.setOnChildClickListener(new FriendsListAdapter.OnFriendClick() {
             @Override
             public void onFriendClick(String friendUsername, String friendXmppName) {
-//                friendMessageListFragActivityCallback.replaceFragment(friendUsername, friendXmppName);
-                MainApplication.getInstance().getBusInstance().post(new OnReplaceMainFragmentEvent(friendUsername, friendXmppName));
+                AndroidUtils.startPersonalMessageActivity(getActivity(), friendUsername, friendXmppName);
             }
         });
 
@@ -159,7 +175,9 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
         MainApplication.getInstance().getBusInstance().register(this);
         getActivity().invalidateOptionsMenu();
 
-        riotXmppRosterHelper.getFullFriendsList();
+        if(!firstTimeOnCreate)
+            riotXmppRosterHelper.getFullFriendsList();
+        firstTimeOnCreate = false;
     }
 
     @Override
@@ -261,11 +279,114 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
         });
     }
 
+//    @OnTouch(R.id.myFriendsListRecyclerView)
+//    public boolean onScrollViewTouch(MotionEvent event){
+//        if(event.getAction() == MotionEvent.ACTION_UP){
+//            if(toolbar.getTranslationY() != 0 && toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL) && lastScrollYDirection == 1){ // UP
+//                final AlphaAnimation fadeIn = new AlphaAnimation(1.0f, 0.0f);
+//                fadeIn.setDuration(400);
+//                fadeIn.setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        toolbar.setVisibility(View.INVISIBLE);
+//                        setToolbarColor(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
+//                        toolbar.setTranslationY(-toolbar.getHeight());
+//                        toolbar.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//                    }
+//                });
+//                toolbar.startAnimation(fadeIn);
+//            }
+//        }
+//        return false;
+//    }
+
     @Override
-    public void onScrollChanged(int i, boolean b, boolean b1) {
-        BaseActivity parentActivity = getParentActivity();
-        if(parentActivity != null){
-        }
+    public void onScrollChanged(int scroll, boolean b, boolean b1) {
+//        toolbar.setTranslationY(-scrollY);
+        int scrollY = scroll + toolbar.getHeight();
+
+        toolbar.setTranslationY(isToolbarTotalVisible(scrollY) ? -scrollY : toolbar.getTranslationY());
+
+//        if(scrollY < toolbar.getHeight())
+//            toolbar.setTranslationY(-scrollY);
+//          toolbar.setTranslationY(isToolbarTotalVisible() ? -scroll : toolbar.getTranslationY());
+//        toolbar.setTranslationY(Math.max(-scrollY, -toolbar.getHeight()));
+
+//        Log.i("as", toolbar.getTranslationY() + "");
+
+//        if(scrollY >= toolbar.getHeight() && isScrollDown(scrollY) && !toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL)){
+//            setToolbarColor(ToolbarState.TOOLBAR_STATE_NORMAL);
+//            toolbar.setVisibility(View.INVISIBLE);
+//            toolbar.setTranslationY(-toolbar.getHeight());
+//            toolbar.setVisibility(View.VISIBLE);
+//        }
+//
+//        if (isScrollDown(scrollY)&& !isToolbarTotalVisible()) {
+//            toolbar.setTranslationY(Math.abs(toolbar.getTranslationY() + oldScrollY - scrollY));
+
+//        if(isScrollDown(scrollY) && !isToolbarTotalVisible())
+//            toolbar.setTranslationY(toolbar.getTranslationY() + Math.abs(scrollY-oldScrollY));
+
+//        if (isScrollDown(scrollY) && toolbar.getTranslationY() < 0 && (scrollY-oldScrollY != 0)) {
+//            if(toolbar.getTranslationY() + Math.abs(scrollY-oldScrollY) <= 0)
+//                toolbar.setTranslationY(toolbar.getTranslationY() + Math.abs(scrollY-oldScrollY));
+//            else
+//                toolbar.setTranslationY(0);
+//        }
+
+        /**
+         * This method is the same as the previous one, but the reverse scrolling, Scrolling-UP.
+         */
+
+//        if (isScrollUp(scrollY) && toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL) && toolbar.getTranslationY() <= 0 && (scrollY-oldScrollY != 0)) {
+//            if(toolbar.getTranslationY() - Math.abs(scrollY-oldScrollY) > -toolbar.getHeight())
+//                toolbar.setTranslationY(toolbar.getTranslationY() - Math.abs(scrollY-oldScrollY));
+//            else
+//                toolbar.setTranslationY(-toolbar.getHeight());
+//        }
+        Log.i("as", isToolbarTotalVisible(scrollY)? "yes" : "no");
+
+//        if (isScrollUp(scrollY)&& toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL)) {
+//            toolbar.setTranslationY(-scrollY);
+//        }
+
+//        if (isScrollUp(scrollY) && toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL) && toolbar.getTranslationY() <= 0 && (scrollY-oldScrollY != 0)) {
+//            if(toolbar.getTranslationY() - Math.abs(scrollY-oldScrollY) > -toolbar.getHeight())
+//                toolbar.setTranslationY(toolbar.getTranslationY() - Math.abs(scrollY-oldScrollY));
+//            else
+//                toolbar.setTranslationY(-toolbar.getHeight());
+//        }
+
+        setScrollDirections(scrollY);
+    }
+
+    public boolean isToolbarTotalVisible(int scrollY){
+        return Math.abs(toolbar.getTranslationY()) <= scrollY;
+    }
+
+    private void setScrollDirections(int scrollY) {
+        if(scrollY > oldScrollY)
+            lastScrollYDirection = 1;
+        if(scrollY < oldScrollY)
+            lastScrollYDirection = -1;
+
+        oldScrollY = scrollY;
+    }
+
+    private boolean isScrollDown(int scrollY) {
+        return scrollY <= oldScrollY && lastScrollYDirection == -1;
+    }
+
+    private boolean isScrollUp(int scrollY){
+        return scrollY >= oldScrollY && lastScrollYDirection == 1;
     }
 
     @Override
@@ -277,9 +398,17 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
     }
+    enum ToolbarState {
+        TOOLBAR_STATE_NORMAL,
+        TOOLBAR_STATE_TRANSPARENT;
 
-    public BaseActivity getParentActivity(){
-        FragmentActivity activity = this.getActivity();
-        return activity instanceof BaseActivity ? (BaseActivity) activity : null;
+        public boolean isNormal(){
+            return this.equals(ToolbarState.TOOLBAR_STATE_NORMAL);
+        }
+
+        public boolean isTransparent(){
+            return this.equals(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
+        }
     }
+
 }

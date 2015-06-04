@@ -9,12 +9,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
+import com.squareup.otto.Subscribe;
+
+import org.jivesoftware.smack.packet.Message;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -98,5 +104,31 @@ public class SettingActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         AndroidUtils.overridePendingTransitionBackAppDefault(this);
+    }
+
+    @Subscribe
+    public void OnNewMessageReceived(final OnNewMessageReceivedEvent messageReceived) {
+        final Message message = messageReceived.getMessage();
+        final String userXmppAddress = messageReceived.getMessageFrom();
+
+        final String username = MainApplication.getInstance().getRiotXmppService().getRoster().getEntry(userXmppAddress).getName();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new MessageNotification(SettingActivity.this, message.getBody(), username, userXmppAddress, MessageNotification.NotificationType.SNACKBAR);
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainApplication.getInstance().getBusInstance().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.getInstance().getBusInstance().register(this);
     }
 }
