@@ -25,14 +25,15 @@ public class AppDateUtils {
      * Then it creates an handler that will update the textview each {@link AppDateUtils#UPDATE_DATE_EACH_MILIS} seconds
      */
     public static void setTimeElapsedWithHandler(final TextView holder, final Date date) {
-        new Runnable() {
+        Runnable runnable123 = new Runnable() {
             @Override
             public void run() {
-                String formatedDate  = getFormatedDate(date);
+                String formatedDate = getFormatedDate(date);
                 holder.setText(formatedDate);
                 new Handler().postDelayed(this, UPDATE_DATE_EACH_MILIS);
             }
-        }.run();
+        };
+        runnable123.run();
     }
 
     public static void updateGameStatusPeriodically(final TextView textview, final Friend text2Update) {
