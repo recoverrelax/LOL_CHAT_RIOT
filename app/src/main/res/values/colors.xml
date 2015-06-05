@@ -40,6 +40,7 @@
     <color name="colorHighlightT2">#7db6b6b6</color>
 
     <color name="white50Alpha">#7dffffff</color>
+    <color name="white190T">#beffffff</color>
     <color name="primaryColor50Alpha">#7d03a9f4</color>
     <color name="primaryColorDarkAlpha50">#7d0288d1</color>
     <color name="neutral_grey_disabled">#727272</color>

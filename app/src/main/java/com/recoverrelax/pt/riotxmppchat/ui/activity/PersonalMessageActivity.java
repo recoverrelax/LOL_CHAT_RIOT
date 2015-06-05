@@ -3,13 +3,10 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 
 import butterknife.ButterKnife;
@@ -62,6 +59,6 @@ public class PersonalMessageActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        AndroidUtils.overridePendingTransitionBackAppDefault(this);
+        AppAndroidUtils.overridePendingTransitionBackAppDefault(this);
     }
 }

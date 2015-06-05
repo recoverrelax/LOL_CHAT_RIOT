@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.github.mrengineer13.snackbar.SnackBar;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
@@ -98,9 +97,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holderOnline.friendName.setText(friend.getName());
 
                 if (friend.getGameStatus().equals(GameStatus.IN_QUEUE) || friend.getGameStatus().equals(GameStatus.INGAME)) {
-                    holderOnline.startRepeatingTask();
-                } else {
-                    holderOnline.stopRepeatingTask();
+//                    holderOnline.startRepeatingTask();
+                    AppDateUtils.updateGameStatusPeriodically(holderOnline.gameStatus, holderOnline.current);
                 }
 
                 /**
@@ -291,31 +289,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Friend current;
 
         private final int mHandlerInterval = 6000;
-        private Handler mHandler;
-        private Runnable mStatusChecker;
 
         public MyViewHolderOnline(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
-            mHandler = new Handler();
-            mStatusChecker = new Runnable() {
-                @Override
-                public void run() {
-                    String gameStatusToPrint = current.getGameStatusToPrint();
-                    gameStatus.setText(gameStatusToPrint);
-                    mHandler.postDelayed(mStatusChecker, mHandlerInterval);
-                }
-            };
-
             itemView.setOnClickListener(this);
-        }
-
-        public void startRepeatingTask() {
-            mStatusChecker.run();
-        }
-
-        void stopRepeatingTask() {
-            mHandler.removeCallbacks(mStatusChecker);
         }
 
         @Override

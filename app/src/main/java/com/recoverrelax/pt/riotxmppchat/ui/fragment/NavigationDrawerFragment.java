@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DividerItemDecoration;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapter;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.DrawerAdapterItemSelectedCallback;
@@ -188,7 +187,7 @@ public class NavigationDrawerFragment extends Fragment implements DrawerAdapterI
             public void run() {
                 if (finalIntent != null) {
                     startActivity(finalIntent);
-                    AndroidUtils.overridePendingTransitionBackAppDefault(getActivity());
+                    AppAndroidUtils.overridePendingTransitionBackAppDefault(getActivity());
                 }
             }
         }, NAVDRAWER_LAUNCH_DELAY);

@@ -20,7 +20,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.github.mrengineer13.snackbar.SnackBar;
@@ -199,7 +199,7 @@ public class LoginActivity extends BaseActivity {
         Intent intent = new Intent(LoginActivity.this, FriendListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        AndroidUtils.overridePendingTransitionBackAppDefault(this);
+        AppAndroidUtils.overridePendingTransitionBackAppDefault(this);
         materialDialog.dismiss();
         MainApplication.getInstance().initSettings();
         this.finish();

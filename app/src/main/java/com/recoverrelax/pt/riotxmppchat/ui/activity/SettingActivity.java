@@ -11,10 +11,10 @@ import android.support.v7.app.ActionBar;
 import com.astuetz.PagerSlidingTabStrip;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
@@ -103,7 +103,7 @@ public class SettingActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        AndroidUtils.overridePendingTransitionBackAppDefault(this);
+        AppAndroidUtils.overridePendingTransitionBackAppDefault(this);
     }
 
     @Subscribe

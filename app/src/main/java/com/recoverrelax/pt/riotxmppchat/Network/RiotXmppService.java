@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
@@ -18,9 +17,9 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.SoundNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.XmppUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SoundNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
@@ -47,11 +46,9 @@ import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLSocketFactory;
@@ -59,7 +56,7 @@ import javax.net.ssl.SSLSocketFactory;
 import LolChatRiotDb.MessageDb;
 import rx.Observer;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification.*;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification.*;
 import static junit.framework.Assert.assertTrue;
 
 public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations>, RosterListener, ChatMessageListener {
@@ -285,7 +282,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     public void processMessage(Chat chat, Message message) {
         // sum1212121@riot.pt
         // but we need sum1212121 ...
-        String messageFrom = XmppUtils.parseXmppAddress(message.getFrom());
+        String messageFrom = AppXmppUtils.parseXmppAddress(message.getFrom());
 
         addChat(chat, messageFrom);
 
@@ -358,7 +355,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         MainApplication instance = MainApplication.getInstance();
 
         if (instance.getConnectedXmppUser() == null) {
-            instance.setConnectedXmppUser(XmppUtils.parseXmppAddress(connection.getUser()));
+            instance.setConnectedXmppUser(AppXmppUtils.parseXmppAddress(connection.getUser()));
         }
         return instance.getConnectedXmppUser();
     }

@@ -20,7 +20,7 @@ import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.Globals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
@@ -67,7 +67,7 @@ public class PersonalMessageFragment extends BaseFragment {
     private String friendUsername;
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
-    private int defaultMessageNrReturned = Globals.Message.DEFAULT_MESSAGES_RETURNED;
+    private int defaultMessageNrReturned = AppGlobals.Message.DEFAULT_MESSAGES_RETURNED;
 
 
     public PersonalMessageFragment() {

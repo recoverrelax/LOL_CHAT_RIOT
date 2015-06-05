@@ -2,18 +2,17 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import LolChatRiotDb.MessageDb;
@@ -77,39 +76,23 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         MessageDb message = personalMessageList.get(position);
 
         switch (holder.getItemViewType()) {
             case VIEW_HOLDER_FROM_ID:
-                MyViewHolderFrom holderFrom = (MyViewHolderFrom) holder;
+                final MyViewHolderFrom holderFrom = (MyViewHolderFrom) holder;
                 holderFrom.messageDb = message;
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(holderFrom.messageDb.getDate());
-
-                int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                int minutes = calendar.get(Calendar.MINUTE);
-
-                String formatedDate = "[" + hour + ":" + minutes + "]";
-                holderFrom.date.setText(formatedDate);
+                AppDateUtils.setTimeElapsedWithHandler(holderFrom.date, holderFrom.messageDb.getDate());
 
                 holderFrom.message.setText(message.getMessage());
                 break;
 
             case VIEW_HOLDER_TO_ID:
-                MyViewHolderTo holderTo = (MyViewHolderTo) holder;
+                final MyViewHolderTo holderTo = (MyViewHolderTo) holder;
                 holderTo.messageDb = message;
 
-                Calendar calendar2 = Calendar.getInstance();
-                calendar2.setTime(holderTo.messageDb.getDate());
-
-                int hour2 = calendar2.get(Calendar.HOUR_OF_DAY);
-                int minutes2 = calendar2.get(Calendar.MINUTE);
-
-                String formatedDate2 = "[" + hour2 + ":" + minutes2 + "]";
-                holderTo.date.setText(formatedDate2);
-
+                AppDateUtils.setTimeElapsedWithHandler(holderTo.date, holderTo.messageDb.getDate());
 
                 holderTo.message.setText(message.getMessage());
                 break;

@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -32,9 +31,8 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListLoa
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.MessageNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
@@ -136,7 +134,7 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
         adapter.setOnChildClickListener(new FriendsListAdapter.OnFriendClick() {
             @Override
             public void onFriendClick(String friendUsername, String friendXmppName) {
-                AndroidUtils.startPersonalMessageActivity(getActivity(), friendUsername, friendXmppName);
+                AppAndroidUtils.startPersonalMessageActivity(getActivity(), friendUsername, friendXmppName);
             }
         });
 

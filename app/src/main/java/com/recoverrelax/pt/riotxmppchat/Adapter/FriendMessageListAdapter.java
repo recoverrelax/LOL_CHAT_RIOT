@@ -11,13 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.XmppUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppDateUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
     }
 
     @Override
-    public void onBindViewHolder(FriendMessageListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final FriendMessageListAdapter.ViewHolder holder, int position) {
         FriendListChat friendListChat = friendMessageList.get(position);
         holder.friendListChat = friendListChat;
 
@@ -59,38 +59,19 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         /**
          * Properly format the date
          */
-        Date friendLastMessageDate = friendListChat.getFriendLastMessageDate();
+        final Date friendLastMessageDate = friendListChat.getFriendLastMessageDate();
         if(friendLastMessageDate != null) {
-            //..
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(friendLastMessageDate);
-
-            String DATE_SEPARATOR = "-";
-            String HOUR_SEPARATOR = ":";
-            String DATE_SPACE = " ";
-
-
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int month = calendar.get(Calendar.MONTH);
-            int year = calendar.get(Calendar.YEAR);
-
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
-            int minutes = calendar.get(Calendar.MINUTE);
-
-            String date = day + DATE_SEPARATOR + month + DATE_SEPARATOR + year + DATE_SPACE + hour + HOUR_SEPARATOR + minutes;
-
-            holder.date.setText(date);
-
+            AppDateUtils.setTimeElapsedWithHandler(holder.date, friendLastMessageDate);
         }else
             holder.date.setText(friendListChat.getFriendLastMessageDateAsString());
 
         Boolean wasRead = holder.friendListChat.getLastMessage().getWasRead();
         if(!wasRead && holder.friendListChat.getLastMessage().getDirection() == MessageDirection.FROM.getId()){
             holder.wasRead.setVisibility(View.VISIBLE);
-            AndroidUtils.setBlinkAnimation(holder.wasRead, true);
+            AppAndroidUtils.setBlinkAnimation(holder.wasRead, true);
         }else{
             holder.wasRead.setVisibility(View.INVISIBLE);
-            AndroidUtils.setBlinkAnimation(holder.wasRead, false);
+            AppAndroidUtils.setBlinkAnimation(holder.wasRead, false);
         }
     }
 
@@ -100,7 +81,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
     }
 
     public void setItem(FriendListChat item) {
-        String userXmppAddress = XmppUtils.parseXmppAddress(item.getFriend().getUserXmppAddress());
+        String userXmppAddress = AppXmppUtils.parseXmppAddress(item.getFriend().getUserXmppAddress());
 
         int position = getFriendMessageListPositionByFriendName(userXmppAddress);
         if(position != -1){
@@ -165,7 +146,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @OnClick(R.id.parent_row)
         public void onRowClick(View view){
-            AndroidUtils.startPersonalMessageActivity(context, friendListChat.getFriendName(),
+            AppAndroidUtils.startPersonalMessageActivity(context, friendListChat.getFriendName(),
                     friendListChat.getUserXmppAddress());
         }
     }
