@@ -12,7 +12,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
@@ -104,28 +102,14 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         toolbar = ((BaseActivity) getActivity()).getToolbar();
-        toolbar.setBackgroundColor(getResources().getColor(R.color.black_200a));
-
-        Drawable background = toolbar.getBackground();
-        background.mutate();
-        background.setAlpha(0);
-        toolbar.setBackgroundDrawable(background);
     }
 
     public void setToolbarStateAndColor(ToolbarState state) {
 
         if (state != toolbarState) {
-            ObjectAnimator fadingBackground;
-
-            if (state.isTransparent()) {
-                fadingBackground = ObjectAnimator.ofPropertyValuesHolder(toolbar.getBackground(),
-                        PropertyValuesHolder.ofInt("alpha", 0));
-            } else {
-                fadingBackground = ObjectAnimator.ofPropertyValuesHolder(toolbar.getBackground(),
-                        PropertyValuesHolder.ofInt("alpha", 255));
-            }
-            fadingBackground.setDuration(500).start();
-
+            ObjectAnimator.ofPropertyValuesHolder(toolbar.getBackground(),
+                        PropertyValuesHolder.ofInt("alpha", state.isTransparent() ? 0 : 220))
+                            .setDuration(500).start();
         }
         toolbarState = state;
     }
@@ -245,7 +229,6 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
 
     @Subscribe
     public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
-        LogUtils.LOGI(TAG, "Callback called on the activity!");
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

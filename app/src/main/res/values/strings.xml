@@ -78,6 +78,11 @@
     <string name="message_list_title">Last Friend\'s Messages</string>
     <string name="message_notification_title">New  Message From:</string>
     <string name="new_message">New Message</string>
+    <string name="settings_when_app_visible">When the App is visible …</string>
+    <string name="settings_coming_soon">Coming soon …</string>
+    <string name="settings_new_message_sound_notification">New Message Sound Notification</string>
+    <string name="settings_new_message_text_notification">New Message Text Notification</string>
+    <string name="settings_when_app_background">When the App is in background ...</string>
 
 
 </resources>

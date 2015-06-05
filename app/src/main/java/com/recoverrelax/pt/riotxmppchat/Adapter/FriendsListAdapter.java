@@ -117,6 +117,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holderOnline.wins.setText(friend.getWins());
                 holderOnline.ranked_icon.setImageDrawable(context.getResources().getDrawable(friend.getProfileIconResId()));
                 holderOnline.division_league.setText(friend.getLeagueDivisionAndTier().getDescriptiveName());
+                holderOnline.division_league.setSelected(true);
 
 //                /**
 //                 * Set The Status Message
@@ -134,9 +135,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 String gameStatusToPrint = friend.getGameStatusToPrint();
                 if (!gameStatusToPrint.equals(Friend.GAME_STATUS_NO_VIEW)) {
                     holderOnline.gameStatus.setText(gameStatusToPrint);
-                    holderOnline.gameStatus.setVisibility(View.VISIBLE);
-                } else
-                    holderOnline.gameStatus.setVisibility(View.GONE);
+                } else{
+                    holderOnline.gameStatus.setText("");
+                }
 
                 /**
                  * Load Image from LolKing Server

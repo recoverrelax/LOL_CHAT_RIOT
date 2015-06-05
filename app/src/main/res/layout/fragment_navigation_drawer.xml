@@ -42,7 +42,7 @@
             android:gravity="center_vertical"
             android:paddingBottom="@dimen/drawer_info_margin_bottom"
             android:paddingLeft="@dimen/drawer_vertical_keyline_left"
-            android:text="recover.relax@gmail.com"
+            tools:text="recover.relax@gmail.com"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_medium" />
     </LinearLayout>

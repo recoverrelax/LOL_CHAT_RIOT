@@ -149,8 +149,12 @@ public class FriendMessageListFragment extends BaseFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                friendMessageListHelper.getPersonalMessageSingleItem(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
-                        messageReceived.getMessageFrom());
+                if(adapter.constains(messageReceived.getMessageFrom())){
+                    friendMessageListHelper.getPersonalMessageSingleItem(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
+                            messageReceived.getMessageFrom());
+                }else{
+                    friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+                }
             }
         });
     }

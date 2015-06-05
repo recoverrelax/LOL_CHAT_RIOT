@@ -110,6 +110,14 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         }
     }
 
+    public boolean constains(String userXmppAddress){
+        for(FriendListChat flc: friendMessageList){
+            if(flc.getFriend().getUserXmppAddress().equals(userXmppAddress))
+                return true;
+        }
+        return false;
+    }
+
     /**
      * Get the array position corresponding to the given xmppName of the user
      * @param xmppName

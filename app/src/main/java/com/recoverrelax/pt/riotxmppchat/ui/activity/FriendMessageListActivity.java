@@ -28,7 +28,6 @@ public class FriendMessageListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
-        MainApplication.getInstance().setApplicationClosed(false);
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -37,6 +36,7 @@ public class FriendMessageListActivity extends BaseActivity {
                     .replace(R.id.container, fragment)
                     .commit();
         }
+        toolbar.getBackground().setAlpha(0);
     }
 
     @Override

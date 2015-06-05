@@ -16,7 +16,7 @@
             android:id="@+id/container"/>
         <include
             android:id="@+id/app_bar"
-            layout="@layout/app_bar_black50a" />
+            layout="@layout/app_bar" />
     </FrameLayout>
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"

@@ -56,6 +56,7 @@ public class PersonalMessageActivity extends BaseActivity {
                     .commit();
         }
         setTitle(getResources().getString(R.string.chatting_with) + " " + friendUsername);
+        toolbar.getBackground().setAlpha(0);
     }
 
     @Override

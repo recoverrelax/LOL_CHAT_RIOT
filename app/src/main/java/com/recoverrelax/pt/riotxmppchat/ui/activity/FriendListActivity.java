@@ -39,6 +39,8 @@ public class FriendListActivity extends BaseActivity {
                     .commit();
         }
         setTitle(getResources().getString(R.string.friends_online));
+
+        toolbar.getBackground().setAlpha(0);
     }
 
     @Override

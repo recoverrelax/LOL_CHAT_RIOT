@@ -47,12 +47,11 @@
     android:translationY="30dp"
     fab:fab_colorNormal="@color/loginBackgroundBlack"
     fab:fab_colorPressed="@color/loginBackground"
-    fab:fab_colorRipple="@color/loginBackground"
     fab:fab_size="normal"
     tools:visibility="visible"
-        android:layout_above="@+id/message_layout"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    android:layout_above="@+id/message_layout"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

@@ -57,6 +57,9 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
                         android:gravity="center"
                         android:textColor="@color/black"
                         tools:text="Silver I" />

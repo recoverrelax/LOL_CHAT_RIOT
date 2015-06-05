@@ -4,6 +4,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme.Base">
         <!-- Customize your theme here. -->
+        <item name="android:background">@null</item>
     </style>
 
     <style name="AppTheme.Base" parent ="Theme.AppCompat.Light.NoActionBar">
@@ -19,7 +20,7 @@
 
     <!--ToolBar Style-->
     <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:background">@color/primaryColor</item>
+        <item name="android:background">@color/toolbarColor</item>
         <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
     </style>
 

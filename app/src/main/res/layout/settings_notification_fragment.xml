@@ -7,7 +7,7 @@
         style="@style/settings_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="When the App is visible ..." />
+        android:text="@string/settings_when_app_visible" />
 
     <View android:layout_width="match_parent"
         android:layout_marginRight="16dp"
@@ -38,7 +38,7 @@
                 style="@style/settings_child"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Message Sound Notification"/>
+                android:text="@string/settings_new_message_sound_notification"/>
         </LinearLayout>
 
         <LinearLayout
@@ -78,7 +78,7 @@
                 style="@style/settings_child"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Message Text Notification" />
+                android:text="@string/settings_new_message_text_notification" />
         </LinearLayout>
 
         <LinearLayout
@@ -102,7 +102,7 @@
         style="@style/settings_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="When the App is in background ..."
+        android:text="@string/settings_when_app_background"
         android:id="@+id/textView2" />
 
     <View android:layout_width="match_parent"
@@ -134,7 +134,7 @@
                 style="@style/settings_child"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Message Sound Notification" />
+                android:text="@string/settings_new_message_sound_notification" />
         </LinearLayout>
 
         <LinearLayout
@@ -174,7 +174,7 @@
                 style="@style/settings_child"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Message Text Notification" />
+                android:text="@string/settings_new_message_text_notification" />
         </LinearLayout>
 
         <LinearLayout
