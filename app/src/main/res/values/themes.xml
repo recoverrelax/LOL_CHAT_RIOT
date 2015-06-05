@@ -19,7 +19,7 @@
 
     <!--ToolBar Style-->
     <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:background">@color/transparent</item>
+        <item name="android:background">@color/primaryColor</item>
         <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
     </style>
 

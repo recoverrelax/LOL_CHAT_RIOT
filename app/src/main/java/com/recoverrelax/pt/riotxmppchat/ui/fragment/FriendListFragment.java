@@ -1,6 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
@@ -77,9 +82,8 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     private boolean firstTimeOnCreate = true;
 
     private Toolbar toolbar;
-    private ToolbarState toolbarState = ToolbarState.TOOLBAR_STATE_NORMAL;
+    private ToolbarState toolbarState = ToolbarState.TOOLBAR_STATE_TRANSPARENT;
     private int lastScrollYDirection = 0;
-    private int toolbarColor;
     private int oldScrollY = 0;
 
     /**
@@ -100,13 +104,30 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         toolbar = ((BaseActivity) getActivity()).getToolbar();
-        toolbar.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.black_200a));
 
+        Drawable background = toolbar.getBackground();
+        background.mutate();
+        background.setAlpha(0);
+        toolbar.setBackgroundDrawable(background);
     }
 
-    public void setToolbarColor(ToolbarState state){
-            toolbar.setBackgroundColor(state.isTransparent() ? getResources().getColor(android.R.color.transparent) : toolbarColor);
-            toolbarState = state;
+    public void setToolbarStateAndColor(ToolbarState state) {
+
+        if (state != toolbarState) {
+            ObjectAnimator fadingBackground;
+
+            if (state.isTransparent()) {
+                fadingBackground = ObjectAnimator.ofPropertyValuesHolder(toolbar.getBackground(),
+                        PropertyValuesHolder.ofInt("alpha", 0));
+            } else {
+                fadingBackground = ObjectAnimator.ofPropertyValuesHolder(toolbar.getBackground(),
+                        PropertyValuesHolder.ofInt("alpha", 255));
+            }
+            fadingBackground.setDuration(500).start();
+
+        }
+        toolbarState = state;
     }
 
     @Override
@@ -150,14 +171,14 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
          * We need this. For some reason, the roster gets time to initialize so it wont return values after some time.
          */
 
-        if(firstTimeFragmentStart) {
+        if (firstTimeFragmentStart) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     riotXmppRosterHelper.getFullFriendsList();
                 }
             }, DELAY_BEFORE_LOAD_ITEMS);
-        }else
+        } else
             riotXmppRosterHelper.getFullFriendsList();
 
         /**
@@ -175,7 +196,7 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
         MainApplication.getInstance().getBusInstance().register(this);
         getActivity().invalidateOptionsMenu();
 
-        if(!firstTimeOnCreate)
+        if (!firstTimeOnCreate)
             riotXmppRosterHelper.getFullFriendsList();
         firstTimeOnCreate = false;
     }
@@ -194,8 +215,8 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     }
 
     @Subscribe
-    public void OnFriendListLoaded(OnFriendListLoadedEvent friendList){
-        if(adapter != null) {
+    public void OnFriendListLoaded(OnFriendListLoadedEvent friendList) {
+        if (adapter != null) {
             adapter.setItems(friendList.getFriendList());
 
             if (swipeRefreshLayout.isRefreshing())
@@ -207,10 +228,10 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     }
 
     @Subscribe
-    public void onFriendChanged(OnFriendChangedEvent friend){
+    public void onFriendChanged(OnFriendChangedEvent friend) {
         Friend friend1 = friend.getFriend();
 
-        if(adapter != null) {
+        if (adapter != null) {
             if (friend1 != null) {
                 adapter.setFriendChanged(friend1);
             }
@@ -223,7 +244,7 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     }
 
     @Subscribe
-    public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence){
+    public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
         LogUtils.LOGI(TAG, "Callback called on the activity!");
         getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -236,7 +257,7 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     public void showProgressBar(boolean state) {
         progressBarCircularIndeterminate.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
 
-        if(state)
+        if (state)
             swipeRefreshLayout.setVisibility(View.GONE);
         else
             swipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -251,9 +272,9 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
 
         MenuItem item = menu.findItem(R.id.newMessage);
 
-        if(hasUnreaded) {
+        if (hasUnreaded) {
             item.setVisible(true);
-        }else {
+        } else {
             item.setVisible(false);
         }
     }
@@ -293,7 +314,7 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
 //                    @Override
 //                    public void onAnimationEnd(Animation animation) {
 //                        toolbar.setVisibility(View.INVISIBLE);
-//                        setToolbarColor(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
+//                        setToolbarStateAndColor(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
 //                        toolbar.setTranslationY(-toolbar.getHeight());
 //                        toolbar.setVisibility(View.VISIBLE);
 //                    }
@@ -310,72 +331,20 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
 
     @Override
     public void onScrollChanged(int scroll, boolean b, boolean b1) {
-//        toolbar.setTranslationY(-scrollY);
-        int scrollY = scroll + toolbar.getHeight();
+        int scrollY = scroll + toolbar.getHeight() + 10;
 
-        toolbar.setTranslationY(isToolbarTotalVisible(scrollY) ? -scrollY : toolbar.getTranslationY());
-
-//        if(scrollY < toolbar.getHeight())
-//            toolbar.setTranslationY(-scrollY);
-//          toolbar.setTranslationY(isToolbarTotalVisible() ? -scroll : toolbar.getTranslationY());
-//        toolbar.setTranslationY(Math.max(-scrollY, -toolbar.getHeight()));
-
-//        Log.i("as", toolbar.getTranslationY() + "");
-
-//        if(scrollY >= toolbar.getHeight() && isScrollDown(scrollY) && !toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL)){
-//            setToolbarColor(ToolbarState.TOOLBAR_STATE_NORMAL);
-//            toolbar.setVisibility(View.INVISIBLE);
-//            toolbar.setTranslationY(-toolbar.getHeight());
-//            toolbar.setVisibility(View.VISIBLE);
-//        }
-//
-//        if (isScrollDown(scrollY)&& !isToolbarTotalVisible()) {
-//            toolbar.setTranslationY(Math.abs(toolbar.getTranslationY() + oldScrollY - scrollY));
-
-//        if(isScrollDown(scrollY) && !isToolbarTotalVisible())
-//            toolbar.setTranslationY(toolbar.getTranslationY() + Math.abs(scrollY-oldScrollY));
-
-//        if (isScrollDown(scrollY) && toolbar.getTranslationY() < 0 && (scrollY-oldScrollY != 0)) {
-//            if(toolbar.getTranslationY() + Math.abs(scrollY-oldScrollY) <= 0)
-//                toolbar.setTranslationY(toolbar.getTranslationY() + Math.abs(scrollY-oldScrollY));
-//            else
-//                toolbar.setTranslationY(0);
-//        }
-
-        /**
-         * This method is the same as the previous one, but the reverse scrolling, Scrolling-UP.
-         */
-
-//        if (isScrollUp(scrollY) && toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL) && toolbar.getTranslationY() <= 0 && (scrollY-oldScrollY != 0)) {
-//            if(toolbar.getTranslationY() - Math.abs(scrollY-oldScrollY) > -toolbar.getHeight())
-//                toolbar.setTranslationY(toolbar.getTranslationY() - Math.abs(scrollY-oldScrollY));
-//            else
-//                toolbar.setTranslationY(-toolbar.getHeight());
-//        }
-        Log.i("as", isToolbarTotalVisible(scrollY)? "yes" : "no");
-
-//        if (isScrollUp(scrollY)&& toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL)) {
-//            toolbar.setTranslationY(-scrollY);
-//        }
-
-//        if (isScrollUp(scrollY) && toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL) && toolbar.getTranslationY() <= 0 && (scrollY-oldScrollY != 0)) {
-//            if(toolbar.getTranslationY() - Math.abs(scrollY-oldScrollY) > -toolbar.getHeight())
-//                toolbar.setTranslationY(toolbar.getTranslationY() - Math.abs(scrollY-oldScrollY));
-//            else
-//                toolbar.setTranslationY(-toolbar.getHeight());
-//        }
-
+        if (scrollY > toolbar.getHeight()) {
+            setToolbarStateAndColor(ToolbarState.TOOLBAR_STATE_NORMAL);
+        } else {
+            setToolbarStateAndColor(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
+        }
         setScrollDirections(scrollY);
     }
 
-    public boolean isToolbarTotalVisible(int scrollY){
-        return Math.abs(toolbar.getTranslationY()) <= scrollY;
-    }
-
     private void setScrollDirections(int scrollY) {
-        if(scrollY > oldScrollY)
+        if (scrollY > oldScrollY)
             lastScrollYDirection = 1;
-        if(scrollY < oldScrollY)
+        if (scrollY < oldScrollY)
             lastScrollYDirection = -1;
 
         oldScrollY = scrollY;
@@ -385,28 +354,33 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
         return scrollY <= oldScrollY && lastScrollYDirection == -1;
     }
 
-    private boolean isScrollUp(int scrollY){
+    private boolean isScrollUp(int scrollY) {
         return scrollY >= oldScrollY && lastScrollYDirection == 1;
     }
 
     @Override
-    public void onDownMotionEvent() {
-
-    }
+    public void onDownMotionEvent() { }
 
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
 
+        if (scrollState.equals(ScrollState.UP)) {
+            toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
+
+        } else if (scrollState.equals(ScrollState.DOWN))
+            toolbar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2));
+
     }
+
     enum ToolbarState {
         TOOLBAR_STATE_NORMAL,
         TOOLBAR_STATE_TRANSPARENT;
 
-        public boolean isNormal(){
+        public boolean isNormal() {
             return this.equals(ToolbarState.TOOLBAR_STATE_NORMAL);
         }
 
-        public boolean isTransparent(){
+        public boolean isTransparent() {
             return this.equals(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
         }
     }

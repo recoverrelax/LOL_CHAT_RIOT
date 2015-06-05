@@ -24,8 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingTop="?attr/actionBarSize"
-                android:clipToPadding="false"
-                tools:listitem="@layout/friends_list_recyclerview_child" />
+                android:clipToPadding="false"/>
         </android.support.v4.widget.SwipeRefreshLayout>
     </FrameLayout>
 
