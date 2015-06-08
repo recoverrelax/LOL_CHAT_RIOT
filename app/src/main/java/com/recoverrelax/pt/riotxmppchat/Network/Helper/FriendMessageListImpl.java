@@ -1,7 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.util.Pair;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
@@ -45,6 +44,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
     public void getPersonalMessageSingleItem(final String connectedUser, final String userToReturn) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
+
                     @Override
                     public void call(Subscriber<? super Pair<FriendMessageListImpl.Method, List<FriendListChat>>> subscriber) {
 

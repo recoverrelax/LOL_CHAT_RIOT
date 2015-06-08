@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 
@@ -25,8 +24,8 @@ public class PersonalMessageActivity extends BaseActivity {
     }
 
     @Override
-    public int getNavigationDrawerPosition() {
-        return ENavDrawer.NAVDRAWER_ITEM_1.getNavDrawerId();
+    public int getNavigationViewPosition() {
+        return R.id.navigation_item_2;
     }
 
     @Override

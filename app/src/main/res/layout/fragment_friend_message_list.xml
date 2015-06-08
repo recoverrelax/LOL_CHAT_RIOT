@@ -6,14 +6,22 @@
     android:orientation="vertical"
     tools:context="com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment">
 
-    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+    <ProgressBar
         android:id="@+id/progressBarCircularIndeterminate"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center_vertical|center_horizontal"
         android:gravity="center_vertical|center_horizontal"
-        android:background="@color/white"
-        materialdesign:animate="false" />
+        android:background="@color/transparent"/>
+
+    <!--<com.gc.materialdesign.views.ProgressBarCircularIndeterminate-->
+        <!--android:id="@+id/progressBarCircularIndeterminate"-->
+        <!--android:layout_width="64dp"-->
+        <!--android:layout_height="64dp"-->
+        <!--android:layout_gravity="center_vertical|center_horizontal"-->
+        <!--android:gravity="center_vertical|center_horizontal"-->
+        <!--android:background="@color/white"-->
+        <!--materialdesign:animate="false" />-->
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

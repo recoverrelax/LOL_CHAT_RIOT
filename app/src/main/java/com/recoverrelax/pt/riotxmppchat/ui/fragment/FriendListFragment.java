@@ -1,8 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -10,19 +8,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
+import android.widget.ProgressBar;
 
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChangedEvent;
@@ -37,7 +30,6 @@ import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.packet.Message;
@@ -52,19 +44,19 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendListFragment extends BaseFragment implements ObservableScrollViewCallbacks {
+public class FriendListFragment extends BaseFragment {
 
     private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
 
     @InjectView(R.id.myFriendsListRecyclerView)
-    ObservableRecyclerView myFriendsListRecyclerView;
+    RecyclerView myFriendsListRecyclerView;
 
     @InjectView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @InjectView(R.id.progressBarCircularIndeterminate)
-    ProgressBarCircularIndeterminate progressBarCircularIndeterminate;
+    ProgressBar progressBarCircularIndeterminate;
 
     private boolean firstTimeFragmentStart = true;
 
@@ -76,11 +68,6 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
      */
     private FriendsListAdapter adapter;
     private boolean firstTimeOnCreate = true;
-
-    private Toolbar toolbar;
-    private ToolbarState toolbarState = ToolbarState.TOOLBAR_STATE_TRANSPARENT;
-    private int lastScrollYDirection = 0;
-    private int oldScrollY = 0;
 
     /**
      * Data Loading
@@ -99,17 +86,6 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolbar = ((BaseActivity) getActivity()).getToolbar();
-    }
-
-    public void setToolbarStateAndColor(ToolbarState state) {
-
-        if (state != toolbarState) {
-            ObjectAnimator.ofPropertyValuesHolder(toolbar.getBackground(),
-                        PropertyValuesHolder.ofInt("alpha", state.isTransparent() ? 0 : 220))
-                            .setDuration(500).start();
-        }
-        toolbarState = state;
     }
 
     @Override
@@ -139,8 +115,6 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
         });
 
         myFriendsListRecyclerView.setAdapter(adapter);
-        myFriendsListRecyclerView.setScrollViewCallbacks(this);
-
         riotXmppRosterHelper = new RiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
 
         swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -279,78 +253,6 @@ public class FriendListFragment extends BaseFragment implements ObservableScroll
                 new MessageNotification(FriendListFragment.this.getActivity(), message.getBody(), username, userXmppAddress, MessageNotification.NotificationType.SNACKBAR);
             }
         });
-    }
-
-//    @OnTouch(R.id.myFriendsListRecyclerView)
-//    public boolean onScrollViewTouch(MotionEvent event){
-//        if(event.getAction() == MotionEvent.ACTION_UP){
-//            if(toolbar.getTranslationY() != 0 && toolbarState.equals(ToolbarState.TOOLBAR_STATE_NORMAL) && lastScrollYDirection == 1){ // UP
-//                final AlphaAnimation fadeIn = new AlphaAnimation(1.0f, 0.0f);
-//                fadeIn.setDuration(400);
-//                fadeIn.setAnimationListener(new Animation.AnimationListener() {
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        toolbar.setVisibility(View.INVISIBLE);
-//                        setToolbarStateAndColor(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
-//                        toolbar.setTranslationY(-toolbar.getHeight());
-//                        toolbar.setVisibility(View.VISIBLE);
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//                    }
-//                });
-//                toolbar.startAnimation(fadeIn);
-//            }
-//        }
-//        return false;
-//    }
-
-    @Override
-    public void onScrollChanged(int scroll, boolean b, boolean b1) {
-        int scrollY = scroll + toolbar.getHeight() + 10;
-
-        if (scrollY > toolbar.getHeight()) {
-            setToolbarStateAndColor(ToolbarState.TOOLBAR_STATE_NORMAL);
-        } else {
-            setToolbarStateAndColor(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
-        }
-        setScrollDirections(scrollY);
-    }
-
-    private void setScrollDirections(int scrollY) {
-        if (scrollY > oldScrollY)
-            lastScrollYDirection = 1;
-        if (scrollY < oldScrollY)
-            lastScrollYDirection = -1;
-
-        oldScrollY = scrollY;
-    }
-
-    private boolean isScrollDown(int scrollY) {
-        return scrollY <= oldScrollY && lastScrollYDirection == -1;
-    }
-
-    private boolean isScrollUp(int scrollY) {
-        return scrollY >= oldScrollY && lastScrollYDirection == 1;
-    }
-
-    @Override
-    public void onDownMotionEvent() { }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-
-        if (scrollState.equals(ScrollState.UP)) {
-            toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
-
-        } else if (scrollState.equals(ScrollState.DOWN))
-            toolbar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(2));
-
     }
 
     enum ToolbarState {

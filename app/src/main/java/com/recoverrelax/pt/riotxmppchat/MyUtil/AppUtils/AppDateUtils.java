@@ -12,7 +12,7 @@ import java.util.Date;
 public class AppDateUtils {
 
     private static final int DATE_MIN_TIME_FORMAT = 360;
-    private static final int UPDATE_DATE_EACH_MILIS = 60000;
+    private static final int UPDATE_DATE_EACH_MILIS = 30000;
 
     private static final int UPDATE_TEXTVIEW_REPEAT_TIME = 1000;
 

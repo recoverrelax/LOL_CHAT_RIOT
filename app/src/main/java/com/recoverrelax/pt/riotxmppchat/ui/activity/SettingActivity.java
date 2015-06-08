@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -8,13 +9,11 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
-import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
@@ -31,7 +30,7 @@ public class SettingActivity extends BaseActivity {
     ViewPager settings_pager;
 
     @InjectView(R.id.tabs)
-    PagerSlidingTabStrip tabs;
+    TabLayout tabs;
 
     private PagerAdapter pagerAdapter;
 
@@ -52,7 +51,7 @@ public class SettingActivity extends BaseActivity {
 
         pagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
         settings_pager.setAdapter(pagerAdapter);
-        tabs.setViewPager(settings_pager);
+        tabs.setupWithViewPager(settings_pager);
 
         /**
          * Configs
@@ -65,8 +64,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Override
-    public int getNavigationDrawerPosition() {
-        return ENavDrawer.NAVDRAWER_ITEM_2.getNavDrawerId();
+    public int getNavigationViewPosition() {
+        return -1;
     }
 
     private class SettingsPagerAdapter extends FragmentStatePagerAdapter {

@@ -3,18 +3,18 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
+import android.view.View;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReplaceMainFragmentEvent;
-import com.recoverrelax.pt.riotxmppchat.R;
-import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 
 import LolChatRiotDb.NotificationDb;
 
-public class MessageNotification implements SnackBar.OnMessageClickListener {
+public class MessageNotification {
 
     private static final int ICON_ID = R.drawable.ic_teemo;
     private static final String EMPTY_STRING = "";
@@ -28,8 +28,8 @@ public class MessageNotification implements SnackBar.OnMessageClickListener {
     private String userXmppNAme;
     private NotificationCompat.Builder mBuilder;
     private NotificationType notifType;
-    private SnackBar.Builder builder;
     private NotificationDb notificationDb;
+    private Snackbar snackBar;
 
     public MessageNotification(Context context, String message, String username, String userXmppName, NotificationType notifType){
         this.context = context;
@@ -51,13 +51,23 @@ public class MessageNotification implements SnackBar.OnMessageClickListener {
     }
 
     private void createNewSnackBarNotification() {
-            builder = new SnackBar.Builder((Activity) context)
-                    .withMessage(username + "\n" + message)
-                    .withTextColorId(R.color.white)
-                    .withOnClickListener(this)
-                    .withActionMessage("GO")
-                    .withBackgroundColorId(R.color.primaryColor)
-                    .withDuration((short) 3000);
+//            builder = new SnackBar.Builder((Activity) context)
+//                    .withMessage(username + "\n" + message)
+//                    .withTextColorId(R.color.white)
+//                    .withOnClickListener(this)
+//                    .withActionMessage("GO")
+//                    .withBackgroundColorId(R.color.primaryColor)
+//                    .withDuration((short) 3000);
+
+        snackBar = Snackbar
+                .make(((Activity) context).getWindow().getDecorView().getRootView(), username + "says: \n" + message, Snackbar.LENGTH_LONG)
+                .setAction("GO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(context instanceof BaseActivity)
+                            ((BaseActivity)context).goToMessageActivity();
+                    }
+                });
     }
 
     private void sendSystemNotification(){
@@ -73,7 +83,7 @@ public class MessageNotification implements SnackBar.OnMessageClickListener {
 
         if(notificationDb.getTextNotificationOnline()) {
             createNewSnackBarNotification();
-            builder.show();
+            snackBar.show();
         }
     }
 
@@ -82,11 +92,6 @@ public class MessageNotification implements SnackBar.OnMessageClickListener {
             sendSnackBarNotification();
         else if(notifType.equals(NotificationType.SYSTEM_NOTIFICATION))
             sendSystemNotification();
-    }
-
-    @Override
-    public void onMessageClick(Parcelable parcelable) {
-        MainApplication.getInstance().getBusInstance().post(new OnReplaceMainFragmentEvent(username, userXmppNAme));
     }
 
     public enum NotificationType {

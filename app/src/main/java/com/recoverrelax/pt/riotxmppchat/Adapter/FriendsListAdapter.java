@@ -3,7 +3,9 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.support.annotation.LayoutRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,9 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
@@ -91,14 +91,15 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         switch(holder.getItemViewType()){
             case VIEW_HOLDER_ONLINE_ID:
-                MyViewHolderOnline holderOnline = (MyViewHolderOnline) holder;
+                final MyViewHolderOnline holderOnline = (MyViewHolderOnline) holder;
 
                 holderOnline.current = friend;
                 holderOnline.friendName.setText(friend.getName());
 
                 if (friend.getGameStatus().equals(GameStatus.IN_QUEUE) || friend.getGameStatus().equals(GameStatus.INGAME)) {
-//                    holderOnline.startRepeatingTask();
-                    AppDateUtils.updateGameStatusPeriodically(holderOnline.gameStatus, holderOnline.current);
+                    holderOnline.startRepeatingTask();
+                } else {
+                    holderOnline.stopRepeatingTask();
                 }
 
                 /**
@@ -127,15 +128,15 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //                } else
 //                    holderOnline.statusMsg.setVisibility(View.INVISIBLE);
 
-                /**
-                 * Set the Game Status
-                 */
-                String gameStatusToPrint = friend.getGameStatusToPrint();
-                if (!gameStatusToPrint.equals(Friend.GAME_STATUS_NO_VIEW)) {
-                    holderOnline.gameStatus.setText(gameStatusToPrint);
-                } else{
-                    holderOnline.gameStatus.setText("");
-                }
+//                /**
+//                 * Set the Game Status
+//                 */
+//                String gameStatusToPrint = friend.getGameStatusToPrint();
+//                if (!gameStatusToPrint.equals(Friend.GAME_STATUS_NO_VIEW)) {
+//                    holderOnline.gameStatus.setText(gameStatusToPrint);
+//                } else{
+//                    holderOnline.gameStatus.setText("");
+//                }
 
                 /**
                  * Load Image from LolKing Server
@@ -289,11 +290,31 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Friend current;
 
         private final int mHandlerInterval = 6000;
+        private Handler mHandler;
+        private Runnable mStatusChecker;
 
         public MyViewHolderOnline(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
+            mHandler = new Handler();
+            mStatusChecker = new Runnable() {
+                @Override
+                public void run() {
+                    String gameStatusToPrint = current.getGameStatusToPrint();
+                    gameStatus.setText(gameStatusToPrint);
+                    mHandler.postDelayed(mStatusChecker, mHandlerInterval);
+                }
+            };
+
             itemView.setOnClickListener(this);
+        }
+
+        public void startRepeatingTask() {
+            mStatusChecker.run();
+        }
+
+        void stopRepeatingTask() {
+            mHandler.removeCallbacks(mStatusChecker);
         }
 
         @Override
@@ -318,18 +339,15 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public MyViewHolderOffline(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
-
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-                    new SnackBar.Builder((Activity)context)
-                    .withMessage(current.getName() + " " + context.getResources().getString(R.string.cannot_chat_with))
-                    .withTextColorId(R.color.white)
-                    .withBackgroundColorId(R.color.primaryColor190T)
-                    .withDuration((short) 3000)
-                    .show();
+            Snackbar
+                    .make(((Activity) context).getWindow().getDecorView().getRootView(),
+                            current.getName() + " " + context.getResources().getString(R.string.cannot_chat_with),
+                            Snackbar.LENGTH_LONG);
         }
     }
 

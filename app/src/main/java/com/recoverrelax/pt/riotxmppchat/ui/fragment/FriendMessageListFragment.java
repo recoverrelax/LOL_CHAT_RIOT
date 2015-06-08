@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
@@ -41,7 +41,7 @@ public class FriendMessageListFragment extends BaseFragment {
     SwipeRefreshLayout swipeRefreshLayout;
 
     @InjectView(R.id.progressBarCircularIndeterminate)
-    ProgressBarCircularIndeterminate progressBarCircularIndeterminate;
+    ProgressBar progressBarCircularIndeterminate;
 
     private final String TAG = FriendMessageListFragment.this.getClass().getSimpleName();
     private RecyclerView.LayoutManager layoutManager;

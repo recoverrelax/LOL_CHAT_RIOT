@@ -1,19 +1,27 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 public class FriendListActivity extends BaseActivity {
+
+    @InjectView(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
 
     @Override
     public int getLayoutResources() {
@@ -21,9 +29,10 @@ public class FriendListActivity extends BaseActivity {
     }
 
     @Override
-    public int getNavigationDrawerPosition() {
-        return ENavDrawer.NAVDRAWER_ITEM_0.getNavDrawerId();
+    public int getNavigationViewPosition() {
+        return R.id.navigation_item_1;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +48,12 @@ public class FriendListActivity extends BaseActivity {
                     .commit();
         }
         setTitle(getResources().getString(R.string.friends_online));
+    }
 
-        toolbar.getBackground().setAlpha(0);
+    @Nullable
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
     }
 
     @Override

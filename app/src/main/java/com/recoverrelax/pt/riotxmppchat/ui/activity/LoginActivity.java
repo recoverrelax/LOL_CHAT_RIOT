@@ -7,6 +7,7 @@ import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,12 +21,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.drawer.ENavDrawer;
-import com.recoverrelax.pt.riotxmppchat.R;
-import com.github.mrengineer13.snackbar.SnackBar;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.squareup.otto.Subscribe;
 
@@ -62,7 +61,6 @@ public class LoginActivity extends BaseActivity {
     LinearLayout login_main_layout;
 
     private DataStorage mDataStorage;
-    private SnackBar snackBar;
 
     private boolean usernameLengthControl = false;
     private boolean passwordLengthControl = false;
@@ -154,9 +152,10 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public int getNavigationDrawerPosition() {
-        return ENavDrawer.NAVDRAWER_ITEM_10.getNavDrawerId();
+    public int getNavigationViewPosition() {
+        return -1;
     }
+
 
     @OnClick(R.id.connect)
     public void onConnectClick(View v) {
@@ -187,11 +186,14 @@ public class LoginActivity extends BaseActivity {
     @Subscribe
     public void onFailure(OnConnectionOrLoginFailureEvent event) {
         materialDialog.dismiss();
-        snackBar = new SnackBar.Builder(this)
-                .withMessageId(R.string.activity_login_cannot_connect)
-                .withTextColorId(R.color.primaryColor)
-                .withDuration((short) 7000)
-                .show();
+//        snackBar = new SnackBar.Builder(this)
+//                .withMessageId(R.string.activity_login_cannot_connect)
+//                .withTextColorId(R.color.primaryColor)
+//                .withDuration((short) 7000)
+//                .show();
+
+        Snackbar
+                .make(getWindow().getDecorView().getRootView(), R.string.activity_login_cannot_connect, Snackbar.LENGTH_LONG);
     }
 
     @Subscribe
