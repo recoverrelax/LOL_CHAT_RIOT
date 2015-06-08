@@ -83,7 +83,7 @@ public class Friend {
     /**
      * @return The extracted String or EMPTY_STRING ("")
      */
-    private String getStringFromXmlTag(String tagName, Element rootElement) {
+    public static String getStringFromXmlTag(String tagName, Element rootElement) {
         if (rootElement == null)
             return NO_DATA;
         else {
@@ -184,6 +184,16 @@ public class Friend {
         return GameStatus.getByXmppName(gameStatusXmpp);
     }
 
+    public boolean isPlaying(){
+        GameStatus gameStatus = getGameStatus();
+        return gameStatus != null && gameStatus.isPlaying();
+    }
+
+    public boolean isInQueue(){
+        GameStatus gameStatus = getGameStatus();
+        return gameStatus != null && gameStatus.isInQueue();
+    }
+
     /**
      * @return The Game Status or "-1" to tell the view shud be View.GONE
      */
@@ -221,7 +231,7 @@ public class Friend {
             long serverTimeStamp = Long.parseLong(getTimeStamp());
             long nowTimeStamp = System.currentTimeMillis();
 
-            long difference = ((nowTimeStamp - serverTimeStamp) / 1000L / 60L);
+            long difference = Math.abs((nowTimeStamp - serverTimeStamp) / 1000L / 60L);
             return String.valueOf(difference);
         }catch(NumberFormatException e){
             return "";

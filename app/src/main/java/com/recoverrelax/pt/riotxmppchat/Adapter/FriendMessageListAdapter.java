@@ -91,7 +91,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         }
     }
 
-    public boolean constains(String userXmppAddress){
+    public boolean contains(String userXmppAddress){
         for(FriendListChat flc: friendMessageList){
             if(flc.getFriend().getUserXmppAddress().equals(userXmppAddress))
                 return true;

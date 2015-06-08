@@ -3,10 +3,14 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
+import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 
@@ -59,5 +63,10 @@ public class PersonalMessageActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         AppAndroidUtils.overridePendingTransitionBackAppDefault(this);
+    }
+
+    @Subscribe
+    public void OnFriendLeftGame(FriendLeftGameNotification notif){
+        new SnackBarNotification(this, notif.getMessage(), "PM", notif.getFriendName(), notif.getFriendXmppAddress());
     }
 }

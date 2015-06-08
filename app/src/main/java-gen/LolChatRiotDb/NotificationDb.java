@@ -20,6 +20,15 @@ public class NotificationDb {
         this.id = id;
     }
 
+    /**
+     *
+     * @param id
+     * @param userXmppId: eg; sum12345@pvp.net
+     * @param soundNotificationOnline
+     * @param soundNotificationOffline
+     * @param textNotificationOnline
+     * @param textNotificationOffline
+     */
     public NotificationDb(Long id, String userXmppId, Boolean soundNotificationOnline, Boolean soundNotificationOffline, Boolean textNotificationOnline, Boolean textNotificationOffline) {
         this.id = id;
         this.userXmppId = userXmppId;

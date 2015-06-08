@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
@@ -59,10 +61,13 @@ public class PersonalMessageFragment extends BaseFragment {
     SwipeRefreshLayout swipeRefreshLayout;
 
     @InjectView(R.id.expandButton)
-    FloatingActionButton expandButton;
+    ImageView expandButton;
 
     @InjectView(R.id.message_layout)
     RelativeLayout message_layout;
+
+    @InjectView(R.id.uselessShape)
+    FrameLayout uselessShape;
 
     private static final String TAG = PersonalMessageFragment.class.getSimpleName();
 
@@ -108,7 +113,6 @@ public class PersonalMessageFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i("1234", "Passa Aki");
 
         Bundle extras = getArguments();
         if(extras==null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)){
@@ -125,21 +129,21 @@ public class PersonalMessageFragment extends BaseFragment {
             messageRecyclerView.setAdapter(adapter);
 
             personalMessageHelper = new PersonalMessageImpl(this);
-            personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned,
-                    MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
+            personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
 
 //        setToolbarTitle(getResources().getString(R.string.chatting_with) + " " + friendUsername);
 
             swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    personalMessageHelper.getLastXPersonalMessageList(doubleLoadedItems(),
-                            MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
+                    personalMessageHelper.getLastXPersonalMessageList(doubleLoadedItems(), friendXmppName);
                 }
             };
 
             swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
-            expandButton.setTranslationY(-convertDIPToPixels(getActivity(), 100-(56/2)));
+//            expandButton.setTranslationY(-convertDIPToPixels(getActivity(), 100-(56/2)));
+//            expandButton.setTranslationY(convertDIPToPixels(getActivity(), (56/2)));
+            uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70/2)));
         }
     }
 
@@ -211,8 +215,7 @@ public class PersonalMessageFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         MainApplication.getInstance().getBusInstance().register(this);
-        personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned,
-                MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(), friendXmppName);
+        personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
     }
 
     @Override
@@ -226,8 +229,7 @@ public class PersonalMessageFragment extends BaseFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                personalMessageHelper.getLastPersonalMessage(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
-                        friendXmppName);
+                personalMessageHelper.getLastPersonalMessage(friendXmppName);
             }
         });
     }

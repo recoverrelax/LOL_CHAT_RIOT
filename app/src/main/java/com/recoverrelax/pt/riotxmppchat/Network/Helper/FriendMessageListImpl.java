@@ -7,10 +7,12 @@ import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageSingleItemReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
@@ -31,17 +33,20 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
 
     private Subscription mSubscription;
     private Fragment mFragment;
-    private Roster roster;
+    private RiotXmppService riotXmppService;
+    private String connectedUser;
+
 
     private String TAG = this.getClass().getSimpleName();
 
-    public FriendMessageListImpl(Fragment frag, Roster roster) {
+    public FriendMessageListImpl(Fragment frag) {
         mFragment = frag;
-        this.roster = roster;
+        this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
+        this.connectedUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
     }
 
     @Override
-    public void getPersonalMessageSingleItem(final String connectedUser, final String userToReturn) {
+    public void getPersonalMessageSingleItem(final String userToReturn) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
 
@@ -53,15 +58,16 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
                          * First get the friendsList
                          */
 
-                        RosterEntry entry = roster.getEntry(userToReturn);
+                        RosterEntry entry = riotXmppService.getRosterEntry(userToReturn);
+                        Presence presence = riotXmppService.getRosterPresence(entry.getUser());
 
-                        Friend friend = new Friend(entry.getName(), entry.getUser(), roster.getPresence(entry.getUser()));
+                        Friend friend = new Friend(entry.getName(), entry.getUser(), presence);
 
                         /**
                          * For each friend, get the last message, if there is a last message
                          */
 
-                        MessageDb message = RiotXmppDBRepository.getLastMessage(connectedUser, friend.getUserXmppAddress());
+                        MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());
                             if(message != null)
                                 friendListChat.add(new FriendListChat(friend, message));
 
@@ -75,7 +81,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
     }
 
     @Override
-    public void getPersonalMessageList(final String connectedUser) {
+    public void getPersonalMessageList() {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
                     @Override
@@ -86,11 +92,11 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
                          * First get the friendsList
                          */
 
-                        Collection<RosterEntry> entries = roster.getEntries();
+                        Collection<RosterEntry> entries = riotXmppService.getRosterEntries();
                         List<Friend> friendList = new ArrayList<>();
 
                         for (RosterEntry entry : entries) {
-                            friendList.add(new Friend(entry.getName(), entry.getUser(), roster.getPresence(entry.getUser())));
+                            friendList.add(new Friend(entry.getName(), entry.getUser(), riotXmppService.getRosterPresence(entry.getUser())));
                         }
 
                         /**
@@ -98,7 +104,7 @@ public class FriendMessageListImpl implements FriendMessageListHelper, Observer<
                          */
 
                         for(Friend friend: friendList){
-                            MessageDb message = RiotXmppDBRepository.getLastMessage(connectedUser, friend.getUserXmppAddress());
+                            MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());
                           if(message != null)
                             friendListChat.add(new FriendListChat(friend, message));
                         }

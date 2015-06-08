@@ -4,11 +4,11 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +26,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenc
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
@@ -110,8 +110,8 @@ public class FriendListFragment extends BaseFragment {
         adapter = new FriendsListAdapter(this, new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, myFriendsListRecyclerView);
         adapter.setOnChildClickListener(new FriendsListAdapter.OnFriendClick() {
             @Override
-            public void onFriendClick(String friendUsername, String friendXmppName) {
-                AppAndroidUtils.startPersonalMessageActivity(getActivity(), friendUsername, friendXmppName);
+            public void onFriendClick(String friendUsername, String friendXmppAddress) {
+                AppAndroidUtils.startPersonalMessageActivity(getActivity(), friendUsername, friendXmppAddress);
             }
         });
 
@@ -251,22 +251,9 @@ public class FriendListFragment extends BaseFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new MessageNotification(FriendListFragment.this.getActivity(), message.getBody(), username, userXmppAddress, MessageNotification.NotificationType.SNACKBAR);
+                new SnackBarNotification(FriendListFragment.this.getActivity(), username + " says: \n" + message.getBody(), "PM",
+                        username, messageReceived.getMessageFrom());
             }
         });
     }
-
-    enum ToolbarState {
-        TOOLBAR_STATE_NORMAL,
-        TOOLBAR_STATE_TRANSPARENT;
-
-        public boolean isNormal() {
-            return this.equals(ToolbarState.TOOLBAR_STATE_NORMAL);
-        }
-
-        public boolean isTransparent() {
-            return this.equals(ToolbarState.TOOLBAR_STATE_TRANSPARENT);
-        }
-    }
-
 }

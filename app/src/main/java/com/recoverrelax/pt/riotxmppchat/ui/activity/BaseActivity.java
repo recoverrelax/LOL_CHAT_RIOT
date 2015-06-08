@@ -109,15 +109,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 if(!userLearnedDrawer){
                     sDataStorage.setUserLearnedDrawer();
                 }
-
-                // activity should redraw the menu
-                invalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
             }
         };
 
@@ -174,7 +170,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         if (id == R.id.action_settings) {
             return true;
         }else if (id == R.id.newMessage){
-            goToMessageActivity();
+            goToMessageListActivity();
             return true;
         }else if(id == android.R.id.home){
             onBackPressed();
@@ -242,7 +238,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 return true;
     }
 
-    public void goToMessageActivity(){
+    public void goToMessageActivity(String username, String userXmppName){
+        AppAndroidUtils.startPersonalMessageActivity(this, username, userXmppName);
+    }
+
+    public void goToMessageListActivity(){
         onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
     }
 }

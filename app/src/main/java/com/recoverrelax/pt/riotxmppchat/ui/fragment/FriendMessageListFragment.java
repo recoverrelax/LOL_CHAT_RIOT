@@ -89,13 +89,12 @@ public class FriendMessageListFragment extends BaseFragment {
         adapter = new FriendMessageListAdapter(getActivity(), new ArrayList<FriendListChat>(), R.layout.friend_message_list_child_layout);
         messageRecyclerView.setAdapter(adapter);
 
-        Roster roster = MainApplication.getInstance().getRiotXmppService().getRoster();
-        friendMessageListHelper = new FriendMessageListImpl(this, roster);
+        friendMessageListHelper = new FriendMessageListImpl(this);
 
         swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+                friendMessageListHelper.getPersonalMessageList();
             }
         };
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
@@ -135,7 +134,7 @@ public class FriendMessageListFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         MainApplication.getInstance().getBusInstance().register(this);
-        friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+        friendMessageListHelper.getPersonalMessageList();
     }
 
     @Override
@@ -149,11 +148,10 @@ public class FriendMessageListFragment extends BaseFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(adapter.constains(messageReceived.getMessageFrom())){
-                    friendMessageListHelper.getPersonalMessageSingleItem(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
-                            messageReceived.getMessageFrom());
+                if(adapter.contains(messageReceived.getMessageFrom())){
+                    friendMessageListHelper.getPersonalMessageSingleItem(messageReceived.getMessageFrom());
                 }else{
-                    friendMessageListHelper.getPersonalMessageList(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+                    friendMessageListHelper.getPersonalMessageList();
                 }
             }
         });

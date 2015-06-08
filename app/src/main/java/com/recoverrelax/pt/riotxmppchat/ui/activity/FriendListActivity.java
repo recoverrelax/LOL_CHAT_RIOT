@@ -11,9 +11,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
+import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -76,5 +79,10 @@ public class FriendListActivity extends BaseActivity {
             Intent i = new Intent(Intent.ACTION_MAIN);
             i.addCategory(Intent.CATEGORY_HOME);
             startActivity(i);
+    }
+
+    @Subscribe
+    public void OnFriendLeftGame(FriendLeftGameNotification notif){
+        new SnackBarNotification(this, notif.getMessage(), "PM", notif.getFriendName(), notif.getFriendXmppAddress());
     }
 }

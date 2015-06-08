@@ -6,7 +6,9 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChanged
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListFailedLoadingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListLoadedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
@@ -16,6 +18,7 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jxmpp.util.XmppStringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +37,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper, Observer<RiotXm
     private Fragment mFragment;
     private AbstractXMPPConnection connection;
     private Bus busInstance;
-
+    private RiotXmppService riotXmppService;
 
     private String TAG = this.getClass().getSimpleName();
 
@@ -42,6 +45,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper, Observer<RiotXm
         mFragment = frag;
         this.connection = connection;
         this.busInstance = MainApplication.getInstance().getBusInstance();
+        this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
     }
 
     @Override
@@ -50,12 +54,21 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper, Observer<RiotXm
                 Observable.create(new Observable.OnSubscribe<FriendList>() {
                     @Override
                     public void call(Subscriber<? super FriendList> subscriber) {
-                        Roster roster = Roster.getInstanceFor(connection);
-                        Collection<RosterEntry> entries = roster.getEntries();
+                        Collection<RosterEntry> entries = riotXmppService.getRosterEntries();
+
                         FriendList friendList = new FriendList(new ArrayList<Friend>(), FriendListOperation.FRIEND_LIST);
 
                         for (RosterEntry entry : entries) {
-                            friendList.getFriendList().add(new Friend(entry.getName(), entry.getUser(), roster.getPresence(entry.getUser())));
+                            Presence rosterPresence = riotXmppService.getRosterPresence(entry.getUser());
+                            String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
+
+                            Friend friend = new Friend(entry.getName(), userXmppAddress, rosterPresence);
+                            friendList.getFriendList().add(friend);
+
+                            if(friend.isPlaying())
+                                riotXmppService.addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+                            else
+                                riotXmppService.removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
                         }
 
                         subscriber.onNext(friendList);
@@ -73,27 +86,26 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper, Observer<RiotXm
                 Observable.create(new Observable.OnSubscribe<FriendList>() {
                     @Override
                     public void call(Subscriber<? super FriendList> subscriber) {
-                        // Get a roster from the connection instance
-                        Roster roster = Roster.getInstanceFor(connection);
-
                         FriendList friendList = new FriendList(new ArrayList<Friend>(), FriendListOperation.FRIEND_CHANGED);
 
                         // Get whose User this presence belongs to
                         String user = presence.getFrom();
-                        LogUtils.LOGI(TAG, TAG + "_" + "PresenceChanged for user: " + user);
 
                         // Get the presence of specified User
-                        Presence bestPresence = roster.getPresence(user);
+                        Presence bestPresence = riotXmppService.getRosterPresence(presence.getFrom());
 
                         // Get roster entry for that user
-                        RosterEntry entry = roster.getEntry(user);
-                        String name = entry.getName();
-                        String userXmppAddress = entry.getUser();
+                        RosterEntry entry = riotXmppService.getRosterEntry(user);
 
-                        LogUtils.LOGI(TAG, TAG + "RosterEntry.getName()" + name);
-                        LogUtils.LOGI(TAG, TAG + "RosterEntry.getEntry()" + userXmppAddress);
+                        String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
 
-                        friendList.getFriendList().add(new Friend(name, userXmppAddress, bestPresence));
+                        Friend friend = new Friend(entry.getName(), userXmppAddress, bestPresence);
+                        friendList.getFriendList().add(friend);
+
+                        if(friend.isPlaying())
+                            MainApplication.getInstance().getRiotXmppService().addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+                        else
+                            MainApplication.getInstance().getRiotXmppService().removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
 
                         subscriber.onNext(friendList);
                         subscriber.onCompleted();

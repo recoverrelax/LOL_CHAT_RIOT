@@ -9,10 +9,11 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
@@ -114,7 +115,8 @@ public class SettingActivity extends BaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new MessageNotification(SettingActivity.this, message.getBody(), username, userXmppAddress, MessageNotification.NotificationType.SNACKBAR);
+                new SnackBarNotification(SettingActivity.this, username + " says: \n" + message.getBody(), "PM",
+                        username, message.getFrom());
             }
         });
     }
@@ -129,5 +131,10 @@ public class SettingActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MainApplication.getInstance().getBusInstance().register(this);
+    }
+
+    @Subscribe
+    public void OnFriendLeftGame(FriendLeftGameNotification notif){
+        new SnackBarNotification(this, notif.getMessage(), "PM", notif.getFriendName(), notif.getFriendXmppAddress());
     }
 }

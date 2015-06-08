@@ -8,16 +8,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SystemNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.SoundNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
@@ -26,6 +29,7 @@ import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
+import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
@@ -42,6 +46,7 @@ import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -49,14 +54,16 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.net.ssl.SSLSocketFactory;
 
 import LolChatRiotDb.MessageDb;
 import rx.Observer;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.MessageNotification.*;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification.*;
 import static junit.framework.Assert.assertTrue;
 
 public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations>, RosterListener, ChatMessageListener {
@@ -91,6 +98,8 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     private ChatManager chatManager;
     private ChatManagerListener chatManagerListener;
     private Map<String, Chat> chatList;
+
+    private Set<String> friendsPlaying = new HashSet<>();
 
     /**
      * Callbacks
@@ -316,14 +325,24 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     }
 
     public Roster getRoster() {
+        if(roster != null && roster.isLoaded())
         return roster;
+        else {
+            roster = Roster.getInstanceFor(connection);
+            return roster;
+        }
+    }
+
+    public Collection<RosterEntry> getRosterEntries(){
+        return getRoster().getEntries();
+    }
+
+    public RosterEntry getRosterEntry(String user){
+        return getRoster().getEntry(user);
     }
 
     public Presence getRosterPresence(String xmppAddress) {
-        if (roster != null) {
-            return roster.getPresence(xmppAddress);
-        }
-        return null;
+        return getRoster().getPresence(xmppAddress);
     }
 
     public void sendMessage(String message, String userXmppName) {
@@ -351,6 +370,10 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         return connection;
     }
 
+    /**
+     *
+     * @return eg: sum12345@pvp.net
+     */
     public String getConnectedXmppUser() {
         MainApplication instance = MainApplication.getInstance();
 
@@ -380,6 +403,17 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     public void presenceChanged(Presence presence) {
         LogUtils.LOGI(TAG, "Callback called on the service");
         busInstance.post(new OnFriendPresenceChangedEvent(presence));
+
+        RosterEntry rosterEntry = MainApplication.getInstance().getRiotXmppService().getRosterEntry(presence.getFrom());
+        Presence bestPresence = MainApplication.getInstance().getRiotXmppService().getRosterPresence(presence.getFrom());
+        String user = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
+
+        Friend friend = new Friend(rosterEntry.getName(), user, bestPresence);
+
+        if(friend.isPlaying())
+            addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+        else
+            removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
     }
 
     /**
@@ -392,7 +426,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
         if (applicationClosed) {
             String username = roster.getEntry(userXmppAddress).getName();
-            new MessageNotification(this, message.getBody(), username, userXmppAddress, NotificationType.SYSTEM_NOTIFICATION);
+            new SystemNotification(this, message.getBody(), username + " says: ");
         }
 
         new SoundNotification(this, R.raw.teemo_new_message, applicationClosed
@@ -408,5 +442,24 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
          * 3rd: {@link FriendMessageListFragment#OnNewMessageReceived(OnNewMessageReceivedEvent)}  }
          */
         busInstance.post(new OnNewMessageReceivedEvent(message, userXmppAddress));
+    }
+
+    public void addFriendPlaying(String friendName, String userXmppAddress){
+        friendsPlaying.add(friendName);
+        Log.i("TAGF", "Added: " + friendName + " to friendsPlaying!");
+    }
+
+    public void removeFriendPlaying(String friendName, String userXmppAddress){
+        boolean removed = friendsPlaying.remove(friendName);
+//        username + " says: \n" + message
+            if(removed){
+                Log.i("ASAS", "REMOVED FRIEND: " + friendName);
+                if (MainApplication.getInstance().isApplicationClosed()) {
+                    new SystemNotification(this, username, "... just left a game!");
+                }else{
+//                    new SnackBarNotification(this, username + " ... just left a game!", "PM", friendName, userXmppAddress);
+                    MainApplication.getInstance().getBusInstance().post(new FriendLeftGameNotification(username + " ... just left a game!", friendName, userXmppAddress));
+                }
+            }
     }
 }

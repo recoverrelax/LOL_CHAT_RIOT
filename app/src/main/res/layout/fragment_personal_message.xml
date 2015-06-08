@@ -54,17 +54,34 @@
     <!--android:layout_above="@+id/message_layout"-->
     <!--android:layout_alignParentRight="true"-->
     <!--android:layout_alignParentEnd="true" />-->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/expandButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_teemo"
-        fab:backgroundTint="@color/blackDrawerScrim"
-        fab:borderWidth="0dp"
-        fab:fabSize="normal"
-        android:layout_marginRight="20dp"
-        android:layout_alignParentBottom="true"
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/expandButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/ic_teemo"-->
+        <!--fab:backgroundTint="@color/blackDrawerScrim"-->
+        <!--fab:borderWidth="0dp"-->
+        <!--fab:fabSize="normal"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true" />-->
+    <FrameLayout
+        android:id="@+id/uselessShape"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/black_t_circle"
+        android:layout_above="@+id/message_layout"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true">
+
+        <ImageView
+            android:id="@+id/expandButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_teemo"
+            android:contentDescription="Click Here to Send Message"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 </RelativeLayout>

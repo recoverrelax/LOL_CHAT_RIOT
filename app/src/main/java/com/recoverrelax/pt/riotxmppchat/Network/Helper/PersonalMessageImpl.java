@@ -24,22 +24,24 @@ public class PersonalMessageImpl implements PersonalMessageHelper, Observer<Pair
 
     private Subscription mSubscription;
     private Fragment mFragment;
+    private String connectedUser;
 
     private String TAG = this.getClass().getSimpleName();
 
     public PersonalMessageImpl(Fragment frag) {
         mFragment = frag;
+        this.connectedUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
     }
 
     @Override
-    public void getLastXPersonalMessageList(final int x, final String connectedUser, final String userToGetMessagesFrom) {
+    public void getLastXPersonalMessageList(final int x, final String userToGetMessagesFrom) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<Pair<PersonalMessageImpl.Method, List<MessageDb>>>() {
                     @Override
                     public void call(Subscriber<? super Pair<PersonalMessageImpl.Method, List<MessageDb>>> subscriber) {
 
-                        List<MessageDb> messageList = RiotXmppDBRepository.getLastXMessages(x, connectedUser, userToGetMessagesFrom);
-                        subscriber.onNext(new Pair<Method, List<MessageDb>>(Method.RETURN_ALL, messageList));
+                        List<MessageDb> messageList = RiotXmppDBRepository.getLastXMessages(x, userToGetMessagesFrom);
+                        subscriber.onNext(new Pair<>(Method.RETURN_ALL, messageList));
                         subscriber.onCompleted();
                     }
                 }))
@@ -49,14 +51,14 @@ public class PersonalMessageImpl implements PersonalMessageHelper, Observer<Pair
     }
 
     @Override
-    public void getLastPersonalMessage(final String connectedUser, final String userToGetMessagesFrom) {
+    public void getLastPersonalMessage(final String userToGetMessagesFrom) {
         mSubscription = AppObservable.bindFragment(mFragment,
                 Observable.create(new Observable.OnSubscribe<Pair<PersonalMessageImpl.Method, List<MessageDb>>>() {
                     @Override
                     public void call(Subscriber<? super Pair<PersonalMessageImpl.Method, List<MessageDb>>> subscriber) {
 
-                        List<MessageDb> lastMessage = RiotXmppDBRepository.getLastMessageAsList(connectedUser, userToGetMessagesFrom);
-                        subscriber.onNext(new Pair<Method, List<MessageDb>>(Method.RETURN_ONE, lastMessage));
+                        List<MessageDb> lastMessage = RiotXmppDBRepository.getLastMessageAsList(userToGetMessagesFrom);
+                        subscriber.onNext(new Pair<>(Method.RETURN_ONE, lastMessage));
                         subscriber.onCompleted();
                     }
                 }))

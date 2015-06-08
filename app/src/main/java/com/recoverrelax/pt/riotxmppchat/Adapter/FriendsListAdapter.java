@@ -315,6 +315,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         void stopRepeatingTask() {
             mHandler.removeCallbacks(mStatusChecker);
+            gameStatus.setText("");
         }
 
         @Override
@@ -352,7 +353,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public interface OnFriendClick {
-        void onFriendClick(String friendUsername, String friendXmppName);
+        void onFriendClick(String friendUsername, String friendXmppAddress);
     }
 
     public enum SortMethod {

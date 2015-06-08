@@ -32,4 +32,12 @@ public enum GameStatus {
         }
         return GameStatus.OUT_OF_GAME;
     }
+
+    public boolean isPlaying(){
+        return this.equals(GameStatus.INGAME);
+    }
+
+    public boolean isInQueue(){
+        return this.equals(GameStatus.IN_QUEUE);
+    }
 }

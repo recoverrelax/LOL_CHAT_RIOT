@@ -44,7 +44,8 @@ public class RiotXmppDBRepository {
         return qb.list();
     }
 
-    public static MessageDb getLastMessage(String connectedUser, String friendUser){
+    public static MessageDb getLastMessage(String friendUser){
+        String connectedUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
         MessageDbDao messageDao = getMessageDao();
 
         QueryBuilder qb = messageDao.queryBuilder();
@@ -61,7 +62,8 @@ public class RiotXmppDBRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<MessageDb> getLastMessageAsList(String connectedUser, String friendUser){
+    public static List<MessageDb> getLastMessageAsList(String friendUser){
+        String connectedUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
         MessageDbDao messageDao = getMessageDao();
 
         QueryBuilder qb = messageDao.queryBuilder();
@@ -79,8 +81,9 @@ public class RiotXmppDBRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public static List<MessageDb> getLastXMessages(int x, String connectedUser, String userToGetMessagesFrom){
+    public static List<MessageDb> getLastXMessages(int x, String userToGetMessagesFrom){
 
+        String connectedUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
         MessageDbDao messageDao = getMessageDao();
 
         QueryBuilder qb = messageDao.queryBuilder();
