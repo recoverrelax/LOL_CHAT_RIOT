@@ -1,16 +1,21 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.PersonalMessageList.OnLastPersonalMessageReceivedEvent;
@@ -53,6 +58,12 @@ public class PersonalMessageFragment extends BaseFragment {
     @InjectView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @InjectView(R.id.expandButton)
+    FloatingActionButton expandButton;
+
+    @InjectView(R.id.message_layout)
+    RelativeLayout message_layout;
+
     private static final String TAG = PersonalMessageFragment.class.getSimpleName();
 
     private RecyclerView.LayoutManager layoutManager;
@@ -91,6 +102,7 @@ public class PersonalMessageFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
     }
 
     @Override
@@ -127,7 +139,13 @@ public class PersonalMessageFragment extends BaseFragment {
             };
 
             swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
+            expandButton.setTranslationY(-convertDIPToPixels(getActivity(), 100-(56/2)));
         }
+    }
+
+    public static int convertDIPToPixels(Context context, int dip) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, displayMetrics);
     }
 
     public int doubleLoadedItems(){

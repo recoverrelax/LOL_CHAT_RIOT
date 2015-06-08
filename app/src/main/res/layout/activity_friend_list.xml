@@ -11,19 +11,16 @@
         android:layout_height="match_parent"
         android:background="@drawable/login_screen">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/container"/>
-
         <android.support.design.widget.AppBarLayout
+            style="@style/normalToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/primaryColor120"
+            android:fitsSystemWindows="true"
             android:id="@+id/appBarLayout">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/app_bar"
-                style="@style/normalToolbarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways">
@@ -42,6 +39,11 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/container"/>
+
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
@@ -49,6 +51,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:id="@+id/navigationView"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/drawer_menu"/>
     <!--app:headerLayout="@layout/drawer_header"-->

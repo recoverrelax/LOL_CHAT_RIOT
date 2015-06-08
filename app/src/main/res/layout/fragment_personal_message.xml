@@ -62,7 +62,7 @@
         fab:backgroundTint="@color/blackDrawerScrim"
         fab:borderWidth="0dp"
         fab:fabSize="normal"
-        android:translationY="-50dp"
+        android:layout_marginRight="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

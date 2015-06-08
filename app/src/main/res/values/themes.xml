@@ -10,7 +10,7 @@
     <style name="AppTheme.Base" parent ="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryColorDark</item>
-        <item name="colorAccent">@color/primaryColor</item>
+        <item name="colorAccent">@color/accentColor</item>
     </style>
 
     <style name="AppTheme.Base.Settings" parent ="Theme.AppCompat.Light.NoActionBar">
@@ -19,10 +19,16 @@
     </style>
 
     <!--ToolBar Style-->
-    <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:background">@color/toolbarColor</item>
+    <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">?attr/colorPrimary</item>
         <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
     </style>
+
+    <style name="MyCustomToolBarThemeT" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
+    </style>
+
 
     <style name="MyCustomToolBarPopupTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/white</item>

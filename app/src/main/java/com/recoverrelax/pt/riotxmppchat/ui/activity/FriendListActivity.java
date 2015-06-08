@@ -48,12 +48,8 @@ public class FriendListActivity extends BaseActivity {
                     .commit();
         }
         setTitle(getResources().getString(R.string.friends_online));
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(name, context, attrs);
+//        appBarLayout.getBackground().setAlpha(120);
+//        appBarLayout.setTranslationY(0);
     }
 
     @Override

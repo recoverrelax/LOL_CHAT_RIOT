@@ -90,52 +90,57 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 supportActionBar.setDisplayShowTitleEnabled(false);
         }
 
-        if(drawer_layout != null){
-            mHandler = new Handler();
-
-            drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
-                    DataStorage.getInstance().getUsername());
-
-            drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
-
-                @Override
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    if(!userLearnedDrawer){
-                        sDataStorage.setUserLearnedDrawer();
-                    }
-
-                    // activity should redraw the menu
-                    invalidateOptionsMenu();
-                }
-
-                @Override
-                public void onDrawerClosed(View drawerView) {
-                    super.onDrawerClosed(drawerView);
-                    invalidateOptionsMenu();
-                }
-            };
-
-            if(!userLearnedDrawer && !fromSavedInstanceState){
-                drawer_layout.openDrawer(navigationView);
-            }
-
-            drawer_layout.setDrawerListener(drawerToggle);
-
-            drawer_layout.post(new Runnable() {
-                @Override
-                public void run() {
-                    drawerToggle.syncState();
-                }
-            });
-
-            drawer_layout.setScrimColor(getResources().getColor(R.color.blackDrawerScrim));
-
-            navigationView.setNavigationItemSelectedListener(this);
-
-            setNavigationViewPosition(getNavigationViewPosition());
+        if(navigationView != null){
+            setupDrawerContent();
         }
     }
+
+    private void setupDrawerContent() {
+        mHandler = new Handler();
+
+        drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
+                DataStorage.getInstance().getUsername());
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                if(!userLearnedDrawer){
+                    sDataStorage.setUserLearnedDrawer();
+                }
+
+                // activity should redraw the menu
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+
+        if(!userLearnedDrawer && !fromSavedInstanceState){
+            drawer_layout.openDrawer(navigationView);
+        }
+
+        drawer_layout.setDrawerListener(drawerToggle);
+
+        drawer_layout.post(new Runnable() {
+            @Override
+            public void run() {
+                drawerToggle.syncState();
+            }
+        });
+
+        drawer_layout.setScrimColor(getResources().getColor(R.color.blackDrawerScrim));
+
+        navigationView.setNavigationItemSelectedListener(this);
+
+        setNavigationViewPosition(getNavigationViewPosition());
+    }
+
 
     public abstract @LayoutRes int getLayoutResources();
 

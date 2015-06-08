@@ -5,6 +5,11 @@
      for big components.
      The actionBar color is 700 version of the primary Color-->
 
+    <color name="primaryColor">#0075A2</color>
+    <color name="primaryColor120">#780075a2</color>
+    <color name="primaryColorDark">#004884</color>
+    <color name="accentColor">#FF5722</color>
+
     <color name="white">#FFFFFF</color>
     <color name="whiteT">#d2ffffff</color>
     <color name="whiteT2X">#b4ffffff</color>
@@ -14,12 +19,12 @@
     <color name="black_220a">#dc000000</color>
     <color name="toolbarColor">@color/black</color>
     <color name="primaryColor190T">#beff5722</color>
-    <color name="primaryColor">#FF5722</color>
+
     <color name="loginBackground">#37ff5722</color>
     <color name="loginBackgroundBlack">#96000000</color>
     <color name="loginBackground2X">#6eff5722</color>
     <color name="drawer_top_background">#a0ff5722</color>
-    <color name="primaryColorDark">#0288d1</color>
+
     <color name="primaryColorDarkT">#960288d1</color>
     <color name="primaryColorDarkT2">#370288d1</color>
     <color name="primaryColorDarkT3">#9b0288d1</color>
@@ -33,7 +38,7 @@
     <color name="loss_color">#ffff0000</color>
 
 
-    <color name="accentColor">#941C2F</color>
+
 
     <color name="colorSecondaryText">#727272</color>
     <color name="colorHighlight">#B6B6B6</color>

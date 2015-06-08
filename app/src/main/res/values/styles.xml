@@ -39,8 +39,9 @@
     </style>
 
     <style name="normalToolbarStyle">
-        <item name="popupTheme">@style/MyCustomToolBarPopupTheme</item>
-        <item name="theme">@style/MyCustomToolBarTheme</item>
+        <item name="android:background">@color/primaryColor</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
     <style name="settings_title">
