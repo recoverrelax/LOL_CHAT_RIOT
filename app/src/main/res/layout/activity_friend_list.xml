@@ -11,6 +11,11 @@
         android:layout_height="match_parent"
         android:background="@drawable/login_screen">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/container"/>
+
         <android.support.design.widget.AppBarLayout
             style="@style/normalToolbarStyleT"
             android:layout_width="match_parent"
@@ -38,12 +43,6 @@
                     android:textSize="20sp"/>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/container"/>
-
     </android.support.design.widget.CoordinatorLayout>
 
     <include layout="@layout/navigation_view"/>

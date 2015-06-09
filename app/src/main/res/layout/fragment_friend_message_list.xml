@@ -10,6 +10,7 @@
         android:id="@+id/progressBarCircularIndeterminate"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        tools:visibility="invisible"
         android:layout_gravity="center_vertical|center_horizontal"
         android:gravity="center_vertical|center_horizontal"
         android:background="@color/transparent"/>

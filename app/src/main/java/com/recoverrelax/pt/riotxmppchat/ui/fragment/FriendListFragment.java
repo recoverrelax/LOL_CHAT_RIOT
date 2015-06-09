@@ -9,14 +9,12 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListFailedLoadingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListLoadedEvent;
@@ -40,7 +37,6 @@ import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.packet.Message;
@@ -252,8 +248,9 @@ public class FriendListFragment extends BaseFragment {
                         riotXmppRosterHelper.getFullFriendsList();
                     refresh.setVisible(true);
                     addFriend.setVisible(true);
-                    if(hasUnreaded)
+                    if(hasUnreaded) {
                         newMessage.setVisible(true);
+                    }
                     return true;
                 }
             });
@@ -261,13 +258,18 @@ public class FriendListFragment extends BaseFragment {
             final EditText et = ButterKnife.findById(searchView, android.support.v7.appcompat.R.id.search_src_text);
 
             et.addTextChangedListener(new TextWatcher() {
-                @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-                @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
 
                 @Override
                 public void afterTextChanged(Editable editable) {
                     String s = editable.toString();
-                    if(!s.equals("") && !s.equals(" ")) {
+                    if (!s.equals("") && !s.equals(" ")) {
                         riotXmppRosterHelper.searchFriendsList(s);
                         modifiedOriginal[0] = true;
                     }

@@ -12,6 +12,9 @@ import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
 
 public class AppAndroidUtils {
     public static void setBlinkAnimation(final View view, boolean state) {
+        if(view == null)
+            return;
+
         if (!state)
             view.clearAnimation();
         else {

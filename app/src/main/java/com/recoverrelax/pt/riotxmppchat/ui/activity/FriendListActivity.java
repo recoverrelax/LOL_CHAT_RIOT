@@ -1,23 +1,19 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
@@ -35,6 +31,8 @@ public class FriendListActivity extends BaseActivity {
     @Optional
     @InjectView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
+
+    private ImageView imageviewMessage;
 
     @Override
     public int getLayoutResources() {
@@ -105,7 +103,6 @@ public class FriendListActivity extends BaseActivity {
         boolean b = super.onCreateOptionsMenu(menu);
 
         boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
-
         MenuItem messageItem = menu.findItem(R.id.newMessage);
 
         if (hasUnreaded) {
@@ -118,7 +115,7 @@ public class FriendListActivity extends BaseActivity {
 
             View actionView = messageItem.getActionView();
 
-            ImageView imageviewMessage = ButterKnife.findById(actionView, R.id.newMessage);
+            imageviewMessage = ButterKnife.findById(actionView, R.id.newMessage);
             Drawable drawable = imageviewMessage.getDrawable();
             drawable.mutate();
             drawable.setColorFilter(getResources().getColor(R.color.newMessageColor), PorterDuff.Mode.SRC_IN);
@@ -130,9 +127,12 @@ public class FriendListActivity extends BaseActivity {
                 }
             });
 
-            AppAndroidUtils.setBlinkAnimation(actionView, true);
+            AppAndroidUtils.setBlinkAnimation(imageviewMessage, true);
         } else {
             messageItem.setVisible(false);
+            messageItem.setActionView(null);
+            if(imageviewMessage != null)
+                AppAndroidUtils.setBlinkAnimation(imageviewMessage, false);
         }
 
         return b;
