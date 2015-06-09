@@ -15,7 +15,7 @@
 
         <include
             android:id="@+id/app_bar"
-            layout="@layout/app_bar" />
+            layout="@layout/app_bar_t" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -24,21 +24,5 @@
             android:id="@+id/container"/>
     </RelativeLayout>
 
-    <android.support.design.widget.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:id="@+id/navigationView"
-        app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer_menu"/>
-
-    <!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"-->
-        <!--xmlns:tools="http://schemas.android.com/tools"-->
-        <!--android:layout_width="@dimen/navigation_drawer_width"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="start"-->
-        <!--android:name="com.recoverrelax.pt.riotxmppchat.ui.fragment.NavigationDrawerFragment"-->
-        <!--tools:layout="@layout/fragment_navigation_drawer"-->
-        <!--android:id="@+id/nav_drawer_fragment" />-->
-
+    <include layout="@layout/navigation_view"/>
 </android.support.v4.widget.DrawerLayout>

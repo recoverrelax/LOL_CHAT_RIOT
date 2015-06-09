@@ -5,23 +5,42 @@
     <item
         android:visible="false"
         android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:title="@string/action_settings"/>
 
     <item android:id="@+id/navigate"
         android:visible="false"
         android:title="@string/next"
-        android:orderInCategory="200"
         android:icon="@drawable/ic_action_next_item"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
+    <item android:id="@+id/refresh"
+        android:visible="false"
+        android:title="@string/refresh"
+        android:orderInCategory="1100"
+        android:icon="@drawable/ic_cached_white_24dp"
+        app:showAsAction="never"/>
+
+
     <item android:id="@+id/newMessage"
         android:visible="false"
         android:title="@string/new_message"
-        android:orderInCategory="300"
-        android:icon="@drawable/ic_ward"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+        android:orderInCategory="900"
+        android:icon="@drawable/ic_question_answer_white_24dp"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/search"
+        android:visible="false"
+        android:title="@string/search_friend"
+        android:orderInCategory="1000"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"/>
+
+    <item android:id="@+id/addFriend"
+        android:visible="false"
+        android:title="@string/add_friend"
+        android:orderInCategory="800"
+        android:icon="@drawable/ic_perm_identity_white_24dp"
+        app:showAsAction="never"/>
 </menu>

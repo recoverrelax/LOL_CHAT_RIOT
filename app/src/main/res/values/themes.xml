@@ -30,7 +30,7 @@
     </style>
 
 
-    <style name="MyCustomToolBarPopupTheme" parent="ThemeOverlay.AppCompat.Light">
+    <style name="MyCustomToolBarPopupTheme" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:background">@color/white</item>
         <item name="android:textColorPrimary">@color/black</item> <!-- ToobarPopup color text SecondaryPrimary-->
     </style>

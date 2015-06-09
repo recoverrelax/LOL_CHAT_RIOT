@@ -2,6 +2,9 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -9,10 +12,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
@@ -20,15 +28,20 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.Optional;
 
 public class FriendListActivity extends BaseActivity {
 
+    @Optional
     @InjectView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
 
     @Override
     public int getLayoutResources() {
-        return R.layout.activity_friend_list;
+
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
+            return R.layout.activity_friend_list_no_animation;
+        else return R.layout.activity_friend_list;
     }
 
     @Override
@@ -51,6 +64,7 @@ public class FriendListActivity extends BaseActivity {
                     .commit();
         }
         setTitle(getResources().getString(R.string.friends_online));
+
 //        appBarLayout.getBackground().setAlpha(120);
 //        appBarLayout.setTranslationY(0);
     }
@@ -84,5 +98,43 @@ public class FriendListActivity extends BaseActivity {
     @Subscribe
     public void OnFriendLeftGame(FriendLeftGameNotification notif){
         new SnackBarNotification(this, notif.getMessage(), "PM", notif.getFriendName(), notif.getFriendXmppAddress());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean b = super.onCreateOptionsMenu(menu);
+
+        boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
+
+        MenuItem messageItem = menu.findItem(R.id.newMessage);
+
+        if (hasUnreaded) {
+
+            messageItem.setVisible(true);
+
+            Drawable messageIcon = messageItem.getIcon();
+            messageIcon.mutate();
+            messageItem.setActionView(R.layout.new_message_view);
+
+            View actionView = messageItem.getActionView();
+
+            ImageView imageviewMessage = ButterKnife.findById(actionView, R.id.newMessage);
+            Drawable drawable = imageviewMessage.getDrawable();
+            drawable.mutate();
+            drawable.setColorFilter(getResources().getColor(R.color.newMessageColor), PorterDuff.Mode.SRC_IN);
+
+            actionView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goToMessageListActivity();
+                }
+            });
+
+            AppAndroidUtils.setBlinkAnimation(actionView, true);
+        } else {
+            messageItem.setVisible(false);
+        }
+
+        return b;
     }
 }

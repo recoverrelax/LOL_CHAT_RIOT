@@ -197,8 +197,18 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void setItems(List<Friend> items) {
         friendsList = items;
-        sortFriendsList(SortMethod.ONLINE_FIRST);
+//        sortFriendsList(SortMethod.ONLINE_FIRST);
         notifyDataSetChanged();
+    }
+
+    public void sortFriendsList(SortMethod sortedMethod) {
+        if (sortedMethod.isSortOnlineFirst()) {
+            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
+        } else if (sortedMethod.isSortAlphabetically()) {
+            Collections.sort(friendsList, new Friend.AlphabeticComparator());
+        } else { // default
+            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
+        }
     }
 
     public int getOnlineFriendsCount(){
@@ -246,16 +256,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     // do nothing!
                 }
             }
-        }
-    }
-
-    public void sortFriendsList(SortMethod sortedMethod) {
-        if (sortedMethod.isSortOnlineFirst()) {
-            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
-        } else if (sortedMethod.isSortAlphabetically()) {
-            Collections.sort(friendsList, new Friend.AlphabeticComparator());
-        } else { // default
-            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
         }
     }
 

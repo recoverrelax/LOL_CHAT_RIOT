@@ -53,6 +53,7 @@
     <color name="presence_mode_available">#64DD17</color>
     <color name="presence_mode_away">#FDD835</color>
     <color name="presence_mode_chat">#8BC34A</color>
+    <color name="newMessageColor">#8BC34A</color>
     <color name="presence_mode_dnd">#FF6F00</color>
     <color name="presence_mode_xa">#BF360C</color>
     <color name="presence_mode_unavailable">#DD2C00</color>

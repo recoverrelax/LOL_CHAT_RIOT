@@ -22,6 +22,7 @@ import org.jxmpp.util.XmppStringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import rx.Observable;
 import rx.Observer;
@@ -69,6 +70,51 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper, Observer<RiotXm
                                 riotXmppService.addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
                             else
                                 riotXmppService.removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+
+                            /**
+                             * Sort Friends By Online-First
+                             */
+                            friendList.sortAlphabetically();
+                        }
+
+                        subscriber.onNext(friendList);
+                        subscriber.onCompleted();
+                    }
+                }))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this);
+    }
+
+    @Override
+    public void searchFriendsList(final String searchString) {
+        mSubscription = AppObservable.bindFragment(mFragment,
+                Observable.create(new Observable.OnSubscribe<FriendList>() {
+                    @Override
+                    public void call(Subscriber<? super FriendList> subscriber) {
+                        Collection<RosterEntry> entries = riotXmppService.getRosterEntries();
+
+                        FriendList friendList = new FriendList(new ArrayList<Friend>(), FriendListOperation.FRIEND_LIST);
+
+                        for (RosterEntry entry : entries) {
+                            Presence rosterPresence = riotXmppService.getRosterPresence(entry.getUser());
+                            String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
+
+                            Friend friend = new Friend(entry.getName(), userXmppAddress, rosterPresence);
+
+                            if(friend.getName().toLowerCase().contains(searchString.toLowerCase())){
+                                friendList.getFriendList().add(friend);
+                            }
+
+                            if(friend.isPlaying())
+                                riotXmppService.addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+                            else
+                                riotXmppService.removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+
+                            /**
+                             * Sort Friends By Online-First
+                             */
+                            friendList.sortAlphabetically();
                         }
 
                         subscriber.onNext(friendList);
@@ -152,6 +198,10 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper, Observer<RiotXm
         public FriendList(ArrayList<Friend> friendList, FriendListOperation operation) {
             this.friendList = friendList;
             this.operation = operation;
+        }
+
+        public void sortAlphabetically(){
+            Collections.sort(friendList, new Friend.OnlineOfflineComparator());
         }
 
         public ArrayList<Friend> getFriendList() {

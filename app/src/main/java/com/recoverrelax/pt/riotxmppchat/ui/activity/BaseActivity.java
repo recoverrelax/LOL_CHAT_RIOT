@@ -1,13 +1,16 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,14 +20,20 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import butterknife.Optional;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -137,6 +146,32 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         setNavigationViewPosition(getNavigationViewPosition());
     }
 
+//    public void setupNewMessageItem() {
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
+//                MenuItem item = navigationView.getMenu().findItem(R.id.navigation_item_2);
+//
+//                if(hasUnreaded) {
+//                    item.setActionView(R.layout.new_message_view);
+//                    View actionView = item.getActionView();
+//
+//                    ImageView imageviewMessage = ButterKnife.findById(actionView, R.id.newMessage);
+//                    imageviewMessage.getDrawable().setColorFilter(getResources().getColor(R.color.newMessageColor), PorterDuff.Mode.SRC_IN);
+//                }else{
+//                    navigationView.invalidate();
+//                    item.setActionView(null);
+//                }
+//            }
+//        });
+//    }
+
+    @Optional
+    @OnClick(R.id.logout)
+    public void onDrawerLogout(View view){
+        this.finish();
+    }
 
     public abstract @LayoutRes int getLayoutResources();
 
@@ -175,8 +210,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }else if(id == android.R.id.home){
             onBackPressed();
         }
-            return super.onOptionsItemSelected(item);
-    }
+                return super.onOptionsItemSelected(item);
+        }
 
     @Override
     public void setTitle(CharSequence title) {

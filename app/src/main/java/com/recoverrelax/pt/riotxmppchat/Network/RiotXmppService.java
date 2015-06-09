@@ -30,7 +30,11 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendMessageListActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
@@ -455,10 +459,16 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
             if(removed){
                 Log.i("ASAS", "REMOVED FRIEND: " + friendName);
                 if (MainApplication.getInstance().isApplicationClosed()) {
-                    new SystemNotification(this, username, "... just left a game!");
+                    new SystemNotification(this, friendName, "... just left a game!");
                 }else{
-//                    new SnackBarNotification(this, username + " ... just left a game!", "PM", friendName, userXmppAddress);
-                    MainApplication.getInstance().getBusInstance().post(new FriendLeftGameNotification(username + " ... just left a game!", friendName, userXmppAddress));
+
+                    /**
+                     * 1st: {@link FriendListActivity#OnFriendLeftGame(FriendLeftGameNotification)}
+                     * 2nd: {@link PersonalMessageActivity#OnFriendLeftGame(FriendLeftGameNotification)}
+                     * 3rd: {@link FriendMessageListActivity#OnFriendLeftGame(FriendLeftGameNotification)}
+                     * 4th: {@link SettingActivity#OnFriendLeftGame(FriendLeftGameNotification)}
+                     */
+                    MainApplication.getInstance().getBusInstance().post(new FriendLeftGameNotification(friendName + " ... just left a game!", friendName, userXmppAddress));
                 }
             }
     }

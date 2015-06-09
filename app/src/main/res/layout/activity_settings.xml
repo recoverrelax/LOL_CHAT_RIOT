@@ -10,7 +10,7 @@
 
         <include
             android:id="@+id/app_bar"
-            layout="@layout/app_bar" />
+            layout="@layout/app_bar_t" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"

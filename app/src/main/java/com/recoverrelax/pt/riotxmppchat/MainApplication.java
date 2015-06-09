@@ -57,6 +57,10 @@ public class MainApplication extends Application {
         bus = new Bus(ThreadEnforcer.ANY);
     }
 
+    public boolean hasNewMessages(){
+        return RiotXmppDBRepository.hasUnreadedMessages(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+    }
+
     public void initSettings() {
         String connectedXmppUser = getRiotXmppService().getConnectedXmppUser();
 
