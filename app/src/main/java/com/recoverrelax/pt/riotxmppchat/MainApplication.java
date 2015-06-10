@@ -103,6 +103,9 @@ public class MainApplication extends Application {
 
     public void setApplicationClosed(boolean isApplicationClosed) {
         this.isApplicationClosed = isApplicationClosed;
+
+        if(isApplicationClosed)
+            getRiotXmppService().stopSelf();
     }
 
     public void startRiotXmppService(String selectedItem, String username, String password){

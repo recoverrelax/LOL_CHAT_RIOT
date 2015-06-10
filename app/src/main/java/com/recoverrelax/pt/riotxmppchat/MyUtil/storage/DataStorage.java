@@ -16,6 +16,7 @@ public class DataStorage {
     private static final String PREF_KEY_PASSWORD = "password";
     private static final String PREF_KEY_SAVE_LOGIN_CREDENTIALS = "save_login_credentials";
     private static final String PREF_KEY_SERVER = "server";
+    private static final String PREF_KEY_ALWAYS_ON = "alwaysOn";
 
     private static DataStorage sInstance;
     private final SecurePreferences mSettings;
@@ -57,6 +58,16 @@ public class DataStorage {
     public synchronized boolean setUserLearnedDrawer(){
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_USER_LEARNED_DRAWER, true);
+        return editor.commit();
+    }
+
+    public synchronized boolean getAppAlwaysOn(){
+        return mSettings.getBoolean(PREF_KEY_ALWAYS_ON, true);
+    }
+
+    public synchronized boolean setAppAlwaysOn(boolean state){
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean(PREF_KEY_ALWAYS_ON, state);
         return editor.commit();
     }
 
