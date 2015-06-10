@@ -1,16 +1,12 @@
 package com.recoverrelax.pt.riotxmppchat.MyUtil;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
-import android.view.View;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 
 import LolChatRiotDb.NotificationDb;
 
@@ -32,7 +28,8 @@ public class SystemNotification {
         this.title = title;
         this.notificationDb = RiotXmppDBRepository.getNotification(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
 
-        sendNotification();
+        if(MainApplication.getInstance().getRiotXmppService().getConnection().isConnected())
+            sendNotification();
     }
 
     private void createNewSystemNotification() {

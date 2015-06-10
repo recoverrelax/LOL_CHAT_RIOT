@@ -289,7 +289,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         Friend current;
 
-        private final int mHandlerInterval = 6000;
+        private final int mHandlerInterval = 60000;
         private Handler mHandler;
         private Runnable mStatusChecker;
 
@@ -302,6 +302,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void run() {
                     String gameStatusToPrint = current.getGameStatusToPrint();
                     gameStatus.setText(gameStatusToPrint);
+                    gameStatus.setSelected(true);
                     mHandler.postDelayed(mStatusChecker, mHandlerInterval);
                 }
             };

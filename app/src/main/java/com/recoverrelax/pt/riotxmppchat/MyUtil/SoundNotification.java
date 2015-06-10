@@ -28,11 +28,13 @@ public class SoundNotification {
         switch (this.notificationType) {
             case ONLINE:
                 if (this.notificationDb.getSoundNotificationOnline())
-                    sendNotification();
+                    if(MainApplication.getInstance().getRiotXmppService().getConnection().isConnected())
+                        sendNotification();
                 break;
             case OFFLINE:
                 if (this.notificationDb.getSoundNotificationOffline())
-                    sendNotification();
+                    if(MainApplication.getInstance().getRiotXmppService().getConnection().isConnected())
+                        sendNotification();
                 break;
             default:
                 break;

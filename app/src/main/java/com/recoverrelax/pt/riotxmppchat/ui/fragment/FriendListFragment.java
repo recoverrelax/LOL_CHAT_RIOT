@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -29,6 +28,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChanged
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListFailedLoadingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListLoadedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectListener;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
@@ -94,8 +94,7 @@ public class FriendListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 ?
-                R.layout.friend_list_fragment_no_animation : R.layout.friend_list_fragment, container, false);
+        View view = inflater.inflate(R.layout.friend_list_fragment, container, false);
 
         ButterKnife.inject(this, view);
         setHasOptionsMenu(true);
@@ -151,6 +150,11 @@ public class FriendListFragment extends BaseFragment {
         if (!firstTimeOnCreate)
             riotXmppRosterHelper.getFullFriendsList();
         firstTimeOnCreate = false;
+    }
+
+    @Subscribe
+    public void onReconnect(OnReconnectListener event){
+        riotXmppRosterHelper.getFullFriendsList();
     }
 
     @Override

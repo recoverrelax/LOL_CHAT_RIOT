@@ -231,7 +231,7 @@ public class Friend {
             long serverTimeStamp = Long.parseLong(getTimeStamp());
             long nowTimeStamp = System.currentTimeMillis();
 
-            long difference = Math.abs((nowTimeStamp - serverTimeStamp) / 1000L / 60L);
+            long difference = Math.abs((nowTimeStamp - serverTimeStamp) / 1000L / 60L) - 2L;
             return String.valueOf(difference);
         }catch(NumberFormatException e){
             return "";

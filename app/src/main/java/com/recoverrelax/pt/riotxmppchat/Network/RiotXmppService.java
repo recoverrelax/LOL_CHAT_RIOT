@@ -10,22 +10,22 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectListener;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SystemNotification;
-import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SoundNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SoundNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.SystemNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
@@ -42,7 +42,10 @@ import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
@@ -67,10 +70,9 @@ import javax.net.ssl.SSLSocketFactory;
 import LolChatRiotDb.MessageDb;
 import rx.Observer;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification.*;
 import static junit.framework.Assert.assertTrue;
 
-public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations>, RosterListener, ChatMessageListener {
+public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations>, RosterListener, ChatMessageListener, ConnectionListener {
 
     private static final String TAG = RiotXmppService.class.getSimpleName();
     private static final int ONGOING_SERVICE_NOTIFICATION_ID = 12345;
@@ -101,6 +103,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     private Roster roster;
     private ChatManager chatManager;
     private ChatManagerListener chatManagerListener;
+    private ConnectionListener connectionListener;
     private Map<String, Chat> chatList;
 
     private Set<String> friendsPlaying = new HashSet<>();
@@ -254,7 +257,12 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
                     public void run() {
                         addRosterListener(RiotXmppService.this);
                         addChatListener();
-                    }
+
+                        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(connection);
+                        reconnectionManager.enableAutomaticReconnection();
+                        reconnectionManager.setReconnectionPolicy(ReconnectionManager.ReconnectionPolicy.RANDOM_INCREASING_DELAY);
+                        addConnectionListener(RiotXmppService.this);
+                }
                 }, DELAY_BEFORE_ROSTER_LISTENER);
 
                 break;
@@ -274,6 +282,13 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
             this.roster = Roster.getInstanceFor(connection);
             this.roster.addRosterListener(rosterListener);
+        }
+    }
+
+    public void addConnectionListener(ConnectionListener connectionListener){
+        if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
+            this.connectionListener = connectionListener;
+            this.connection.addConnectionListener(this.connectionListener);
         }
     }
 
@@ -472,4 +487,23 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
                 }
             }
     }
+
+    @Override public void connected(XMPPConnection connection) { }
+
+    @Override public void authenticated(XMPPConnection connection, boolean resumed) { }
+
+    @Override public void connectionClosed() { }
+
+    @Override public void connectionClosedOnError(Exception e) { }
+
+    @Override
+    public void reconnectionSuccessful() {
+        Log.i("TAS", "Recconected!");
+        MainApplication.getInstance().getBusInstance().post(new OnReconnectListener());
+    }
+
+    @Override public void reconnectingIn(int seconds) { }
+
+    @Override public void reconnectionFailed(Exception e) { }
+
 }

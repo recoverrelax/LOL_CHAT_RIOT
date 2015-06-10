@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -37,9 +36,7 @@ public class FriendListActivity extends BaseActivity {
     @Override
     public int getLayoutResources() {
 
-        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-            return R.layout.activity_friend_list_no_animation;
-        else return R.layout.activity_friend_list;
+        return R.layout.activity_friend_list;
     }
 
     @Override
