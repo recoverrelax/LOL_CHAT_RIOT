@@ -12,7 +12,7 @@ public enum PresenceMode {
     CHAT("Chatting", R.color.presence_mode_chat),
     DND("DN Disturb", R.color.presence_mode_dnd),
     XA("E-Away", R.color.presence_mode_xa),
-    UNAVAILABLE("Offline", R.color.presence_mode_unavailable);
+    UNAVAILABLE("OFF", R.color.presence_mode_unavailable);
 
     private String descriptiveName;
     private @ColorRes int statusColor;

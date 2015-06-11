@@ -1,24 +1,30 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,6 +33,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 
 public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -287,6 +294,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @InjectView(R.id.ranked_icon)
         ImageView ranked_icon;
 
+        @InjectView(R.id.card_more)
+        ImageView card_more;
+
         Friend current;
 
         private final int mHandlerInterval = 60000;
@@ -296,6 +306,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public MyViewHolderOnline(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
+
+            Drawable drawable = card_more.getDrawable();
+            drawable.mutate();
+            drawable.setColorFilter(context.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+
             mHandler = new Handler();
             mStatusChecker = new Runnable() {
                 @Override
@@ -308,6 +323,12 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             };
 
             itemView.setOnClickListener(this);
+
+        }
+
+        @OnClick(R.id.card_more_layout)
+        public void onCardOptionsClick(View view){
+            openOptionsDialogFragment(view);
         }
 
         public void startRepeatingTask() {
@@ -336,12 +357,26 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @InjectView(R.id.profileIcon)
         ImageView profileIcon;
 
+        @InjectView(R.id.card_more)
+        ImageView card_more;
+
+
         Friend current;
 
         public MyViewHolderOffline(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
+
+            Drawable drawable = card_more.getDrawable();
+            drawable.mutate();
+            drawable.setColorFilter(context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+
             itemView.setOnClickListener(this);
+        }
+
+        @OnClick(R.id.card_more_layout)
+        public void onCardOptionsClick(View view){
+            openOptionsDialogFragment(view);
         }
 
         @Override
@@ -355,6 +390,35 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface OnFriendClick {
         void onFriendClick(String friendUsername, String friendXmppAddress);
+    }
+
+    public void openOptionsDialogFragment(View v){
+
+        final PopupMenu popupMenu = new PopupMenu(context, v);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_friend_options, popupMenu.getMenu());
+
+        popupMenu.show();
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch(menuItem.getItemId()){
+                    case R.id.notifications:
+                        FragmentManager manager = ((Activity)context).getFragmentManager();
+                        NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance();
+                        myDialog.show(manager, "baseDialog");
+                        break;
+                    case R.id.other_1:
+                        break;
+                    case R.id.other_2:
+                        break;
+
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     public enum SortMethod {

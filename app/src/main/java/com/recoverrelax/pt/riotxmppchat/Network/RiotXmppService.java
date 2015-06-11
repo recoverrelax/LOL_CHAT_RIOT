@@ -70,6 +70,7 @@ import javax.net.ssl.SSLSocketFactory;
 import LolChatRiotDb.MessageDb;
 import rx.Observer;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 import static junit.framework.Assert.assertTrue;
 
 public class RiotXmppService extends Service implements Observer<RiotXmppConnectionImpl.RiotXmppOperations>, RosterListener, ChatMessageListener, ConnectionListener {
@@ -173,6 +174,13 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         startForeground(ONGOING_SERVICE_NOTIFICATION_ID, notification);
 
         return Service.START_STICKY;
+    }
+
+    public void stopService(){
+        stopForeground(true);
+        stopService(new Intent(this, RiotXmppService.class));
+        this.stopSelf();
+        onDestroy();
     }
 
     private boolean isUserAlreadyLogged(String username, String password, String serverHost) {
@@ -317,7 +325,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
         if (messageFrom != null && message.getBody() != null) {
             MessageDb message1 = new MessageDb(null, getConnectedXmppUser(), messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
             RiotXmppDBRepository.insertMessage(message1);
-            LogUtils.LOGI(TAG, "Iserted message in the db:\n + " + message1.toString());
+            LOGI(TAG, "Iserted message in the db:\n + " + message1.toString());
 
             notifyNewMessage(message, messageFrom);
         }
@@ -404,8 +412,15 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
 
     @Override
     public void onDestroy() {
+        LOGI(TAG, "Service onDestroy was called");
         if (connection != null)
-            connection.disconnect();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    connection.disconnect();
+                }
+            });
+
         connection = null;
         super.onDestroy();
     }
@@ -420,7 +435,7 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)}**/
     @Override
     public void presenceChanged(Presence presence) {
-        LogUtils.LOGI(TAG, "Callback called on the service");
+        LOGI(TAG, "Callback called on the service");
         busInstance.post(new OnFriendPresenceChangedEvent(presence));
 
         RosterEntry rosterEntry = MainApplication.getInstance().getRiotXmppService().getRosterEntry(presence.getFrom());
@@ -442,8 +457,9 @@ public class RiotXmppService extends Service implements Observer<RiotXmppConnect
     public void notifyNewMessage(Message message, String userXmppAddress) {
 
         boolean applicationClosed = MainApplication.getInstance().isApplicationClosed();
-
+        Log.i("TAG123", "Passed Here-1");
         if (applicationClosed) {
+            Log.i("TAG123", "Passed Here0");
             String username = roster.getEntry(userXmppAddress).getName();
             new SystemNotification(this, message.getBody(), username + " says: ");
         }

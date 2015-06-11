@@ -1,67 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        style="@style/settings_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_global_notifications_title" />
 
-    <View android:layout_width="match_parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_height="2dp"
-        android:background="@color/primaryColorDark"
-        android:layout_marginBottom="16dp"/>
-
-
-
-    <LinearLayout
-        android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/visible_sound_layout">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical" >
-
-            <TextView
-                style="@style/settings_child"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_global_always_receive_notifications"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/notificationAlwaysOn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textOn="YES"
-                android:textOff="NO"/>
-
-            <!--<CheckBox-->
-                <!--android:focusable="false"-->
-                <!--android:clickable="false"-->
-                <!--android:background="@color/transparent"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:id="@+id/notificationAlwaysOn"-->
-                <!--android:layout_gravity="center_horizontal" />-->
-        </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

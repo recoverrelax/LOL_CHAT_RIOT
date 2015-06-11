@@ -62,6 +62,8 @@ public class FriendListActivity extends BaseActivity {
 
 //        appBarLayout.getBackground().setAlpha(120);
 //        appBarLayout.setTranslationY(0);
+
+        appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor120));
     }
 
     @Override
@@ -75,6 +77,7 @@ public class FriendListActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         MainApplication.getInstance().getBusInstance().register(this);
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -82,6 +85,8 @@ public class FriendListActivity extends BaseActivity {
         super.onPause();
         MainApplication.getInstance().getBusInstance().unregister(this);
     }
+
+
 
     @Override
     public void onBackPressed() {

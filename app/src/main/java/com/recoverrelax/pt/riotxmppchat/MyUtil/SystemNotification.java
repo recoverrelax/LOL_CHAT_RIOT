@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -22,7 +23,7 @@ public class SystemNotification {
     private NotificationCompat.Builder mBuilder;
     private NotificationDb notificationDb;
 
-    public SystemNotification(Context context, String message, String title){
+    public SystemNotification(Context context, String title, String message){
         this.context = context;
         this.message = message;
         this.title = title;
@@ -42,7 +43,6 @@ public class SystemNotification {
     }
 
     private void sendNotification(){
-
         if(notificationDb.getTextNotificationOffline()) {
             createNewSystemNotification();
             NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

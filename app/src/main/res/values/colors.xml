@@ -8,10 +8,14 @@
     <color name="primaryColor">#0075A2</color>
     <color name="primaryColor120">#780075a2</color>
     <color name="primaryColorDark">#004884</color>
+    <color name="primaryColorDark120">#78004884</color>
     <color name="accentColor">#FF5722</color>
+
+    <color name="materialBlueGrey200">#faeeeeee</color>
 
     <color name="white">#FFFFFF</color>
     <color name="whiteT">#d2ffffff</color>
+    <color name="red20">#3cff5722</color>
     <color name="whiteT2X">#b4ffffff</color>
     <color name="black">#000</color>
     <color name="blackT">#b4000000</color>

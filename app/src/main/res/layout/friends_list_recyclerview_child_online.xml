@@ -137,45 +137,77 @@
 
                 <!--</LinearLayout>-->
             </LinearLayout>
+
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/friendName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
-            android:textAppearance="?android:textAppearanceSmall"
-            tools:text="2Fast4You" />
-
-        <TextView
-            android:id="@+id/friendPresenceMode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/friends_list_recycler_child_textview_margin"
-            android:background="@drawable/friend_list_status_rounded_background"
-            android:gravity="center_vertical|center_horizontal"
-            tools:background="@color/presence_mode_away"
-            android:paddingBottom="@dimen/friends_list_recycler_child_textview_padding_tb"
-            android:paddingLeft="@dimen/friends_list_recycler_child_textview_padding_lr"
-            android:paddingRight="@dimen/friends_list_recycler_child_textview_padding_lr"
-            android:paddingTop="@dimen/friends_list_recycler_child_textview_padding_tb"
-            android:textAppearance="?android:textAppearanceSmall"
-            tools:text="Away" />
-
-        <TextView
-            android:id="@+id/gameStatus"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_marginTop="10dp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
-            android:paddingRight="@dimen/friends_list_recycler_child_textview_margin"
-            android:textSize="@dimen/text_size_micro"
-            tools:text="Playing as Ashe for 45 minutes" />
+            android:gravity="bottom"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/friendName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    tools:text="2Fast4You" />
+
+                <TextView
+                    android:id="@+id/friendPresenceMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/friends_list_recycler_child_textview_margin"
+                    android:background="@drawable/friend_list_status_rounded_background"
+                    android:gravity="center_vertical|center_horizontal"
+                    tools:background="@color/presence_mode_away"
+                    android:paddingBottom="@dimen/friends_list_recycler_child_textview_padding_tb"
+                    android:paddingLeft="@dimen/friends_list_recycler_child_textview_padding_lr"
+                    android:paddingRight="@dimen/friends_list_recycler_child_textview_padding_lr"
+                    android:paddingTop="@dimen/friends_list_recycler_child_textview_padding_tb"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    tools:text="Away" />
+
+                <TextView
+                    android:id="@+id/gameStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
+                    android:paddingRight="@dimen/friends_list_recycler_child_textview_margin"
+                    android:textSize="@dimen/text_size_micro"
+                    tools:text="Playing as Ashe for 45 minutes" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/card_more_layout"
+                android:layout_gravity="bottom|center_horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/card_more"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_more_vert_white_24dp"
+                    android:layout_gravity="bottom|center_horizontal" />
+
+            </FrameLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -18,9 +18,6 @@ import butterknife.OnClick;
 
 public class Settings_General extends Fragment {
 
-    @InjectView(R.id.notificationAlwaysOn)
-    SwitchCompat notificationAlwaysOn;
-
     private String connectedXmppUser;
     private DataStorage dataStorage;
 
@@ -51,15 +48,5 @@ public class Settings_General extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(connectedXmppUser!= null) {
-            notificationAlwaysOn.setChecked(dataStorage.getAppAlwaysOn());
-        }
-    }
-
-    @OnClick(R.id.notificationAlwaysOn)
-    public void onItemClick(SwitchCompat switchButton){
-        if(connectedXmppUser!= null) {
-            dataStorage.setAppAlwaysOn(switchButton.isChecked());
-        }
     }
 }

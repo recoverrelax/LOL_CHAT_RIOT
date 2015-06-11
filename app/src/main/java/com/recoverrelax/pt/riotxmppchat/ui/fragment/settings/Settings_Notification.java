@@ -3,12 +3,14 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment.settings;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -24,18 +26,23 @@ import butterknife.OnClick;
 public class Settings_Notification extends Fragment {
 
     @InjectView(R.id.visible_text)
-    CheckBox visible_text;
+    SwitchCompat visible_text;
 
     @InjectView(R.id.visible_sound)
-    CheckBox visible_sound;
+    SwitchCompat visible_sound;
 
     @InjectView(R.id.background_text)
-    CheckBox background_text;
+    SwitchCompat background_text;
 
     @InjectView(R.id.background_sound)
-    CheckBox background_sound;
+    SwitchCompat background_sound;
+
+    @InjectView(R.id.notificationAlwaysOn)
+    SwitchCompat notificationAlwaysOn;
 
     private String connectedXmppUser;
+    private NotificationDb notification;
+    private DataStorage dataStorage;
 
     public Settings_Notification(){
 
@@ -49,6 +56,7 @@ public class Settings_Notification extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+        dataStorage = DataStorage.getInstance();
     }
 
     @Nullable
@@ -64,8 +72,9 @@ public class Settings_Notification extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if(connectedXmppUser!= null) {
-            NotificationDb notification = RiotXmppDBRepository.getNotification(connectedXmppUser);
+            notification = RiotXmppDBRepository.getNotification(connectedXmppUser);
 
+            notificationAlwaysOn.setChecked(dataStorage.getAppAlwaysOn());
             background_text.setChecked(notification.getTextNotificationOffline());
             background_sound.setChecked(notification.getSoundNotificationOffline());
             visible_text.setChecked(notification.getTextNotificationOnline());
@@ -73,44 +82,32 @@ public class Settings_Notification extends Fragment {
         }
     }
 
-    @OnClick({R.id.background_text_layout, R.id.background_sound_layout, R.id.visible_text_layout, R.id.visible_sound_layout})
-    public void onItemClick(View view){
-        int id = view.getId();
-        switch(id){
-            case R.id.background_text_layout:
-                background_text.setChecked(!background_text.isChecked());
-                break;
-            case R.id.background_sound_layout:
-                background_sound.setChecked(!background_sound.isChecked());
-                break;
-            case R.id.visible_text_layout:
-                visible_text.setChecked(!visible_text.isChecked());
-                break;
-            case R.id.visible_sound_layout:
-                visible_sound.setChecked(!visible_sound.isChecked());
-                break;
-        }
-    }
+    @OnClick({R.id.visible_text, R.id.visible_sound, R.id.background_sound, R.id.background_text, R.id.notificationAlwaysOn})
+    public void onItemClick(SwitchCompat switchButton){
+        int id = switchButton.getId();
 
-    @OnCheckedChanged({R.id.background_text, R.id.background_sound, R.id.visible_text, R.id.visible_sound})
-    public void onChecked(CompoundButton cb, boolean isChecked){
-        int id = cb.getId();
-
-        if(connectedXmppUser!= null) {
-            NotificationDb notification = RiotXmppDBRepository.getNotification(connectedXmppUser);
+        if(notification != null) {
 
             switch (id) {
                 case R.id.background_text:
-                    notification.setTextNotificationOffline(background_text.isChecked());
+//                    background_text.setChecked(switchButton.isChecked());
+                    notification.setTextNotificationOffline(switchButton.isChecked());
                     break;
                 case R.id.background_sound:
-                    notification.setSoundNotificationOffline(background_sound.isChecked());
-                    break;
-                case R.id.visible_text:
-                    notification.setTextNotificationOnline(visible_text.isChecked());
+//                    background_sound.setChecked(switchButton.isChecked());
+                    notification.setSoundNotificationOffline(switchButton.isChecked());
                     break;
                 case R.id.visible_sound:
-                    notification.setSoundNotificationOnline(visible_sound.isChecked());
+//                    visible_sound.setChecked(switchButton.isChecked());
+                    notification.setSoundNotificationOnline(switchButton.isChecked());
+                    break;
+                case R.id.visible_text:
+//                    visible_text.setChecked(switchButton.isChecked());
+                    notification.setTextNotificationOnline(switchButton.isChecked());
+                    break;
+
+                case R.id.notificationAlwaysOn:
+                    dataStorage.setAppAlwaysOn(notificationAlwaysOn.isChecked());
                     break;
             }
             RiotXmppDBRepository.updateNotification(notification);

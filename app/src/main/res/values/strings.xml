@@ -81,15 +81,23 @@
     <string name="new_message">New Message</string>
     <string name="add_friend">Add Friend</string>
     <string name="search_friend">Search Friend</string>
-    <string name="settings_when_app_visible">When the App is visible …</string>
-    <string name="settings_global_notifications_title">Notifications Global Settings</string>
+
+    <string name="settings_when_app_visible">When LOLCHAT is visible:</string>
+    <string name="settings_global_notifications_title">Global Notification Settings</string>
     <string name="settings_coming_soon">Coming soon …</string>
-    <string name="settings_new_message_sound_notification">New Message Sound Notification</string>
-    <string name="settings_global_always_receive_notifications">I want to receive notifications even if the app is closed</string>
-    <string name="settings_new_message_text_notification">New Message Text Notification</string>
-    <string name="settings_when_app_background">When the App is in background ...</string>
+    <string name="settings_new_message_sound_notification">Enable Global Sound Notifications</string>
+    <string name="settings_global_always_receive_notifications">Receive notifications even after LOLCHAT is closed </string>
+    <string name="settings_new_message_text_notification">Enable Global Text Notifications</string>
+    <string name="settings_when_app_background">When LOLCHAT is in background:</string>
+
+    <string name="settings_custom_notif_online">is ONLINE</string>
+    <string name="settings_custom_notif_offline">is OFFLINE</string>
+    <string name="settings_custom_notif_start_game">has started a game</string>
+    <string name="settings_custom_notif_end_game">has left a game</string>
+    <string name="settings_custom_notif_message">has sent me a PM</string>
+
+
     <string name="add_friend_soon">Feature Coming Soon! Add friend in the client and use the refresh button to see new friends</string>
     <string name="drawer_logout_label">LOGOUT</string>
-
 
 </resources>

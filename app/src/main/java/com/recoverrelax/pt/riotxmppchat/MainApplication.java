@@ -103,9 +103,13 @@ public class MainApplication extends Application {
 
     public void setApplicationClosed(boolean isApplicationClosed) {
         this.isApplicationClosed = isApplicationClosed;
-
-        if(isApplicationClosed)
-            getRiotXmppService().stopSelf();
+/**
+ * TODO: fix applicationCloseThing ...
+ */
+        if(isApplicationClosed) {
+            if(!DataStorage.getInstance().getAppAlwaysOn())
+                getRiotXmppService().stopService();
+        }
     }
 
     public void startRiotXmppService(String selectedItem, String username, String password){
@@ -125,7 +129,6 @@ public class MainApplication extends Application {
         return mService.getConnection();
     }
 
-
     public void bindService() {
         if(!mBound)
             bindService(intentService, mConnection, BIND_AUTO_CREATE);
@@ -137,17 +140,9 @@ public class MainApplication extends Application {
 
     public void unbindService() {
         if(mConnection != null) {
-            unbindService(mConnection);
+            if(mBound)
+                unbindService(mConnection);
         }
-    }
-
-    @Override
-    public void onTerminate() {
-        if (mBound) {
-            unbindService();
-            mBound = false;
-        }
-        super.onTerminate();
     }
 
     public static MainApplication getInstance() {
