@@ -80,7 +80,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         notifyDataSetChanged();
     }
 
-    public void setItem(FriendListChat item) {
+    public void setSingleItem(FriendListChat item) {
         String userXmppAddress = AppXmppUtils.parseXmppAddress(item.getFriend().getUserXmppAddress());
 
         int position = getFriendMessageListPositionByFriendName(userXmppAddress);

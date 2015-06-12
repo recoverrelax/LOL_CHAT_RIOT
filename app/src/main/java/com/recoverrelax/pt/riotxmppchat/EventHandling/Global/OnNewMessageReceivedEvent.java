@@ -7,10 +7,16 @@ public class OnNewMessageReceivedEvent {
 
     private Message message;
     private String messageFrom;
+    private String username;
 
-    public OnNewMessageReceivedEvent(Message message, String messageFrom) {
+    public OnNewMessageReceivedEvent(Message message, String messageFrom, String username) {
         this.message = message;
         this.messageFrom = messageFrom;
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public Message getMessage() {

@@ -17,6 +17,7 @@ public class DataStorage {
     private static final String PREF_KEY_SAVE_LOGIN_CREDENTIALS = "save_login_credentials";
     private static final String PREF_KEY_SERVER = "server";
     private static final String PREF_KEY_ALWAYS_ON = "alwaysOn";
+    private static final String PREF_KEY_SHOW_OFFLINE_USERS = "showHideOffline";
 
     private static DataStorage sInstance;
     private final SecurePreferences mSettings;
@@ -68,6 +69,16 @@ public class DataStorage {
     public synchronized boolean setAppAlwaysOn(boolean state){
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_ALWAYS_ON, state);
+        return editor.commit();
+    }
+
+    public synchronized boolean showOfflineUsers(){
+        return mSettings.getBoolean(PREF_KEY_SHOW_OFFLINE_USERS, true);
+    }
+
+    public synchronized boolean showOfflineUsers(boolean state){
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean(PREF_KEY_SHOW_OFFLINE_USERS, state);
         return editor.commit();
     }
 

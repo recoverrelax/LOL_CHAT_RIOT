@@ -1,14 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
-import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.util.Pair;
-
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.PersonalMessageList.OnLastPersonalMessageReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.PersonalMessageList.OnLastXPersonalMessageListReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 
 import java.util.List;
 
@@ -16,84 +8,78 @@ import LolChatRiotDb.MessageDb;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.Subscription;
-import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-public class PersonalMessageImpl implements PersonalMessageHelper, Observer<Pair<PersonalMessageImpl.Method, List<MessageDb>>>{
+public class PersonalMessageImpl implements PersonalMessageHelper {
 
-    private Subscription mSubscription;
-    private Fragment mFragment;
-    private String connectedUser;
+    private PersonalMessageImplCallbacks callbacks;
 
-    private String TAG = this.getClass().getSimpleName();
-
-    public PersonalMessageImpl(Fragment frag) {
-        mFragment = frag;
-        this.connectedUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+    public PersonalMessageImpl(PersonalMessageImplCallbacks callbacks) {
+        this.callbacks = callbacks;
     }
 
     @Override
     public void getLastXPersonalMessageList(final int x, final String userToGetMessagesFrom) {
-        mSubscription = AppObservable.bindFragment(mFragment,
-                Observable.create(new Observable.OnSubscribe<Pair<PersonalMessageImpl.Method, List<MessageDb>>>() {
+        Observable.create(new Observable.OnSubscribe<List<MessageDb>>() {
                     @Override
-                    public void call(Subscriber<? super Pair<PersonalMessageImpl.Method, List<MessageDb>>> subscriber) {
-
+                    public void call(Subscriber<? super List<MessageDb>> subscriber) {
                         List<MessageDb> messageList = RiotXmppDBRepository.getLastXMessages(x, userToGetMessagesFrom);
-                        subscriber.onNext(new Pair<>(Method.RETURN_ALL, messageList));
+                        subscriber.onNext(messageList);
                         subscriber.onCompleted();
                     }
-                }))
-                .subscribeOn(AndroidSchedulers.mainThread())
+                })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
+                .subscribe(new Observer<List<MessageDb>>() {
+
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) {
+                        if(callbacks != null)
+                            callbacks.onLastXPersonalMessageListFailedReception(e);
+                    }
+
+                    @Override
+                    public void onNext(List<MessageDb> messageList) {
+                        if(callbacks != null)
+                            callbacks.onLastXPersonalMessageListReceived(messageList);
+                    }
+                });
     }
 
     @Override
     public void getLastPersonalMessage(final String userToGetMessagesFrom) {
-        mSubscription = AppObservable.bindFragment(mFragment,
-                Observable.create(new Observable.OnSubscribe<Pair<PersonalMessageImpl.Method, List<MessageDb>>>() {
+        Observable.create(new Observable.OnSubscribe<MessageDb>() {
                     @Override
-                    public void call(Subscriber<? super Pair<PersonalMessageImpl.Method, List<MessageDb>>> subscriber) {
+                    public void call(Subscriber<? super MessageDb> subscriber) {
 
-                        List<MessageDb> lastMessage = RiotXmppDBRepository.getLastMessageAsList(userToGetMessagesFrom);
-                        subscriber.onNext(new Pair<>(Method.RETURN_ONE, lastMessage));
+                        MessageDb lastMessage = RiotXmppDBRepository.getLastMessage(userToGetMessagesFrom);
+                        subscriber.onNext(lastMessage);
                         subscriber.onCompleted();
                     }
-                }))
-                .subscribeOn(AndroidSchedulers.mainThread())
+                })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
+                .subscribe(new Observer<MessageDb>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) {
+                        if(callbacks != null)
+                            callbacks.onLastPersonalMessageFailedReception(e);
+                    }
+
+                    @Override
+                    public void onNext(MessageDb messageDbs) {
+                        if(callbacks != null)
+                            callbacks.onLastPersonalMessageReceived(messageDbs);
+                    }
+                });
     }
 
-    @Override
-    public void onCompleted() {}
+    public interface PersonalMessageImplCallbacks{
+        void onLastXPersonalMessageListReceived(List<MessageDb> messageList);
+        void onLastXPersonalMessageListFailedReception(Throwable e);
 
-    @Override
-    public void onError(Throwable e) {
-    }
-
-    @Override
-    public void onNext(Pair<Method, List<MessageDb>> result) {
-        if(result.first.isReturnAll()) {
-            /** {@link PersonalMessageFragment#LastXMessageListReceived(OnLastXPersonalMessageListReceivedEvent)} **/
-            MainApplication.getInstance().getBusInstance().post(new OnLastXPersonalMessageListReceivedEvent(result.second));
-        }else if(result.first.isReturnOne()){
-            /** {@link PersonalMessageFragment#LastMessageReceived(OnLastPersonalMessageReceivedEvent)} **/
-            MainApplication.getInstance().getBusInstance().post(new OnLastPersonalMessageReceivedEvent(result.second.get(0)));
-        }
-    }
-
-    public enum Method {
-        RETURN_ALL,
-        RETURN_ONE;
-
-        public boolean isReturnAll(){
-            return this.equals(Method.RETURN_ALL);
-        }
-        public boolean isReturnOne(){
-            return this.equals(Method.RETURN_ONE);
-        }
+        void onLastPersonalMessageReceived(MessageDb message);
+        void onLastPersonalMessageFailedReception(Throwable e);
     }
 }

@@ -1,19 +1,12 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
-import android.support.v4.app.Fragment;
-import android.util.Pair;
-
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageSingleItemReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.ArrayList;
@@ -25,130 +18,124 @@ import LolChatRiotDb.MessageDb;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.Subscription;
-import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-public class FriendMessageListImpl implements FriendMessageListHelper, Observer<Pair<FriendMessageListImpl.Method, List<FriendListChat>>> {
+public class FriendMessageListImpl implements FriendMessageListHelper {
 
-    private Subscription mSubscription;
-    private Fragment mFragment;
     private RiotXmppService riotXmppService;
-    private String connectedUser;
+    private FriendMessageListImplCallbacks callback;
 
-
-    private String TAG = this.getClass().getSimpleName();
-
-    public FriendMessageListImpl(Fragment frag) {
-        mFragment = frag;
+    public FriendMessageListImpl(FriendMessageListImplCallbacks callback) {
         this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
-        this.connectedUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+        this.callback = callback;
     }
 
     @Override
     public void getPersonalMessageSingleItem(final String userToReturn) {
-        mSubscription = AppObservable.bindFragment(mFragment,
-                Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
+        Observable.create(new Observable.OnSubscribe<FriendListChat>() {
+            @Override
+            public void call(Subscriber<? super FriendListChat> subscriber) {
+
+                FriendListChat friendListChat = null;
+                /**
+                 * First get the friendsList
+                 */
+
+                RosterEntry entry = riotXmppService.getRiotRosterManager().getRosterEntry(userToReturn);
+                Presence presence = riotXmppService.getRiotRosterManager().getRosterPresence(entry.getUser());
+
+                Friend friend = new Friend(entry.getName(), entry.getUser(), presence);
+
+                /**
+                 * For each friend, get the last message, if there is a last message
+                 */
+
+                MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());
+                if (message != null)
+                    friendListChat = new FriendListChat(friend, message);
+
+                subscriber.onNext(friendListChat);
+                subscriber.onCompleted();
+
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FriendListChat>() {
+
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) {
+                        if(callback != null)
+                            callback.onFriendsMessageSingleFailedReception(e);
+                    }
 
                     @Override
-                    public void call(Subscriber<? super Pair<FriendMessageListImpl.Method, List<FriendListChat>>> subscriber) {
-
-                        List<FriendListChat> friendListChat = new ArrayList<>();
-                        /**
-                         * First get the friendsList
-                         */
-
-                        RosterEntry entry = riotXmppService.getRosterEntry(userToReturn);
-                        Presence presence = riotXmppService.getRosterPresence(entry.getUser());
-
-                        Friend friend = new Friend(entry.getName(), entry.getUser(), presence);
-
-                        /**
-                         * For each friend, get the last message, if there is a last message
-                         */
-
-                        MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());
-                            if(message != null)
-                                friendListChat.add(new FriendListChat(friend, message));
-
-                        subscriber.onNext(new Pair<>(Method.RETURN_SINGLE, friendListChat));
-                        subscriber.onCompleted();
+                    public void onNext(FriendListChat friendListChat) {
+                        if(callback != null)
+                            callback.onFriendsMessageSingleReceived(friendListChat);
                     }
-                }))
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
+                });
     }
 
     @Override
     public void getPersonalMessageList() {
-        mSubscription = AppObservable.bindFragment(mFragment,
-                Observable.create(new Observable.OnSubscribe<Pair<FriendMessageListImpl.Method, List<FriendListChat>>>() {
-                    @Override
-                    public void call(Subscriber<? super Pair<FriendMessageListImpl.Method, List<FriendListChat>>> subscriber) {
+        Observable.create(new Observable.OnSubscribe<List<FriendListChat>>() {
+            @Override
+            public void call(Subscriber<? super List<FriendListChat>> subscriber) {
 
-                        List<FriendListChat> friendListChat = new ArrayList<>();
-                        /**
-                         * First get the friendsList
-                         */
+                List<FriendListChat> friendListChat = new ArrayList<>();
+                /**
+                 * First get the friendsList
+                 */
 
-                        Collection<RosterEntry> entries = riotXmppService.getRosterEntries();
-                        List<Friend> friendList = new ArrayList<>();
+                Collection<RosterEntry> entries = riotXmppService.getRiotRosterManager().getRosterEntries();
+                List<Friend> friendList = new ArrayList<>();
 
-                        for (RosterEntry entry : entries) {
-                            friendList.add(new Friend(entry.getName(), entry.getUser(), riotXmppService.getRosterPresence(entry.getUser())));
-                        }
+                for (RosterEntry entry : entries) {
+                    friendList.add(new Friend(entry.getName(), entry.getUser(), riotXmppService.getRiotRosterManager().getRosterPresence(entry.getUser())));
+                }
 
-                        /**
-                         * For each friend, get the last message, if there is a last message
-                         */
+                /**
+                 * For each friend, get the last message, if there is a last message
+                 */
 
-                        for(Friend friend: friendList){
-                            MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());
-                          if(message != null)
-                            friendListChat.add(new FriendListChat(friend, message));
-                        }
-                        Collections.sort(friendListChat, new FriendListChat.LastMessageComparable());
-                        Collections.reverse(friendListChat);
+                for (Friend friend : friendList) {
+                    MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());
+                    if (message != null)
+                        friendListChat.add(new FriendListChat(friend, message));
+                }
+                Collections.sort(friendListChat, new FriendListChat.LastMessageComparable());
+                Collections.reverse(friendListChat);
 
-                        subscriber.onNext(new Pair<>(Method.RETURN_ALL, friendListChat));
-                        subscriber.onCompleted();
-                    }
-                }))
-                .subscribeOn(AndroidSchedulers.mainThread())
+                subscriber.onNext(friendListChat);
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
+                .subscribe(new Observer<List<FriendListChat>>() {
+
+                               @Override public void onCompleted() { }
+                               @Override public void onError(Throwable e) {
+                                   if(callback != null)
+                                       callback.onFriendsMessageListFailedReception(e);
+                               }
+
+                               @Override
+                               public void onNext(List<FriendListChat> friendListChat) {
+                                   if(callback != null)
+                                       callback.onFriendsMessageListReceived(friendListChat);
+                               }
+                           }
+                );
     }
 
-    @Override
-    public void onCompleted() {}
+    public interface FriendMessageListImplCallbacks{
+        void onFriendsMessageSingleReceived(FriendListChat friendListChat);
+        void onFriendsMessageSingleFailedReception(Throwable e);
 
-    @Override
-    public void onError(Throwable e) {
-        e.printStackTrace();
-    }
-
-    @Override
-    public void onNext(Pair<FriendMessageListImpl.Method, List<FriendListChat>> pair) {
-
-        if(pair.first.isReturnAll()) {
-            /** {@link FriendMessageListFragment#OnFriendsListListReceived(OnMessageListReceivedEvent)} **/
-            MainApplication.getInstance().getBusInstance().post(new OnMessageListReceivedEvent(pair.second));
-        } else if(pair.first.isReturnSingle()){
-            /** {@link FriendMessageListFragment#OnFriendsListReceived(OnMessageSingleItemReceivedEvent)} **/
-            MainApplication.getInstance().getBusInstance().post(new OnMessageSingleItemReceivedEvent(pair.second.get(0)));
-        }
-    }
-
-    public enum Method{
-        RETURN_ALL,
-        RETURN_SINGLE;
-
-        public boolean isReturnAll(){
-            return this.equals(Method.RETURN_ALL);
-        }
-        public boolean isReturnSingle(){
-            return this.equals(Method.RETURN_SINGLE);
-        }
+        void onFriendsMessageListReceived(List<FriendListChat> friendListChat);
+        void onFriendsMessageListFailedReception(Throwable e);
     }
 }

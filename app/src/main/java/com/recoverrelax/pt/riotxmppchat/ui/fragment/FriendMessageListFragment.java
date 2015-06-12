@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageListReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.MessageList.OnMessageSingleItemReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
@@ -22,17 +20,19 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 import com.squareup.otto.Subscribe;
 
-import org.jivesoftware.smack.roster.Roster;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
+import static com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl.*;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendMessageListFragment extends BaseFragment {
+public class FriendMessageListFragment extends BaseFragment implements FriendMessageListImplCallbacks {
 
     @InjectView(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
@@ -44,16 +44,13 @@ public class FriendMessageListFragment extends BaseFragment {
     ProgressBar progressBarCircularIndeterminate;
 
     private final String TAG = FriendMessageListFragment.this.getClass().getSimpleName();
-    private RecyclerView.LayoutManager layoutManager;
 
     /**
      * Adapter
      */
     private FriendMessageListAdapter adapter;
-    private boolean firstTime = true;
 
     private FriendMessageListHelper friendMessageListHelper;
-    private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
     public FriendMessageListFragment() {
         // Required empty public constructor
@@ -83,45 +80,20 @@ public class FriendMessageListFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         messageRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new FriendMessageListAdapter(getActivity(), new ArrayList<FriendListChat>(), R.layout.friend_message_list_child_layout);
+        adapter = new FriendMessageListAdapter(getActivity(), new ArrayList<>(), R.layout.friend_message_list_child_layout);
         messageRecyclerView.setAdapter(adapter);
 
         friendMessageListHelper = new FriendMessageListImpl(this);
 
-        swipeRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                friendMessageListHelper.getPersonalMessageList();
-            }
-        };
+        SwipeRefreshLayout.OnRefreshListener swipeRefreshListener = friendMessageListHelper::getPersonalMessageList;
         swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
     }
 
-    @Subscribe
-    public void OnFriendsListListReceived(OnMessageListReceivedEvent event) {
-        adapter.setItems(event.getFriendListChats());
-
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-
-        showProgressBar(false);
-    }
-
-    @Subscribe
-    public void OnFriendsListReceived(OnMessageSingleItemReceivedEvent event) {
-        adapter.setItem(event.getFriendList());
-
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-
-        showProgressBar(false);
-    }
-
     public void showProgressBar(boolean state) {
-        progressBarCircularIndeterminate.setVisibility(state? View.VISIBLE : View.INVISIBLE);
+        progressBarCircularIndeterminate.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
 
         if(state)
             swipeRefreshLayout.setVisibility(View.GONE);
@@ -145,15 +117,46 @@ public class FriendMessageListFragment extends BaseFragment {
 
     @Subscribe
     public void OnNewMessageReceived(final OnNewMessageReceivedEvent messageReceived) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(adapter.contains(messageReceived.getMessageFrom())){
-                    friendMessageListHelper.getPersonalMessageSingleItem(messageReceived.getMessageFrom());
-                }else{
-                    friendMessageListHelper.getPersonalMessageList();
-                }
+        getActivity().runOnUiThread(() -> {
+            if (adapter.contains(messageReceived.getMessageFrom())) {
+                friendMessageListHelper.getPersonalMessageSingleItem(messageReceived.getMessageFrom());
+            } else {
+                friendMessageListHelper.getPersonalMessageList();
             }
         });
+    }
+
+    public void onGeneralThrowableEvent(Throwable e){
+        LOGE(TAG, "", e);
+    }
+
+    @Override
+    public void onFriendsMessageSingleReceived(FriendListChat friendListChat) {
+        adapter.setSingleItem(friendListChat);
+
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+
+        showProgressBar(false);
+    }
+
+    @Override
+    public void onFriendsMessageSingleFailedReception(Throwable e) {
+        onGeneralThrowableEvent(e);
+    }
+
+    @Override
+    public void onFriendsMessageListReceived(List<FriendListChat> friendListChat) {
+        adapter.setItems(friendListChat);
+
+        if (swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+
+        showProgressBar(false);
+    }
+
+    @Override
+    public void onFriendsMessageListFailedReception(Throwable e) {
+        onGeneralThrowableEvent(e);
     }
 }

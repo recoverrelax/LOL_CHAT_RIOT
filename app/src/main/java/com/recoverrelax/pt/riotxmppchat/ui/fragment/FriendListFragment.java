@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
@@ -24,15 +26,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListFailedLoadingEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendListLoadedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectListener;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
@@ -42,16 +42,18 @@ import com.squareup.otto.Subscribe;
 import org.jivesoftware.smack.packet.Message;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+import static com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl.*;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendListFragment extends BaseFragment {
+public class FriendListFragment extends BaseFragment implements FriendsListAdapter.OnAdapterChildClick, RiotXmppRosterImplCallbacks {
 
     private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
@@ -65,6 +67,8 @@ public class FriendListFragment extends BaseFragment {
     private boolean firstTimeFragmentStart = true;
 
     private RecyclerView.LayoutManager layoutManager;
+    private DataStorage mDataStorage;
+    private boolean SHOW_OFFLINE_USERS;
 
     /**
      * Adapter
@@ -88,6 +92,8 @@ public class FriendListFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDataStorage = DataStorage.getInstance();
+        SHOW_OFFLINE_USERS = mDataStorage.showOfflineUsers();
     }
 
     @Override
@@ -110,12 +116,7 @@ public class FriendListFragment extends BaseFragment {
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
 
         adapter = new FriendsListAdapter(this, new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, myFriendsListRecyclerView);
-        adapter.setOnChildClickListener(new FriendsListAdapter.OnFriendClick() {
-            @Override
-            public void onFriendClick(String friendUsername, String friendXmppAddress) {
-                AppAndroidUtils.startPersonalMessageActivity(getActivity(), friendUsername, friendXmppAddress);
-            }
-        });
+        adapter.setAdapterClickListener(this);
 
         myFriendsListRecyclerView.setAdapter(adapter);
         riotXmppRosterHelper = new RiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
@@ -125,14 +126,11 @@ public class FriendListFragment extends BaseFragment {
          */
 
         if (firstTimeFragmentStart) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    riotXmppRosterHelper.getFullFriendsList();
-                }
-            }, DELAY_BEFORE_LOAD_ITEMS);
+            new Handler().postDelayed(
+                    () -> getFullFriendList(SHOW_OFFLINE_USERS), DELAY_BEFORE_LOAD_ITEMS
+            );
         } else
-            riotXmppRosterHelper.getFullFriendsList();
+            getFullFriendList(SHOW_OFFLINE_USERS);
 
         /**
          * Handler to Update the TimeStamp
@@ -142,19 +140,50 @@ public class FriendListFragment extends BaseFragment {
     }
 
     @Override
+    public void onAdapterFriendClick(String friendUsername, String friendXmppAddress) {
+        AppAndroidUtils.startPersonalMessageActivity(getActivity(), friendUsername, friendXmppAddress);
+    }
+
+    @Override
+    public void onAdapterFriendOptionsClick(View view) {
+        final PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_friend_options, popupMenu.getMenu());
+
+        popupMenu.show();
+
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            switch(menuItem.getItemId()){
+                case R.id.notifications:
+                    FragmentManager manager = getActivity().getFragmentManager();
+                    NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance();
+                    myDialog.show(manager, "baseDialog");
+                    break;
+                case R.id.other_1:
+                    break;
+                case R.id.other_2:
+                    break;
+
+                default:
+                    break;
+            }
+            return false;
+        });
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         MainApplication.getInstance().getBusInstance().register(this);
         getActivity().invalidateOptionsMenu();
 
         if (!firstTimeOnCreate)
-            riotXmppRosterHelper.getFullFriendsList();
+            getFullFriendList(SHOW_OFFLINE_USERS);
         firstTimeOnCreate = false;
     }
 
     @Subscribe
     public void onReconnect(OnReconnectListener event){
-        riotXmppRosterHelper.getFullFriendsList();
+        getFullFriendList(SHOW_OFFLINE_USERS);
     }
 
     @Override
@@ -164,41 +193,10 @@ public class FriendListFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onError(OnFriendListFailedLoadingEvent event) {
-        LOGI(TAG, "Failed to load friendsList! =(");
-    }
-
-    @Subscribe
-    public void OnFriendListLoaded(OnFriendListLoadedEvent friendList) {
-        if (adapter != null) {
-            adapter.setItems(friendList.getFriendList());
-            LOGI("TAGS", "Refreshed");
-            showProgressBar(false);
-            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
-        }
-    }
-
-    @Subscribe
-    public void onFriendChanged(OnFriendChangedEvent friend) {
-        Friend friend1 = friend.getFriend();
-
-        if (adapter != null) {
-            if (friend1 != null) {
-                adapter.setFriendChanged(friend1);
-            }
-
-            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
-        }
-    }
-
-    @Subscribe
     public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                riotXmppRosterHelper.getPresenceChanged(friendPresence.getPresence());
-            }
-        });
+        getActivity().runOnUiThread(
+                () -> riotXmppRosterHelper.getPresenceChanged(friendPresence.getPresence())
+        );
     }
 
     public void showProgressBar(boolean state) {
@@ -215,6 +213,10 @@ public class FriendListFragment extends BaseFragment {
 
         final MenuItem refresh = menu.findItem(R.id.refresh);
         refresh.setVisible(true);
+
+        final MenuItem showHideOffline = menu.findItem(R.id.show_hide_offline);
+        showHideOffline.setVisible(true);
+
 
         final MenuItem newMessage = menu.findItem(R.id.newMessage);
 
@@ -249,7 +251,7 @@ public class FriendListFragment extends BaseFragment {
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem item) {
                     if (modifiedOriginal[0])
-                        riotXmppRosterHelper.getFullFriendsList();
+                        getFullFriendList(SHOW_OFFLINE_USERS);
                     refresh.setVisible(true);
                     addFriend.setVisible(true);
                     if(hasUnreaded) {
@@ -281,51 +283,83 @@ public class FriendListFragment extends BaseFragment {
             });
 
             ButterKnife.findById(searchView, android.support.v7.appcompat.R.id.search_close_btn).setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    view -> {
                             if (modifiedOriginal[0])
-                                riotXmppRosterHelper.getFullFriendsList();
+                                getFullFriendList(SHOW_OFFLINE_USERS);
                             et.setText("");
                         }
-                    });
+                    );
 
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        final int[] itemId = {item.getItemId()};
+        int itemId = item.getItemId();
 
-        switch(itemId[0]){
+        switch(itemId){
             case R.id.refresh:
-                riotXmppRosterHelper.getFullFriendsList();
+                getFullFriendList(SHOW_OFFLINE_USERS);
                 return true;
-
             case R.id.addFriend:
                 Snackbar
                         .make(this.getActivity().getWindow().getDecorView().getRootView(),
                                 getResources().getString(R.string.add_friend_soon), Snackbar.LENGTH_LONG).show();
+                return true;
+            case R.id.show_hide_offline:
+                SHOW_OFFLINE_USERS = !mDataStorage.showOfflineUsers();
+                mDataStorage.showOfflineUsers(SHOW_OFFLINE_USERS);
+                getFullFriendList(SHOW_OFFLINE_USERS);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void getFullFriendList(boolean showOffline) {
+        riotXmppRosterHelper.getFullFriendsList(showOffline);
+    }
+
     @Subscribe
     public void OnNewMessageReceived(final OnNewMessageReceivedEvent messageReceived) {
         final Message message = messageReceived.getMessage();
-        final String userXmppAddress = messageReceived.getMessageFrom();
         getActivity().invalidateOptionsMenu();
-        final String username = MainApplication.getInstance().getRiotXmppService().getRoster().getEntry(userXmppAddress).getName();
+        final String username = messageReceived.getUsername();
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new SnackBarNotification(FriendListFragment.this.getActivity(), username + " says: \n" + message.getBody(), "PM",
-                        username, messageReceived.getMessageFrom());
-            }
-        });
+        getActivity().runOnUiThread(
+                () -> new SnackBarNotification(FriendListFragment.this.getActivity(), username + " says: \n" + message.getBody(), "PM",
+                username, messageReceived.getMessageFrom())
+        );
     }
+
+    @Override
+    public void onFullFriendsListReceived(List<Friend> friendList) {
+        if (adapter != null) {
+            adapter.setItems(friendList);
+            showProgressBar(false);
+            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
+        }
+    }
+
+    @Override public void onFullFriendsListFailedReception() { }
+
+    @Override
+    public void onSearchedFriendListReceived(List<Friend> friendList) {
+        onFullFriendsListReceived(friendList);
+    }
+
+    @Override public void onSearchedFriendListFailedReception() { }
+
+    @Override
+    public void onSingleFriendReceived(Friend friend) {
+        if (adapter != null) {
+            if (friend != null) {
+                adapter.setFriendChanged(friend);
+            }
+            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
+        }
+    }
+
+    @Override public void onSingleFriendFailedReception() { }
 
 }

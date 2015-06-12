@@ -43,4 +43,9 @@
         android:orderInCategory="800"
         android:icon="@drawable/ic_perm_identity_white_24dp"
         app:showAsAction="never"/>
+
+    <item
+        android:visible="false"
+        android:id="@+id/show_hide_offline"
+        android:title="@string/settings_show_hide_offline"/>
 </menu>

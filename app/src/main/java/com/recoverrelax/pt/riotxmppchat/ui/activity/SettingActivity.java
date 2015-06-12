@@ -109,16 +109,10 @@ public class SettingActivity extends BaseActivity {
     @Subscribe
     public void OnNewMessageReceived(final OnNewMessageReceivedEvent messageReceived) {
         final Message message = messageReceived.getMessage();
-        final String userXmppAddress = messageReceived.getMessageFrom();
 
-        final String username = MainApplication.getInstance().getRiotXmppService().getRoster().getEntry(userXmppAddress).getName();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new SnackBarNotification(SettingActivity.this, username + " says: \n" + message.getBody(), "PM",
-                        username, message.getFrom());
-            }
-        });
+        final String username = messageReceived.getUsername();
+        runOnUiThread(() -> new SnackBarNotification(SettingActivity.this, username + " says: \n" + message.getBody(), "PM",
+                username, message.getFrom()));
     }
 
     @Override
