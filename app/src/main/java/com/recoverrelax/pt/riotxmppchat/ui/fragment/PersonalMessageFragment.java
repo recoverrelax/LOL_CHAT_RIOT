@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
@@ -48,7 +47,7 @@ import static com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivi
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PersonalMessageFragment extends BaseFragment implements PersonalMessageImplCallbacks {
+public class PersonalMessageFragment extends RiotXmppCommunicationFragment implements PersonalMessageImplCallbacks {
 
     @InjectView(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
@@ -112,10 +111,9 @@ public class PersonalMessageFragment extends BaseFragment implements PersonalMes
         super.onActivityCreated(savedInstanceState);
 
         Bundle extras = getArguments();
-        if(extras==null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)){
+        if (extras == null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)) {
             LogUtils.LOGE(TAG, "Something went wrong, we haven't got a xmppName");
-        }
-        else {
+        } else {
             friendUsername = extras.getString(INTENT_FRIEND_NAME);
             friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
 
@@ -132,7 +130,7 @@ public class PersonalMessageFragment extends BaseFragment implements PersonalMes
 
             swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
 
-            uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70/2)));
+            uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70 / 2)));
         }
     }
 
@@ -141,13 +139,13 @@ public class PersonalMessageFragment extends BaseFragment implements PersonalMes
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, displayMetrics);
     }
 
-    public int doubleLoadedItems(){
-        this.defaultMessageNrReturned = defaultMessageNrReturned*2;
+    public int doubleLoadedItems() {
+        this.defaultMessageNrReturned = defaultMessageNrReturned * 2;
         return this.defaultMessageNrReturned;
     }
 
     @OnClick(R.id.expandButton)
-    public void sendMessageButton(View view){
+    public void sendMessageButton(View view) {
         String message = chatEditText.getText().toString();
         Presence rosterPresence = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterPresence(friendXmppName);
 
@@ -165,7 +163,7 @@ public class PersonalMessageFragment extends BaseFragment implements PersonalMes
 
     private void setAllMessagesRead() {
         List<MessageDb> allMessages = adapter.getAllMessages();
-        for(MessageDb message: allMessages)
+        for (MessageDb message : allMessages)
             message.setWasRead(true);
         RiotXmppDBRepository.updateMessages(allMessages);
     }
@@ -173,54 +171,60 @@ public class PersonalMessageFragment extends BaseFragment implements PersonalMes
     @Override
     public void onResume() {
         super.onResume();
-        MainApplication.getInstance().getBusInstance().register(this);
+//        MainApplication.getInstance().getBusInstance().register(this);
         personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApplication.getInstance().getBusInstance().unregister(this);
-    }
-
     @Subscribe
-    public void OnNewMessageReceived(OnNewMessageReceivedEvent messageReceived) {
-        getActivity().runOnUiThread(() -> personalMessageHelper.getLastPersonalMessage(friendXmppName));
+    public void OnNewMessageReceived(OnNewMessageReceivedEventEvent messageReceived) {
+        if (this.friendXmppName != null) {
+            getActivity().runOnUiThread(() -> {
+
+                // this means that i have sent a message
+                if (messageReceived == null) {
+                    personalMessageHelper.getLastPersonalMessage(friendXmppName);
+                } else {
+                    // if its not for me, don't update
+                    if (this.friendXmppName.equals(messageReceived.getMessageFrom()))
+                        personalMessageHelper.getLastPersonalMessage(friendXmppName);
+                }
+            });
+        }
     }
 
-    @Override
-    public void onLastXPersonalMessageListReceived(List<MessageDb> messageDbs) {
-        if(messageDbs != null)
-            setAllMessagesRead();
+        @Override
+        public void onLastXPersonalMessageListReceived (List < MessageDb > messageDbs) {
+            if (messageDbs != null)
+                setAllMessagesRead();
 
-        adapter.setItems(messageDbs, swipeRefreshLayout.isRefreshing() ? null : PersonalMessageAdapter.ScrollTo.FIRST_ITEM);
+            adapter.setItems(messageDbs, swipeRefreshLayout.isRefreshing() ? null : PersonalMessageAdapter.ScrollTo.FIRST_ITEM);
 
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-    }
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
+        }
 
-    @Override
-    public void onLastXPersonalMessageListFailedReception(Throwable e) {
-        onGeneralThrowableEvent(e);
-    }
+        @Override
+        public void onLastXPersonalMessageListFailedReception (Throwable e){
+            onGeneralThrowableEvent(e);
+        }
 
-    @Override
-    public void onLastPersonalMessageReceived(MessageDb message) {
-        if(message != null)
-            setAllMessagesRead();
+        @Override
+        public void onLastPersonalMessageReceived (MessageDb message){
+            if (message != null)
+                setAllMessagesRead();
 
-        adapter.addItem(message);
+            adapter.addItem(message);
 
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-    }
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
+        }
 
-    @Override
-    public void onLastPersonalMessageFailedReception(Throwable e) {
-        onGeneralThrowableEvent(e);
-    }
+        @Override
+        public void onLastPersonalMessageFailedReception (Throwable e){
+            onGeneralThrowableEvent(e);
+        }
 
-    public void onGeneralThrowableEvent(Throwable e){
+    public void onGeneralThrowableEvent(Throwable e) {
         LOGE(TAG, "", e);
     }
 }

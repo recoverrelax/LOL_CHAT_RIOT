@@ -4,16 +4,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 
-public class FriendMessageListActivity extends BaseActivity {
+public class FriendMessageListActivity extends RiotXmppCommunicationActivity {
 
     @Override
     public int getLayoutResources() {
@@ -48,7 +47,12 @@ public class FriendMessageListActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void OnFriendLeftGame(FriendLeftGameNotification notif){
-        new SnackBarNotification(this, notif.getMessage(), "PM", notif.getFriendName(), notif.getFriendXmppAddress());
+    public void OnFriendStatusGameNotification(FriendStatusGameNotificationEvent notif){
+        super.OnFriendStatusGameNotification(notif);
+    }
+
+    @Override
+    public boolean hasNewMessageIcon() {
+        return false;
     }
 }

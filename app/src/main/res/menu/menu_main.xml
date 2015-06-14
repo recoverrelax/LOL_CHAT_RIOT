@@ -26,7 +26,7 @@
         android:visible="false"
         android:title="@string/new_message"
         android:orderInCategory="900"
-        android:icon="@drawable/ic_question_answer_white_24dp"
+        android:icon="@drawable/ic_action_question_answer_green"
         app:showAsAction="always"/>
 
     <item android:id="@+id/search"

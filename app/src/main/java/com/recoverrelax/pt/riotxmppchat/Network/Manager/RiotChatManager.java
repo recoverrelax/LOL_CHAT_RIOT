@@ -1,17 +1,14 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SoundNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SystemNotification;
-import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.NewMessageSpeechNotification;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 import com.squareup.otto.Bus;
@@ -107,28 +104,33 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     public void notifyNewMessage(Message message, String userXmppAddress) {
 
         boolean applicationClosed = MainApplication.getInstance().isApplicationClosed();
-        Log.i("TAG123", "Passed Here-1");
-        if (applicationClosed) {
-            Log.i("TAG123", "Passed Here0");
-            String username = riotRosterManager.getRoster().getEntry(userXmppAddress).getName();
-            new SystemNotification(context, message.getBody(), username + " says: ");
-        }
+        String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRoster().getEntry(userXmppAddress).getName();
 
-        new SoundNotification(context, R.raw.teemo_new_message, applicationClosed
-                ? SoundNotification.NotificationType.OFFLINE
-                : SoundNotification.NotificationType.ONLINE);
+//        Log.i("TAG123", "Passed Here-1");
+//        if (applicationClosed) {
+//            Log.i("TAG123", "Passed Here0");
+//
+////            new SystemNotification(context, message.getBody(), username + " says: ");
+//        }
+
+//        new SoundNotification(context, R.raw.teemo_new_message, applicationClosed
+//                ? SoundNotification.NotificationType.OFFLINE
+//                : SoundNotification.NotificationType.ONLINE);
+
+        NewMessageSpeechNotification instance = NewMessageSpeechNotification.getInstance();
+        instance.sendSpeechNotification(message.getBody(), username);
 
 
         /**
          * Deliver the new message to all the observers
          *
-         * 1st: {@link FriendListFragment#OnNewMessageReceived(OnNewMessageReceivedEvent)}  }
-         * 2nd: {@link PersonalMessageFragment#OnNewMessageReceived(OnNewMessageReceivedEvent)}  }
-         * 3rd: {@link FriendMessageListFragment#OnNewMessageReceived(OnNewMessageReceivedEvent)}  }
+         * 1st: {@link FriendListActivity#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
+         * 2nd: {@link PersonalMessageFragment#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
+         * 3rd: {@link FriendMessageListFragment#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
          */
 
-        String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRoster().getEntry(userXmppAddress).getName();
-        busInstance.post(new OnNewMessageReceivedEvent(message, userXmppAddress, username));
+
+        busInstance.post(new OnNewMessageReceivedEventEvent(message, userXmppAddress, username));
     }
 
     public void sendMessage(String message, String userXmppName) {

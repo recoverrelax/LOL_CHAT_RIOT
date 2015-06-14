@@ -1,22 +1,14 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Subscribe;
@@ -25,13 +17,11 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
 
-public class FriendListActivity extends BaseActivity {
+public class FriendListActivity extends RiotXmppCommunicationActivity {
 
     @Optional
     @InjectView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
-
-    private ImageView imageviewMessage;
 
     @Override
     public int getLayoutResources() {
@@ -44,6 +34,20 @@ public class FriendListActivity extends BaseActivity {
         return R.id.navigation_item_1;
     }
 
+    @Subscribe
+    public void OnFriendStatusGameNotification(FriendStatusGameNotificationEvent notif){
+        super.OnFriendStatusGameNotification(notif);
+    }
+
+    @Subscribe
+    public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
+        super.OnNewMessageReceived(messageReceived);
+    }
+
+    @Override
+    public boolean hasNewMessageIcon() {
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,76 +71,9 @@ public class FriendListActivity extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        MainApplication.getInstance().setApplicationClosed(true);
-        Log.i("ASAS", "onDestroy FriendListActivity");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MainApplication.getInstance().getBusInstance().register(this);
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MainApplication.getInstance().getBusInstance().unregister(this);
-    }
-
-
-
-    @Override
     public void onBackPressed() {
             Intent i = new Intent(Intent.ACTION_MAIN);
             i.addCategory(Intent.CATEGORY_HOME);
             startActivity(i);
-    }
-
-    @Subscribe
-    public void OnFriendLeftGame(FriendLeftGameNotification notif){
-        new SnackBarNotification(this, notif.getMessage(), "PM", notif.getFriendName(), notif.getFriendXmppAddress());
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        boolean b = super.onCreateOptionsMenu(menu);
-
-        boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
-        MenuItem messageItem = menu.findItem(R.id.newMessage);
-
-        if (hasUnreaded) {
-
-            messageItem.setVisible(true);
-
-            Drawable messageIcon = messageItem.getIcon();
-            messageIcon.mutate();
-            messageItem.setActionView(R.layout.new_message_view);
-
-            View actionView = messageItem.getActionView();
-
-            imageviewMessage = ButterKnife.findById(actionView, R.id.newMessage);
-            Drawable drawable = imageviewMessage.getDrawable();
-            drawable.mutate();
-            drawable.setColorFilter(getResources().getColor(R.color.newMessageColor), PorterDuff.Mode.SRC_IN);
-
-            actionView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    goToMessageListActivity();
-                }
-            });
-
-            AppAndroidUtils.setBlinkAnimation(imageviewMessage, true);
-        } else {
-            messageItem.setVisible(false);
-            messageItem.setActionView(null);
-            if(imageviewMessage != null)
-                AppAndroidUtils.setBlinkAnimation(imageviewMessage, false);
-        }
-
-        return b;
     }
 }

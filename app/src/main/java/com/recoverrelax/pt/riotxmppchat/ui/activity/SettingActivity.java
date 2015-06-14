@@ -9,23 +9,19 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
 import com.squareup.otto.Subscribe;
 
-import org.jivesoftware.smack.packet.Message;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends RiotXmppCommunicationActivity {
 
     @InjectView(R.id.settings_pager)
     ViewPager settings_pager;
@@ -107,28 +103,17 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageReceivedEvent messageReceived) {
-        final Message message = messageReceived.getMessage();
-
-        final String username = messageReceived.getUsername();
-        runOnUiThread(() -> new SnackBarNotification(SettingActivity.this, username + " says: \n" + message.getBody(), "PM",
-                username, message.getFrom()));
+    public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
+        super.OnNewMessageReceived(messageReceived);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        MainApplication.getInstance().getBusInstance().unregister(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MainApplication.getInstance().getBusInstance().register(this);
+    public boolean hasNewMessageIcon() {
+        return true;
     }
 
     @Subscribe
-    public void OnFriendLeftGame(FriendLeftGameNotification notif){
-        new SnackBarNotification(this, notif.getMessage(), "PM", notif.getFriendName(), notif.getFriendXmppAddress());
+    public void OnFriendStatusGameNotification(FriendStatusGameNotificationEvent notif){
+        super.OnFriendStatusGameNotification(notif);
     }
 }

@@ -8,19 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
-import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SoundNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SystemNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotChatManager;
@@ -31,7 +23,6 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
-import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;

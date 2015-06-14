@@ -4,15 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendLeftGameNotification;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SystemNotification;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendMessageListActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Bus;
 
@@ -87,11 +82,7 @@ public class RiotRosterManager implements RosterListener{
         /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)} */
         busInstance.post(new OnFriendPresenceChangedEvent(presence));
 
-        RosterEntry rosterEntry = getRosterEntry(presence.getFrom());
-        Presence bestPresence = getRosterPresence(presence.getFrom());
-        String user = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
-
-        Friend friend = new Friend(rosterEntry.getName(), user, bestPresence);
+        Friend friend = getFriendFromPresence(presence);
 
         if (friend.isPlaying())
             addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
@@ -99,27 +90,34 @@ public class RiotRosterManager implements RosterListener{
             removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
     }
 
+    public Friend getFriendFromPresence(Presence presence){
+        RosterEntry rosterEntry = getRosterEntry(presence.getFrom());
+        Presence bestPresence = getRosterPresence(presence.getFrom());
+        String user = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
+
+        return new Friend(rosterEntry.getName(), user, bestPresence);
+    }
+
     public void addFriendPlaying(String friendName, String userXmppAddress) {
-        friendsPlaying.add(friendName);
-        Log.i("TAGF", "Added: " + friendName + " to friendsPlaying!");
+        boolean added = friendsPlaying.add(friendName);
+
+        if(added){
+            /**
+             * 1st: {@link com.recoverrelax.pt.riotxmppchat.ui.activity.RiotXmppCommunicationActivity#OnFriendStatusGameNotification(FriendStatusGameNotificationEvent)}
+             */
+        Log.i("123", "Entered Notification Started Playing");
+            MainApplication.getInstance().getBusInstance().post(new FriendStatusGameNotificationEvent(friendName, userXmppAddress, FriendStatusGameNotificationEvent.State.STARTED));
+        }
     }
 
     public void removeFriendPlaying(String friendName, String userXmppAddress) {
         boolean removed = friendsPlaying.remove(friendName);
         if (removed) {
-            Log.i("ASAS", "REMOVED FRIEND: " + friendName);
-            if (MainApplication.getInstance().isApplicationClosed()) {
-                new SystemNotification(context, friendName, "... just left a game!");
-            } else {
-
                 /**
-                 * 1st: {@link FriendListActivity#OnFriendLeftGame(FriendLeftGameNotification)}
-                 * 2nd: {@link PersonalMessageActivity#OnFriendLeftGame(FriendLeftGameNotification)}
-                 * 3rd: {@link FriendMessageListActivity#OnFriendLeftGame(FriendLeftGameNotification)}
-                 * 4th: {@link SettingActivity#OnFriendLeftGame(FriendLeftGameNotification)}
+                 * 1st: {@link com.recoverrelax.pt.riotxmppchat.ui.activity.RiotXmppCommunicationActivity#OnFriendLeftGame(FriendStatusGameNotificationEvent)}
                  */
-                MainApplication.getInstance().getBusInstance().post(new FriendLeftGameNotification(friendName + " ... just left a game!", friendName, userXmppAddress));
-            }
+            Log.i("123", "Entered Notification Stopped Playing");
+                MainApplication.getInstance().getBusInstance().post(new FriendStatusGameNotificationEvent(friendName, userXmppAddress, FriendStatusGameNotificationEvent.State.LEFT));
         }
     }
 }

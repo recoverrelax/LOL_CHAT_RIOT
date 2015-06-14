@@ -274,6 +274,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     public void goToMessageListActivity(){
-        onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
+        if(getNavigationViewPosition() != -1)
+            onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
+        else {
+            Intent intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            AppAndroidUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
+            this.finish();
+        }
+
     }
 }

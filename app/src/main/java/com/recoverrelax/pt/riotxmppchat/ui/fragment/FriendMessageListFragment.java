@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -27,12 +26,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
-import static com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl.*;
+import static com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl.FriendMessageListImplCallbacks;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendMessageListFragment extends BaseFragment implements FriendMessageListImplCallbacks {
+public class FriendMessageListFragment extends RiotXmppCommunicationFragment implements FriendMessageListImplCallbacks {
 
     @InjectView(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
@@ -105,18 +104,18 @@ public class FriendMessageListFragment extends BaseFragment implements FriendMes
     @Override
     public void onResume() {
         super.onResume();
-        MainApplication.getInstance().getBusInstance().register(this);
+//        MainApplication.getInstance().getBusInstance().register(this);
         friendMessageListHelper.getPersonalMessageList();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        MainApplication.getInstance().getBusInstance().unregister(this);
+//        MainApplication.getInstance().getBusInstance().unregister(this);
     }
 
     @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageReceivedEvent messageReceived) {
+    public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
         getActivity().runOnUiThread(() -> {
             if (adapter.contains(messageReceived.getMessageFrom())) {
                 friendMessageListHelper.getPersonalMessageSingleItem(messageReceived.getMessageFrom());

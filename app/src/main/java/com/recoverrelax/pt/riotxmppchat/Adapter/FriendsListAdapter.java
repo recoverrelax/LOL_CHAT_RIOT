@@ -285,7 +285,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void run() {
                     String gameStatusToPrint = current.getGameStatusToPrint();
                     gameStatus.setText(gameStatusToPrint);
-                    gameStatus.setSelected(true);
+//                    gameStatus.setSelected(true);
                     mHandler.postDelayed(mStatusChecker, mHandlerInterval);
                 }
             };

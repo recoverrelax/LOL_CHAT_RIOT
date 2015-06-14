@@ -1,6 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectListener;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionListener;
@@ -36,7 +36,7 @@ public class RiotConnectionManager implements ConnectionListener {
 
     @Override
     public void reconnectionSuccessful() {
-        MainApplication.getInstance().getBusInstance().post(new OnReconnectListener());
+        MainApplication.getInstance().getBusInstance().post(new OnReconnectListenerEvent());
     }
 
     @Override public void reconnectingIn(int seconds) { }

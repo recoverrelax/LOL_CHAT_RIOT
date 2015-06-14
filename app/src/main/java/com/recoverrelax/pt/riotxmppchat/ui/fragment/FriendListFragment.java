@@ -27,11 +27,9 @@ import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectListener;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.SnackBarNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -39,21 +37,18 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.squareup.otto.Subscribe;
 
-import org.jivesoftware.smack.packet.Message;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
-import static com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl.*;
+import static com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl.RiotXmppRosterImplCallbacks;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendListFragment extends BaseFragment implements FriendsListAdapter.OnAdapterChildClick, RiotXmppRosterImplCallbacks {
+public class FriendListFragment extends RiotXmppCommunicationFragment implements FriendsListAdapter.OnAdapterChildClick, RiotXmppRosterImplCallbacks {
 
     private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
@@ -173,23 +168,14 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     @Override
     public void onResume() {
         super.onResume();
-        MainApplication.getInstance().getBusInstance().register(this);
-        getActivity().invalidateOptionsMenu();
-
         if (!firstTimeOnCreate)
             getFullFriendList(SHOW_OFFLINE_USERS);
         firstTimeOnCreate = false;
     }
 
     @Subscribe
-    public void onReconnect(OnReconnectListener event){
+    public void onReconnect(OnReconnectListenerEvent event){
         getFullFriendList(SHOW_OFFLINE_USERS);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApplication.getInstance().getBusInstance().unregister(this);
     }
 
     @Subscribe
@@ -318,18 +304,6 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
     private void getFullFriendList(boolean showOffline) {
         riotXmppRosterHelper.getFullFriendsList(showOffline);
-    }
-
-    @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageReceivedEvent messageReceived) {
-        final Message message = messageReceived.getMessage();
-        getActivity().invalidateOptionsMenu();
-        final String username = messageReceived.getUsername();
-
-        getActivity().runOnUiThread(
-                () -> new SnackBarNotification(FriendListFragment.this.getActivity(), username + " says: \n" + message.getBody(), "PM",
-                username, messageReceived.getMessageFrom())
-        );
     }
 
     @Override

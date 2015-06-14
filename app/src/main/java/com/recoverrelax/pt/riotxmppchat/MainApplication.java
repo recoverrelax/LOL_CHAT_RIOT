@@ -7,8 +7,10 @@ import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 
+import com.crashlytics.android.Crashlytics;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.NewMessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
@@ -21,6 +23,7 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
 import LolChatRiotDb.NotificationDb;
+import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class MainApplication extends Application {
@@ -44,8 +47,10 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         instance = this;
         DataStorage.init(this);
+        NewMessageSpeechNotification.init(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/Roboto-Light.ttf")

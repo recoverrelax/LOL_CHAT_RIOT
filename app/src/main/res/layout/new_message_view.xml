@@ -4,5 +4,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
      android:id="@+id/newMessage"
-    android:src="@drawable/ic_question_answer_white_24dp">
+    android:src="@drawable/ic_action_question_answer_green">
 </ImageView>
