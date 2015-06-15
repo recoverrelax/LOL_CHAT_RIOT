@@ -1,0 +1,51 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:visible="false"
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"/>
+
+    <item android:id="@+id/navigate"
+        android:visible="false"
+        android:title="@string/next"
+        android:icon="@drawable/ic_action_next_item"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+
+    <item android:id="@+id/refresh"
+        android:visible="false"
+        android:title="@string/refresh"
+        android:orderInCategory="1100"
+        android:icon="@drawable/ic_cached_white_24dp"
+        app:showAsAction="never"/>
+
+
+    <item android:id="@+id/newMessage"
+        android:visible="false"
+        android:title="@string/new_message"
+        android:orderInCategory="900"
+        android:icon="@drawable/ic_action_question_answer_green"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/search"
+        android:visible="false"
+        android:title="@string/search_friend"
+        android:orderInCategory="1000"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView"/>
+
+    <item android:id="@+id/addFriend"
+        android:visible="false"
+        android:title="@string/add_friend"
+        android:orderInCategory="800"
+        android:icon="@drawable/ic_perm_identity_white_24dp"
+        app:showAsAction="never"/>
+
+    <item
+        android:visible="false"
+        android:id="@+id/show_hide_offline"
+        android:title="@string/settings_show_hide_offline"/>
+</menu>

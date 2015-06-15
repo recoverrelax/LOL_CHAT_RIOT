@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/friends_list_cardview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="5dp"
+    card_view:cardBackgroundColor="@color/whiteT"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/profileIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    tools:src="@drawable/profile_icon_example" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/division_league"
+                        style="@style/friend_list_cardview_league_division_textview"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        tools:text="Silver I" />
+
+                    <TextView
+                        android:id="@+id/wins"
+                        style="@style/friend_list_cardview_win_loss_1_textview"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/win_color"
+                        android:textStyle="bold"
+                        tools:text="1945" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2.2"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/ranked_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal|top"
+                            android:adjustViewBounds="true"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/master_1" />
+                    </FrameLayout>
+                    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="@style/friend_list_cardview_win_loss_2_textview"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="Ranked\nWins"/>&ndash;&gt;-->
+
+                    <TextView
+                        style="@style/friend_list_cardview_win_loss_2_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|center"
+                        android:text="@string/friends_list_recycler_child_ranked_wins" />
+
+                </LinearLayout>
+
+                <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="0dp"-->
+                <!--android:layout_weight="1">-->
+
+                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                <!--&lt;!&ndash;style="@style/friend_list_cardview_win_loss_1_textview"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_weight="0.7"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textStyle="bold"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:textColor="@color/win_color"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:text="1945"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/wins" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                <!--&lt;!&ndash;style="@style/friend_list_cardview_win_loss_2_textview"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="0dp"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_weight="1"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:text="Ranked\nWins"/>&ndash;&gt;-->
+
+                <!--</LinearLayout>-->
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:gravity="bottom"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/friendName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    tools:text="2Fast4You" />
+
+                <TextView
+                    android:id="@+id/friendPresenceMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/friends_list_recycler_child_textview_margin"
+                    android:background="@drawable/friend_list_status_rounded_background"
+                    android:gravity="center_vertical|center_horizontal"
+                    tools:background="@color/presence_mode_away"
+                    android:paddingBottom="@dimen/friends_list_recycler_child_textview_padding_tb"
+                    android:paddingLeft="@dimen/friends_list_recycler_child_textview_padding_lr"
+                    android:paddingRight="@dimen/friends_list_recycler_child_textview_padding_lr"
+                    android:paddingTop="@dimen/friends_list_recycler_child_textview_padding_tb"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    tools:text="Away" />
+
+                <TextView
+                    android:id="@+id/gameStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|left"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
+                    android:paddingRight="@dimen/friends_list_recycler_child_textview_margin"
+                    android:textSize="@dimen/text_size_micro"
+                    tools:text="Playing as Ashe for 45 minutes" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/card_more_layout"
+                android:layout_gravity="bottom|center_horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/card_more"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_more_vert_white_24dp"
+                    android:layout_gravity="bottom|center_horizontal" />
+
+            </FrameLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:orientation="horizontal"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent">-->
+
+    <!--<LinearLayout--><!--android:id="@+id/parent_row"--><!--android:gravity="center"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content">-->
+
+    <!--<TextView--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="@dimen/friends_list_recycler_child_textview_padding"--><!--android:textAppearance="?android:textAppearanceMedium"--><!--android:background="?android:attr/selectableItemBackground"--><!--tools:text="2Fast4You"--><!--android:id="@+id/friendName"--><!--android:gravity="center_vertical|center_horizontal" />-->
+
+    <!--</LinearLayout>--><!--</LinearLayout>-->

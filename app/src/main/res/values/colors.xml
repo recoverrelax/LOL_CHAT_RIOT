@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Primary Color is the Material500 Color and used as primaryColor,
+     for big components.
+     The actionBar color is 700 version of the primary Color-->
+
+    <color name="primaryColor">#0075A2</color>
+    <color name="primaryColor120">#780075a2</color>
+    <color name="primaryColorDark">#004884</color>
+    <color name="primaryColorDark120">#78004884</color>
+    <color name="accentColor">#FF5722</color>
+
+    <color name="materialBlueGrey200">#faeeeeee</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="whiteT">#d2ffffff</color>
+    <color name="red20">#3cff5722</color>
+    <color name="whiteT2X">#b4ffffff</color>
+    <color name="black">#000</color>
+    <color name="blackT">#b4000000</color>
+    <color name="blackDrawerScrim">#8c000000</color>
+    <color name="black_220a">#dc000000</color>
+    <color name="toolbarColor">@color/black</color>
+    <color name="primaryColor190T">#beff5722</color>
+
+    <color name="loginBackground">#37ff5722</color>
+    <color name="loginBackgroundBlack">#96000000</color>
+    <color name="loginBackground2X">#6eff5722</color>
+    <color name="drawer_top_background">#a0ff5722</color>
+
+    <color name="primaryColorDarkT">#960288d1</color>
+    <color name="primaryColorDarkT2">#370288d1</color>
+    <color name="primaryColorDarkT3">#9b0288d1</color>
+    <color name="indigo">#3F51B5</color>
+    <color name="online">#ff00ff00</color>
+    <color name="offline">#ffff0000</color>
+    <color name="online_alpha50">#3200ff00</color>
+    <color name="offline_alpha50">#32ff0000</color>
+
+    <color name="win_color">#1B5E20</color>
+    <color name="loss_color">#ffff0000</color>
+
+
+
+
+    <color name="colorSecondaryText">#727272</color>
+    <color name="colorHighlight">#B6B6B6</color>
+    <color name="colorHighlightT2">#7db6b6b6</color>
+
+    <color name="white50Alpha">#7dffffff</color>
+    <color name="white190T">#beffffff</color>
+    <color name="primaryColor50Alpha">#7d03a9f4</color>
+    <color name="primaryColorDarkAlpha50">#7d0288d1</color>
+    <color name="neutral_grey_disabled">#727272</color>
+
+    <color name="presence_mode_available">#64DD17</color>
+    <color name="presence_mode_away">#FDD835</color>
+    <color name="presence_mode_chat">#8BC34A</color>
+    <color name="newMessageColor">#8BC34A</color>
+    <color name="presence_mode_dnd">#FF6F00</color>
+    <color name="presence_mode_xa">#BF360C</color>
+    <color name="presence_mode_unavailable">#DD2C00</color>
+</resources>

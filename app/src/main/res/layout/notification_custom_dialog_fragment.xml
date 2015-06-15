@@ -1,0 +1,153 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:layout_gravity="center"
+    android:gravity="center_vertical|center_horizontal">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/settings_title"
+        android:background="?attr/colorPrimary"
+        android:textColor="@color/white"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        tools:text="Notify me when 2Fast4U: "
+        android:text="Notify me when 2Fast4U: " />
+
+
+    <LinearLayout
+        android:paddingRight="32dp"
+        android:paddingLeft="32dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="15dp"
+                app:theme="@style/AppTheme.Base.Settings"
+                android:textOn="YES"
+                android:textOff="NO" />
+
+            <TextView
+                style="@style/settings_notif_child"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/settings_custom_notif_online"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:theme="@style/AppTheme.Base.Settings"
+                android:textOn="YES"
+                android:textOff="NO"
+                android:layout_marginRight="15dp" />
+
+            <TextView
+                style="@style/settings_notif_child"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/settings_custom_notif_offline"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:theme="@style/AppTheme.Base.Settings"
+                android:textOn="YES"
+                android:textOff="NO"
+                android:layout_marginRight="15dp" />
+
+            <TextView
+                style="@style/settings_notif_child"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/settings_custom_notif_start_game"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:theme="@style/AppTheme.Base.Settings"
+                android:textOn="YES"
+                android:textOff="NO"
+                android:layout_marginRight="15dp" />
+
+            <TextView
+                style="@style/settings_notif_child"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/settings_custom_notif_end_game"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:theme="@style/AppTheme.Base.Settings"
+                android:textOn="YES"
+                android:textOff="NO"
+                android:layout_marginRight="15dp" />
+
+            <TextView
+                style="@style/settings_notif_child"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/settings_custom_notif_message"/>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

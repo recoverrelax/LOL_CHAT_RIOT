@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Document   : rotate.xml
+    Created on : December 6, 2010, 5:34 PM
+    Author     : andre
+    Description:
+        Purpose of the document follows.
+-->
+
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+         android:pivotX="50%"
+         android:pivotY="50%"
+        android:duration="2000"/>
+
+<!--
+<set android:interpolator="@android:anim/decelerate_interpolator">
+  <scale
+         android:fromXScale="1.4"
+         android:toXScale="0.0"
+         android:fromYScale="0.6"
+         android:toYScale="0.0"
+         android:pivotX="50%"
+         android:pivotY="50%"
+         android:duration="400"
+         android:fillBefore="false" />
+  <rotate
+         android:fromDegrees="0"
+         android:toDegrees="-45"
+         android:toYScale="0.0"
+         android:pivotX="50%"
+         android:pivotY="50%"
+         android:duration="400" />
+</set>
+-->
