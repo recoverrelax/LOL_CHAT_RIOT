@@ -103,7 +103,6 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
 
-        boolean applicationClosed = MainApplication.getInstance().isApplicationClosed();
         String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRoster().getEntry(userXmppAddress).getName();
 
 //        Log.i("TAG123", "Passed Here-1");
@@ -117,8 +116,8 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
 //                ? SoundNotification.NotificationType.OFFLINE
 //                : SoundNotification.NotificationType.ONLINE);
 
-        NewMessageSpeechNotification instance = NewMessageSpeechNotification.getInstance();
-        instance.sendSpeechNotification(message.getBody(), username);
+        NewMessageSpeechNotification.getInstance()
+            .sendSpeechNotification(message.getBody(), username);
 
 
         /**

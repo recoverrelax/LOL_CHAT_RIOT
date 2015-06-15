@@ -1,11 +1,13 @@
 package com.recoverrelax.pt.riotxmppchat;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
@@ -19,6 +21,9 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
@@ -42,7 +47,7 @@ public class MainApplication extends Application {
     private String connectedXmppUser;
 
     private static MainApplication instance;
-    private boolean isApplicationClosed = true;
+    private int startedActivityCounter = 0;
 
     @Override
     public void onCreate() {
@@ -61,6 +66,26 @@ public class MainApplication extends Application {
 
         bus = new Bus(ThreadEnforcer.ANY);
     }
+
+    public void addCreatedActivity(){
+        startedActivityCounter ++;
+        Log.i("111", "Is application closed ?" + isApplicationClosed());
+    }
+    public void addDestroyActivity() {
+        startedActivityCounter -- ;
+        Log.i("111", "Is application closed ?" + isApplicationClosed());
+    }
+
+     public boolean isApplicationClosed(){
+        return startedActivityCounter == 0;
+    }
+
+    //        if(isApplicationClosed) {
+//            if(!DataStorage.getInstance().getAppAlwaysOn())
+//                getRiotXmppService().stopService();
+//        }
+//    }
+
 
     public boolean hasNewMessages(){
         return RiotXmppDBRepository.hasUnreadedMessages(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
@@ -102,20 +127,7 @@ public class MainApplication extends Application {
         }
     };
 
-    public boolean isApplicationClosed() {
-        return isApplicationClosed;
-    }
 
-    public void setApplicationClosed(boolean isApplicationClosed) {
-        this.isApplicationClosed = isApplicationClosed;
-/**
- * TODO: fix applicationCloseThing ...
- */
-        if(isApplicationClosed) {
-            if(!DataStorage.getInstance().getAppAlwaysOn())
-                getRiotXmppService().stopService();
-        }
-    }
 
     public void startRiotXmppService(String selectedItem, String username, String password){
         intentService = new Intent(this, RiotXmppService.class);

@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,6 +67,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResources());
         ButterKnife.inject(this);
+        MainApplication.getInstance().addCreatedActivity();
 
         if(savedInstanceState != null){
             fromSavedInstanceState = true;
@@ -95,6 +97,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         if(navigationView != null){
             setupDrawerContent();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MainApplication.getInstance().addDestroyActivity();
     }
 
     private void setupDrawerContent() {

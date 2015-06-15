@@ -4,7 +4,9 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Log;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -16,18 +18,16 @@ public class NewMessageSpeechNotification implements TextToSpeech.OnInitListener
     private Context context;
     private static NewMessageSpeechNotification sInstance;
     private TextToSpeech tts;
-    private final String TAG = this.getClass().getSimpleName();
+    private final String TAG = "SpeechNotification";
     private String message;
     private String from;
 
     private static final String MESSAGE_START = "New message from: ";
+    private static final long DELAY_FROM_MESSAGE = 500;
 
-    /**
-     *
-     */
-
+    private boolean isReady = false;
+    private long lastMessageDateMillis = 0;
     private String lastMessageFrom = null;
-    private long lastMessageDateMilis = 0;
 
     /**
      * <p>Initialize the {@link NewMessageSpeechNotification} singleton</p>
@@ -55,59 +55,66 @@ public class NewMessageSpeechNotification implements TextToSpeech.OnInitListener
         return sInstance;
     }
 
-    public void sendSpeechNotification(String message, String from){
+    public void getReady(){
         tts = new TextToSpeech(context, this);
-        tts.setLanguage(Locale.US);
-        tts.setSpeechRate(0.8f);
-        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-            @Override
-            public void onStart(String s) {
+    }
 
-            }
+    public void sendSpeechNotification(String message, String from){
 
-            @Override
-            public void onDone(String s) {
-                lastMessageDateMilis = System.currentTimeMillis();
-                lastMessageFrom = from;
-                tts.shutdown();
-
-            }
-
-            @Override
-            public void onError(String s) {
-
-            }
-        });
-        this.message = message;
-        this.from = from;
+        if(isReady){
+            speak(from, message);
+        }else{
+            getReady();
+            this.message = message;
+            this.from = from;
+        }
     }
 
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
+            tts.setLanguage(Locale.US);
+            tts.setSpeechRate(0.8f);
+            tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
+                public void onStart(String s) {
 
-            int result = tts.setLanguage(Locale.US);
+                }
 
-            if (result == TextToSpeech.LANG_MISSING_DATA
-                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                LOGE(TAG, "This Language is not supported");
-            } else {
-                speakOut();
-            }
+                @Override
+                public void onDone(String s) {
 
+                }
+
+                @Override
+                public void onError(String s) {
+                }
+            });
+
+            isReady = true;
+            speak(this.from, this.message);
         } else {
+            isReady = false;
             LOGE(TAG, "Initilization Failed!");
         }
     }
 
-    public void speakOut(){
-        long lastMessageMilis = TimeUnit.SECONDS.toSeconds((System.currentTimeMillis() - lastMessageDateMilis));
-        LOGI("123", String.valueOf(lastMessageMilis));
+    public void speak(String from, String message) {
+        long dateDifference = (System.nanoTime() - lastMessageDateMillis)/1000000000;
 
-        if(lastMessageFrom != null && lastMessageFrom.equals(from) && lastMessageMilis < 3){
-            tts.speak(message, TextToSpeech.QUEUE_ADD, null);
-        }else{
-            tts.speak(MESSAGE_START + from + " " + message, TextToSpeech.QUEUE_ADD, null);
-        }
+        Log.i("1112", String.valueOf(dateDifference));
+            HashMap<String, String> map = new HashMap<>();
+            map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "messageID");
+
+            if(dateDifference > 10 || !lastMessageFrom.equals(from)) {
+                tts.speak(MESSAGE_START + from, TextToSpeech.QUEUE_ADD, null);
+                tts.playSilence(DELAY_FROM_MESSAGE, TextToSpeech.QUEUE_ADD, null);
+                tts.speak(message, TextToSpeech.QUEUE_ADD, map);
+            }else{
+                tts.playSilence(DELAY_FROM_MESSAGE, TextToSpeech.QUEUE_ADD, null);
+                tts.speak(message, TextToSpeech.QUEUE_ADD, map);
+            }
+        lastMessageFrom = from;
+        lastMessageDateMillis = System.nanoTime();
     }
 }

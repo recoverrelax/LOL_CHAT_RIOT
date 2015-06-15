@@ -313,4 +313,14 @@ public class Friend {
         } else
             return false;
     }
+
+    @Override
+    public String toString() {
+        return "Friend{" +
+                "name='" + name + '\'' +
+                ", userXmppAddress='" + userXmppAddress + '\'' +
+                ", userRosterPresence=" + userRosterPresence +
+                ", rootElement=" + rootElement +
+                '}';
+    }
 }

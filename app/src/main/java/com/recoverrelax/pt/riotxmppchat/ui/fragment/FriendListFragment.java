@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -110,7 +111,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new FriendsListAdapter(this, new ArrayList<Friend>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, myFriendsListRecyclerView);
+        adapter = new FriendsListAdapter(this, new ArrayList<>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, myFriendsListRecyclerView);
         adapter.setAdapterClickListener(this);
 
         myFriendsListRecyclerView.setAdapter(adapter);
@@ -332,6 +333,9 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
             }
             setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
         }
+        /**
+         * TODO: there is a bug here, review the adaptar fag
+         */
     }
 
     @Override public void onSingleFriendFailedReception() { }
