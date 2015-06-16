@@ -1,5 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.Model;
 
+import android.support.annotation.NonNull;
+
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
@@ -21,7 +23,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class Friend {
+public class Friend implements Comparable<Friend>{
     private String name;
     private String userXmppAddress;
     private Presence userRosterPresence;
@@ -275,6 +277,16 @@ public class Friend {
 
     public String getTimeStamp() {
         return getStringFromXmlTag(TIME_STAMP, rootElement);
+    }
+
+    @Override
+    public int compareTo(@NonNull Friend friend) {
+        if ((this.isOnline() && friend.isOnline()) || (!this.isOnline() && !friend.isOnline()))
+                        return this.getName().compareTo(friend.getName());
+                    else if (this.isOnline())
+            return -1;
+                    else
+                        return 1;
     }
 
     public static class OnlineOfflineComparator implements Comparator<Friend> {
