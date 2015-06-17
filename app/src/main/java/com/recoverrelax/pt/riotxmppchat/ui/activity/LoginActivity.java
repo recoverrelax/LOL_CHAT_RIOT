@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -71,7 +72,6 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mainApplication = MainApplication.getInstance();
         mDataStorage = DataStorage.getInstance();
-        mainApplication.getBusInstance().register(this);
 
         /**
          * Set initial Title Scalling to 0.7f
@@ -163,6 +163,7 @@ public class LoginActivity extends BaseActivity {
                 .title(R.string.activity_login_progress_dialog_title)
                 .content(R.string.activity_login_progress_dialog_message)
                 .progress(true, 0)
+                .cancelable(false)
                 .show();
 
         mainApplication.startRiotXmppService((String) serverSpinner.getSelectedItem(), getUsername(), getPassword());
@@ -191,9 +192,8 @@ public class LoginActivity extends BaseActivity {
 //                .withTextColorId(R.color.primaryColor)
 //                .withDuration((short) 7000)
 //                .show();
-
         Snackbar
-                .make(getWindow().getDecorView().getRootView(), R.string.activity_login_cannot_connect, Snackbar.LENGTH_LONG);
+                .make(getWindow().getDecorView().getRootView(), R.string.activity_login_cannot_connect, Snackbar.LENGTH_LONG).show();
     }
 
     @Subscribe
@@ -222,9 +222,20 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mainApplication.getBusInstance().unregister(this);
 
         if(materialDialog != null)
             materialDialog.dismiss();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mainApplication.getBusInstance().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mainApplication.getBusInstance().unregister(this);
     }
 }

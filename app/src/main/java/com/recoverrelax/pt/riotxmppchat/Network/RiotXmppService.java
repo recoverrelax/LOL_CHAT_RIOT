@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
@@ -197,6 +198,7 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
 
     public void onFailedConnecting() {
         /**{@link LoginActivity#onFailure(OnConnectionOrLoginFailureEvent)} */
+        Log.i("1212", "Reaches here");
         MainApplication.getInstance().getBusInstance().post(new OnConnectionOrLoginFailureEvent());
     }
 

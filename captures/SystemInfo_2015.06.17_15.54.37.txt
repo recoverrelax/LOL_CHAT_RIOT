@@ -1,0 +1,28 @@
+TASK com.recoverrelax.pt.riotxmppchat id=217
+  ACTIVITY com.recoverrelax.pt.riotxmppchat/.ui.activity.LoginActivity 41d2a6f8 pid=17728
+    Local FragmentActivity 417a4988 State:
+      mCreated=truemResumed=true mStopped=false mReallyStopped=false
+      mLoadersStarted=true
+    FragmentManager misc state:
+      mActivity=com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity@417a4988
+      mContainer=android.support.v4.app.FragmentActivity$2@417ee4e8
+      mCurState=5 mStateSaved=false mDestroyed=false
+    View Hierarchy:
+      com.android.internal.policy.impl.PhoneWindow$DecorView{417838a8 V.E..... ... 0,0-720,1280}
+        android.widget.LinearLayout{418a2170 V.E..... ... 0,0-720,1280}
+          android.view.ViewStub{41782928 G.E..... ... 0,0-0,0 #10202e3}
+          android.widget.FrameLayout{4178d190 V.E..... ... 0,50-720,1280}
+            android.support.v7.internal.widget.FitWindowsLinearLayout{41831418 V.E..... ... 0,0-720,1230 #7f0b0057 app:id/action_bar_root}
+              android.support.v7.internal.widget.ViewStubCompat{4178f410 G.E..... ... 0,0-0,0 #7f0b0058 app:id/action_mode_bar_stub}
+              android.support.v7.internal.widget.ContentFrameLayout{4182e7a0 V.ED.... ... 0,0-720,1230 #1020002 android:id/content}
+                android.widget.LinearLayout{4172c1d0 V.E..... ... 0,0-720,1230 #7f0b0071 app:id/login_base_layout}
+                  android.widget.LinearLayout{417e4450 V.E..... ... 0,0-720,1230 #7f0b0072 app:id/login_main_layout}
+                    android.widget.ImageView{41835988 V.ED.... ... 72,72-648,432 #7f0b0073 app:id/lol_logo}
+                    android.widget.LinearLayout{41807b08 V.E..... ... 32,472-688,1198 #7f0b0074 app:id/login_bottom_layout}
+                      android.support.v7.widget.AppCompatEditText{41792408 VFED..CL F.. 80,60-576,149 #7f0b0075 app:id/username}
+                      android.support.v7.widget.AppCompatEditText{4179c9d0 VFED..CL ... 80,209-576,298 #7f0b0076 app:id/password}
+                      android.support.v7.widget.AppCompatSpinner{41785270 VFED..C. ... 144,328-512,406 #7f0b0077 app:id/serverSpinner}
+                        android.widget.LinearLayout{4179d910 V.E..... ... 0,0-236,78}
+                          android.support.v7.widget.AppCompatTextView{4189c210 V.ED.... ... 0,0-236,78 #7f0b00c3 app:id/server_textview}
+                      android.support.v7.widget.AppCompatCheckBox{41721400 VFED..C. ... 80,446-369,510 #7f0b0078 app:id/checkBox}
+                      android.support.v7.widget.AppCompatButton{417bf930 VFED..C. ... 224,570-432,666 #7f0b0079 app:id/connect}
