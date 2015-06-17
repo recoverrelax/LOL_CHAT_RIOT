@@ -49,7 +49,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
 
                 .doOnNext(friend -> {
                     if (friend.isPlaying())
-                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress(), true);
                     else
                         riotXmppService.getRiotRosterManager().removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
                 })
@@ -100,7 +100,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                     }
 
                     if (friend.isPlaying())
-                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress(), true);
                     else
                         riotXmppService.getRiotRosterManager().removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
                 }
@@ -146,7 +146,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                 .filter(friend -> friend.getName().toLowerCase().contains(searchString.toLowerCase()))
                 .doOnNext(friend -> {
                     if (friend.isPlaying())
-                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress(), false);
                     else
                         riotXmppService.getRiotRosterManager().removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
                 })
@@ -284,7 +284,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                 })
                 .doOnNext(friend -> {
                     if (friend.isPlaying())
-                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
+                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress(), false);
                     else
                         riotXmppService.getRiotRosterManager().removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
                 })

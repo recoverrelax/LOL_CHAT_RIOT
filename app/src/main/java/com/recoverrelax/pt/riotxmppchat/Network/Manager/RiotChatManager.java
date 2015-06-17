@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
 import android.content.Context;
+import android.media.AudioManager;
 
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
@@ -116,9 +117,11 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
 //                ? SoundNotification.NotificationType.OFFLINE
 //                : SoundNotification.NotificationType.ONLINE);
 
-        NewMessageSpeechNotification.getInstance()
-            .sendSpeechNotification(message.getBody(), username);
-
+        final AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0 && audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+            NewMessageSpeechNotification.getInstance()
+                    .sendSpeechNotification(message.getBody(), username);
+        }
 
         /**
          * Deliver the new message to all the observers
