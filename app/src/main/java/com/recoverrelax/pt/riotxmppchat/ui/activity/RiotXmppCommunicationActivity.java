@@ -7,12 +7,9 @@ import android.view.MenuItem;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.FriendStatusGameNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NewMessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.squareup.otto.Subscribe;
-
-import org.jivesoftware.smack.packet.Message;
 
 public abstract class RiotXmppCommunicationActivity extends BaseActivity{
 
@@ -31,20 +28,16 @@ public abstract class RiotXmppCommunicationActivity extends BaseActivity{
     }
 
     public void OnFriendStatusGameNotification(FriendStatusGameNotificationEvent notification){
-       new FriendStatusGameNotification(this, notification.getFriendName(), notification.getFriendXmppAddress(), notification.getState().equals(FriendStatusGameNotificationEvent.State.STARTED))
-       .sendNotification();
+        NotificationCenter.sendLeftGameSnackbarNotificationNoAction(this, notification.getFriendXmppAddress());
     }
 
     @Subscribe
     public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
-        final Message message = messageReceived.getMessage();
-        final String username = messageReceived.getUsername();
+        String message = messageReceived.getMessage().getBody();
+        String username = messageReceived.getUsername();
+        String userXmppAddress = messageReceived.getMessageFrom();
 
-//        runOnUiThread(
-//                () -> new SnackBarNotification(RiotXmppCommunicationActivity.this, username + " says: \n" + message.getBody(), "PM",
-//                        username, messageReceived.getMessageFrom())
-//        );
-        new NewMessageNotification(this, username, messageReceived.getMessageFrom(), message.getBody()).sendNotification();
+        NotificationCenter.sendNewMessageSnackbarNotification(this, message, username, userXmppAddress, "CHAT");
         resetMessageIcon();
     }
 
@@ -64,12 +57,12 @@ public abstract class RiotXmppCommunicationActivity extends BaseActivity{
 //            imageviewMessage = ButterKnife.findById(actionView, R.id.newMessage);
 //            actionView.setOnClickListener(view -> goToMessageListActivity());
 //
-//            AppAndroidUtils.setBlinkAnimation(imageviewMessage, true);
+//            AppContextUtils.setBlinkAnimation(imageviewMessage, true);
             } else {
                 messageItem.setVisible(false);
 //            messageItem.setActionView(null);
 //            if(imageviewMessage != null)
-//                AppAndroidUtils.setBlinkAnimation(imageviewMessage, false);
+//                AppContextUtils.setBlinkAnimation(imageviewMessage, false);
             }
         }
 

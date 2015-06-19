@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 import com.squareup.otto.Subscribe;
@@ -60,7 +60,7 @@ public class PersonalMessageActivity extends RiotXmppCommunicationActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        AppAndroidUtils.overridePendingTransitionBackAppDefault(this);
+        AppContextUtils.overridePendingTransitionBackAppDefault(this);
     }
 
     @Subscribe

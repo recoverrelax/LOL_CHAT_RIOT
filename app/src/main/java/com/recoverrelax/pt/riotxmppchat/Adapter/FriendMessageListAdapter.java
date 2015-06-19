@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -68,10 +68,10 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         Boolean wasRead = holder.friendListChat.getLastMessage().getWasRead();
         if(!wasRead && holder.friendListChat.getLastMessage().getDirection() == MessageDirection.FROM.getId()){
             holder.wasRead.setVisibility(View.VISIBLE);
-            AppAndroidUtils.setBlinkAnimation(holder.wasRead, true);
+            AppContextUtils.setBlinkAnimation(holder.wasRead, true);
         }else{
             holder.wasRead.setVisibility(View.INVISIBLE);
-            AppAndroidUtils.setBlinkAnimation(holder.wasRead, false);
+            AppContextUtils.setBlinkAnimation(holder.wasRead, false);
         }
     }
 
@@ -146,7 +146,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @OnClick(R.id.parent_row)
         public void onRowClick(View view){
-            AppAndroidUtils.startPersonalMessageActivity(context, friendListChat.getFriendName(),
+            AppContextUtils.startPersonalMessageActivity(context, friendListChat.getFriendName(),
                     friendListChat.getUserXmppAddress());
         }
     }

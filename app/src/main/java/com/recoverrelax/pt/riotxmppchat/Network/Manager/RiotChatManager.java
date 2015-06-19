@@ -1,17 +1,12 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
 import android.content.Context;
-import android.media.AudioManager;
 
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NewMessageSpeechNotification;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
 import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -104,35 +99,8 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
 
-        String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRoster().getEntry(userXmppAddress).getName();
-
-//        Log.i("TAG123", "Passed Here-1");
-//        if (applicationClosed) {
-//            Log.i("TAG123", "Passed Here0");
-//
-////            new SystemNotification(context, message.getBody(), username + " says: ");
-//        }
-
-//        new SoundNotification(context, R.raw.teemo_new_message, applicationClosed
-//                ? SoundNotification.NotificationType.OFFLINE
-//                : SoundNotification.NotificationType.ONLINE);
-
-        final AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0 && audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-            NewMessageSpeechNotification.getInstance()
-                    .sendSpeechNotification(message.getBody(), username);
-        }
-
-        /**
-         * Deliver the new message to all the observers
-         *
-         * 1st: {@link FriendListActivity#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
-         * 2nd: {@link PersonalMessageFragment#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
-         * 3rd: {@link FriendMessageListFragment#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
-         */
-
-
-        busInstance.post(new OnNewMessageReceivedEventEvent(message, userXmppAddress, username));
+        new NotificationCenter(context)
+                .sendMessageNotification(message, userXmppAddress);
     }
 
     public void sendMessage(String message, String userXmppName) {

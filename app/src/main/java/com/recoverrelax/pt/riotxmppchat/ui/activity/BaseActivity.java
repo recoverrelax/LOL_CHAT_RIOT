@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +20,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 
@@ -67,7 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResources());
         ButterKnife.inject(this);
-        MainApplication.getInstance().addCreatedActivity();
+        MainApplication.getInstance().addStartedActivity();
 
         if(savedInstanceState != null){
             fromSavedInstanceState = true;
@@ -102,7 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MainApplication.getInstance().addDestroyActivity();
+        MainApplication.getInstance().addStoppedActivity();
     }
 
     private void setupDrawerContent() {
@@ -173,7 +172,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public void onDrawerLogout(View view){
         this.finish();
 
-        if(!DataStorage.getInstance().getAppAlwaysOn())
+        if(!DataStorage.getInstance().getNotificationsAlwaysOn())
             MainApplication.getInstance().getRiotXmppService().stopSelf();
     }
 
@@ -269,7 +268,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                     public void run() {
                         if (finalIntent != null) {
                             startActivity(finalIntent);
-                            AppAndroidUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
+                            AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
                         }
                     }
                 }, NAVDRAWER_LAUNCH_DELAY);
@@ -278,7 +277,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     public void goToMessageActivity(String username, String userXmppName){
-        AppAndroidUtils.startPersonalMessageActivity(this, username, userXmppName);
+        AppContextUtils.startPersonalMessageActivity(this, username, userXmppName);
     }
 
     public void goToMessageListActivity(){
@@ -289,7 +288,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            AppAndroidUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
+            AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
             this.finish();
         }
 

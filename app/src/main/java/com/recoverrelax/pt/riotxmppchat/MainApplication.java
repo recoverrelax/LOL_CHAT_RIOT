@@ -1,19 +1,16 @@
 package com.recoverrelax.pt.riotxmppchat;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NewMessageSpeechNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
@@ -22,14 +19,12 @@ import com.squareup.otto.ThreadEnforcer;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
-import LolChatRiotDb.NotificationDb;
 import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
@@ -48,6 +43,9 @@ public class MainApplication extends Application {
 
     private static MainApplication instance;
     private int startedActivityCounter = 0;
+    private int stoppedActivityCounter = 0;
+    private int resumedActivityCOunter = 0;
+    private int pausedActivityCounter = 0;
 
     @Override
     public void onCreate() {
@@ -55,7 +53,7 @@ public class MainApplication extends Application {
         Fabric.with(this, new Crashlytics());
         instance = this;
         DataStorage.init(this);
-        NewMessageSpeechNotification.init(this);
+        MessageSpeechNotification.init(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/Roboto-Light.ttf")
@@ -67,40 +65,19 @@ public class MainApplication extends Application {
         bus = new Bus(ThreadEnforcer.ANY);
     }
 
-    public void addCreatedActivity(){
-        startedActivityCounter ++;
-        Log.i("111", "Is application closed ?" + isApplicationClosed());
+    public void addStartedActivity() {
+        startedActivityCounter++;
     }
-    public void addDestroyActivity() {
-        startedActivityCounter -- ;
-        Log.i("111", "Is application closed ?" + isApplicationClosed());
+    public void addStoppedActivity() {
+        stoppedActivityCounter++;
     }
 
-     public boolean isApplicationClosed(){
-        return startedActivityCounter == 0;
+    public boolean isApplicationClosed(){
+        return startedActivityCounter == stoppedActivityCounter && startedActivityCounter > 0;
     }
-
-    //        if(isApplicationClosed) {
-//            if(!DataStorage.getInstance().getAppAlwaysOn())
-//                getRiotXmppService().stopService();
-//        }
-//    }
-
 
     public boolean hasNewMessages(){
         return RiotXmppDBRepository.hasUnreadedMessages(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
-    }
-
-    public void initSettings() {
-        String connectedXmppUser = getRiotXmppService().getConnectedXmppUser();
-
-        if(!RiotXmppDBRepository.defaultSettingsNotificationsSetted(connectedXmppUser)){
-            NotificationDb notif = new NotificationDb(null, connectedXmppUser, true, true, true, true);
-            RiotXmppDBRepository.insertNotification(notif);
-            LogUtils.LOGI(TAG, "Setting NotificationDefaults for the first time");
-        }else{
-            LogUtils.LOGI(TAG, "NotificationDefaults already setted");
-        }
     }
 
     private void setupDatabase() {

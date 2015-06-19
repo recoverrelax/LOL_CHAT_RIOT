@@ -11,7 +11,7 @@ import android.support.v7.app.ActionBar;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppAndroidUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
@@ -99,7 +99,7 @@ public class SettingActivity extends RiotXmppCommunicationActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        AppAndroidUtils.overridePendingTransitionBackAppDefault(this);
+        AppContextUtils.overridePendingTransitionBackAppDefault(this);
     }
 
     @Subscribe
