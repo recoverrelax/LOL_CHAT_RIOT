@@ -4,7 +4,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
@@ -27,10 +27,6 @@ public abstract class RiotXmppCommunicationActivity extends BaseActivity{
         MainApplication.getInstance().getBusInstance().unregister(this);
     }
 
-    public void OnFriendStatusGameNotification(FriendStatusGameNotificationEvent notification){
-        NotificationCenter.sendLeftGameSnackbarNotificationNoAction(this, notification.getFriendXmppAddress());
-    }
-
     @Subscribe
     public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
         String message = messageReceived.getMessage().getBody();
@@ -40,6 +36,12 @@ public abstract class RiotXmppCommunicationActivity extends BaseActivity{
         NotificationCenter.sendNewMessageSnackbarNotification(this, message, username, userXmppAddress, "CHAT");
         resetMessageIcon();
     }
+
+    @Subscribe
+    public void onFriendStatusChanged(FriendStatusChangedEvent event){
+        NotificationCenter.sendGameSnackbarNotificationNoAction(this, event.getMessage());
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

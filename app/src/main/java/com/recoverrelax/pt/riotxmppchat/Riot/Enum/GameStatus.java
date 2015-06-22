@@ -40,4 +40,8 @@ public enum GameStatus {
     public boolean isInQueue(){
         return this.equals(GameStatus.IN_QUEUE);
     }
+
+    public boolean isOutOfGame(){
+        return this.equals(GameStatus.OUT_OF_GAME);
+    }
 }

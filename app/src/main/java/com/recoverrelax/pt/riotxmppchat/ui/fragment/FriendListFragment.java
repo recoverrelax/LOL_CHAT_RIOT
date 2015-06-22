@@ -140,7 +140,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     }
 
     @Override
-    public void onAdapterFriendOptionsClick(View view) {
+    public void onAdapterFriendOptionsClick(View view, String friendXmppAddress) {
         final PopupMenu popupMenu = new PopupMenu(getActivity(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_friend_options, popupMenu.getMenu());
 
@@ -150,7 +150,8 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
             switch(menuItem.getItemId()){
                 case R.id.notifications:
                     FragmentManager manager = getActivity().getFragmentManager();
-                    NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance();
+                    String connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+                    NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance(friendXmppAddress, connectedXmppUser);
                     myDialog.show(manager, "baseDialog");
                     break;
                 case R.id.other_1:
@@ -181,7 +182,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     @Subscribe
     public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
         getActivity().runOnUiThread(
-                () -> riotXmppRosterHelper.getPresenceChanged(friendPresence.getPresence())
+                () -> riotXmppRosterHelper.getPresenceChanged(friendPresence.getPresence(), SHOW_OFFLINE_USERS)
         );
     }
 

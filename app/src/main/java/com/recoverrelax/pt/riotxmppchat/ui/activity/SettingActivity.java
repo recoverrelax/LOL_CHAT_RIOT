@@ -9,7 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -110,10 +109,5 @@ public class SettingActivity extends RiotXmppCommunicationActivity {
     @Override
     public boolean hasNewMessageIcon() {
         return true;
-    }
-
-    @Subscribe
-    public void OnFriendStatusGameNotification(FriendStatusGameNotificationEvent notif){
-        super.OnFriendStatusGameNotification(notif);
     }
 }

@@ -87,7 +87,6 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             tts.setLanguage(Locale.US);
-            tts.setSpeechRate(0.8f);
             tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                 @Override public void onStart(String s) { }
                 @Override public void onDone(String s) { }
@@ -103,28 +102,32 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     }
 
     public void speak(String from, String message) {
-        long dateDifference = (System.nanoTime() - lastMessageDateMillis)/1000000000;
+        tts.setSpeechRate(0.8f);
+        if (from == null)
+            speak(message);
+        else {
 
-        Log.i("1112", String.valueOf(dateDifference));
+            long dateDifference = (System.nanoTime() - lastMessageDateMillis) / 1000000000;
+
             HashMap<String, String> map = new HashMap<>();
             map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "messageID");
 
-            if(dateDifference > 10 || !lastMessageFrom.equals(from)) {
+            if (dateDifference > 10 || !lastMessageFrom.equals(from)) {
                 tts.speak(MESSAGE_START + from, TextToSpeech.QUEUE_ADD, null);
                 tts.playSilence(DELAY_FROM_MESSAGE, TextToSpeech.QUEUE_ADD, null);
                 tts.speak(message, TextToSpeech.QUEUE_ADD, map);
-            }else{
+            } else {
                 tts.playSilence(DELAY_FROM_MESSAGE, TextToSpeech.QUEUE_ADD, null);
                 tts.speak(message, TextToSpeech.QUEUE_ADD, map);
             }
-        lastMessageFrom = from;
-        lastMessageDateMillis = System.nanoTime();
+            lastMessageFrom = from;
+            lastMessageDateMillis = System.nanoTime();
+        }
     }
 
     public void speak(String message) {
-        long dateDifference = (System.nanoTime() - lastMessageDateMillis)/1000000000;
+        tts.setSpeechRate(1.0f);
 
-        Log.i("1112", String.valueOf(dateDifference));
         HashMap<String, String> map = new HashMap<>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "messageID");
 

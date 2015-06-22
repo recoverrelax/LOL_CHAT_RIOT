@@ -43,7 +43,8 @@
                 android:layout_marginRight="15dp"
                 app:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
-                android:textOff="NO" />
+                android:textOff="NO"
+                android:id="@+id/isOnline" />
 
             <TextView
                 style="@style/settings_notif_child"
@@ -66,7 +67,8 @@
                 app:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:id="@+id/isOffline" />
 
             <TextView
                 style="@style/settings_notif_child"
@@ -89,7 +91,8 @@
                 app:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:id="@+id/hasStartedGame" />
 
             <TextView
                 style="@style/settings_notif_child"
@@ -112,7 +115,8 @@
                 app:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:id="@+id/hasLeftGame" />
 
             <TextView
                 style="@style/settings_notif_child"
@@ -135,7 +139,8 @@
                 app:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
-                android:layout_marginRight="15dp" />
+                android:layout_marginRight="15dp"
+                android:id="@+id/hasSentPm" />
 
             <TextView
                 style="@style/settings_notif_child"

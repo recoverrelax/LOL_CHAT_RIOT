@@ -49,12 +49,9 @@ public abstract class NotificationCenterHelper {
                 }).show();
     }
 
-    public static void sendLeftGameSnackbarNotificationNoAction(Activity activity, String userXmppAddress) {
-        String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRoster().getEntry(userXmppAddress).getName();
-        String finalMessage = username + ":\n" + "has left a game";
-
+    public static void sendGameSnackbarNotificationNoAction(Activity activity, String message) {
         Snackbar
-                .make(activity.getWindow().getDecorView().getRootView(), finalMessage, Snackbar.LENGTH_LONG)
+                .make(activity.getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG)
                 .show();
     }
 

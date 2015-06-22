@@ -6,9 +6,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Subscribe;
@@ -32,11 +30,6 @@ public class FriendListActivity extends RiotXmppCommunicationActivity {
     @Override
     public int getNavigationViewPosition() {
         return R.id.navigation_item_1;
-    }
-
-    @Subscribe
-    public void OnFriendStatusGameNotification(FriendStatusGameNotificationEvent notif){
-        super.OnFriendStatusGameNotification(notif);
     }
 
     @Subscribe

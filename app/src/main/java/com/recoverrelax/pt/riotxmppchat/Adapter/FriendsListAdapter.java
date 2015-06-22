@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
@@ -226,12 +227,18 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if (oldFriend.isOnline()) {
                     // ONLINE - OFFLINE
                     friendsList.remove(positionFriend);
-                    friendsList.add(newFriend);
+                    if(DataStorage.getInstance().showOfflineUsers())
+                        friendsList.add(newFriend);
                     notifyItemRemoved(positionFriend);
                 } else {
                     // OFFLINE - OFFLINE
                     // do nothing!
                 }
+            }
+        }else{
+            if(newFriend.isOnline()) {
+                friendsList.add(0, newFriend);
+                notifyItemInserted(0);
             }
         }
     }
@@ -297,7 +304,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @OnClick(R.id.card_more_layout)
         public void onCardOptionsClick(View view) {
             if (onAdapterChildClickCallback != null)
-                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view);
+                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress());
         }
 
         @Override
@@ -352,7 +359,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @OnClick(R.id.card_more_layout)
         public void onCardOptionsClick(View view) {
             if (onAdapterChildClickCallback != null)
-                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view);
+                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress());
         }
     }
 
@@ -360,7 +367,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface OnAdapterChildClick {
         void onAdapterFriendClick(String friendUsername, String friendXmppAddress);
-        void onAdapterFriendOptionsClick(View view);
+        void onAdapterFriendOptionsClick(View view, String friendXmppAddress);
     }
 
     public enum SortMethod {

@@ -22,11 +22,11 @@ public class DataStorage {
      * NOTIFICATION SHARED PREFS
      */
     private static final String PREF_KEY_NOTIFICATION_ALWAYS_ON = "alwaysOn";
-    private static final String PREF_KEY_NOTIFICATION_FOREG_TEXT = "alwaysOn";
-    private static final String PREF_KEY_NOTIFICATION_FOREG_SPEECH = "alwaysOn";
+    private static final String PREF_KEY_NOTIFICATION_GLOBAL_FOREG_TEXT = "foreg_text";
+    private static final String PREF_KEY_NOTIFICATION_GLOBAL_FOREG_SPEECH = "foreg_speech";
 
-    private static final String PREF_KEY_NOTIFICATION_BACKG_TEXT = "alwaysOn";
-    private static final String PREF_KEY_NOTIFICATION_BACKG_SPEECH = "alwaysOn";
+    private static final String PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT = "backg_text";
+    private static final String PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH = "backg_speech";
 
 
 
@@ -60,7 +60,7 @@ public class DataStorage {
     }
 
     public synchronized boolean isFirstRun(){
-        return mSettings.getBoolean(PREF_KEY_FIRST_RUN,true);
+        return mSettings.getBoolean(PREF_KEY_FIRST_RUN, true);
     }
 
     public synchronized boolean userLearnedDrawer(){
@@ -124,7 +124,7 @@ public class DataStorage {
 
     public synchronized boolean setRunned(){
         SharedPreferences.Editor editor = mSettings.edit();
-        editor.putBoolean(PREF_KEY_FIRST_RUN,false);
+        editor.putBoolean(PREF_KEY_FIRST_RUN, false);
         return editor.commit();
     }
 
@@ -142,4 +142,50 @@ public class DataStorage {
         editor.putBoolean(PREF_KEY_NOTIFICATION_ALWAYS_ON, state);
         return editor.commit();
     }
+
+    public synchronized boolean getGlobalNotifForegroundText(){
+        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_TEXT, false);
+    }
+
+    public synchronized boolean setGlobalNotifForegroundText(boolean state){
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_TEXT, state);
+        return editor.commit();
+    }
+
+    public synchronized boolean getGlobalNotifForegroundSpeech(){
+        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_SPEECH, false);
+    }
+
+    public synchronized boolean setGlobalNotifForegroundSpeech(boolean state){
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_SPEECH, state);
+        return editor.commit();
+    }
+
+    /**
+     *
+     */
+
+    public synchronized boolean getGlobalNotifBackgroundText(){
+        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT, false);
+    }
+
+    public synchronized boolean setGlobalNotifBackgroundText(boolean state){
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT, state);
+        return editor.commit();
+    }
+
+    public synchronized boolean getGlobalNotifBackgroundSpeech(){
+        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH, false);
+    }
+
+    public synchronized boolean setGlobalNotifBackgroundSpeech(boolean state){
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH, state);
+        return editor.commit();
+    }
+
+
 }

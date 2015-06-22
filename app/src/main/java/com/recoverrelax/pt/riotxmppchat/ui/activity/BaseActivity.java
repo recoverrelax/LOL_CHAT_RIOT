@@ -291,6 +291,5 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
             this.finish();
         }
-
     }
 }

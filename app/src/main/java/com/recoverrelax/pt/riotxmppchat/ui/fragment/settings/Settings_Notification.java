@@ -64,46 +64,36 @@ public class Settings_Notification extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        if(connectedXmppUser!= null) {
-//            notification = RiotXmppDBRepository.getNotification(connectedXmppUser);
-//
-//            notificationAlwaysOn.setChecked(dataStorage.getNotificationsAlwaysOn());
-//            background_text.setChecked(notification.getTextNotificationOffline());
-//            background_sound.setChecked(notification.getSoundNotificationOffline());
-//            visible_text.setChecked(notification.getTextNotificationOnline());
-//            visible_sound.setChecked(notification.getSoundNotificationOnline());
-//        }
+        if(connectedXmppUser!= null) {
+            notificationAlwaysOn.setChecked(dataStorage.getNotificationsAlwaysOn());
+            background_text.setChecked(dataStorage.getGlobalNotifBackgroundText());
+            background_sound.setChecked(dataStorage.getGlobalNotifBackgroundSpeech());
+            visible_text.setChecked(dataStorage.getGlobalNotifForegroundText());
+            visible_sound.setChecked(dataStorage.getGlobalNotifForegroundSpeech());
+        }
     }
 
     @OnClick({R.id.visible_text, R.id.visible_sound, R.id.background_sound, R.id.background_text, R.id.notificationAlwaysOn})
     public void onItemClick(SwitchCompat switchButton){
         int id = switchButton.getId();
 
-//        if(notification != null) {
-//
-//            switch (id) {
-//                case R.id.background_text:
-////                    background_text.setChecked(switchButton.isChecked());
-//                    notification.setTextNotificationOffline(switchButton.isChecked());
-//                    break;
-//                case R.id.background_sound:
-////                    background_sound.setChecked(switchButton.isChecked());
-//                    notification.setSoundNotificationOffline(switchButton.isChecked());
-//                    break;
-//                case R.id.visible_sound:
-////                    visible_sound.setChecked(switchButton.isChecked());
-//                    notification.setSoundNotificationOnline(switchButton.isChecked());
-//                    break;
-//                case R.id.visible_text:
-////                    visible_text.setChecked(switchButton.isChecked());
-//                    notification.setTextNotificationOnline(switchButton.isChecked());
-//                    break;
-//
-//                case R.id.notificationAlwaysOn:
-//                    dataStorage.setNotificationsAlwaysOn(notificationAlwaysOn.isChecked());
-//                    break;
-//            }
-//            RiotXmppDBRepository.updateNotification(notification);
-//        }
+            switch (id) {
+                case R.id.background_text:
+                    dataStorage.setGlobalNotifBackgroundText(background_text.isChecked());
+                    break;
+                case R.id.background_sound:
+                    dataStorage.setGlobalNotifBackgroundSpeech(background_sound.isChecked());
+                    break;
+                case R.id.visible_sound:
+                    dataStorage.setGlobalNotifForegroundText(visible_sound.isChecked());
+                    break;
+                case R.id.visible_text:
+                    dataStorage.setGlobalNotifForegroundSpeech(visible_text.isChecked());
+                    break;
+
+                case R.id.notificationAlwaysOn:
+                    dataStorage.setNotificationsAlwaysOn(notificationAlwaysOn.isChecked());
+                    break;
+            }
     }
 }

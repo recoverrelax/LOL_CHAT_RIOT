@@ -3,10 +3,9 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.content.Context;
 import android.util.Log;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusGameNotificationEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.RiotXmppCommunicationActivity;
@@ -18,9 +17,11 @@ import org.jivesoftware.smack.packet.Message;
 public class NotificationCenter extends NotificationCenterHelper{
 
     private Context context;
+    private String connectedUserName;
 
     public NotificationCenter(Context context){
         this.context = context;
+        this.connectedUserName = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
     }
 
     public void sendMessageNotification(Message message, String userXmppAddress){
@@ -50,24 +51,20 @@ public class NotificationCenter extends NotificationCenterHelper{
         MessageSpeechNotification.getInstance().sendMessageSpeechNotification(message.getBody(), username);
     }
 
-    public void sendLeftGameNotification(String userXmppAddress){
-        String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRoster().getEntry(userXmppAddress).getName();
+    public void sendStatusGameNotification(String username, String message, String speechMessage){
 
         switch (getNotificationType()){
             case SYSTEM_NOTIFICATION:
-                String title = "Has Left the Game";
-                sendStatusSystemNotification(username, title);
+                sendGameSnackbarNotificationNoAction(getActivity(), message);
                 break;
 
             case SNACKBAR_NOTIFICATION:
                 /**
-                 * 1st: {@link RiotXmppCommunicationActivity#OnFriendStatusGameNotification(FriendStatusGameNotificationEvent)}
+                 * 1st: {@link RiotXmppCommunicationActivity#onFriendStatusChanged(FriendStatusChangedEvent)}
                  */
-                Log.i("123", "Entered Notification Stopped Playing");
-                MainApplication.getInstance().getBusInstance().post(new FriendStatusGameNotificationEvent(username, userXmppAddress));
+                MainApplication.getInstance().getBusInstance().post(new FriendStatusChangedEvent(username, message));
                 break;
         }
-        String speechMessage = username + " has left a game";
         MessageSpeechNotification.getInstance().sendStatusSpeechNotification(speechMessage);
     }
 

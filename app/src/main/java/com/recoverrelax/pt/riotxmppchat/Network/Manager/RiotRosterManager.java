@@ -24,23 +24,24 @@ public class RiotRosterManager implements RosterListener{
 
     private AbstractXMPPConnection connection;
     private Roster roster;
-    private Set<String> friendsPlaying;
     private Context context;
+    private FriendStatusTracker friendStatusTracker;
 
     private Bus busInstance;
 
     public RiotRosterManager(Context context, AbstractXMPPConnection connection) {
         this.context = context;
         this.connection = connection;
-        this.friendsPlaying = new HashSet<>();
-
         this.busInstance = MainApplication.getInstance().getBusInstance();
+
+
     }
 
     public void addRosterListener() {
         if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
             this.roster = Roster.getInstanceFor(connection);
             this.roster.addRosterListener(this);
+            this.friendStatusTracker = new FriendStatusTracker(context);
         }
     }
 
@@ -48,6 +49,10 @@ public class RiotRosterManager implements RosterListener{
         if (roster != null && rosterListener != null) {
             roster.removeRosterListener(rosterListener);
         }
+    }
+
+    public FriendStatusTracker getFriendStatusTracker() {
+        return friendStatusTracker;
     }
 
     @Override public void entriesAdded(Collection<String> addresses) { }
@@ -78,15 +83,15 @@ public class RiotRosterManager implements RosterListener{
 
     @Override
     public void presenceChanged(Presence presence) {
+
+        String xmppAddress = AppXmppUtils.parseXmppAddress(presence.getFrom());
+        String username = getRosterEntry(xmppAddress).getName();
+
+        if(friendStatusTracker != null){
+            getFriendStatusTracker().checkForFriendNotificationToSend(username, xmppAddress, presence);
+        }
         /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)} */
         busInstance.post(new OnFriendPresenceChangedEvent(presence));
-
-//        Friend friend = getFriendFromPresence(presence);
-//
-//        if (friend.isPlaying())
-//            addFriendPlaying(friend.getName(), friend.getUserXmppAddress(), false);
-//        else
-//            removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
     }
 
     public Friend getFriendFromPresence(Presence presence){
@@ -95,17 +100,5 @@ public class RiotRosterManager implements RosterListener{
         String user = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
 
         return new Friend(rosterEntry.getName(), user, bestPresence);
-    }
-
-    public void addFriendPlaying(String friendName) {
-        friendsPlaying.add(friendName);
-    }
-
-    public void removeFriendPlaying(String friendName, String userXmppAddress) {
-        boolean removed = friendsPlaying.remove(friendName);
-        if (removed) {
-            new NotificationCenter(context)
-                    .sendLeftGameNotification(userXmppAddress);
-        }
     }
 }
