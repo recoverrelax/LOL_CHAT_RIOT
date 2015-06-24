@@ -1,7 +1,10 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,22 +16,31 @@ import android.widget.TextView;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppDateUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
 
     List<FriendListChat> friendMessageList;
     private LayoutInflater inflater;
     private Context context;
+    private Random ramdom;
+    private OnRowClick clickCallback;
 
     private @LayoutRes int layoutRes;
 
@@ -38,6 +50,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         this.context = context;
         this.layoutRes = layoutRes;
         this.friendMessageList = friendMessageList;
+        ramdom = new Random();
     }
 
     @Override
@@ -91,6 +104,10 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         }
     }
 
+    public void setRowClickListener(OnRowClick clickCallback){
+        this.clickCallback = clickCallback;
+    }
+
     public boolean contains(String userXmppAddress){
         for(FriendListChat flc: friendMessageList){
             if(flc.getFriend().getUserXmppAddress().equals(userXmppAddress))
@@ -120,7 +137,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         return friendMessageList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @InjectView(R.id.name)
         TextView name;
@@ -137,17 +154,30 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         FriendListChat friendListChat;
         View itemView;
 
+        int cardColor;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             ButterKnife.inject(this, itemView);
+
+            if(itemView instanceof CardView) {
+                int materialColor = AppMiscUtils.getRamdomMaterialColor(ramdom);
+                cardColor = materialColor;
+                ((CardView) itemView).setCardBackgroundColor(context.getResources().getColor(materialColor));
+            }
+            itemView.setOnClickListener(this);
         }
 
-        @OnClick(R.id.parent_row)
-        public void onRowClick(View view){
-            AppContextUtils.startPersonalMessageActivity(context, friendListChat.getFriendName(),
-                    friendListChat.getUserXmppAddress());
+        @Override
+        public void onClick(View view) {
+            if(clickCallback != null)
+                clickCallback.onRowClick(view, friendListChat.getFriendName(), friendListChat.getUserXmppAddress(), context.getResources().getColor(cardColor));
         }
+    }
+
+    public interface OnRowClick{
+        void onRowClick(View view, String friendName, String friendXmppAddress, int cardColor);
     }
 }

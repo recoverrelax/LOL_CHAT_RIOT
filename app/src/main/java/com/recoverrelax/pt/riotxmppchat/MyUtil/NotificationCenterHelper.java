@@ -4,72 +4,67 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 import static junit.framework.Assert.assertTrue;
 
 public abstract class NotificationCenterHelper {
 
-    private static final int NEW_MESSAGE_NOTIFICATION_ID = 544565;
+    private final Context applicationContext = MainApplication.getInstance().getApplicationContext();
 
-    protected void sendNewMessageSystemNotification(String title, String message){
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(getNewMessageSystemNotificationIcon())
+    protected void hSendSystemNotification(@NonNull String title, @NonNull String message, @DrawableRes int systemNotifId, int notificationId,
+                                           boolean hasPermissions){
+
+        if(!hasPermissions) {
+            return;
+        }
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(applicationContext)
+                .setSmallIcon(systemNotifId)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NEW_MESSAGE_NOTIFICATION_ID, mBuilder.build());
+        NotificationManager mNotificationManager = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(notificationId, mBuilder.build());
     }
 
-    protected void sendStatusSystemNotification(String title, String message){
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
-                .setSmallIcon(getNewMessageSystemNotificationIcon())
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+    protected void hSendSnackbarNotification(@Nullable Activity activity, @Nullable String userXmppName, @NonNull String message,
+                                                @Nullable String buttonLabel, boolean combinedPermission) {
 
-        NotificationManager mNotificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NEW_MESSAGE_NOTIFICATION_ID, mBuilder.build());
-    }
+        if(!combinedPermission || activity == null)
+            return;
 
-    public static void sendNewMessageSnackbarNotification(Activity activity, String message, String username, String userXmppName, String buttonLabel) {
-        String finalMessage = username + " said: " + message;
+            Snackbar snackbar = Snackbar
+                    .make(activity.getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG);
 
-        Snackbar
-                .make(activity.getWindow().getDecorView().getRootView(), finalMessage, Snackbar.LENGTH_LONG)
-                .setAction(buttonLabel, view -> {
+            if (userXmppName != null && buttonLabel != null) {
+                snackbar.setAction(buttonLabel, view -> {
+                    String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(userXmppName).getName();
                     if (activity instanceof BaseActivity)
                         ((BaseActivity) activity).goToMessageActivity(username, userXmppName);
-                }).show();
+                });
+            }
+            snackbar.show();
     }
 
-    public static void sendGameSnackbarNotificationNoAction(Activity activity, String message) {
-        Snackbar
-                .make(activity.getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG)
-                .show();
+    protected void hSendMessageSpeechNotification(String user, String message, boolean combinedPermission){
+
+        if(!combinedPermission)
+            return;
+        MessageSpeechNotification.getInstance().sendMessageSpeechNotification(message, user);
     }
 
-    public static void sendNewMessageSnackbarNotificationNoAction(Activity activity, String message, String username) {
-        String finalMessage = username + " said: " + message;
+    protected void hSendStatusSpeechNotification(String message, boolean combinedPermission){
 
-        Snackbar
-                .make(activity.getWindow().getDecorView().getRootView(), finalMessage, Snackbar.LENGTH_LONG)
-                .show();
+        if(!combinedPermission)
+            return;
+        MessageSpeechNotification.getInstance().sendStatusSpeechNotification(message);
     }
-
-    public abstract Context getContext();
-
-    public Activity getActivity(){
-        assertTrue("In order to send a SnackBar notification, you need to pass in Activity context", getContext() instanceof Activity);
-        return (Activity) getContext();
-    }
-
-    public abstract @DrawableRes int getNewMessageSystemNotificationIcon();
-    public abstract @DrawableRes int getStatusSystemNotificationIcon();
 }

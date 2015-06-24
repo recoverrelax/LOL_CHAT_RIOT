@@ -23,6 +23,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
@@ -31,6 +32,8 @@ import com.squareup.otto.Subscribe;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class LoginActivity extends BaseActivity {
 
@@ -78,8 +81,6 @@ public class LoginActivity extends BaseActivity {
         logo.setScaleY(0.7f);
         logo.setScaleX(0.7f);
 
-
-
         ObjectAnimator titleSlideUp = ObjectAnimator.ofFloat(logo, "translationY", 1000, -100, 0)
                                         .setDuration(3000);
 
@@ -110,14 +111,7 @@ public class LoginActivity extends BaseActivity {
         titleSlideUp.start();
         fadingBackground.start();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                animatorSetSecondPart.start();
-            }
-        },2000);
-
-        MainApplication.getInstance().setConnectedXmppUser(null);
+        new Handler().postDelayed(animatorSetSecondPart::start,2000);
 
         checkBox.setChecked(mDataStorage.getSaveLoginCredentials());
 

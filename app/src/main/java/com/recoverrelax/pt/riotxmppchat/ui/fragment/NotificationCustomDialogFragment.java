@@ -19,10 +19,14 @@ import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.R;
 
+import org.jivesoftware.smack.roster.RosterEntry;
+
 import LolChatRiotDb.NotificationDb;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class NotificationCustomDialogFragment extends DialogFragment {
 
@@ -44,8 +48,8 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     @InjectView(R.id.hasSentPm)
     SwitchCompat hasSentPm;
 
-    public static String USER_XMPP_ADDRESS;
-    public static String FRIEND_XMPP_ADDRESS;
+    public static String USER_XMPP_ADDRESS = "user_xmpp_address";
+    public static String FRIEND_XMPP_ADDRESS = "friend_xmpp_address";
 
     private String connectedUserName;
     private String friendXmppUser;
@@ -130,8 +134,9 @@ public class NotificationCustomDialogFragment extends DialogFragment {
 
             notification = RiotXmppDBRepository.getNotificationByUser(connectedUserName, friendXmppUser);
 
-            String connUserName2 = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(connectedUserName).getName();
-            title.setText("Notify me when " + connUserName2 + " is...");
+            RosterEntry connUserName2 = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppUser);
+            if(connUserName2 != null)
+                title.setText("Notify me when " + connUserName2.getName() + ":");
 
             isOffline.setChecked(notification.getIsOffline());
             isOnline.setChecked(notification.getIsOnline());

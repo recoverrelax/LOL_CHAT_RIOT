@@ -11,6 +11,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +35,8 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 
 public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -309,6 +312,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Override
         public void onClick(View view) {
+            LOGI("123", "12312121: " + current.getUserXmppAddress());
             if (onAdapterChildClickCallback != null) {
                 onAdapterChildClickCallback.onAdapterFriendClick(current.getName(), current.getUserXmppAddress());
             }
@@ -358,6 +362,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @OnClick(R.id.card_more_layout)
         public void onCardOptionsClick(View view) {
+            LOGI("123", "12312121: " + current.getUserXmppAddress());
             if (onAdapterChildClickCallback != null)
                 onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress());
         }

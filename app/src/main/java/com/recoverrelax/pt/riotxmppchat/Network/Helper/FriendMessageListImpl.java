@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
@@ -81,8 +82,9 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
                 .flatMap(rosterManager -> {
                     RosterEntry entry = rosterManager.getRosterEntry(userToReturn);
                     Presence presence = rosterManager.getRosterPresence(entry.getUser());
+                    String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
 
-                    Friend friend = new Friend(entry.getName(), entry.getUser(), presence);
+                    Friend friend = new Friend(entry.getName(), userXmppAddress, presence);
                     return Observable.just(friend);
                 })
                 .flatMap(friend -> Observable.just(
@@ -165,7 +167,9 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
         Observable.from(riotXmppService.getRiotRosterManager().getRosterEntries())
                 .flatMap(rosterEntry -> {
                     Presence rosterPresence = riotXmppService.getRiotRosterManager().getRosterPresence(rosterEntry.getUser());
-                    return Observable.just(new Friend(rosterEntry.getName(), rosterEntry.getUser(), rosterPresence));
+                    String userXmppAddress = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
+
+                    return Observable.just(new Friend(rosterEntry.getName(), userXmppAddress, rosterPresence));
                 })
                 .flatMap(friend -> {
                     MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());

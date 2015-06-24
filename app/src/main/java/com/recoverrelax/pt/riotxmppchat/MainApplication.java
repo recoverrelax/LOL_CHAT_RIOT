@@ -13,6 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent
 import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
@@ -35,6 +36,8 @@ public class MainApplication extends Application {
     private DaoSession daoSession;
     private Bus bus;
 
+    private BaseActivity baseActivity;
+
     /**
      * This value is stored as a buffer because its accessed many times.
      * When the app start, this value is reseted (set to null)
@@ -44,8 +47,6 @@ public class MainApplication extends Application {
     private static MainApplication instance;
     private int startedActivityCounter = 0;
     private int stoppedActivityCounter = 0;
-    private int resumedActivityCOunter = 0;
-    private int pausedActivityCounter = 0;
 
     @Override
     public void onCreate() {
@@ -74,6 +75,14 @@ public class MainApplication extends Application {
 
     public boolean isApplicationClosed(){
         return startedActivityCounter == stoppedActivityCounter && startedActivityCounter > 0;
+    }
+
+    public BaseActivity getCurrentOpenedActivity(){
+        return this.baseActivity;
+    }
+
+    public BaseActivity setBaseActivity(BaseActivity act){
+        return this.baseActivity = act;
     }
 
     public boolean hasNewMessages(){

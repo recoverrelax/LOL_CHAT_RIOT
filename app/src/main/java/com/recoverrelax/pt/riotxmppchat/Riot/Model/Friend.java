@@ -219,7 +219,7 @@ public class Friend implements Comparable<Friend>{
         boolean noTimeStamp = timeStamp.equals(NO_DATA);
         String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
 
-        String message = "";
+        String message;
 
         if(noTimeStamp)
             message = MainApplication.getInstance().getResources().getString(R.string.in_champion_select);

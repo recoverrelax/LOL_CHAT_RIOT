@@ -120,7 +120,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public enum ScrollTo{
         LAST_ITEM,
-        FIRST_ITEM;
+        FIRST_ITEM
     }
 
     @Override

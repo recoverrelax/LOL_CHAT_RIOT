@@ -263,13 +263,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 }
 
                 final Intent finalIntent = intent;
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (finalIntent != null) {
-                            startActivity(finalIntent);
-                            AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
-                        }
+                mHandler.postDelayed(() -> {
+                    if (finalIntent != null) {
+                        startActivity(finalIntent);
+                        AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
                     }
                 }, NAVDRAWER_LAUNCH_DELAY);
                 drawer_layout.closeDrawer(Gravity.LEFT);
@@ -291,5 +288,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
             this.finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.getInstance().setBaseActivity(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MainApplication.getInstance().setBaseActivity(null);
     }
 }

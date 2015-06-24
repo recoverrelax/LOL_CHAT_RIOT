@@ -102,13 +102,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     * Showing splash screen with a timer. This will be useful when
     * you want to show case your app logo / company
     */
-    private Runnable splashRunnable = new Runnable() {
-        // This method will be executed once the timer is over
-        // Start your app main activity
-        public void run() {
-            showAfterSplashIntent();
-        }
-    };
+    private Runnable splashRunnable = () -> showAfterSplashIntent();
 
     private void showAfterSplashIntent() {
         finish();

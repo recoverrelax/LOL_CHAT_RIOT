@@ -27,7 +27,7 @@ import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectListenerEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectSuccessListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
@@ -43,6 +43,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 import static com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl.RiotXmppRosterImplCallbacks;
 
 /**
@@ -64,6 +65,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     private RecyclerView.LayoutManager layoutManager;
     private DataStorage mDataStorage;
     private boolean SHOW_OFFLINE_USERS;
+    private SearchView searchView;
 
     /**
      * Adapter
@@ -151,6 +153,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                 case R.id.notifications:
                     FragmentManager manager = getActivity().getFragmentManager();
                     String connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+
                     NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance(friendXmppAddress, connectedXmppUser);
                     myDialog.show(manager, "baseDialog");
                     break;
@@ -175,7 +178,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     }
 
     @Subscribe
-    public void onReconnect(OnReconnectListenerEvent event){
+    public void onReconnect(OnReconnectSuccessListenerEvent event){
         getFullFriendList(SHOW_OFFLINE_USERS);
     }
 
@@ -217,7 +220,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
          * Setup the SearchView
          */
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = null;
+        searchView = null;
         final boolean[] modifiedOriginal = {false};
 
         if (search != null) {
@@ -339,5 +342,6 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     }
 
     @Override public void onSingleFriendFailedReception() { }
+
 
 }

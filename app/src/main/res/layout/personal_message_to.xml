@@ -27,7 +27,7 @@
         android:layout_gravity="left"
         android:layout_marginRight="50dp"
         android:layout_marginLeft="10dp"
-        card_view:cardBackgroundColor="@color/white190T"
+        card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="9dp"
         card_view:cardElevation="10dp">
 

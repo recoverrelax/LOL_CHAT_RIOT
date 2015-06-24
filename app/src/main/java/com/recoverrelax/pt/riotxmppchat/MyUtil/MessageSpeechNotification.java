@@ -4,7 +4,6 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 
@@ -61,7 +60,6 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     }
 
     public void sendMessageSpeechNotification(String message, String from){
-        if(!AppMiscUtils.isAppSilenced(context)) {
             if (isReady) {
                 speak(from, message);
             } else {
@@ -69,18 +67,15 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
                 this.message = message;
                 this.from = from;
             }
-        }
     }
 
     public void sendStatusSpeechNotification(String message) {
-        if (!AppMiscUtils.isAppSilenced(context)) {
             if (isReady) {
                 speak(message);
             } else {
                 getReady();
                 this.message = message;
             }
-        }
     }
 
     @Override

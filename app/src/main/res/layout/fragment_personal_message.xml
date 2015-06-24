@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment">
+    tools:context=".ui.activity.PersonalMessageActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_above="@+id/message_layout"
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/loginBackground"
+        android:background="@color/black"
         android:orientation="vertical">
 
         <EditText
@@ -34,7 +34,8 @@
             android:layout_marginRight="100dp"
             android:clickable="true"
             android:focusable="true"
-            tools:text="Olá tudo bem?" />
+            tools:text="Olá tudo bem?"
+            tools:ignore="TextFields" />
 
 
 

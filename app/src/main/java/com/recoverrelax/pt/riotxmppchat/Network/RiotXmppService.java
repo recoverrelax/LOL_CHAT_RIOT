@@ -10,6 +10,8 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnConnectionLostListenerEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectSuccessListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -24,6 +26,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
+import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -258,6 +261,16 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
 
         connection = null;
         super.onDestroy();
+    }
+
+    @Subscribe
+    public void onReconnect(OnReconnectSuccessListenerEvent event){
+        getRiotRosterManager().getFriendStatusTracker().setEnabled(true);
+    }
+
+    @Subscribe
+    public void onConnectionLost(OnConnectionLostListenerEvent event){
+        getRiotRosterManager().getFriendStatusTracker().setEnabled(false);
     }
 
     public RiotRosterManager getRiotRosterManager() {

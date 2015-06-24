@@ -66,6 +66,7 @@ public class Settings_Notification extends Fragment {
 
         if(connectedXmppUser!= null) {
             notificationAlwaysOn.setChecked(dataStorage.getNotificationsAlwaysOn());
+
             background_text.setChecked(dataStorage.getGlobalNotifBackgroundText());
             background_sound.setChecked(dataStorage.getGlobalNotifBackgroundSpeech());
             visible_text.setChecked(dataStorage.getGlobalNotifForegroundText());
@@ -84,11 +85,11 @@ public class Settings_Notification extends Fragment {
                 case R.id.background_sound:
                     dataStorage.setGlobalNotifBackgroundSpeech(background_sound.isChecked());
                     break;
-                case R.id.visible_sound:
-                    dataStorage.setGlobalNotifForegroundText(visible_sound.isChecked());
-                    break;
                 case R.id.visible_text:
-                    dataStorage.setGlobalNotifForegroundSpeech(visible_text.isChecked());
+                    dataStorage.setGlobalNotifForegroundText(visible_text.isChecked());
+                    break;
+                case R.id.visible_sound:
+                    dataStorage.setGlobalNotifForegroundSpeech(visible_sound.isChecked());
                     break;
 
                 case R.id.notificationAlwaysOn:

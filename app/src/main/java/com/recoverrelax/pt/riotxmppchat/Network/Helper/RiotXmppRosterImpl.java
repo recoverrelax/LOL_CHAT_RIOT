@@ -23,6 +23,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+
 public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
 
     private RiotXmppRosterImplCallbacks callback;
@@ -49,12 +51,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
 
                 .filter(friend -> getOffline || friend.isOnline())
 
-                .doOnNext(friend -> {
-                    if (friend.isPlaying())
-                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend);
-                    else
-                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend);
-                })
+                .doOnNext(friend -> riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend))
                 .toList()
                 .flatMap(friendList -> {
                     Collections.sort(friendList, new Friend.OnlineOfflineComparator());
@@ -73,68 +70,10 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
 
                     @Override
                     public void onNext(List<Friend> friendList) {
+                        LOGI("1111", friendList.size() + "");
                         if (callback != null) {
                             riotXmppService.getRiotRosterManager().getFriendStatusTracker().setEnabled(true);
                             callback.onFullFriendsListReceived(friendList);
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public void getFullFriendsList2(final boolean getOffline) {
-        Observable.create(new Observable.OnSubscribe<List<Friend>>() {
-            @Override
-            public void call(Subscriber<? super List<Friend>> subscriber) {
-                Collection<RosterEntry> entries = riotXmppService.getRiotRosterManager().getRosterEntries();
-
-                List<Friend> friendList = new ArrayList<>();
-
-                for (RosterEntry entry : entries) {
-                    Presence rosterPresence = riotXmppService.getRiotRosterManager().getRosterPresence(entry.getUser());
-                    String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
-
-                    Friend friend = new Friend(entry.getName(), userXmppAddress, rosterPresence);
-
-                    if (!getOffline) {
-                        if (friend.isOnline())
-                            friendList.add(friend);
-                    } else {
-                        friendList.add(friend);
-                    }
-
-                    if (friend.isPlaying())
-                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend);
-                    else
-                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend);
-                }
-                /**
-                 * Sort Friends By Online-First
-                 */
-                Collections.sort(friendList, new Friend.OnlineOfflineComparator());
-
-                subscriber.onNext(friendList);
-                subscriber.onCompleted();
-            }
-        })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Friend>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if (callback != null)
-                            callback.onFullFriendsListFailedReception();
-                    }
-
-                    @Override
-                    public void onNext(List<Friend> friendList) {
-                        if (callback != null) {
-                            callback.onFullFriendsListReceived(friendList);
-                            riotXmppService.getRiotRosterManager().getFriendStatusTracker().setEnabled(true);
                         }
                     }
                 });
@@ -150,12 +89,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                     return Observable.just(new Friend(rosterEntry.getName(), userXmppAddress, rosterPresence));
                 })
                 .filter(friend -> friend.getName().toLowerCase().contains(searchString.toLowerCase()))
-                .doOnNext(friend -> {
-                    if (friend.isPlaying())
-                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend);
-                    else
-                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend);
-                })
+                .doOnNext(friend -> riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend))
                 .toList()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -178,105 +112,6 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                 });
     }
 
-//    public void searchFriendsList2(final String searchString) {
-//        Observable.create(new Observable.OnSubscribe<List<Friend>>() {
-//            @Override
-//            public void call(Subscriber<? super List<Friend>> subscriber) {
-//                Collection<RosterEntry> entries = riotXmppService.getRiotRosterManager().getRosterEntries();
-//
-//                List<Friend> friendList = new ArrayList<>();
-//
-//                for (RosterEntry entry : entries) {
-//                    Presence rosterPresence = riotXmppService.getRiotRosterManager().getRosterPresence(entry.getUser());
-//                    String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
-//
-//                    Friend friend = new Friend(entry.getName(), userXmppAddress, rosterPresence);
-//
-//                    if (friend.getName().toLowerCase().contains(searchString.toLowerCase())) {
-//                        friendList.add(friend);
-//                    }
-//
-//                    if (friend.isPlaying())
-//                        riotXmppService.getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
-//                    else
-//                        riotXmppService.getRiotRosterManager().removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
-//                }
-//
-//                Collections.sort(friendList, new Friend.OnlineOfflineComparator());
-//
-//                subscriber.onNext(friendList);
-//                subscriber.onCompleted();
-//            }
-//        })
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<List<Friend>>() {
-//                    @Override
-//                    public void onCompleted() {
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        if (callback != null)
-//                            callback.onSearchedFriendListFailedReception();
-//                    }
-//
-//                    @Override
-//                    public void onNext(List<Friend> friendList) {
-//                        if (callback != null)
-//                            callback.onSearchedFriendListReceived(friendList);
-//                    }
-//                });
-//    }
-
-//    public void getPresenceChanged2(final Presence presence) {
-//        Observable.create(new Observable.OnSubscribe<Friend>() {
-//            @Override
-//            public void call(Subscriber<? super Friend> subscriber) {
-//
-//                Friend friend;
-//                // Get whose User this presence belongs to
-//                String user = presence.getFrom();
-//
-//                // Get the presence of specified User
-//                Presence bestPresence = riotXmppService.getRiotRosterManager().getRosterPresence(presence.getFrom());
-//
-//                // Get roster entry for that user
-//                RosterEntry entry = riotXmppService.getRiotRosterManager().getRosterEntry(user);
-//
-//                String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
-//
-//                friend = new Friend(entry.getName(), userXmppAddress, bestPresence);
-//
-//                if (friend.isPlaying())
-//                    MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
-//                else
-//                    MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
-//
-//                subscriber.onNext(friend);
-//                subscriber.onCompleted();
-//            }
-//        })
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<Friend>() {
-//                    @Override
-//                    public void onCompleted() {
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        if (callback != null)
-//                            callback.onSingleFriendFailedReception();
-//                    }
-//
-//                    @Override
-//                    public void onNext(Friend friend) {
-//                        if (callback != null)
-//                            callback.onSingleFriendReceived(friend);
-//                    }
-//                });
-//    }
 
     @Override
     public void getPresenceChanged(final Presence presence, final boolean getOffline) {
@@ -287,12 +122,6 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                     Friend f = new Friend(rosterEntry.getName(), userXmppAddress, bestPresence);
 
                     return Observable.just(f);
-                })
-                .doOnNext(friend -> {
-                    if (friend.isPlaying())
-                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend);
-                    else
-                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend);
                 })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -312,54 +141,6 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                     }
                 });
     }
-
-//    @Override
-//    public void getPresenceChanged(final Presence presence) {
-//        Observable.create(new Observable.OnSubscribe<Friend>() {
-//            @Override
-//            public void call(Subscriber<? super Friend> subscriber) {
-//
-//                Friend friend;
-//                // Get whose User this presence belongs to
-//                String user = presence.getFrom();
-//
-//                // Get the presence of specified User
-//                Presence bestPresence = riotXmppService.getRiotRosterManager().getRosterPresence(presence.getFrom());
-//
-//                // Get roster entry for that user
-//                RosterEntry entry = riotXmppService.getRiotRosterManager().getRosterEntry(user);
-//
-//                String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
-//
-//                friend = new Friend(entry.getName(), userXmppAddress, bestPresence);
-//
-//                if(friend.isPlaying())
-//                    MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().addFriendPlaying(friend.getName(), friend.getUserXmppAddress());
-//                else
-//                    MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().removeFriendPlaying(friend.getName(), friend.getUserXmppAddress());
-//
-//                subscriber.onNext(friend);
-//                subscriber.onCompleted();
-//            }
-//        })
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<Friend>() {
-//                    @Override public void onCompleted() { }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        if(callback != null)
-//                            callback.onSingleFriendFailedReception();
-//                    }
-//
-//                    @Override
-//                    public void onNext(Friend friend) {
-//                        if(callback != null)
-//                            callback.onSingleFriendReceived(friend);
-//                    }
-//                });
-//    }
 
     public interface RiotXmppRosterImplCallbacks {
         void onFullFriendsListReceived(List<Friend> friendList);

@@ -1,6 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
 import android.content.Context;
+
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 
@@ -8,6 +10,8 @@ import org.jivesoftware.smack.packet.Presence;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class FriendStatusTracker {
 
@@ -25,35 +29,24 @@ public class FriendStatusTracker {
         friendList.put(friend.getName(), friend);
     }
 
-    public void checkForFriendNotificationToSend(String friendName, String xmppAddress, Presence newPresence) {
+    public void checkForFriendNotificationToSend(String xmppAddress, Presence newPresence) {
+        String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(xmppAddress).getName();
+
         Friend oldFriend = friendList.containsKey(friendName) ? friendList.get(friendName) : null;
         Friend newFriend = new Friend(friendName, xmppAddress, newPresence);
 
-        if(enabled) {
-            String message = null;
-            String speechMessage = null;
-
-                if(checkForFriendOnlineStatus(oldFriend, newFriend)){
-                    message = friendName + " is now Online...";
-                    speechMessage = friendName + " has went online";
-                } else if(checkForLeftGameStatus(oldFriend, newFriend)){
-                    message = friendName + " has left a game";
-                    speechMessage = message;
-                } else if(checkForFriendOfflineStatus(oldFriend, newFriend)){
-                    message = friendName + " has went offline";
-                    speechMessage = message;
-                }
-
-            if(message != null && speechMessage != null)
-                new NotificationCenter(context).sendStatusGameNotification(friendName, message, speechMessage);
-            }
+        if (enabled) {
+            if (checkForFriendOnlineStatus(oldFriend, newFriend)) {
+                LOGI("1212", "checkForFriendOnlineStatus");
+                new NotificationCenter(newFriend.getUserXmppAddress()).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.ONLINE);
+            }else if (checkForFriendOfflineStatus(oldFriend, newFriend))
+                new NotificationCenter(newFriend.getUserXmppAddress()).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.OFFLINE);
+        }
     }
 
     public boolean checkForFriendOnlineStatus(Friend oldFriend, Friend newFriend){
         return newFriend.isOnline() &&
-                (oldFriend == null ||
-                        (oldFriend.getGameStatus().isOutOfGame())
-                                && oldFriend.isOffline());
+                (oldFriend == null || oldFriend.isOffline());
     }
 
     public boolean checkForFriendOfflineStatus(Friend oldFriend, Friend newFriend){

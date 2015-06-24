@@ -12,6 +12,8 @@ import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.functions.Func1;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+
 public class RiotXmppDBRepository {
 
     /**
@@ -39,7 +41,8 @@ public class RiotXmppDBRepository {
                 .orderDesc(MessageDbDao.Properties.Id)
                 .limit(1).build().list();
 
-        return (MessageDb)list.get(0);
+        return list.size() == 0 ? null
+                : (MessageDb)list.get(0);
 //        return Observable.just((MessageDb) list.get(0));
 //        return Observable.just(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser())
 //                .map(connectedUser -> {
@@ -111,16 +114,21 @@ public class RiotXmppDBRepository {
         return MainApplication.getInstance().getDaoSession().getNotificationDbDao();
     }
 
-    public static NotificationDb getNotificationByUser(String currentUser, String friendUser){
+    public static NotificationDb getNotificationByUser(String currentUser, String friendUser) {
         QueryBuilder qb = getNotificationDao().queryBuilder();
         qb.where(NotificationDbDao.Properties.UserXmppId.eq(currentUser),
                 NotificationDbDao.Properties.FriendXmppId.eq(friendUser))
                 .build();
 
-        if(qb.list().size() == 0){
-            return new NotificationDb(null, currentUser, friendUser, false, false, false, false, false);
-        }else
-            return (NotificationDb)qb.list().get(0);
+        if (qb.list().size() == 0) {
+            NotificationDb notificationDb = new NotificationDb(null, currentUser, friendUser, false, false, false, false, false);
+            LOGI("123", notificationDb.toString());
+            return notificationDb;
+        } else {
+            NotificationDb notificationDb = (NotificationDb) qb.list().get(0);
+            LOGI("123", notificationDb.toString());
+            return notificationDb;
+        }
     }
 
     public static void updateNotification(NotificationDb notif) {

@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:orientation="horizontal"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+            android:baselineAligned="false">
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -144,7 +145,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:gravity="bottom"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:orientation="vertical"

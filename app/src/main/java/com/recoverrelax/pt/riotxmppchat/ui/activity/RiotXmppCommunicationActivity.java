@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.squareup.otto.Subscribe;
 
@@ -29,17 +28,17 @@ public abstract class RiotXmppCommunicationActivity extends BaseActivity{
 
     @Subscribe
     public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
-        String message = messageReceived.getMessage().getBody();
-        String username = messageReceived.getUsername();
-        String userXmppAddress = messageReceived.getMessageFrom();
+//        String message = messageReceived.getMessage().getBody();
+//        String username = messageReceived.getUsername();
+//        String userXmppAddress = messageReceived.getMessageFrom();
 
-        NotificationCenter.sendNewMessageSnackbarNotification(this, message, username, userXmppAddress, "CHAT");
+//        NotificationCenter.sendNewMessageSnackbarNotification(this, message, username, userXmppAddress, "CHAT");
         resetMessageIcon();
     }
 
     @Subscribe
     public void onFriendStatusChanged(FriendStatusChangedEvent event){
-        NotificationCenter.sendGameSnackbarNotificationNoAction(this, event.getMessage());
+//        NotificationCenter.sendGameSnackbarNotificationNoAction(this, event.getMessage());
     }
 
 

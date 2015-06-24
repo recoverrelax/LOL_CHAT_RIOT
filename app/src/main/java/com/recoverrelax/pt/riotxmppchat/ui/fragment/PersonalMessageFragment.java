@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
@@ -27,6 +29,7 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.packet.Presence;
@@ -77,6 +80,8 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
 
     private String friendXmppName;
     private String friendUsername;
+    private int bgColor;
+
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
     private int defaultMessageNrReturned = AppGlobals.Message.DEFAULT_MESSAGES_RETURNED;
@@ -111,16 +116,20 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
         super.onActivityCreated(savedInstanceState);
 
         Bundle extras = getArguments();
-        if (extras == null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)) {
+        if (extras == null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)
+                || !extras.containsKey(INTENT_BGCOLOR)) {
             LogUtils.LOGE(TAG, "Something went wrong, we haven't got a xmppName");
         } else {
             friendUsername = extras.getString(INTENT_FRIEND_NAME);
             friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
+            bgColor = extras.getInt(INTENT_BGCOLOR);
+
+
 
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
             messageRecyclerView.setLayoutManager(layoutManager);
 
-            adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<MessageDb>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
+            adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
             messageRecyclerView.setAdapter(adapter);
 
             personalMessageHelper = new PersonalMessageImpl(this);
@@ -131,6 +140,9 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
             swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
 
             uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70 / 2)));
+
+            swipeRefreshLayout.setBackgroundColor(bgColor);
+//            ((BaseActivity)getActivity()).getToolbar().getBackground().setAlpha(0);
         }
     }
 

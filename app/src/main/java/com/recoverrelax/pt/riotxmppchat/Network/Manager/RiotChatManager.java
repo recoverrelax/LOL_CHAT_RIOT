@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
@@ -99,8 +100,11 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
 
-        new NotificationCenter(context)
-                .sendMessageNotification(message, userXmppAddress);
+        new NotificationCenter(userXmppAddress)
+                .sendMessageNotification(message.getBody());
+
+        String name = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(userXmppAddress).getName();
+        MainApplication.getInstance().getBusInstance().post(new OnNewMessageReceivedEventEvent(message, userXmppAddress, name));
     }
 
     public void sendMessage(String message, String userXmppName) {

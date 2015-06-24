@@ -5,7 +5,6 @@ import android.content.Context;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Bus;
@@ -19,6 +18,8 @@ import org.jivesoftware.smack.roster.RosterListener;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class RiotRosterManager implements RosterListener{
 
@@ -84,14 +85,22 @@ public class RiotRosterManager implements RosterListener{
     @Override
     public void presenceChanged(Presence presence) {
 
+        if(!MainApplication.getInstance().getRiotXmppService().getConnection().isConnected())
+            return;
+
         String xmppAddress = AppXmppUtils.parseXmppAddress(presence.getFrom());
-        String username = getRosterEntry(xmppAddress).getName();
 
         if(friendStatusTracker != null){
-            getFriendStatusTracker().checkForFriendNotificationToSend(username, xmppAddress, presence);
+            getFriendStatusTracker().checkForFriendNotificationToSend(xmppAddress, presence);
         }
         /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)} */
         busInstance.post(new OnFriendPresenceChangedEvent(presence));
+
+        Presence bestPresence = getRosterPresence(presence.getFrom());
+        String name = getRosterEntry(xmppAddress).getName();
+
+        Friend friend = new Friend(name, xmppAddress, bestPresence);
+        getFriendStatusTracker().updateFriend(friend);
     }
 
     public Friend getFriendFromPresence(Presence presence){

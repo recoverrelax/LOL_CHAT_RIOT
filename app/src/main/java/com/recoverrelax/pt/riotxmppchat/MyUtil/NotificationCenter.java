@@ -1,106 +1,119 @@
 package com.recoverrelax.pt.riotxmppchat.MyUtil;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.RiotXmppCommunicationActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
+import LolChatRiotDb.NotificationDb;
 
-import org.jivesoftware.smack.packet.Message;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class NotificationCenter extends NotificationCenterHelper{
 
-    private Context context;
-    private String connectedUserName;
+    private static final int MESSAGE_NOTIFICATION_ID = 1111111;
+    private static final int STATUS_NOTIFICATION_ID  = 2222222;
 
-    public NotificationCenter(Context context){
-        this.context = context;
-        this.connectedUserName = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+
+    private static final int MESSAGE_NOTIFICATION_DRAWABLE = R.drawable.ic_action_question_answer_green;
+    private static final int ONLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
+    private static final int OFFLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
+
+    private boolean isAppClosedOrBg = true;
+    private DataStorage dataStorageInstance;
+    private NotificationDb notificationDb;
+
+    private String connectedXmppUser;
+    private String targetXmppUser;
+    private String targetUserName;
+
+    public NotificationCenter(String targetXmppUser){
+        this.isAppClosedOrBg = MainApplication.getInstance().isApplicationClosed();
+        dataStorageInstance = DataStorage.getInstance();
+
+        this.connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+        this.targetXmppUser = targetXmppUser;
+        this.notificationDb = RiotXmppDBRepository.getNotificationByUser(connectedXmppUser, targetXmppUser);
+        this.targetUserName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(this.targetXmppUser).getName();
     }
 
-    public void sendMessageNotification(Message message, String userXmppAddress){
-        String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRoster().getEntry(userXmppAddress).getName();
-        String messageString = message.getBody();
+    public void sendMessageNotification(String message){
 
-        switch (getNotificationType()){
-            case SYSTEM_NOTIFICATION:
-                String title = username + ":";
-                sendNewMessageSystemNotification(title, messageString);
-                break;
+        hSendSystemNotification(targetUserName + " says:", message, MESSAGE_NOTIFICATION_DRAWABLE, MESSAGE_NOTIFICATION_ID,
+                getMessageBackgroundPermission());
 
-            case SNACKBAR_NOTIFICATION:
-                /**
-                 * Deliver the new message to all the observers
-                 *
-                 * 1st: {@link FriendListActivity#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
-                 * 2nd: {@link PersonalMessageFragment#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
-                 * 3rd: {@link FriendMessageListFragment#OnNewMessageReceived(OnNewMessageReceivedEventEvent)}  }
-                 */
-                MainApplication.getInstance().getBusInstance()
-                        .post(new OnNewMessageReceivedEventEvent(message, userXmppAddress, username));
+        hSendSnackbarNotification(MainApplication.getInstance().getCurrentOpenedActivity(),
+                targetXmppUser,
+                targetUserName + "says: \n" + message,
+                "CHAT",
+                getMessageForegroundPermission());
 
-                break;
+        hSendMessageSpeechNotification(targetUserName, message,
+                getMessageSpeechPermission());
+    }
+
+    public void sendOnlineOfflineNotification(OnlineOffline status){
+
+        String message = status.isOnline() ? "is now online" : "has went offline";
+
+        hSendSystemNotification(targetUserName, "..." + message,
+                status.isOffline() ? OFFLINE_NOTIFICATION_DRAWABLE : ONLINE_NOTIFICATION_DRAWABLE,
+                STATUS_NOTIFICATION_ID,
+                getOnlineOfflineBackgroundTextPermission(status));
+
+        hSendSnackbarNotification(MainApplication.getInstance().getCurrentOpenedActivity(),
+                targetXmppUser,
+                targetUserName + " " + message,
+                "CHAT",
+                getOnlineOfflineForegroundTextPermission(status));
+
+        hSendStatusSpeechNotification(targetUserName + " " + message, getOnlineOfflineSpeechPermission(status));
+    }
+
+
+
+    private boolean getOnlineOfflineBackgroundTextPermission(OnlineOffline status) {
+        boolean b = isAppClosedOrBg && dataStorageInstance.getGlobalNotifBackgroundText() &&
+                (status.isOnline()
+                        ? notificationDb.getIsOnline()
+                        : notificationDb.getIsOffline()
+                );
+        LOGI("1212", b ? "true" : "false");
+        return b;
+    }
+    private boolean getOnlineOfflineForegroundTextPermission(OnlineOffline status) {
+        return !isAppClosedOrBg && dataStorageInstance.getGlobalNotifForegroundText() &&
+                (status.isOnline()
+                ? notificationDb.getIsOnline()
+                : notificationDb.getIsOffline()
+                );
+    }
+    private boolean getMessageSpeechPermission() {
+        return (isAppClosedOrBg ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
+                && notificationDb.getHasSentMePm() && !AppMiscUtils.isPhoneSilenced();
+    }
+    private boolean getMessageForegroundPermission() {
+        return !isAppClosedOrBg && dataStorageInstance.getGlobalNotifForegroundText() && notificationDb.getHasSentMePm();
+    }
+    private boolean getMessageBackgroundPermission() {
+        return isAppClosedOrBg && dataStorageInstance.getGlobalNotifBackgroundText() && notificationDb.getHasSentMePm();
+    }
+    private boolean getOnlineOfflineSpeechPermission(OnlineOffline status) {
+        return (isAppClosedOrBg ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
+                && ( status.isOnline() ? notificationDb.getIsOnline() : notificationDb.getIsOffline() )
+                && !AppMiscUtils.isPhoneSilenced();
+    }
+
+    public enum OnlineOffline{
+        ONLINE,
+        OFFLINE;
+
+        public boolean isOnline(){
+            return this.equals(OnlineOffline.ONLINE);
         }
 
-        MessageSpeechNotification.getInstance().sendMessageSpeechNotification(message.getBody(), username);
-    }
-
-    public void sendStatusGameNotification(String username, String message, String speechMessage){
-
-        switch (getNotificationType()){
-            case SYSTEM_NOTIFICATION:
-                sendGameSnackbarNotificationNoAction(getActivity(), message);
-                break;
-
-            case SNACKBAR_NOTIFICATION:
-                /**
-                 * 1st: {@link RiotXmppCommunicationActivity#onFriendStatusChanged(FriendStatusChangedEvent)}
-                 */
-                MainApplication.getInstance().getBusInstance().post(new FriendStatusChangedEvent(username, message));
-                break;
+        public boolean isOffline(){
+            return !isOnline();
         }
-        MessageSpeechNotification.getInstance().sendStatusSpeechNotification(speechMessage);
-    }
-
-    public enum NotificationType {
-        SYSTEM_NOTIFICATION,
-        SNACKBAR_NOTIFICATION;
-
-        public boolean isSystemNotification(){
-            return this.equals(NotificationType.SYSTEM_NOTIFICATION);
-        }
-
-        public boolean isSnackbarNotification(){
-            return this.equals(NotificationType.SNACKBAR_NOTIFICATION);
-        }
-    }
-
-    public boolean isApplicationClosed(){
-        return MainApplication.getInstance().isApplicationClosed();
-    }
-
-    public NotificationType getNotificationType(){
-        return isApplicationClosed() ? NotificationType.SYSTEM_NOTIFICATION : NotificationType.SNACKBAR_NOTIFICATION;
-    }
-
-    @Override
-    public Context getContext(){
-        return this.context;
-    }
-
-    @Override
-    public int getNewMessageSystemNotificationIcon() {
-        return R.drawable.ic_action_question_answer_green;
-    }
-
-    @Override
-    public int getStatusSystemNotificationIcon() {
-        return R.drawable.ic_action_question_answer_green;
     }
 }
