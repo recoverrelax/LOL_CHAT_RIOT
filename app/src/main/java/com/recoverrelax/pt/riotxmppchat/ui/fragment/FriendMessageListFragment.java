@@ -131,7 +131,6 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
             swipeRefreshLayout.setVisibility(View.VISIBLE);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
