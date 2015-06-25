@@ -357,7 +357,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Snackbar
                             .make(((Activity) context).getWindow().getDecorView().getRootView(),
                                     current.getName() + " " + context.getResources().getString(R.string.cannot_chat_with),
-                                    Snackbar.LENGTH_LONG);
+                                    Snackbar.LENGTH_LONG).show();
         }
 
         @OnClick(R.id.card_more_layout)

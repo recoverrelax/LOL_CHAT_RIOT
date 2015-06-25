@@ -30,11 +30,13 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenc
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectSuccessListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -149,6 +151,8 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         popupMenu.show();
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
+
+
             switch(menuItem.getItemId()){
                 case R.id.notifications:
                     FragmentManager manager = getActivity().getFragmentManager();
@@ -158,6 +162,8 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                     myDialog.show(manager, "baseDialog");
                     break;
                 case R.id.other_1:
+                    String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppAddress).getName();
+                    AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName, friendXmppAddress);
                     break;
                 case R.id.other_2:
                     break;

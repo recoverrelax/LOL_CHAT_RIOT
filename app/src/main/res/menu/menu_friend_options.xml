@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/other_1"
-        android:title="Other 1"/>
+        android:title="CHAT"/>
 
     <item
         android:id="@+id/other_2"

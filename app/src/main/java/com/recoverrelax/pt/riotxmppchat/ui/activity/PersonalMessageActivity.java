@@ -63,7 +63,7 @@ public class PersonalMessageActivity extends RiotXmppCommunicationActivity {
                     .commit();
         }
         setTitle(getResources().getString(R.string.chatting_with) + " " + friendUsername);
-        toolbar.setBackgroundColor(AppMiscUtils.changeColorAlpha(bgColor, 250));
+        toolbar.setBackgroundColor(bgColor);
     }
 
     @Override

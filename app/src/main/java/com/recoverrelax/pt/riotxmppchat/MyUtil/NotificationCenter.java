@@ -18,6 +18,8 @@ public class NotificationCenter extends NotificationCenterHelper{
     private static final int MESSAGE_NOTIFICATION_DRAWABLE = R.drawable.ic_action_question_answer_green;
     private static final int ONLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int OFFLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
+    private static final int START_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
+    private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
 
     private boolean isAppClosedOrBg = true;
     private DataStorage dataStorageInstance;
@@ -70,6 +72,24 @@ public class NotificationCenter extends NotificationCenterHelper{
         hSendStatusSpeechNotification(targetUserName + " " + message, getOnlineOfflineSpeechPermission(status));
     }
 
+    public void sendStartedEndedGameNotification(PlayingIddle playingOrIdle){
+
+        String message = playingOrIdle.startedGame() ? "has started a game" : "has left a game";
+
+        hSendSystemNotification(targetUserName, "..." + message,
+                playingOrIdle.startedGame() ? START_GAME_NOTIFICATION_DRAWABLE : LEFT_GAME_NOTIFICATION_DRAWABLE,
+                STATUS_NOTIFICATION_ID,
+                getStartedLeftGameBackgroundTextPermission(playingOrIdle));
+
+        hSendSnackbarNotification(MainApplication.getInstance().getCurrentOpenedActivity(),
+                targetXmppUser,
+                targetUserName + " " + message,
+                "CHAT",
+                getStartedLeftGameForegroundTextPermission(playingOrIdle));
+
+        hSendStatusSpeechNotification(targetUserName + " " + message, getStartedLeftGameSpeechPermission(playingOrIdle));
+    }
+
 
 
     private boolean getOnlineOfflineBackgroundTextPermission(OnlineOffline status) {
@@ -81,11 +101,27 @@ public class NotificationCenter extends NotificationCenterHelper{
         LOGI("1212", b ? "true" : "false");
         return b;
     }
+
+    private boolean getStartedLeftGameBackgroundTextPermission(PlayingIddle playingOrIdle) {
+        return isAppClosedOrBg && dataStorageInstance.getGlobalNotifBackgroundText() &&
+                (playingOrIdle.startedGame()
+                        ? notificationDb.getHasStartedGame()
+                        : notificationDb.getHasLefGame()
+                );
+    }
     private boolean getOnlineOfflineForegroundTextPermission(OnlineOffline status) {
         return !isAppClosedOrBg && dataStorageInstance.getGlobalNotifForegroundText() &&
                 (status.isOnline()
                 ? notificationDb.getIsOnline()
                 : notificationDb.getIsOffline()
+                );
+    }
+
+    private boolean getStartedLeftGameForegroundTextPermission(PlayingIddle playingOrIdle) {
+        return !isAppClosedOrBg && dataStorageInstance.getGlobalNotifForegroundText() &&
+                (playingOrIdle.startedGame()
+                        ? notificationDb.getHasStartedGame()
+                        : notificationDb.getHasLefGame()
                 );
     }
     private boolean getMessageSpeechPermission() {
@@ -104,6 +140,12 @@ public class NotificationCenter extends NotificationCenterHelper{
                 && !AppMiscUtils.isPhoneSilenced();
     }
 
+    private boolean getStartedLeftGameSpeechPermission(PlayingIddle playingOrIdle) {
+        return (isAppClosedOrBg ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
+                && ( playingOrIdle.startedGame() ? notificationDb.getHasStartedGame() : notificationDb.getHasLefGame() )
+                && !AppMiscUtils.isPhoneSilenced();
+    }
+
     public enum OnlineOffline{
         ONLINE,
         OFFLINE;
@@ -114,6 +156,19 @@ public class NotificationCenter extends NotificationCenterHelper{
 
         public boolean isOffline(){
             return !isOnline();
+        }
+    }
+
+    public enum PlayingIddle{
+        STARTED_GAME,
+        ENDED_GAME;
+
+        public boolean startedGame(){
+            return this.equals(PlayingIddle.STARTED_GAME);
+        }
+
+        public boolean endedGame(){
+            return this.equals(PlayingIddle.ENDED_GAME);
         }
     }
 }

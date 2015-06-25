@@ -141,6 +141,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
 
             uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70 / 2)));
 
+
             swipeRefreshLayout.setBackgroundColor(bgColor);
 //            ((BaseActivity)getActivity()).getToolbar().getBackground().setAlpha(0);
         }

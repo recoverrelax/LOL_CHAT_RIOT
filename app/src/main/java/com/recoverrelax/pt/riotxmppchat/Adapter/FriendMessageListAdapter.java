@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -73,6 +74,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
          * Properly format the date
          */
         final Date friendLastMessageDate = friendListChat.getFriendLastMessageDate();
+
         if(friendLastMessageDate != null) {
             AppDateUtils.setTimeElapsedWithHandler(holder.date, friendLastMessageDate);
         }else
@@ -99,7 +101,6 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         int position = getFriendMessageListPositionByFriendName(userXmppAddress);
         if(position != -1){
             friendMessageList.get(position).setMessage(item.getLastMessage());
-            Log.i("ASAS", friendMessageList.get(position).toString());
             notifyItemChanged(position);
         }
     }
@@ -154,8 +155,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         FriendListChat friendListChat;
         View itemView;
 
-        int cardColor;
-
+         @ColorRes int cardColor;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -163,9 +163,10 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
             ButterKnife.inject(this, itemView);
 
             if(itemView instanceof CardView) {
-                int materialColor = AppMiscUtils.getRamdomMaterialColor(ramdom);
-                cardColor = materialColor;
-                ((CardView) itemView).setCardBackgroundColor(context.getResources().getColor(materialColor));
+                int cardColorId = AppMiscUtils.getRamdomMaterialColor(ramdom);
+                cardColor = context.getResources().getColor(cardColorId);
+                cardColor = AppMiscUtils.changeColorAlpha(cardColor, 190);
+                ((CardView) itemView).setCardBackgroundColor(cardColor);
             }
             itemView.setOnClickListener(this);
         }
@@ -173,7 +174,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         @Override
         public void onClick(View view) {
             if(clickCallback != null)
-                clickCallback.onRowClick(view, friendListChat.getFriendName(), friendListChat.getUserXmppAddress(), context.getResources().getColor(cardColor));
+                clickCallback.onRowClick(view, friendListChat.getFriendName(), friendListChat.getUserXmppAddress(), cardColor);
         }
     }
 

@@ -15,7 +15,7 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class FriendStatusTracker {
 
-    private Map<String, Friend> friendList;
+    private Map<String, FriendStates> friendList;
     private Context context;
 
     private boolean enabled = false;
@@ -26,40 +26,60 @@ public class FriendStatusTracker {
     }
 
     public void updateFriend(Friend friend){
-        friendList.put(friend.getName(), friend);
+        FriendStates state = getFriendState(friend);
+        friendList.put(friend.getName(), state);
+    }
+
+    public FriendStates getFriendState(Friend friend){
+        FriendStates state;
+
+        if(friend == null ||friend.isOffline())
+            state = FriendStates.OFFLINE;
+        else if(friend.isPlaying())
+            state = FriendStates.PLAYINNG;
+        else
+            state = FriendStates.IDLE;
+        return state;
     }
 
     public void checkForFriendNotificationToSend(String xmppAddress, Presence newPresence) {
         String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(xmppAddress).getName();
 
-        Friend oldFriend = friendList.containsKey(friendName) ? friendList.get(friendName) : null;
-        Friend newFriend = new Friend(friendName, xmppAddress, newPresence);
+        FriendStates oldState = friendList.containsKey(friendName) ? friendList.get(friendName) : FriendStates.OFFLINE;
+        FriendStates newState = getFriendState(new Friend(friendName, xmppAddress, newPresence));
 
         if (enabled) {
-            if (checkForFriendOnlineStatus(oldFriend, newFriend)) {
-                LOGI("1212", "checkForFriendOnlineStatus");
-                new NotificationCenter(newFriend.getUserXmppAddress()).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.ONLINE);
-            }else if (checkForFriendOfflineStatus(oldFriend, newFriend))
-                new NotificationCenter(newFriend.getUserXmppAddress()).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.OFFLINE);
+            if (oldState.isOffline() && !newState.isOffline()) {
+                new NotificationCenter(xmppAddress).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.ONLINE);
+            }else if (!oldState.isOffline() && newState.isOffline())
+                    new NotificationCenter(xmppAddress).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.OFFLINE);
+            else if(!oldState.isPlaying() && newState.isPlaying())
+                    new NotificationCenter(xmppAddress).sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.STARTED_GAME);
+            else if(oldState.isPlaying() && !newState.isPlaying())
+                    new NotificationCenter(xmppAddress).sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.ENDED_GAME);
         }
-    }
-
-    public boolean checkForFriendOnlineStatus(Friend oldFriend, Friend newFriend){
-        return newFriend.isOnline() &&
-                (oldFriend == null || oldFriend.isOffline());
-    }
-
-    public boolean checkForFriendOfflineStatus(Friend oldFriend, Friend newFriend){
-        return !newFriend.isOnline() &&
-                oldFriend.isOnline();
-    }
-
-    public boolean checkForLeftGameStatus(Friend oldFriend, Friend newFriend){
-        return newFriend.isOnline() && !newFriend.getGameStatus().isPlaying()
-                    && oldFriend.isOnline() && oldFriend.isPlaying();
     }
 
     public void setEnabled(boolean state){
         this.enabled = state;
+    }
+
+
+    public enum FriendStates {
+        OFFLINE,
+        PLAYINNG,
+        IDLE;
+
+        public boolean isOffline(){
+            return this.equals(FriendStates.OFFLINE);
+        }
+
+        public boolean isPlaying(){
+            return this.equals(FriendStates.PLAYINNG);
+        }
+
+        public boolean isIdle(){
+            return this.equals(FriendStates.IDLE);
+        }
     }
 }
