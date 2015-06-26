@@ -17,9 +17,12 @@ import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 
 import org.jivesoftware.smack.roster.RosterEntry;
+
+import java.util.Random;
 
 import LolChatRiotDb.NotificationDb;
 import butterknife.ButterKnife;
@@ -125,6 +128,9 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Random random = new Random();
+        int backgroundColor = AppMiscUtils.getRamdomMaterialColor(random);
+        title.setBackgroundColor(getResources().getColor(backgroundColor));
 
         if(savedInstanceState == null){
             Bundle extra = getArguments();

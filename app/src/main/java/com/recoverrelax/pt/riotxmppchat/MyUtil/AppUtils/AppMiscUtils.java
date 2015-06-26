@@ -25,14 +25,37 @@ public class AppMiscUtils {
         return (Integer)materialColorList.get(randomFunction.nextInt(materialColorList.size()));
     }
 
+    public static List<Integer> getXRamdomMaterialColorT(Random randomFunction, int nrColors, Context context, int alpha){
+        List materialColorList = getMaterialColorList();
+        List<Integer> colorList = new ArrayList<>();
+
+        for(int i = 0; i < nrColors; i++){
+            Integer colorId = (Integer) materialColorList.get(randomFunction.nextInt(materialColorList.size()));
+            int color = context.getResources().getColor(colorId);
+            int colorT = changeColorAlpha(color, alpha);
+            colorList.add(colorT);
+        }
+        return colorList;
+    }
+
+    public static List<Integer> getXRamdomMaterialColor(Random randomFunction, int nrColors, Context context){
+        List materialColorList = getMaterialColorList();
+        List<Integer> colorList = new ArrayList<>();
+
+        for(int i = 0; i < nrColors; i++){
+            Integer colorId = (Integer) materialColorList.get(randomFunction.nextInt(materialColorList.size()));
+            int color = context.getResources().getColor(colorId);
+
+            colorList.add(color);
+        }
+        return colorList;
+    }
+
     public static List<Integer> getMaterialColorList(){
         List<Integer> colors = new ArrayList<>();
 
-
         colors.add(R.color.red_300);
         colors.add(R.color.red_400);
-
-
 
         colors.add(R.color.purple_500);
         colors.add(R.color.purple_600);

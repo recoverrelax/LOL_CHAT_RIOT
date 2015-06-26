@@ -28,17 +28,7 @@ public abstract class RiotXmppCommunicationActivity extends BaseActivity{
 
     @Subscribe
     public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
-//        String message = messageReceived.getMessage().getBody();
-//        String username = messageReceived.getUsername();
-//        String userXmppAddress = messageReceived.getMessageFrom();
-
-//        NotificationCenter.sendNewMessageSnackbarNotification(this, message, username, userXmppAddress, "CHAT");
         resetMessageIcon();
-    }
-
-    @Subscribe
-    public void onFriendStatusChanged(FriendStatusChangedEvent event){
-//        NotificationCenter.sendGameSnackbarNotificationNoAction(this, event.getMessage());
     }
 
 

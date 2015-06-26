@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Subscribe;
@@ -64,8 +65,7 @@ public class FriendListActivity extends RiotXmppCommunicationActivity {
 
     @Override
     public void onBackPressed() {
-            Intent i = new Intent(Intent.ACTION_MAIN);
-            i.addCategory(Intent.CATEGORY_HOME);
-            startActivity(i);
+        super.onBackPressed();
+        AppContextUtils.overridePendingTransitionBackAppDefault(this);
     }
 }

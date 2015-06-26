@@ -106,6 +106,15 @@ public class RiotXmppDBRepository {
         return qb.list().size()>0;
     }
 
+    public static int unreadedMessages(String connectedUser){
+        QueryBuilder qb = getMessageDao().queryBuilder();
+        qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
+                MessageDbDao.Properties.Direction.eq(MessageDirection.FROM.getId()),
+                MessageDbDao.Properties.WasRead.eq(false))
+                .build();
+        return qb.list().size();
+    }
+
     /**
      * NotificationDao
      */

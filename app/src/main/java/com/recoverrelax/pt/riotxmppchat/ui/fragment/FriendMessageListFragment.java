@@ -1,20 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,20 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -54,9 +39,6 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
 
     @InjectView(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
-
-    @InjectView(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout swipeRefreshLayout;
 
     @InjectView(R.id.progressBarCircularIndeterminate)
     ProgressBar progressBarCircularIndeterminate;
@@ -117,31 +99,21 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
                 });
 
         friendMessageListHelper = new FriendMessageListImpl(this);
-
-        SwipeRefreshLayout.OnRefreshListener swipeRefreshListener = friendMessageListHelper::getPersonalMessageList;
-        swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
     }
 
     public void showProgressBar(boolean state) {
         progressBarCircularIndeterminate.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
-
-        if(state)
-            swipeRefreshLayout.setVisibility(View.GONE);
-        else
-            swipeRefreshLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        MainApplication.getInstance().getBusInstance().register(this);
         friendMessageListHelper.getPersonalMessageList();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        MainApplication.getInstance().getBusInstance().unregister(this);
     }
 
     @Subscribe
@@ -162,10 +134,6 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
     @Override
     public void onFriendsMessageSingleReceived(FriendListChat friendListChat) {
         adapter.setSingleItem(friendListChat);
-
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-
         showProgressBar(false);
     }
 
@@ -177,10 +145,6 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
     @Override
     public void onFriendsMessageListReceived(List<FriendListChat> friendListChat) {
         adapter.setItems(friendListChat);
-
-        if (swipeRefreshLayout.isRefreshing())
-            swipeRefreshLayout.setRefreshing(false);
-
         showProgressBar(false);
     }
 

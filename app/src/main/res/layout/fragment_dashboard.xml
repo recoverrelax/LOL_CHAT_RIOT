@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?><!--<ScrollView--><!--xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:fillViewport="true">-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!--FirstHalf-->
+    <LinearLayout
+        android:id="@+id/dashboard_main"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <!--FirstRow-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:id="@+id/dashboard_1">
+
+                <ImageView
+                    style="@style/dashboardSubTitles"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:src="@drawable/dashboard_new_message" />
+
+                <TextView
+                    android:id="@+id/message_number"
+                    style="@style/dashboardItem"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:id="@+id/dashboard_2">
+
+                <ImageView
+                    style="@style/dashboardSubTitles"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:src="@drawable/dashboard_play"
+                    android:id="@+id/imageView" />
+
+                <TextView
+                    style="@style/dashboardItem"
+                    android:id="@+id/playing_number"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="" />
+            </LinearLayout>
+        </LinearLayout>
+        <!--SecondRow-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:id="@+id/dashboard_3">
+
+                <ImageView
+                    style="@style/dashboardSubTitles"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:src="@drawable/dashboard_online" />
+
+                <TextView
+                    style="@style/dashboardItem"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:id="@+id/online_number" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:id="@+id/dashboard_4">
+
+                <ImageView
+                    style="@style/dashboardSubTitles"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:src="@drawable/dashboard_offline"
+                    android:id="@+id/imageView2" />
+
+                <TextView
+                    style="@style/dashboardItem"
+                    android:id="@+id/offline_number"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <!--SecondHalf-->
+    <RelativeLayout
+        android:id="@+id/dashboard_secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/dashboard_sync_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/dashboard_main">
+
+        <TextView
+            android:id="@+id/dashboard_last_news"
+            style="@style/dashboardTitles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Latest News" />
+
+        <!--FirstRow-->
+    </RelativeLayout>
+    <!--EndButton-->
+    <FrameLayout
+        android:id="@+id/dashboard_sync_btn"
+        style="?android:attr/buttonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/primaryColor">
+
+        <TextView
+            style="?android:attr/buttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:text="Refresh"
+            android:textColor="@color/white"
+            android:textSize="@dimen/abc_text_size_subhead_material" />
+    </FrameLayout>
+</RelativeLayout><!--</ScrollView>-->

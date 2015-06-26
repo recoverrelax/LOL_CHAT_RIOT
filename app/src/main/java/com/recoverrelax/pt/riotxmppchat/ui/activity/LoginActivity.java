@@ -191,7 +191,7 @@ public class LoginActivity extends BaseActivity {
 
     @Subscribe
     public void onServiceBinded(OnServiceBindedEvent event) {
-        Intent intent = new Intent(LoginActivity.this, FriendListActivity.class);
+        Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         AppContextUtils.overridePendingTransitionBackAppDefault(this);

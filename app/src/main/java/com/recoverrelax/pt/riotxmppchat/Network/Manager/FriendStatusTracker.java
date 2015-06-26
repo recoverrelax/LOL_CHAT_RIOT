@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
 import android.content.Context;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
@@ -53,10 +54,14 @@ public class FriendStatusTracker {
                 new NotificationCenter(xmppAddress).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.ONLINE);
             }else if (!oldState.isOffline() && newState.isOffline())
                     new NotificationCenter(xmppAddress).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.OFFLINE);
-            else if(!oldState.isPlaying() && newState.isPlaying())
-                    new NotificationCenter(xmppAddress).sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.STARTED_GAME);
-            else if(oldState.isPlaying() && !newState.isPlaying())
-                    new NotificationCenter(xmppAddress).sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.ENDED_GAME);
+            else if(!oldState.isPlaying() && newState.isPlaying()) {
+                new NotificationCenter(xmppAddress).sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.STARTED_GAME);
+                MainApplication.getInstance().getBusInstance().post(new OnNewFriendPlayingEvent());
+            }
+            else if(oldState.isPlaying() && !newState.isPlaying()) {
+                new NotificationCenter(xmppAddress).sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.ENDED_GAME);
+                MainApplication.getInstance().getBusInstance().post(new OnNewFriendPlayingEvent());
+            }
         }
     }
 

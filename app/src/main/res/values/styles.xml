@@ -75,7 +75,29 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
     </style>
 
+    <style name="dashboardTitles">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:padding">@dimen/def_spacing_double</item>
+        <item name="android:background">@color/primaryColor</item>
+        <item name="android:textSize">@dimen/abc_text_size_large_material</item>
+    </style>
+
+    <style name="dashboardSubTitles">
+        <item name="android:textColor">@color/primaryColorDark</item>
+        <item name="android:padding">@dimen/def_spacing_double</item>
+        <item name="android:textSize">@dimen/abc_text_size_large_material</item>
+    </style>
+
+    <style name="dashboardItem">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/abc_text_size_display_1_material</item>
+        <item name="android:gravity">center</item>
+        <item name="fontPath">@string/app_caligraphy_text</item>
+    </style>
+
     <dimen name="login_textview_padding_top_bottom">10dp</dimen>
+    <dimen name="def_spacing_double">16dp</dimen>
+    <dimen name="def_spacing_default">8dp</dimen>
 
     <!--<style name="AppTheme.Base.Widget.TextView" parent="android:Widget.Holo.Light.TextView">-->
         <!--<item name="fontPath">@string/app_caligraphy_text</item>-->

@@ -30,13 +30,11 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenc
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectSuccessListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppRosterHelper;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -62,7 +60,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     @InjectView(R.id.progressBarCircularIndeterminate)
     ProgressBar progressBarCircularIndeterminate;
 
-    private boolean firstTimeFragmentStart = true;
+
 
     private RecyclerView.LayoutManager layoutManager;
     private DataStorage mDataStorage;
@@ -73,7 +71,6 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
      * Adapter
      */
     private FriendsListAdapter adapter;
-    private boolean firstTimeOnCreate = true;
     /**
      * Data Loading
      */
@@ -120,22 +117,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         myFriendsListRecyclerView.setAdapter(adapter);
         riotXmppRosterHelper = new RiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
 
-        /**
-         * We need this. For some reason, the roster gets time to initialize so it wont return values after some time.
-         */
-
-        if (firstTimeFragmentStart) {
-            new Handler().postDelayed(
-                    () -> getFullFriendList(SHOW_OFFLINE_USERS), DELAY_BEFORE_LOAD_ITEMS
-            );
-        } else
-            getFullFriendList(SHOW_OFFLINE_USERS);
-
-        /**
-         * Handler to Update the TimeStamp
-         * of friends Playing or inQueue
-         */
-        firstTimeFragmentStart = false;
+        getFullFriendList(SHOW_OFFLINE_USERS);
     }
 
     @Override
@@ -159,15 +141,17 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                     String connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
 
                     NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance(friendXmppAddress, connectedXmppUser);
-                    myDialog.show(manager, "baseDialog");
+
+                    new Handler().postDelayed(
+                            () -> myDialog.show(manager, "baseDialog"),
+                            50);
                     break;
                 case R.id.other_1:
                     String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppAddress).getName();
-                    AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName, friendXmppAddress);
+                    new Handler().postDelayed(
+                            () -> AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName, friendXmppAddress),
+                    50);
                     break;
-                case R.id.other_2:
-                    break;
-
                 default:
                     break;
             }
@@ -178,9 +162,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (!firstTimeOnCreate)
             getFullFriendList(SHOW_OFFLINE_USERS);
-        firstTimeOnCreate = false;
     }
 
     @Subscribe

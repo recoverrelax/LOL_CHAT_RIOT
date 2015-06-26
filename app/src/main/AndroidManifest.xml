@@ -14,6 +14,10 @@
             android:label="@string/friends_online" >
         </activity>
         <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.DashBoardActivity"
+            android:label="@string/dashboard" >
+        </activity>
+        <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendMessageListActivity"
             android:label="@string/message_list_title" >
         </activity>

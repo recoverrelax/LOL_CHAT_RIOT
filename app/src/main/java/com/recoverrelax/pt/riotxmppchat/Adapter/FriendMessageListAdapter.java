@@ -9,6 +9,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,6 +33,7 @@ import java.util.Random;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
@@ -149,24 +151,25 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         @InjectView(R.id.date)
         TextView date;
 
+        @InjectView(R.id.friends_list_cardview)
+        CardView friends_list_cardview;
+
         @InjectView(R.id.wasRead)
         ImageView wasRead;
 
         FriendListChat friendListChat;
-        View itemView;
 
-         @ColorRes int cardColor;
+        @ColorRes int cardColor;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.itemView = itemView;
             ButterKnife.inject(this, itemView);
 
             if(itemView instanceof CardView) {
                 int cardColorId = AppMiscUtils.getRamdomMaterialColor(ramdom);
                 cardColor = context.getResources().getColor(cardColorId);
                 cardColor = AppMiscUtils.changeColorAlpha(cardColor, 190);
-                ((CardView) itemView).setCardBackgroundColor(cardColor);
+                friends_list_cardview.setCardBackgroundColor(cardColor);
             }
             itemView.setOnClickListener(this);
         }

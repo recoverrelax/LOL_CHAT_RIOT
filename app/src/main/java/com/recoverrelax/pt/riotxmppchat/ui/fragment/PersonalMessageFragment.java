@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -37,11 +38,13 @@ import org.jivesoftware.smack.packet.Presence;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import LolChatRiotDb.MessageDb;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
 import static com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl.*;
@@ -124,8 +127,6 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
             friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
             bgColor = extras.getInt(INTENT_BGCOLOR);
 
-
-
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
             messageRecyclerView.setLayoutManager(layoutManager);
 
@@ -140,8 +141,6 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
             swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
 
             uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70 / 2)));
-
-
             swipeRefreshLayout.setBackgroundColor(bgColor);
 //            ((BaseActivity)getActivity()).getToolbar().getBackground().setAlpha(0);
         }

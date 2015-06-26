@@ -246,6 +246,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 int itemId = menuItem.getItemId();
 
                 switch(itemId){
+                    case R.id.navigation_item_0:
+                        intent = new Intent(BaseActivity.this, DashBoardActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        break;
                     case R.id.navigation_item_1:
                         intent = new Intent(BaseActivity.this, FriendListActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -253,7 +258,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                     case R.id.navigation_item_2:
                         intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         break;
                     case R.id.navigation_item_3:
                         intent = new Intent(BaseActivity.this, SettingActivity.class);
@@ -283,7 +287,18 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         else {
             Intent intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
+            this.finish();
+        }
+    }
+
+    public void goToFriendListActivity(){
+        if(getNavigationViewPosition() != -1)
+            onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_1));
+        else {
+            Intent intent = new Intent(BaseActivity.this, FriendListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
             this.finish();

@@ -11,6 +11,8 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 import com.squareup.otto.Subscribe;
 
+import java.util.Random;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -47,7 +49,9 @@ public class PersonalMessageActivity extends RiotXmppCommunicationActivity {
             if (extras != null) {
                 friendUsername = extras.getString(INTENT_FRIEND_NAME);
                 friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
-                bgColor = extras.getInt(INTENT_BGCOLOR);
+                bgColor = extras.getInt(INTENT_BGCOLOR,
+                        AppMiscUtils.getXRamdomMaterialColorT(new Random(), 1, this, 120) // return a list of colors
+                                        .get(0));
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
