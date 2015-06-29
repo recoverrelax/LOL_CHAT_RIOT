@@ -40,10 +40,8 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 import static com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl.RiotXmppRosterImplCallbacks;
 
 /**
@@ -54,10 +52,10 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
 
-    @InjectView(R.id.myFriendsListRecyclerView)
+    @Bind(R.id.myFriendsListRecyclerView)
     RecyclerView myFriendsListRecyclerView;
 
-    @InjectView(R.id.progressBarCircularIndeterminate)
+    @Bind(R.id.progressBarCircularIndeterminate)
     ProgressBar progressBarCircularIndeterminate;
 
 
@@ -98,7 +96,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.friend_list_fragment, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         showProgressBar(true);
         return view;
@@ -111,7 +109,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new FriendsListAdapter(this, new ArrayList<>(), R.layout.friends_list_recyclerview_child_online, R.layout.friends_list_recyclerview_child_offline, myFriendsListRecyclerView);
+        adapter = new FriendsListAdapter(this, new ArrayList<>(), myFriendsListRecyclerView);
         adapter.setAdapterClickListener(this);
 
         myFriendsListRecyclerView.setAdapter(adapter);

@@ -97,17 +97,4 @@ public class NotificationDb {
         this.hasSentMePm = hasSentMePm;
     }
 
-    @Override
-    public String toString() {
-        return "NotificationDb{" +
-                "id=" + id +
-                ", userXmppId='" + userXmppId + '\'' +
-                ", friendXmppId='" + friendXmppId + '\'' +
-                ", isOnline=" + isOnline +
-                ", isOffline=" + isOffline +
-                ", hasStartedGame=" + hasStartedGame +
-                ", hasLefGame=" + hasLefGame +
-                ", hasSentMePm=" + hasSentMePm +
-                '}';
-    }
 }

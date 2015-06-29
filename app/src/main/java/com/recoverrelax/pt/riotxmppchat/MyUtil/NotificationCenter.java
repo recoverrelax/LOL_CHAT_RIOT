@@ -21,7 +21,6 @@ public class NotificationCenter extends NotificationCenterHelper{
     private static final int START_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
 
-    private boolean isAppClosedOrBg = true;
     private DataStorage dataStorageInstance;
     private NotificationDb notificationDb;
 
@@ -30,7 +29,6 @@ public class NotificationCenter extends NotificationCenterHelper{
     private String targetUserName;
 
     public NotificationCenter(String targetXmppUser){
-        this.isAppClosedOrBg = MainApplication.getInstance().isApplicationClosed();
         dataStorageInstance = DataStorage.getInstance();
 
         this.connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
@@ -93,7 +91,7 @@ public class NotificationCenter extends NotificationCenterHelper{
 
 
     private boolean getOnlineOfflineBackgroundTextPermission(OnlineOffline status) {
-        boolean b = isAppClosedOrBg && dataStorageInstance.getGlobalNotifBackgroundText() &&
+        boolean b = MainApplication.getInstance().isApplicationClosed() && dataStorageInstance.getGlobalNotifBackgroundText() &&
                 (status.isOnline()
                         ? notificationDb.getIsOnline()
                         : notificationDb.getIsOffline()
@@ -103,14 +101,14 @@ public class NotificationCenter extends NotificationCenterHelper{
     }
 
     private boolean getStartedLeftGameBackgroundTextPermission(PlayingIddle playingOrIdle) {
-        return isAppClosedOrBg && dataStorageInstance.getGlobalNotifBackgroundText() &&
+        return isPausedOrClosed() && dataStorageInstance.getGlobalNotifBackgroundText() &&
                 (playingOrIdle.startedGame()
                         ? notificationDb.getHasStartedGame()
                         : notificationDb.getHasLefGame()
                 );
     }
     private boolean getOnlineOfflineForegroundTextPermission(OnlineOffline status) {
-        return !isAppClosedOrBg && dataStorageInstance.getGlobalNotifForegroundText() &&
+        return !isPausedOrClosed() && dataStorageInstance.getGlobalNotifForegroundText() &&
                 (status.isOnline()
                 ? notificationDb.getIsOnline()
                 : notificationDb.getIsOffline()
@@ -118,30 +116,30 @@ public class NotificationCenter extends NotificationCenterHelper{
     }
 
     private boolean getStartedLeftGameForegroundTextPermission(PlayingIddle playingOrIdle) {
-        return !isAppClosedOrBg && dataStorageInstance.getGlobalNotifForegroundText() &&
+        return !isPausedOrClosed() && dataStorageInstance.getGlobalNotifForegroundText() &&
                 (playingOrIdle.startedGame()
                         ? notificationDb.getHasStartedGame()
                         : notificationDb.getHasLefGame()
                 );
     }
     private boolean getMessageSpeechPermission() {
-        return (isAppClosedOrBg ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
+        return (isPausedOrClosed() ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
                 && notificationDb.getHasSentMePm() && !AppMiscUtils.isPhoneSilenced();
     }
     private boolean getMessageForegroundPermission() {
-        return !isAppClosedOrBg && dataStorageInstance.getGlobalNotifForegroundText() && notificationDb.getHasSentMePm();
+        return !isPausedOrClosed() && dataStorageInstance.getGlobalNotifForegroundText() && notificationDb.getHasSentMePm();
     }
     private boolean getMessageBackgroundPermission() {
-        return isAppClosedOrBg && dataStorageInstance.getGlobalNotifBackgroundText() && notificationDb.getHasSentMePm();
+        return isPausedOrClosed() && dataStorageInstance.getGlobalNotifBackgroundText() && notificationDb.getHasSentMePm();
     }
     private boolean getOnlineOfflineSpeechPermission(OnlineOffline status) {
-        return (isAppClosedOrBg ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
+        return (isPausedOrClosed() ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
                 && ( status.isOnline() ? notificationDb.getIsOnline() : notificationDb.getIsOffline() )
                 && !AppMiscUtils.isPhoneSilenced();
     }
 
     private boolean getStartedLeftGameSpeechPermission(PlayingIddle playingOrIdle) {
-        return (isAppClosedOrBg ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
+        return (isPausedOrClosed() ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
                 && ( playingOrIdle.startedGame() ? notificationDb.getHasStartedGame() : notificationDb.getHasLefGame() )
                 && !AppMiscUtils.isPhoneSilenced();
     }
@@ -157,6 +155,11 @@ public class NotificationCenter extends NotificationCenterHelper{
         public boolean isOffline(){
             return !isOnline();
         }
+    }
+
+    public boolean isPausedOrClosed(){
+        return MainApplication.getInstance().isApplicationClosed()
+                || MainApplication.getInstance().isApplicationClosed();
     }
 
     public enum PlayingIddle{

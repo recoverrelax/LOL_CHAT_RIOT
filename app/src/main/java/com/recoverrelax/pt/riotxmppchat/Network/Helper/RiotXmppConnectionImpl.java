@@ -109,11 +109,8 @@ public class RiotXmppConnectionImpl implements RiotXmppConnectionHelper {
 
     public interface RiotXmppConnectionImplCallbacks {
         void onConnected();
-
         void onFailedConnecting();
-
         void onLoggedIn();
-
         void onFailedLoggin();
     }
 }

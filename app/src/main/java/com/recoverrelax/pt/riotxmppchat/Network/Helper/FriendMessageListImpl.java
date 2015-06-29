@@ -1,15 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
-
-import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.roster.RosterEntry;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -23,25 +17,21 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
 
     private RiotXmppService riotXmppService;
     private FriendMessageListImplCallbacks callback;
+    private FriendImpl friendImpl;
 
     public FriendMessageListImpl(FriendMessageListImplCallbacks callback) {
         this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
         this.callback = callback;
+        this.friendImpl = new FriendImpl();
     }
 
     @Override
     public void getPersonalMessageSingleItem(final String userToReturn) {
-        Observable.just(riotXmppService.getRiotRosterManager())
-                .flatMap(rosterManager -> {
-                    RosterEntry entry = rosterManager.getRosterEntry(userToReturn);
-                    Presence presence = rosterManager.getRosterPresence(entry.getUser());
-                    String userXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
 
-                    Friend friend = new Friend(entry.getName(), userXmppAddress, presence);
-                    return Observable.just(friend);
-                })
-                .flatMap(friend -> Observable.just(
-                        new FriendListChat(friend, RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress()))))
+        Observable<Friend> friendFromRosterEntry = friendImpl.getFriendFromXmppAddress(userToReturn, riotXmppService);
+        Observable<MessageDb> friendLastMessage = friendImpl.getFriendLastMessage(friendFromRosterEntry);
+
+        Observable.zip(friendFromRosterEntry, friendLastMessage, FriendListChat::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<FriendListChat>() {
@@ -66,15 +56,11 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
     public void getPersonalMessageList() {
         Observable.from(riotXmppService.getRiotRosterManager().getRosterEntries())
                 .flatMap(rosterEntry -> {
-                    Presence rosterPresence = riotXmppService.getRiotRosterManager().getRosterPresence(rosterEntry.getUser());
-                    String userXmppAddress = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
 
-                    return Observable.just(new Friend(rosterEntry.getName(), userXmppAddress, rosterPresence));
-                })
-                .flatMap(friend -> {
-                    MessageDb message = RiotXmppDBRepository.getLastMessage(friend.getUserXmppAddress());
+                    Observable<Friend> friendFromRosterEntry = friendImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService);
+                    Observable<MessageDb> friendLastMessage = friendImpl.getFriendLastMessage(friendFromRosterEntry);
 
-                    return Observable.just(new FriendListChat(friend, message));
+                    return Observable.zip(friendFromRosterEntry, friendLastMessage, FriendListChat::new);
                 })
                 .filter(friendListChat -> friendListChat.getLastMessage() != null)
                 .toList()

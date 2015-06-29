@@ -31,7 +31,7 @@ public class NotificationDbDao extends AbstractDao<NotificationDb, Long> {
         public final static Property HasStartedGame = new Property(5, Boolean.class, "hasStartedGame", false, "HAS_STARTED_GAME");
         public final static Property HasLefGame = new Property(6, Boolean.class, "hasLefGame", false, "HAS_LEF_GAME");
         public final static Property HasSentMePm = new Property(7, Boolean.class, "hasSentMePm", false, "HAS_SENT_ME_PM");
-    }
+    };
 
 
     public NotificationDbDao(DaoConfig config) {

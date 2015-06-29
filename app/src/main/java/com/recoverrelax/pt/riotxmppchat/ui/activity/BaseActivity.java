@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -24,32 +25,31 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
-import butterknife.Optional;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @Optional
-    @InjectView(R.id.app_bar)
+    @Nullable
+    @Bind(R.id.app_bar)
     protected Toolbar toolbar;
 
-    @Optional
-    @InjectView(R.id.navigationView)
+    @Nullable
+    @Bind(R.id.navigationView)
     NavigationView navigationView;
 
-    @Optional
-    @InjectView(R.id.drawer_layout)
+    @Nullable
+    @Bind(R.id.drawer_layout)
     DrawerLayout drawer_layout;
 
-    @Optional
-    @InjectView(R.id.toolbar_title)
+    @Nullable
+    @Bind(R.id.toolbar_title)
     TextView toolbar_title;
 
-    @Optional
-    @InjectView(R.id.drawer_username)
+    @Nullable
+    @Bind(R.id.drawer_username)
     TextView drawer_username;
 
     private boolean userLearnedDrawer;
@@ -65,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResources());
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         MainApplication.getInstance().addStartedActivity();
 
         if(savedInstanceState != null){
@@ -107,8 +107,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     private void setupDrawerContent() {
         mHandler = new Handler();
 
-        drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
-                DataStorage.getInstance().getUsername());
+        if (drawer_username != null) {
+            drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
+                    DataStorage.getInstance().getUsername());
+        }
 
         drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
 
@@ -127,47 +129,31 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         };
 
         if(!userLearnedDrawer && !fromSavedInstanceState){
-            drawer_layout.openDrawer(navigationView);
+            if (drawer_layout != null) {
+                if (navigationView != null) {
+                    drawer_layout.openDrawer(navigationView);
+                }
+            }
         }
 
-        drawer_layout.setDrawerListener(drawerToggle);
+        if (drawer_layout != null) {
+            drawer_layout.setDrawerListener(drawerToggle);
+        }
 
-        drawer_layout.post(new Runnable() {
-            @Override
-            public void run() {
-                drawerToggle.syncState();
-            }
-        });
+        if (drawer_layout != null) {
+            drawer_layout.post(drawerToggle::syncState);
+        }
 
         drawer_layout.setScrimColor(getResources().getColor(R.color.blackDrawerScrim));
 
-        navigationView.setNavigationItemSelectedListener(this);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
 
         setNavigationViewPosition(getNavigationViewPosition());
     }
 
-//    public void setupNewMessageItem() {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
-//                MenuItem item = navigationView.getMenu().findItem(R.id.navigation_item_2);
-//
-//                if(hasUnreaded) {
-//                    item.setActionView(R.layout.new_message_view);
-//                    View actionView = item.getActionView();
-//
-//                    ImageView imageviewMessage = ButterKnife.findById(actionView, R.id.newMessage);
-//                    imageviewMessage.getDrawable().setColorFilter(getResources().getColor(R.color.newMessageColor), PorterDuff.Mode.SRC_IN);
-//                }else{
-//                    navigationView.invalidate();
-//                    item.setActionView(null);
-//                }
-//            }
-//        });
-//    }
-
-    @Optional
+    @Nullable
     @OnClick(R.id.logout)
     public void onDrawerLogout(View view){
         this.finish();
@@ -185,7 +171,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
 
     public void setNavigationViewPosition(int menuItemId){
-        MenuItem item = navigationView.getMenu().findItem(menuItemId);
+        MenuItem item = null;
+        if (navigationView != null) {
+            item = navigationView.getMenu().findItem(menuItemId);
+        }
         if(item != null && drawer_layout!=null)
             item.setChecked(true);
     }
@@ -218,7 +207,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     @Override
     public void setTitle(CharSequence title) {
-        toolbar_title.setText(title.toString());
+        if (toolbar_title != null) {
+            toolbar_title.setText(title.toString());
+        }
     }
 
     public
@@ -227,6 +218,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         return getResources().getColor(color);
     }
 
+    @Nullable
     public Toolbar getToolbar(){
         return toolbar;
     }
@@ -273,8 +265,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
                     }
                 }, NAVDRAWER_LAUNCH_DELAY);
-                drawer_layout.closeDrawer(Gravity.LEFT);
-                return true;
+        if (drawer_layout != null) {
+            drawer_layout.closeDrawer(Gravity.LEFT);
+        }
+        return true;
     }
 
     public void goToMessageActivity(String username, String userXmppName){
@@ -283,7 +277,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     public void goToMessageListActivity(){
         if(getNavigationViewPosition() != -1)
-            onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
+            if (navigationView != null) {
+                onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
+            }
         else {
             Intent intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -295,7 +291,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     public void goToFriendListActivity(){
         if(getNavigationViewPosition() != -1)
-            onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_1));
+            if (navigationView != null) {
+                onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_1));
+            }
         else {
             Intent intent = new Intent(BaseActivity.this, FriendListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -309,11 +307,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected void onResume() {
         super.onResume();
         MainApplication.getInstance().setBaseActivity(this);
+        MainApplication.getInstance().addResumedActivity();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MainApplication.getInstance().setBaseActivity(null);
+        MainApplication.getInstance().addPausedActivity();
     }
 }

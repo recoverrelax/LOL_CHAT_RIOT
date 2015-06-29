@@ -27,7 +27,7 @@ public class FriendMessageListActivity extends RiotXmppCommunicationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();

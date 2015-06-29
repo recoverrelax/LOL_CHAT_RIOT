@@ -23,44 +23,41 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.squareup.otto.Subscribe;
 
-import butterknife.InjectView;
+import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class LoginActivity extends BaseActivity {
 
     private final String TAG = "LoginActivity";
 
-    @InjectView(R.id.username)
+    @Bind(R.id.username)
     EditText username;
-    @InjectView(R.id.password)
+    @Bind(R.id.password)
     EditText password;
-    @InjectView(R.id.serverSpinner)
+    @Bind(R.id.serverSpinner)
     Spinner serverSpinner;
-    @InjectView(R.id.connect)
+    @Bind(R.id.connect)
     Button connectbutton;
 
-    @InjectView(R.id.checkBox)
+    @Bind(R.id.checkBox)
     CheckBox checkBox;
 
-    @InjectView(R.id.lol_logo)
+    @Bind(R.id.lol_logo)
     ImageView logo;
 
-    @InjectView(R.id.login_bottom_layout)
+    @Bind(R.id.login_bottom_layout)
     LinearLayout loginBottomLayout;
 
-    @InjectView(R.id.login_base_layout)
+    @Bind(R.id.login_base_layout)
     LinearLayout login_base_layout;
 
-    @InjectView(R.id.login_main_layout)
+    @Bind(R.id.login_main_layout)
     LinearLayout login_main_layout;
 
     private DataStorage mDataStorage;

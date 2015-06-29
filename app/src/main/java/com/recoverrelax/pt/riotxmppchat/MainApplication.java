@@ -10,8 +10,10 @@ import android.os.IBinder;
 import com.crashlytics.android.Crashlytics;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.GlobalImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
@@ -23,6 +25,7 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
 import io.fabric.sdk.android.Fabric;
+import rx.Observable;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
@@ -35,6 +38,7 @@ public class MainApplication extends Application {
     private Intent intentService;
     private DaoSession daoSession;
     private Bus bus;
+    private GlobalImpl globalImpl;
 
     private BaseActivity baseActivity;
 
@@ -42,9 +46,10 @@ public class MainApplication extends Application {
      * This value is stored as a buffer because its accessed many times.
      * When the app start, this value is reseted (set to null)
      */
-    private String connectedXmppUser;
 
     private static MainApplication instance;
+    private int resumedActivityCounter = 0;
+    private int pausedActivityCounter = 0;
     private int startedActivityCounter = 0;
     private int stoppedActivityCounter = 0;
 
@@ -66,15 +71,37 @@ public class MainApplication extends Application {
         bus = new Bus(ThreadEnforcer.ANY);
     }
 
+    public void addResumedActivity() {
+        resumedActivityCounter = resumedActivityCounter+1;
+        printActivityState();
+    }
+    public void addPausedActivity() {
+        pausedActivityCounter = pausedActivityCounter+1;
+        printActivityState();
+    }
+
     public void addStartedActivity() {
-        startedActivityCounter++;
+        startedActivityCounter = startedActivityCounter+1;
+        printActivityState();
     }
     public void addStoppedActivity() {
-        stoppedActivityCounter++;
+        stoppedActivityCounter = stoppedActivityCounter+1;
+        printActivityState();
+    }
+
+    public void printActivityState(){
+        LOGI("1111", isApplicationPaused() ? "isPaused? yes" : "isPaused? no");
+        LOGI("1111", isApplicationClosed() ? "isClosed? yes" : "isClosed? no");
+        LOGI("1111", !isApplicationClosed() && !isApplicationPaused() ? "isOppened? yes" : "isOppened? no");
+        LOGI("1111", "\n\n");
     }
 
     public boolean isApplicationClosed(){
-        return startedActivityCounter == stoppedActivityCounter && startedActivityCounter > 0;
+        return resumedActivityCounter == pausedActivityCounter && startedActivityCounter == stoppedActivityCounter;
+    }
+
+    public boolean isApplicationPaused(){
+        return resumedActivityCounter == pausedActivityCounter && startedActivityCounter > stoppedActivityCounter;
     }
 
     public BaseActivity getCurrentOpenedActivity(){
@@ -86,7 +113,7 @@ public class MainApplication extends Application {
     }
 
     public boolean hasNewMessages(){
-        return RiotXmppDBRepository.hasUnreadedMessages(MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser());
+        return RiotXmppDBRepository.hasUnreadedMessages();
     }
 
     private void setupDatabase() {
@@ -102,6 +129,8 @@ public class MainApplication extends Application {
             RiotXmppService.MyBinder binder = (RiotXmppService.MyBinder) serviceBinder;
             mService = binder.getService();
             mBound = true;
+
+            globalImpl = new GlobalImpl(mService.getConnection());
 
             /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
             getBusInstance().post(new OnServiceBindedEvent());
@@ -138,8 +167,29 @@ public class MainApplication extends Application {
         else {
             /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
             getBusInstance().post(new OnServiceBindedEvent());
+            globalImpl = new GlobalImpl(mService.getConnection());
         }
     }
+
+    public GlobalImpl getGlobalImpl() {
+        return globalImpl;
+    }
+
+    public Observable<String> getConnectedUser(){
+        if(globalImpl == null)
+            globalImpl = new GlobalImpl(mService.getConnection());
+
+        return globalImpl.getConnectedXmppUser();
+    }
+
+    /**
+     * TODO: CHEAT - RESOLVE THIS
+     * @return
+     */
+    public String getConnectedUserString(){
+        return AppXmppUtils.parseXmppAddress(mService.getConnection().getUser());
+    }
+
 
     public void unbindService() {
         if(mConnection != null) {
@@ -154,14 +204,6 @@ public class MainApplication extends Application {
 
     public DaoSession getDaoSession() {
         return daoSession;
-    }
-
-    public String getConnectedXmppUser() {
-        return connectedXmppUser;
-    }
-
-    public void setConnectedXmppUser(String connectedXmppUser) {
-        this.connectedXmppUser = connectedXmppUser;
     }
 
     public Bus getBusInstance(){

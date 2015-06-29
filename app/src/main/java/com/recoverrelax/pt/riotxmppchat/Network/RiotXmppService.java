@@ -35,6 +35,8 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import javax.net.ssl.SSLSocketFactory;
 
+import rx.Subscriber;
+
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 import static junit.framework.Assert.assertTrue;
 
@@ -219,14 +221,23 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
         MainApplication.getInstance().getBusInstance().post(new OnSuccessLoginEvent());
 
         new Handler().postDelayed(() -> {
-            riotRosterManager = new RiotRosterManager(this, connection);
-            riotRosterManager.addRosterListener();
 
-            riotChatManager = new RiotChatManager(this, connection, getConnectedXmppUser(), getRiotRosterManager());
-            riotChatManager.addChatListener();
+            MainApplication.getInstance().getConnectedUser().subscribe(new Subscriber<String>() {
+                @Override public void onCompleted() { }
+                @Override public void onError(Throwable e) { }
 
-            riotConnectionManager = new RiotConnectionManager(connection);
-            riotConnectionManager.addConnectionListener();
+                @Override
+                public void onNext(String connectedUSer) {
+                    riotRosterManager = new RiotRosterManager(RiotXmppService.this, connection);
+                    riotRosterManager.addRosterListener();
+
+                    riotChatManager = new RiotChatManager(RiotXmppService.this, connection, connectedUSer, getRiotRosterManager());
+                    riotChatManager.addChatListener();
+
+                    riotConnectionManager = new RiotConnectionManager(connection);
+                    riotConnectionManager.addConnectionListener();
+                }
+            });
 
         }, DELAY_BEFORE_ROSTER_LISTENER);
     }
@@ -239,18 +250,6 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
 
     public AbstractXMPPConnection getConnection() {
         return connection;
-    }
-
-    /**
-     * @return eg: sum12345@pvp.net
-     */
-    public String getConnectedXmppUser() {
-        MainApplication instance = MainApplication.getInstance();
-
-        if (instance.getConnectedXmppUser() == null) {
-            instance.setConnectedXmppUser(AppXmppUtils.parseXmppAddress(connection.getUser()));
-        }
-        return instance.getConnectedXmppUser();
     }
 
     @Override

@@ -26,9 +26,8 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
 import static com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl.FriendMessageListImplCallbacks;
 
@@ -37,10 +36,10 @@ import static com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListI
  */
 public class FriendMessageListFragment extends RiotXmppCommunicationFragment implements FriendMessageListImplCallbacks {
 
-    @InjectView(R.id.friendMessageListRecycler)
+    @Bind(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
 
-    @InjectView(R.id.progressBarCircularIndeterminate)
+    @Bind(R.id.progressBarCircularIndeterminate)
     ProgressBar progressBarCircularIndeterminate;
 
     private final String TAG = FriendMessageListFragment.this.getClass().getSimpleName();
@@ -65,7 +64,7 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend_message_list, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -83,7 +82,7 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         messageRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new FriendMessageListAdapter(getActivity(), new ArrayList<>(), R.layout.friend_message_list_child_layout);
+        adapter = new FriendMessageListAdapter(getActivity(), new ArrayList<>());
         messageRecyclerView.setAdapter(adapter);
         adapter.setRowClickListener(
                 (view, friendName, friendXmppAddress, cardColor) -> {

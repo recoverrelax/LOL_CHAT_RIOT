@@ -1,15 +1,12 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,38 +19,30 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.OnClick;
-import butterknife.OnTouch;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
 
     List<FriendListChat> friendMessageList;
     private LayoutInflater inflater;
     private Context context;
-    private Random ramdom;
+    private Random random;
     private OnRowClick clickCallback;
 
-    private @LayoutRes int layoutRes;
+    @LayoutRes
+    int layoutRes = R.layout.friend_message_list_child_layout;
 
-
-    public FriendMessageListAdapter(Context context, ArrayList<FriendListChat> friendMessageList, int layoutRes) {
+    public FriendMessageListAdapter(Context context, ArrayList<FriendListChat> friendMessageList) {
         inflater = LayoutInflater.from(context);
         this.context = context;
-        this.layoutRes = layoutRes;
         this.friendMessageList = friendMessageList;
-        ramdom = new Random();
+        random = new Random();
     }
 
     @Override
@@ -142,19 +131,19 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @InjectView(R.id.name)
+        @Bind(R.id.name)
         TextView name;
 
-        @InjectView(R.id.lastMessage)
+        @Bind(R.id.lastMessage)
         TextView lastMessage;
 
-        @InjectView(R.id.date)
+        @Bind(R.id.date)
         TextView date;
 
-        @InjectView(R.id.friends_list_cardview)
+        @Bind(R.id.friends_list_cardview)
         CardView friends_list_cardview;
 
-        @InjectView(R.id.wasRead)
+        @Bind(R.id.wasRead)
         ImageView wasRead;
 
         FriendListChat friendListChat;
@@ -163,10 +152,10 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
 
             if(itemView instanceof CardView) {
-                int cardColorId = AppMiscUtils.getRamdomMaterialColor(ramdom);
+                int cardColorId = AppMiscUtils.getRamdomMaterialColor(random);
                 cardColor = context.getResources().getColor(cardColorId);
                 cardColor = AppMiscUtils.changeColorAlpha(cardColor, 190);
                 friends_list_cardview.setCardBackgroundColor(cardColor);

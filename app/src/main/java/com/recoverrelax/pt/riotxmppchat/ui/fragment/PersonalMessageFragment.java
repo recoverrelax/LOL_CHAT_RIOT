@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -20,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
@@ -30,7 +27,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.packet.Presence;
@@ -38,13 +34,11 @@ import org.jivesoftware.smack.packet.Presence;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-
 import LolChatRiotDb.MessageDb;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
-import butterknife.OnTouch;
+import rx.Subscriber;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
 import static com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl.*;
@@ -55,22 +49,22 @@ import static com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivi
  */
 public class PersonalMessageFragment extends RiotXmppCommunicationFragment implements PersonalMessageImplCallbacks {
 
-    @InjectView(R.id.messageRecyclerView)
+    @Bind(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
 
-    @InjectView(R.id.chatEditText)
+    @Bind(R.id.chatEditText)
     EditText chatEditText;
 
-    @InjectView(R.id.swipeRefreshLayout)
+    @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    @InjectView(R.id.expandButton)
+    @Bind(R.id.expandButton)
     ImageView expandButton;
 
-    @InjectView(R.id.message_layout)
+    @Bind(R.id.message_layout)
     RelativeLayout message_layout;
 
-    @InjectView(R.id.uselessShape)
+    @Bind(R.id.uselessShape)
     FrameLayout uselessShape;
 
     private static final String TAG = PersonalMessageFragment.class.getSimpleName();
@@ -104,7 +98,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_personal_message, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -164,12 +158,22 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
         if (!message.equals("") && rosterPresence.isAvailable()) {
 
             MainApplication.getInstance().getRiotXmppService().getRiotChatManager().sendMessage(message, friendXmppName);
-            RiotXmppDBRepository.insertMessage(new MessageDb(null, MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
-                    friendXmppName, MessageDirection.TO.getId(), new Date(), message, false));
-            OnNewMessageReceived(null);
-            // clear text
 
-            chatEditText.setText("");
+            MessageDb messageDb = new MessageDb(null, MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
+                    friendXmppName, MessageDirection.TO.getId(), new Date(), message, false);
+
+            new RiotXmppDBRepository().insertMessage(messageDb)
+                    .subscribe(new Subscriber<Long>() {
+                        @Override public void onCompleted() { }
+                        @Override public void onError(Throwable e) { }
+
+                        @Override
+                        public void onNext(Long aLong) {
+                            OnNewMessageReceived(null);
+                            // clear text
+                            chatEditText.setText("");
+                        }
+                    });
         }
     }
 

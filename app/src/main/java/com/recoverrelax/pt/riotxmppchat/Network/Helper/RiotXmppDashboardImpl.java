@@ -13,6 +13,9 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
@@ -22,6 +25,7 @@ public class RiotXmppDashboardImpl implements RiotXmppDashboardHelper {
     private RiotXmppDashboardImplCallbacks callback;
     private AbstractXMPPConnection connection;
     private RiotXmppService riotXmppService;
+    private RiotXmppDBRepository riotXmppDBRepository;
 
     private Integer messageCount;
 
@@ -29,26 +33,22 @@ public class RiotXmppDashboardImpl implements RiotXmppDashboardHelper {
         this.callback = callback;
         this.connection = MainApplication.getInstance().getRiotXmppService().getConnection();
         this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
+        this.riotXmppDBRepository = new RiotXmppDBRepository();
     }
 
     @Override
     public void getUnreadedMessagesCount() {
-        Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                String connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+        if (messageCount == null)
+            messageCount = 0;
+        else
+            messageCount = messageCount++;
 
-                int i = RiotXmppDBRepository.unreadedMessages(connectedXmppUser);
-
-                if (messageCount == null)
-                    messageCount = 0;
-                else
-                    messageCount = messageCount++;
-
-                int countToReturn = Math.max(i, messageCount);
-                subscriber.onNext(String.valueOf(countToReturn));
-            }
-        }).observeOn(Schedulers.newThread())
+        Observable.zip(Observable.just(messageCount), riotXmppDBRepository.getUnreadedMessages(),
+                (integer, integer2) -> {
+                    int max = Math.max(integer, integer2);
+                    return String.valueOf(max);
+                })
+                .observeOn(Schedulers.newThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override
@@ -63,8 +63,9 @@ public class RiotXmppDashboardImpl implements RiotXmppDashboardHelper {
 
                     @Override
                     public void onNext(String s) {
-                        if (callback != null)
+                        if (callback != null) {
                             callback.onUnreadedMessageCountRetrieved(s);
+                        }
                     }
                 });
     }
@@ -94,7 +95,9 @@ public class RiotXmppDashboardImpl implements RiotXmppDashboardHelper {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<FriendStatusInfo>() {
-                    @Override public void onCompleted() { }
+                    @Override
+                    public void onCompleted() {
+                    }
 
                     @Override
                     public void onError(Throwable e) {
@@ -151,9 +154,7 @@ public class RiotXmppDashboardImpl implements RiotXmppDashboardHelper {
 
     public interface RiotXmppDashboardImplCallbacks {
         void onUnreadedMessageCountRetrieved(String messageCount);
-
         void onUnreadedMessageCountFailedReception();
-
         void onFriendsStatusInfoRetrieved(FriendStatusInfo friendStatusInfo);
         void onFriendsStatusInfoFailedReception();
     }

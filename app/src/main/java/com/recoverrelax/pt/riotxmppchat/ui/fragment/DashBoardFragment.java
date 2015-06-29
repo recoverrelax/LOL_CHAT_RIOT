@@ -1,7 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -26,43 +25,40 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 import java.util.Random;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DashBoardFragment extends RiotXmppCommunicationFragment implements RiotXmppDashboardImpl.RiotXmppDashboardImplCallbacks {
 
-    @InjectView(R.id.dashboard_1)
+    @Bind(R.id.dashboard_1)
     LinearLayout dashboard_1;
 
-    @InjectView(R.id.dashboard_2)
+    @Bind(R.id.dashboard_2)
     LinearLayout dashboard_2;
 
-    @InjectView(R.id.dashboard_3)
+    @Bind(R.id.dashboard_3)
     LinearLayout dashboard_3;
 
-    @InjectView(R.id.dashboard_4)
+    @Bind(R.id.dashboard_4)
     LinearLayout dashboard_4;
 
-    @InjectView(R.id.message_number)
+    @Bind(R.id.message_number)
     TextView message_number;
 
-    @InjectView(R.id.playing_number)
+    @Bind(R.id.playing_number)
     TextView playing_number;
-    @InjectView(R.id.online_number)
+    @Bind(R.id.online_number)
     TextView online_number;
 
-    @InjectView(R.id.offline_number)
+    @Bind(R.id.offline_number)
     TextView offline_number;
 
-    @InjectView(R.id.dashboard_sync_btn)
+    @Bind(R.id.dashboard_sync_btn)
     FrameLayout dashboard_sync_btn;
 
     private RiotXmppDashboardHelper dashboardImpl;
@@ -86,7 +82,7 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment implements 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         return view;
     }

@@ -25,26 +25,20 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
     private AbstractXMPPConnection connection;
 
     private RiotXmppService riotXmppService;
+    private FriendImpl friendImpl;
 
     public RiotXmppRosterImpl(RiotXmppRosterImplCallbacks callback, AbstractXMPPConnection connection) {
         this.callback = callback;
         this.connection = connection;
         this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
+        this.friendImpl = new FriendImpl();
     }
 
     @Override
     public void getFullFriendsList(final boolean getOffline) {
-        Observable.from(riotXmppService.getRiotRosterManager().getRosterEntries()) // Observable<Collection<RosterEntry>>
-                .flatMap(rosterEntry -> {
-                    Presence rosterPresence = riotXmppService.getRiotRosterManager().getRosterPresence(rosterEntry.getUser());
-                    String userXmppAddress = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
-
-                    Friend f = new Friend(rosterEntry.getName(), userXmppAddress, rosterPresence);
-                    return Observable.just(f);
-                })
-
+        friendImpl.getRosterEntries(riotXmppService)
+                .flatMap(rosterEntry -> friendImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService))
                 .filter(friend -> getOffline || friend.isOnline())
-
                 .doOnNext(friend -> riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend))
                 .toList()
                 .flatMap(friendList -> {
@@ -75,13 +69,8 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
 
     @Override
     public void searchFriendsList(final String searchString) {
-        Observable.from(riotXmppService.getRiotRosterManager().getRosterEntries()) // RosterEntry
-                .flatMap(rosterEntry -> {
-                    Presence rosterPresence = riotXmppService.getRiotRosterManager().getRosterPresence(rosterEntry.getUser());
-                    String userXmppAddress = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
-
-                    return Observable.just(new Friend(rosterEntry.getName(), userXmppAddress, rosterPresence));
-                })
+        friendImpl.getRosterEntries(riotXmppService)
+                .flatMap(rosterEntry -> friendImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService))
                 .filter(friend -> friend.getName().toLowerCase().contains(searchString.toLowerCase()))
                 .doOnNext(friend -> riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend))
                 .toList()
@@ -106,17 +95,9 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                 });
     }
 
-
     @Override
     public void getPresenceChanged(final Presence presence, final boolean getOffline) {
-        Observable.just(riotXmppService.getRiotRosterManager().getRosterEntry(presence.getFrom())) // RosterEntry
-                .flatMap(rosterEntry -> {
-                    String userXmppAddress = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
-                    Presence bestPresence = riotXmppService.getRiotRosterManager().getRosterPresence(presence.getFrom());
-                    Friend f = new Friend(rosterEntry.getName(), userXmppAddress, bestPresence);
-
-                    return Observable.just(f);
-                })
+        friendImpl.getFriendFromXmppAddress(presence.getFrom(), riotXmppService)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Friend>() {
@@ -138,15 +119,10 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
 
     public interface RiotXmppRosterImplCallbacks {
         void onFullFriendsListReceived(List<Friend> friendList);
-
         void onFullFriendsListFailedReception();
-
         void onSearchedFriendListReceived(List<Friend> friendList);
-
         void onSearchedFriendListFailedReception();
-
         void onSingleFriendReceived(Friend friend);
-
         void onSingleFriendFailedReception();
     }
 }

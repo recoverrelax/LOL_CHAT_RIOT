@@ -78,7 +78,8 @@ dependencies {
     /**
      * View Injection
      */
-    compile 'com.jakewharton:butterknife:6.1.0'
+//    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.jakewharton:butterknife:7.0.0'
 
     /**
      * Roboto Fonts Library

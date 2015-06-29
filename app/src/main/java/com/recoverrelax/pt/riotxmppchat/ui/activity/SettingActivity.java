@@ -17,15 +17,15 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
 import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class SettingActivity extends RiotXmppCommunicationActivity {
 
-    @InjectView(R.id.settings_pager)
+    @Bind(R.id.settings_pager)
     ViewPager settings_pager;
 
-    @InjectView(R.id.tabs)
+    @Bind(R.id.tabs)
     TabLayout tabs;
 
     private PagerAdapter pagerAdapter;
@@ -33,7 +33,7 @@ public class SettingActivity extends RiotXmppCommunicationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         setTitle("Settings");
         if(toolbar != null)

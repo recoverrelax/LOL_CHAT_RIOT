@@ -31,6 +31,14 @@ public class MyDaoGenerator {
         notification.addBooleanProperty("hasLefGame");
         notification.addBooleanProperty("hasSentMePm");
 
+        Entity inappLogg = schema.addEntity("InAppLogDb");
+        inappLogg.addIdProperty();
+        inappLogg.addIntProperty("logId");
+        inappLogg.addDateProperty("logDate");
+        inappLogg.addStringProperty("logMessage");
+        inappLogg.addStringProperty("userXmppId");
+        inappLogg.addStringProperty("friendXmppId");
+
         new DaoGenerator().generateAll(schema, args[0]);
     }
 }

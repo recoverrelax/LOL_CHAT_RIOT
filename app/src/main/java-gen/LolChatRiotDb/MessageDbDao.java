@@ -30,7 +30,7 @@ public class MessageDbDao extends AbstractDao<MessageDb, Long> {
         public final static Property Date = new Property(4, java.util.Date.class, "date", false, "DATE");
         public final static Property Message = new Property(5, String.class, "message", false, "MESSAGE");
         public final static Property WasRead = new Property(6, Boolean.class, "wasRead", false, "WAS_READ");
-    }
+    };
 
 
     public MessageDbDao(DaoConfig config) {

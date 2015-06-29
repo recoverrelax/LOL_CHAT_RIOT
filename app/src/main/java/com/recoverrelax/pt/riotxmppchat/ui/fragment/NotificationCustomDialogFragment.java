@@ -25,30 +25,28 @@ import org.jivesoftware.smack.roster.RosterEntry;
 import java.util.Random;
 
 import LolChatRiotDb.NotificationDb;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class NotificationCustomDialogFragment extends DialogFragment {
 
-    @InjectView(R.id.title)
+    @Bind(R.id.title)
     TextView title;
 
-    @InjectView(R.id.isOnline)
+    @Bind(R.id.isOnline)
     SwitchCompat isOnline;
 
-    @InjectView(R.id.isOffline)
+    @Bind(R.id.isOffline)
     SwitchCompat isOffline;
 
-    @InjectView(R.id.hasLeftGame)
+    @Bind(R.id.hasLeftGame)
     SwitchCompat hasLeftGame;
 
-    @InjectView(R.id.hasStartedGame)
+    @Bind(R.id.hasStartedGame)
     SwitchCompat hasStartedGame;
 
-    @InjectView(R.id.hasSentPm)
+    @Bind(R.id.hasSentPm)
     SwitchCompat hasSentPm;
 
     public static String USER_XMPP_ADDRESS = "user_xmpp_address";
@@ -84,7 +82,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ScrollView scroller = new ScrollView(getActivity());
         View view = inflater.inflate(R.layout.notification_custom_dialog_fragment, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         scroller.addView(view);
 
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.materialBlueGrey200)));

@@ -1,7 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,14 +12,13 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.Optional;
 
 public class FriendListActivity extends RiotXmppCommunicationActivity {
 
-    @Optional
-    @InjectView(R.id.appBarLayout)
+    @Nullable
+    @Bind(R.id.appBarLayout)
     AppBarLayout appBarLayout;
 
     @Override
@@ -46,7 +45,7 @@ public class FriendListActivity extends RiotXmppCommunicationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -60,7 +59,8 @@ public class FriendListActivity extends RiotXmppCommunicationActivity {
 //        appBarLayout.getBackground().setAlpha(120);
 //        appBarLayout.setTranslationY(0);
 
-        appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor120));
+        if(appBarLayout != null)
+            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor120));
     }
 
     @Override

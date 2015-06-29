@@ -10,28 +10,27 @@ import android.view.ViewGroup;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class Settings_Notification extends Fragment {
 
-    @InjectView(R.id.visible_text)
+    @Bind(R.id.visible_text)
     SwitchCompat visible_text;
 
-    @InjectView(R.id.visible_sound)
+    @Bind(R.id.visible_sound)
     SwitchCompat visible_sound;
 
-    @InjectView(R.id.background_text)
+    @Bind(R.id.background_text)
     SwitchCompat background_text;
 
-    @InjectView(R.id.background_sound)
+    @Bind(R.id.background_sound)
     SwitchCompat background_sound;
 
-    @InjectView(R.id.notificationAlwaysOn)
+    @Bind(R.id.notificationAlwaysOn)
     SwitchCompat notificationAlwaysOn;
 
     private String connectedXmppUser;
@@ -56,7 +55,7 @@ public class Settings_Notification extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.settings_notification_fragment, container, false);
-        ButterKnife.inject(this, view);
+        ButterKnife.bind(this, view);
         return view;
     }
 

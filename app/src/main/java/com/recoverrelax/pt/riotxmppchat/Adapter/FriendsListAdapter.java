@@ -1,6 +1,5 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -11,7 +10,6 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
@@ -32,12 +29,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.BindColor;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
-
 
 public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -48,24 +45,30 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private OnAdapterChildClick onAdapterChildClickCallback;
     private RecyclerView recyclerView;
-    private
+    
     @LayoutRes
-    int layout_online;
+    int layout_online = R.layout.friends_list_recyclerview_child_online;
+    
     @LayoutRes
-    int layout_offline;
+    int layout_offline = R.layout.friends_list_recyclerview_child_offline;
 
     private final int VIEW_HOLDER_ONLINE_ID = 0;
     private final int VIEW_HOLDER_OFFLINE_ID = 1;
 
-    public FriendsListAdapter(Fragment frag, ArrayList<Friend> friendsList, int layout_online, int layout_offline, RecyclerView recyclerView) {
+    @ColorRes
+    int COLOR_BLACK;
 
+    @ColorRes
+    int COLOR_WHITE;
+
+    public FriendsListAdapter(Fragment frag, ArrayList<Friend> friendsList, RecyclerView recyclerView) {
         this.context = frag.getActivity();
         inflater = LayoutInflater.from(this.context);
-
-        this.layout_online = layout_online;
-        this.layout_offline = layout_offline;
         this.friendsList = friendsList;
         this.recyclerView = recyclerView;
+
+        COLOR_BLACK = frag.getActivity().getResources().getColor(R.color.black);
+        COLOR_WHITE = frag.getActivity().getResources().getColor(R.color.white);
     }
 
     public void setAdapterClickListener(OnAdapterChildClick onAdapterChildClickCallback) {
@@ -120,7 +123,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                  */
 
                 holderOnline.friendPresenceMode.setText(friendMode.getDescriptiveName());
-                holderOnline.friendPresenceMode.setTextColor(context.getResources().getColor(R.color.white));
+                holderOnline.friendPresenceMode.setTextColor(COLOR_WHITE);
 
                 GradientDrawable drawable = (GradientDrawable) holderOnline.friendPresenceMode.getBackground();
                 drawable.setColor(context.getResources().getColor(friendMode.getStatusColor()));
@@ -253,28 +256,28 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     class MyViewHolderOnline extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @InjectView(R.id.gameStatus)
+        @Bind(R.id.gameStatus)
         TextView gameStatus;
 
-        @InjectView(R.id.friendPresenceMode)
+        @Bind(R.id.friendPresenceMode)
         TextView friendPresenceMode;
 
-        @InjectView(R.id.division_league)
+        @Bind(R.id.division_league)
         TextView division_league;
 
-        @InjectView(R.id.wins)
+        @Bind(R.id.wins)
         TextView wins;
 
-        @InjectView(R.id.ranked_icon)
+        @Bind(R.id.ranked_icon)
         ImageView ranked_icon;
 
-        @InjectView(R.id.friendName)
+        @Bind(R.id.friendName)
         TextView friendName;
 
-        @InjectView(R.id.profileIcon)
+        @Bind(R.id.profileIcon)
         ImageView profileIcon;
 
-        @InjectView(R.id.card_more)
+        @Bind(R.id.card_more)
         ImageView card_more;
 
         protected Friend current;
@@ -285,11 +288,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public MyViewHolderOnline(View itemView) {
             super(itemView);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
 
             Drawable drawable = card_more.getDrawable();
             drawable.mutate();
-            drawable.setColorFilter(context.getResources().getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+            drawable.setColorFilter(COLOR_BLACK, PorterDuff.Mode.SRC_IN);
 
             mHandler = new Handler();
             mStatusChecker = new Runnable() {
@@ -297,7 +300,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void run() {
                     String gameStatusToPrint = current.getGameStatusToPrint();
                     gameStatus.setText(gameStatusToPrint);
-//                    gameStatus.setSelected(true);
                     mHandler.postDelayed(mStatusChecker, mHandlerInterval);
                 }
             };
@@ -312,7 +314,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Override
         public void onClick(View view) {
-            LOGI("123", "12312121: " + current.getUserXmppAddress());
             if (onAdapterChildClickCallback != null) {
                 onAdapterChildClickCallback.onAdapterFriendClick(current.getName(), current.getUserXmppAddress());
             }
@@ -330,24 +331,24 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     class MyViewHolderOffline extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @InjectView(R.id.friendName)
+        @Bind(R.id.friendName)
         TextView friendName;
 
-        @InjectView(R.id.profileIcon)
+        @Bind(R.id.profileIcon)
         ImageView profileIcon;
 
-        @InjectView(R.id.card_more)
+        @Bind(R.id.card_more)
         ImageView card_more;
 
         Friend current;
 
         public MyViewHolderOffline(View itemView) {
             super(itemView);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
 
             Drawable drawable = card_more.getDrawable();
             drawable.mutate();
-            drawable.setColorFilter(context.getResources().getColor(R.color.white), PorterDuff.Mode.SRC_IN);
+            drawable.setColorFilter(COLOR_WHITE, PorterDuff.Mode.SRC_IN);
 
             itemView.setOnClickListener(this);
         }

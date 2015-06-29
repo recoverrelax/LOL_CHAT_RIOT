@@ -16,8 +16,7 @@ import android.widget.ImageView;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.Bind;
 
 public class SplashScreenActivity extends AppCompatActivity {
     // Splash screen timer
@@ -25,7 +24,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private static String TIMER_KEY = "splashScheduled";
     private boolean isSplashScheduled;
 
-    @InjectView(R.id.lol_logo)
+    @Bind(R.id.lol_logo)
     ImageView logo;
 
     private Handler splashHandler = new Handler();

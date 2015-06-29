@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import LolChatRiotDb.MessageDb;
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-
 
 public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -27,11 +26,10 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private Context context;
     private RecyclerView recyclerView;
 
-    private
     @LayoutRes
-    int layout_from;
+    int layout_from = R.layout.personal_message_from;
     @LayoutRes
-    int layout_to;
+    int layout_to = R.layout.personal_message_to;
 
     private final int VIEW_HOLDER_FROM_ID = 0;
     private final int VIEW_HOLDER_TO_ID = 1;
@@ -130,33 +128,33 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     class MyViewHolderFrom extends RecyclerView.ViewHolder {
 
-        @InjectView(R.id.message)
+        @Bind(R.id.message)
         TextView message;
 
-        @InjectView(R.id.date)
+        @Bind(R.id.date)
         TextView date;
 
         MessageDb messageDb;
 
         public MyViewHolderFrom(View itemView) {
             super(itemView);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
     class MyViewHolderTo extends RecyclerView.ViewHolder {
 
-        @InjectView(R.id.message)
+        @Bind(R.id.message)
         TextView message;
 
-        @InjectView(R.id.date)
+        @Bind(R.id.date)
         TextView date;
 
         MessageDb messageDb;
 
         public MyViewHolderTo(View itemView) {
             super(itemView);
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

@@ -13,8 +13,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.Random;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PersonalMessageActivity extends RiotXmppCommunicationActivity {
 
@@ -22,7 +22,7 @@ public class PersonalMessageActivity extends RiotXmppCommunicationActivity {
     public static final String INTENT_FRIEND_XMPPNAME = "intent_friend_xmppname";
     public static final String INTENT_BGCOLOR = "intent_bgcolor";
 
-    @InjectView(R.id.parent_view_group)
+    @Bind(R.id.parent_view_group)
     RelativeLayout parent_view_group;
 
     String friendUsername;
@@ -42,7 +42,7 @@ public class PersonalMessageActivity extends RiotXmppCommunicationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
