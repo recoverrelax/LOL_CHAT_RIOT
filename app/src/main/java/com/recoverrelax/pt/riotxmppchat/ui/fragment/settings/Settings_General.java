@@ -29,7 +29,6 @@ public class Settings_General extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
         dataStorage = DataStorage.getInstance();
     }
 

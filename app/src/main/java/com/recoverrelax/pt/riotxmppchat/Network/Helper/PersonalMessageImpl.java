@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
 import java.util.List;
 
@@ -14,15 +15,17 @@ public class PersonalMessageImpl implements PersonalMessageHelper {
 
     private PersonalMessageImplCallbacks callbacks;
     private RiotXmppDBRepository riotXmppDBRepository;
+    private GlobalImpl globalImpl;
 
     public PersonalMessageImpl(PersonalMessageImplCallbacks callbacks) {
         this.callbacks = callbacks;
         this.riotXmppDBRepository = new RiotXmppDBRepository();
+        this.globalImpl = new GlobalImpl(MainApplication.getInstance().getConnection());
     }
 
     @Override
     public void getLastXPersonalMessageList(final int x, final String userToGetMessagesFrom) {
-        riotXmppDBRepository.getLastXMessages(x, userToGetMessagesFrom)
+        globalImpl.getLastXMessages(x, userToGetMessagesFrom)
                 .observeOn(Schedulers.newThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<MessageDb>>() {
@@ -44,7 +47,7 @@ public class PersonalMessageImpl implements PersonalMessageHelper {
 
     @Override
     public void getLastPersonalMessage(final String userToGetMessagesFrom) {
-        riotXmppDBRepository.getLastMessage(userToGetMessagesFrom)
+        globalImpl.getLastMessage(userToGetMessagesFrom)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<MessageDb>() {

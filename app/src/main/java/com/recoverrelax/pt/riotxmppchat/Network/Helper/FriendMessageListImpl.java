@@ -17,19 +17,19 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
 
     private RiotXmppService riotXmppService;
     private FriendMessageListImplCallbacks callback;
-    private FriendImpl friendImpl;
+    private GlobalImpl globalImpl;
 
     public FriendMessageListImpl(FriendMessageListImplCallbacks callback) {
         this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
         this.callback = callback;
-        this.friendImpl = new FriendImpl();
+        this.globalImpl = new GlobalImpl(MainApplication.getInstance().getConnection());
     }
 
     @Override
     public void getPersonalMessageSingleItem(final String userToReturn) {
 
-        Observable<Friend> friendFromRosterEntry = friendImpl.getFriendFromXmppAddress(userToReturn, riotXmppService);
-        Observable<MessageDb> friendLastMessage = friendImpl.getFriendLastMessage(friendFromRosterEntry);
+        Observable<Friend> friendFromRosterEntry = globalImpl.getFriendFromXmppAddress(userToReturn, riotXmppService);
+        Observable<MessageDb> friendLastMessage = globalImpl.getFriendLastMessage(friendFromRosterEntry);
 
         Observable.zip(friendFromRosterEntry, friendLastMessage, FriendListChat::new)
                 .subscribeOn(Schedulers.io())
@@ -57,8 +57,8 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
         Observable.from(riotXmppService.getRiotRosterManager().getRosterEntries())
                 .flatMap(rosterEntry -> {
 
-                    Observable<Friend> friendFromRosterEntry = friendImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService);
-                    Observable<MessageDb> friendLastMessage = friendImpl.getFriendLastMessage(friendFromRosterEntry);
+                    Observable<Friend> friendFromRosterEntry = globalImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService);
+                    Observable<MessageDb> friendLastMessage = globalImpl.getFriendLastMessage(friendFromRosterEntry);
 
                     return Observable.zip(friendFromRosterEntry, friendLastMessage, FriendListChat::new);
                 })

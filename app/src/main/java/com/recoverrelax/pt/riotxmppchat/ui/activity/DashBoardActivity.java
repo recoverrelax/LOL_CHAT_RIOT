@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
@@ -16,8 +17,8 @@ import butterknife.ButterKnife;
 public class DashBoardActivity extends BaseActivity {
 
     @Nullable
-    @Bind(R.id.appBarLayout)
-    AppBarLayout appBarLayout;
+    @Bind(R.id.parent_view_group)
+    RelativeLayout parent_view_group;
 
     @Override
     public int getLayoutResources() {
@@ -42,7 +43,6 @@ public class DashBoardActivity extends BaseActivity {
                     .commit();
         }
         setTitle(getResources().getString(R.string.dashboard));
-        appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor));
     }
 
     @Override

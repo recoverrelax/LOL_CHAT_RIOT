@@ -15,6 +15,7 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Subscriber;
 
 public class Settings_Notification extends Fragment {
 
@@ -47,7 +48,6 @@ public class Settings_Notification extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
         dataStorage = DataStorage.getInstance();
     }
 
@@ -63,14 +63,20 @@ public class Settings_Notification extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(connectedXmppUser!= null) {
-            notificationAlwaysOn.setChecked(dataStorage.getNotificationsAlwaysOn());
+        MainApplication.getInstance().getConnectedUser()
+                .subscribe(new Subscriber<String>() {
+                    @Override public void onCompleted() { } @Override public void onError(Throwable e) { }
 
-            background_text.setChecked(dataStorage.getGlobalNotifBackgroundText());
-            background_sound.setChecked(dataStorage.getGlobalNotifBackgroundSpeech());
-            visible_text.setChecked(dataStorage.getGlobalNotifForegroundText());
-            visible_sound.setChecked(dataStorage.getGlobalNotifForegroundSpeech());
-        }
+                    @Override
+                    public void onNext(String connectedXmppUser) {
+                        notificationAlwaysOn.setChecked(dataStorage.getNotificationsAlwaysOn());
+
+                        background_text.setChecked(dataStorage.getGlobalNotifBackgroundText());
+                        background_sound.setChecked(dataStorage.getGlobalNotifBackgroundSpeech());
+                        visible_text.setChecked(dataStorage.getGlobalNotifForegroundText());
+                        visible_sound.setChecked(dataStorage.getGlobalNotifForegroundSpeech());
+                    }
+                });
     }
 
     @OnClick({R.id.visible_text, R.id.visible_sound, R.id.background_sound, R.id.background_text, R.id.notificationAlwaysOn})

@@ -8,6 +8,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceive
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.GlobalImpl;
 import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -34,6 +35,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     private RiotRosterManager riotRosterManager;
     private Context context;
     private Bus busInstance;
+    private GlobalImpl globalImpl;
 
     private RiotXmppDBRepository riotXmppDBRepository;
 
@@ -46,6 +48,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         this.context = context;
         this.busInstance = MainApplication.getInstance().getBusInstance();
         this.riotXmppDBRepository = new RiotXmppDBRepository();
+        this.globalImpl = new GlobalImpl(connection);
     }
 
     public void addChatListener() {
@@ -75,15 +78,12 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         if (messageFrom != null && message.getBody() != null) {
             MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
-            riotXmppDBRepository.insertMessage(message1)
+            globalImpl.insertMessage(message1)
                 .subscribe(new Subscriber<Long>() {
-                @Override public void onCompleted() {}
-                @Override public void onError(Throwable e) {}
-                @Override
-                public void onNext(Long aLong) {
-                    notifyNewMessage(message, messageFrom);
-                }
-            });
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
+                    @Override public void onNext(Long aLong) { } });
+            notifyNewMessage(message, messageFrom);
         }
     }
 

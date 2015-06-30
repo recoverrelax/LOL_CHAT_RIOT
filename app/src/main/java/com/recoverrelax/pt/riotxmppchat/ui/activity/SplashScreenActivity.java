@@ -40,40 +40,9 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_splashscreen);
 
-//        if (savedInstanceState != null  && savedInstanceState.containsKey(TIMER_KEY)) {
-//            isSplashScheduled = savedInstanceState.getBoolean(TIMER_KEY);
-//        }
-//
-//        if (!isSplashScheduled) {
-//            isSplashScheduled = true;
-//            /*New Handler to start the Main activity and
-//            close the splash screen after few seconds */
-//            //splashHandler.postDelayed(splashRunnable, SPLASH_TIME_OUT);
-//
-//            new AsyncTask<Void, Void, Void>() {
-//
-//                @Override
-//                protected Void doInBackground(Void... voids) {
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Void aVoid) {
-//                    splashHandler.postDelayed(splashRunnable, SPLASH_TIME_OUT);
-//                }
-//            }.execute();
-//
-//        }
-
         ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 0.1f, 1f, 0.1f);
         logo.setAnimation(scaleAnimation);
         scaleAnimation.start();
-
-        MainApplication.getInstance().setConnectedXmppUser(null);
-
-
-
-
         showAfterSplashIntent();
     }
 
@@ -101,7 +70,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     * Showing splash screen with a timer. This will be useful when
     * you want to show case your app logo / company
     */
-    private Runnable splashRunnable = () -> showAfterSplashIntent();
+    private Runnable splashRunnable = this::showAfterSplashIntent;
 
     private void showAfterSplashIntent() {
         finish();

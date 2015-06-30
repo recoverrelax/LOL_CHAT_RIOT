@@ -1,11 +1,23 @@
 package com.recoverrelax.pt.riotxmppchat.MyUtil;
 
+import android.os.Handler;
+
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.GlobalImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.DashBoardActivity;
+
+import java.util.Date;
+
+import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.NotificationDb;
+import rx.Subscriber;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
@@ -27,22 +39,29 @@ public class NotificationCenter extends NotificationCenterHelper{
     private String connectedXmppUser;
     private String targetXmppUser;
     private String targetUserName;
+    private RiotXmppDBRepository xmppRepository;
 
     public NotificationCenter(String targetXmppUser){
         dataStorageInstance = DataStorage.getInstance();
 
-        this.connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+        this.connectedXmppUser = MainApplication.getInstance().getConnectedUserString();
         this.targetXmppUser = targetXmppUser;
         this.notificationDb = RiotXmppDBRepository.getNotificationByUser(connectedXmppUser, targetXmppUser);
         this.targetUserName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(this.targetXmppUser).getName();
+
+        xmppRepository = new RiotXmppDBRepository();
     }
 
     public void sendMessageNotification(String message){
 
+        saveToLog(InAppLogIds.FRIEND_PM.getOperationId(), targetUserName + " says: " + message);
+
         hSendSystemNotification(targetUserName + " says:", message, MESSAGE_NOTIFICATION_DRAWABLE, MESSAGE_NOTIFICATION_ID,
                 getMessageBackgroundPermission());
 
-        hSendSnackbarNotification(MainApplication.getInstance().getCurrentOpenedActivity(),
+        BaseActivity currentOpenedActivity = MainApplication.getInstance().getCurrentOpenedActivity();
+        if(!(currentOpenedActivity instanceof DashBoardActivity))
+        hSendSnackbarNotification(currentOpenedActivity,
                 targetXmppUser,
                 targetUserName + "says: \n" + message,
                 "CHAT",
@@ -54,6 +73,9 @@ public class NotificationCenter extends NotificationCenterHelper{
 
     public void sendOnlineOfflineNotification(OnlineOffline status){
 
+        saveToLog(status.isOnline() ? InAppLogIds.FRIEND_ONLINE.getOperationId() : InAppLogIds.FRIEND_OFFLINE.getOperationId(),
+                status.isOnline() ? targetUserName + " has went online" : targetUserName + " has went offline");
+
         String message = status.isOnline() ? "is now online" : "has went offline";
 
         hSendSystemNotification(targetUserName, "..." + message,
@@ -61,6 +83,8 @@ public class NotificationCenter extends NotificationCenterHelper{
                 STATUS_NOTIFICATION_ID,
                 getOnlineOfflineBackgroundTextPermission(status));
 
+        BaseActivity currentOpenedActivity = MainApplication.getInstance().getCurrentOpenedActivity();
+        if(!(currentOpenedActivity instanceof DashBoardActivity))
         hSendSnackbarNotification(MainApplication.getInstance().getCurrentOpenedActivity(),
                 targetXmppUser,
                 targetUserName + " " + message,
@@ -72,6 +96,9 @@ public class NotificationCenter extends NotificationCenterHelper{
 
     public void sendStartedEndedGameNotification(PlayingIddle playingOrIdle){
 
+        saveToLog(playingOrIdle.startedGame() ? InAppLogIds.FRIEND_STARTED_GAME.getOperationId() : InAppLogIds.FRIEND_ENDED_GAME.getOperationId(),
+                playingOrIdle.startedGame() ? targetUserName + " has left a game" : targetUserName + " has started a game");
+
         String message = playingOrIdle.startedGame() ? "has started a game" : "has left a game";
 
         hSendSystemNotification(targetUserName, "..." + message,
@@ -79,6 +106,8 @@ public class NotificationCenter extends NotificationCenterHelper{
                 STATUS_NOTIFICATION_ID,
                 getStartedLeftGameBackgroundTextPermission(playingOrIdle));
 
+        BaseActivity currentOpenedActivity = MainApplication.getInstance().getCurrentOpenedActivity();
+        if(!(currentOpenedActivity instanceof DashBoardActivity))
         hSendSnackbarNotification(MainApplication.getInstance().getCurrentOpenedActivity(),
                 targetXmppUser,
                 targetUserName + " " + message,
@@ -87,8 +116,6 @@ public class NotificationCenter extends NotificationCenterHelper{
 
         hSendStatusSpeechNotification(targetUserName + " " + message, getStartedLeftGameSpeechPermission(playingOrIdle));
     }
-
-
 
     private boolean getOnlineOfflineBackgroundTextPermission(OnlineOffline status) {
         boolean b = MainApplication.getInstance().isApplicationClosed() && dataStorageInstance.getGlobalNotifBackgroundText() &&
@@ -173,5 +200,18 @@ public class NotificationCenter extends NotificationCenterHelper{
         public boolean endedGame(){
             return this.equals(PlayingIddle.ENDED_GAME);
         }
+    }
+
+    private void saveToLog(Integer logId, String logMessage) {
+         new GlobalImpl(MainApplication.getInstance().getConnection()).updateInappLog(new InAppLogDb(null, logId, new Date(),
+                logMessage, connectedXmppUser, targetXmppUser))
+                .subscribe(new Subscriber<Long>() {
+                    @Override public void onCompleted() {}
+                    @Override public void onError(Throwable e) {}
+                    @Override public void onNext(Long aLong) {}
+                });
+
+        // With a delay in order to not update the dashboard at the same time the snackbar is on
+        MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
     }
 }

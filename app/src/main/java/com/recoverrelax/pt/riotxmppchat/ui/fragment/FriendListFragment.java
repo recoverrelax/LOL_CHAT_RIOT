@@ -136,7 +136,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
             switch(menuItem.getItemId()){
                 case R.id.notifications:
                     FragmentManager manager = getActivity().getFragmentManager();
-                    String connectedXmppUser = MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser();
+                    String connectedXmppUser = MainApplication.getInstance().getConnectedUserString();
 
                     NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance(friendXmppAddress, connectedXmppUser);
 

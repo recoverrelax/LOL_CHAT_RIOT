@@ -17,7 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.GlobalImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
@@ -27,6 +29,7 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.packet.Presence;
@@ -34,6 +37,8 @@ import org.jivesoftware.smack.packet.Presence;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.MessageDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -159,21 +164,37 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
 
             MainApplication.getInstance().getRiotXmppService().getRiotChatManager().sendMessage(message, friendXmppName);
 
-            MessageDb messageDb = new MessageDb(null, MainApplication.getInstance().getRiotXmppService().getConnectedXmppUser(),
+            MessageDb messageDb = new MessageDb(null, MainApplication.getInstance().getConnectedUserString(),
                     friendXmppName, MessageDirection.TO.getId(), new Date(), message, false);
 
-            new RiotXmppDBRepository().insertMessage(messageDb)
+            new GlobalImpl(MainApplication.getInstance().getConnection()).insertMessage(messageDb)
                     .subscribe(new Subscriber<Long>() {
                         @Override public void onCompleted() { }
                         @Override public void onError(Throwable e) { }
+                        @Override public void onNext(Long aLong) { }
+                    });
+
+            OnNewMessageReceived(null);
+            new GlobalImpl(MainApplication.getInstance().getConnection()).updateInappLog(new InAppLogDb(null, InAppLogIds.FRIEND_PM.getOperationId(), new Date(),
+                    "You said to  " + friendUsername + ": " + message,
+                    MainApplication.getInstance().getConnectedUserString(), friendXmppName))
+                    .subscribe(new Subscriber<Long>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
 
                         @Override
                         public void onNext(Long aLong) {
-                            OnNewMessageReceived(null);
-                            // clear text
-                            chatEditText.setText("");
                         }
                     });
+
+            MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
+            // clear text
+            chatEditText.setText("");
         }
     }
 

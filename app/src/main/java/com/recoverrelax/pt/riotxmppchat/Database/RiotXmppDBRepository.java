@@ -25,47 +25,12 @@ public class RiotXmppDBRepository {
      * MessageDao
      */
 
-    public RiotXmppDBRepository(){}
-    
     private static MessageDbDao messageDao = MainApplication.getInstance().getDaoSession().getMessageDbDao();
+    private static InAppLogDbDao inAppLogDbDao = MainApplication.getInstance().getDaoSession().getInAppLogDbDao();
+    private static NotificationDbDao notificationDao = MainApplication.getInstance().getDaoSession().getNotificationDbDao();
 
-    private static MessageDbDao getMessageDbDao(){
-        return messageDao;
-    }
-
-    public Observable<Long> insertMessage(MessageDb message) {
-        return Observable.just(messageDao.insert(message))
-                .observeOn(Schedulers.newThread())
-                .subscribeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<MessageDb> getLastMessage(String friendUser){
-        return MainApplication.getInstance().getConnectedUser()
-                .flatMap(connectedUser -> {
-                    List<MessageDb> list = messageDao.queryBuilder()
-                            .where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
-                                    MessageDbDao.Properties.FromTo.eq(friendUser))
-                            .orderDesc(MessageDbDao.Properties.Id)
-                            .limit(1).build().list();
-
-                    return list.size() == 0
-                            ? Observable.just(null)
-                            : Observable.just(list.get(0));
-                });
-    }
-
-    public Observable<List<MessageDb>> getLastXMessages(int x, String userToGetMessagesFrom){
-        return MainApplication.getInstance().getConnectedUser()
-            .flatMap(connectedUser -> {
-                QueryBuilder qb = messageDao.queryBuilder();
-                qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
-                        MessageDbDao.Properties.FromTo.eq(userToGetMessagesFrom))
-                        .orderDesc(MessageDbDao.Properties.Id)
-                        .limit(x).build();
-                QueryBuilder.LOG_SQL = true;
-                List<MessageDb> messageList = qb.list();
-                return Observable.just(messageList);
-            });
+    public static long insertMessageNoRx(MessageDb message) {
+        return messageDao.insert(message);
     }
 
     public static void updateMessages(List<MessageDb> messages){
@@ -80,26 +45,6 @@ public class RiotXmppDBRepository {
                 MessageDbDao.Properties.WasRead.eq(false))
                 .build();
         return qb.list().size()>0;
-    }
-
-    public Observable<Integer> getUnreadedMessages(){
-        return MainApplication.getInstance().getConnectedUser()
-                .flatMap(connectedUser -> {
-                    QueryBuilder qb = messageDao.queryBuilder();
-                    qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
-                            MessageDbDao.Properties.Direction.eq(MessageDirection.FROM.getId()),
-                            MessageDbDao.Properties.WasRead.eq(false))
-                            .build();
-                    return Observable.just(qb.list().size());
-                });
-    }
-
-    /**
-     * NotificationDao
-     */
-
-    public static NotificationDbDao getNotificationDao(){
-        return MainApplication.getInstance().getDaoSession().getNotificationDbDao();
     }
 
     public static NotificationDb getNotificationByUser(String currentUser, String friendUser) {
@@ -123,28 +68,15 @@ public class RiotXmppDBRepository {
         getNotificationDao().insertOrReplace(notif);
     }
 
-    /**
-     * InapplogDb
-     */
-
-    public static InAppLogDbDao getInappDbDao(){
-        return MainApplication.getInstance().getDaoSession().getInAppLogDbDao();
+    public static MessageDbDao getMessageDao() {
+        return messageDao;
     }
 
-    public static void updateInappLog(InAppLogDb inappLog){
-        getInappDbDao().insertOrReplace(inappLog);
+    public static InAppLogDbDao getInAppLogDbDao() {
+        return inAppLogDbDao;
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<InAppLogDb> getLastXInappLogs(int x){
-
-        String connectedUser = MainApplication.getInstance().getConnectedUserString();
-
-        QueryBuilder qb = getInappDbDao().queryBuilder();
-        qb.where(InAppLogDbDao.Properties.UserXmppId.eq(connectedUser))
-                .orderDesc(InAppLogDbDao.Properties.Id)
-                .limit(x).build();
-        QueryBuilder.LOG_SQL = true;
-        return (List<InAppLogDb>)qb.list();
+    public static NotificationDbDao getNotificationDao() {
+        return notificationDao;
     }
 }

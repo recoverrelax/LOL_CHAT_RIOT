@@ -1,7 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 
@@ -25,19 +24,19 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
     private AbstractXMPPConnection connection;
 
     private RiotXmppService riotXmppService;
-    private FriendImpl friendImpl;
+    private GlobalImpl globalImpl;
 
     public RiotXmppRosterImpl(RiotXmppRosterImplCallbacks callback, AbstractXMPPConnection connection) {
         this.callback = callback;
         this.connection = connection;
         this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
-        this.friendImpl = new FriendImpl();
+        this.globalImpl = new GlobalImpl(connection);
     }
 
     @Override
     public void getFullFriendsList(final boolean getOffline) {
-        friendImpl.getRosterEntries(riotXmppService)
-                .flatMap(rosterEntry -> friendImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService))
+        globalImpl.getRosterEntries(riotXmppService)
+                .flatMap(rosterEntry -> globalImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService))
                 .filter(friend -> getOffline || friend.isOnline())
                 .doOnNext(friend -> riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend))
                 .toList()
@@ -59,8 +58,8 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
                     @Override
                     public void onNext(List<Friend> friendList) {
                         LOGI("1111", friendList.size() + "");
+                        riotXmppService.getRiotRosterManager().getFriendStatusTracker().setEnabled(true);
                         if (callback != null) {
-                            riotXmppService.getRiotRosterManager().getFriendStatusTracker().setEnabled(true);
                             callback.onFullFriendsListReceived(friendList);
                         }
                     }
@@ -69,8 +68,8 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
 
     @Override
     public void searchFriendsList(final String searchString) {
-        friendImpl.getRosterEntries(riotXmppService)
-                .flatMap(rosterEntry -> friendImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService))
+        globalImpl.getRosterEntries(riotXmppService)
+                .flatMap(rosterEntry -> globalImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService))
                 .filter(friend -> friend.getName().toLowerCase().contains(searchString.toLowerCase()))
                 .doOnNext(friend -> riotXmppService.getRiotRosterManager().getFriendStatusTracker().updateFriend(friend))
                 .toList()
@@ -97,7 +96,7 @@ public class RiotXmppRosterImpl implements RiotXmppRosterHelper {
 
     @Override
     public void getPresenceChanged(final Presence presence, final boolean getOffline) {
-        friendImpl.getFriendFromXmppAddress(presence.getFrom(), riotXmppService)
+        globalImpl.getFriendFromXmppAddress(presence.getFrom(), riotXmppService)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Friend>() {
