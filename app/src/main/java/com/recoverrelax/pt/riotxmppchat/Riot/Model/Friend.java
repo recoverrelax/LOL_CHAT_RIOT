@@ -219,13 +219,13 @@ public class Friend implements Comparable<Friend>{
         boolean noTimeStamp = timeStamp.equals(NO_DATA);
         String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
 
-        String message;
+        StringBuilder message = new StringBuilder();
 
         if(noTimeStamp)
-            message = MainApplication.getInstance().getResources().getString(R.string.in_champion_select);
+            message.append(MainApplication.getInstance().getResources().getString(R.string.in_champion_select));
         else
-            message = MainApplication.getInstance().getResources().getString(R.string.in_champion_select_for) + " " + timeStamp + " " + minutes;
-        return message;
+            message.append(MainApplication.getInstance().getResources().getString(R.string.in_champion_select_for)).append(" ").append(timeStamp).append(" ").append(minutes);
+        return message.toString();
     }
 
     public String getTimeStampDifference(){
@@ -248,9 +248,14 @@ public class Friend implements Comparable<Friend>{
         boolean noChampionName = championName.equals(NO_DATA);
 
         String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
+        StringBuilder returnString = new StringBuilder();
 
-        String playingAs = MainApplication.getInstance().getResources().getString(R.string.ingame_playing_as) + " ";
-        String playingAsFor = MainApplication.getInstance().getResources().getString(R.string.ingame_playing_as_for) + " ";
+        String playingAs = returnString.append(MainApplication.getInstance().getResources().getString(R.string.ingame_playing_as))
+                .append(" ").toString();
+
+        String playingAsFor = returnString.delete(0, returnString.length())
+                .append(MainApplication.getInstance().getResources().getString(R.string.ingame_playing_as_for))
+                .append(" ").toString();
 
        if(noTimeStamp){
             if(noChampionName){
@@ -258,15 +263,30 @@ public class Friend implements Comparable<Friend>{
                 return GameStatus.INGAME.getDescriptiveText();
             }else{
                 // !TIMESTAMP - CHAMPIONNAME
-                return playingAs + championName;
+                return returnString.delete(0, returnString.length())
+                        .append(playingAs).append(championName).toString();
             }
         }else{
             if(noChampionName){
                 // TIMESTAMP - !CHAMPIONNAME
-                return GameStatus.INGAME.getDescriptiveText() + " " + playingAsFor + " " + timeStamp + " " + minutes;
+                return returnString.delete(0, returnString.length())
+                        .append(GameStatus.INGAME.getDescriptiveText())
+                        .append(" ")
+                        .append(playingAsFor)
+                        .append(" ")
+                        .append(timeStamp)
+                        .append(" ")
+                        .append(minutes).toString();
             }else{
                 // TIMESTAMP - CHAMPIONNAME
-                return playingAs + championName + " " + playingAsFor + timeStamp + " " + minutes;
+                return returnString.delete(0, returnString.length())
+                        .append(playingAs)
+                        .append(championName)
+                        .append(" ")
+                        .append(playingAsFor)
+                        .append(timeStamp)
+                        .append(" ")
+                        .append(minutes).toString();
             }
         }
     }

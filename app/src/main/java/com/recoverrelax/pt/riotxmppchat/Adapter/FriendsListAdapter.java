@@ -45,6 +45,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context context;
     private OnAdapterChildClick onAdapterChildClickCallback;
     private RecyclerView recyclerView;
+    private StringBuilder stringBuilder = new StringBuilder();
     
     @LayoutRes
     int layout_online = R.layout.friends_list_recyclerview_child_online;
@@ -144,7 +145,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             .into(holderOnline.profileIcon);
                 } else {
                     Picasso pic = Picasso.with(context);
-                    pic.load(RiotGlobals.LOLKING_PROFILE_ICON_URL + friend.getProfileIconId() + RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION)
+
+                    stringBuilder.delete(0, stringBuilder.length());
+                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL).append(friend.getProfileIconId()).append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
+
+                    pic.load(stringBuilder.toString())
                             .placeholder(R.drawable.profile_icon_example)
                             .error(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
@@ -168,7 +173,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             .into(holderOffline.profileIcon);
                 } else {
                     Picasso pic = Picasso.with(context);
-                    pic.load(RiotGlobals.LOLKING_PROFILE_ICON_URL + friend.getProfileIconId() + RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION)
+
+                    stringBuilder.delete(0, stringBuilder.length());
+                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL).append(friend.getProfileIconId()).append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
+                    pic.load(stringBuilder.toString())
                             .placeholder(R.drawable.profile_icon_example)
                             .error(R.drawable.profile_icon_example)
                             .into(holderOffline.profileIcon);
