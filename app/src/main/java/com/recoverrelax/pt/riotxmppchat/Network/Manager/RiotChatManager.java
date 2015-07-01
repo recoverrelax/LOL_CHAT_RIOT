@@ -27,6 +27,8 @@ import LolChatRiotDb.MessageDb;
 import rx.Observable;
 import rx.Subscriber;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+
 public class RiotChatManager implements ChatManagerListener, ChatMessageListener {
 
     private AbstractXMPPConnection connection;
@@ -72,17 +74,19 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     @Override
     public void processMessage(Chat chat, Message message) {
         String messageFrom = AppXmppUtils.parseXmppAddress(message.getFrom());
-
+        LOGI("1212", "processMessage");
         addChat(chat, messageFrom);
 
         if (messageFrom != null && message.getBody() != null) {
             MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
-            globalImpl.insertMessage(message1)
-                .subscribe(new Subscriber<Long>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
-                    @Override public void onNext(Long aLong) { } });
+//            globalImpl.insertMessage(message1)
+//                .subscribe(new Subscriber<Long>() {
+//                    @Override public void onCompleted() { }
+//                    @Override public void onError(Throwable e) { }
+//                    @Override public void onNext(Long aLong) { } });
+
+            globalImpl.insertMessageNoRx(message1);
             notifyNewMessage(message, messageFrom);
         }
     }

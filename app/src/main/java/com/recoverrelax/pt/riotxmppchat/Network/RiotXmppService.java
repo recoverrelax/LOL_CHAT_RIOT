@@ -203,7 +203,6 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
 
     public void onFailedConnecting() {
         /**{@link LoginActivity#onFailure(OnConnectionOrLoginFailureEvent)} */
-        Log.i("1212", "Reaches here");
         MainApplication.getInstance().getBusInstance().post(new OnConnectionOrLoginFailureEvent());
     }
 

@@ -50,6 +50,10 @@ public class GlobalImpl {
                 .subscribeOn(AndroidSchedulers.mainThread());
     }
 
+    public void insertMessageNoRx(MessageDb message){
+        messageDao.insert(message);
+    }
+
     public Observable<Friend> getFriendFromXmppAddress(String userXmppAddress, RiotXmppService riotXmppService){
         return Observable.just(riotXmppService.getRiotRosterManager())
                 .flatMap(rosterManager -> {

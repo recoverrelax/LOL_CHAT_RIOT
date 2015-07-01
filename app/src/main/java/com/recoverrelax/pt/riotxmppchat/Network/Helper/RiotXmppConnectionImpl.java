@@ -26,7 +26,7 @@ public class RiotXmppConnectionImpl implements RiotXmppConnectionHelper {
 
     private RiotXmppConnectionImplCallbacks callback;
     private final int MAX_LOGIN_TRIES = 5;
-    private final int MAX_CONNECTION_TRIES = 10;
+    private final int MAX_CONNECTION_TRIES = 3;
 
     public RiotXmppConnectionImpl(RiotXmppConnectionImplCallbacks callback) {
         this.callback = callback;

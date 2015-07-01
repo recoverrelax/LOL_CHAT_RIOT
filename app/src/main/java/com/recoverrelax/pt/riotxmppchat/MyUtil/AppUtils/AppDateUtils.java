@@ -40,7 +40,6 @@ public class AppDateUtils {
         new Runnable() {
             @Override
             public void run() {
-                Log.i("TAG", "RUN");
                 textview.setText(text2Update.getGameStatusToPrint());
                 new Handler().postDelayed(this, UPDATE_TEXTVIEW_REPEAT_TIME);
             }

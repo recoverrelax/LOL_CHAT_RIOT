@@ -224,7 +224,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             if (newFriend.isOnline()) { // NEW FRIEND ONLINE
                 if (oldFriend.isOnline()) {
-                    Log.i("112", "Passa aqui");
                     // ONLINE - ONLINE
                     friendsList.remove(positionFriend);
                     friendsList.add(positionFriend, newFriend);

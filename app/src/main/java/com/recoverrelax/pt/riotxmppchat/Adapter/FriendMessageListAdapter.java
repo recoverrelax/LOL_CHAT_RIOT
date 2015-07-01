@@ -117,7 +117,6 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         int friendMessageListSize = friendMessageList.size();
 
         for(int i = 0 ; i < friendMessageListSize; i++){
-            Log.i("ASASAS", "1: " + friendMessageList.get(i).getFriend().getUserXmppAddress() + "\n2: " + xmppName);
             if(friendMessageList.get(i).getFriend().getUserXmppAddress().equals(xmppName))
                 return i;
         }
