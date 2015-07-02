@@ -1,9 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/championInputLayout"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+        <EditText
+            android:id="@+id/championName"
+            android:layout_width="match_parent"
+            tools:text="Aatrox"
+            android:text="AAtrox"
+            android:layout_height="match_parent"
+            android:hint="@string/champion_name_here"/>
+    </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text="Try"
+            android:id="@+id/download" />
+
+    </LinearLayout>
 
 
 </LinearLayout>

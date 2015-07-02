@@ -10,6 +10,7 @@ import android.os.IBinder;
 import com.crashlytics.android.Crashlytics;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
@@ -21,6 +22,8 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
+
+import java.io.File;
 
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
@@ -69,6 +72,11 @@ public class MainApplication extends Application {
         setupDatabase();
 
         bus = new Bus(ThreadEnforcer.ANY);
+
+        File file = new File(AppMiscUtils.getAppSpecificFolder(this).getPath() + "/champion_skins/");
+
+        if(!file.exists())
+            file.mkdir();
     }
 
     public void addResumedActivity() {

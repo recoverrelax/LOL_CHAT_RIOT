@@ -3,11 +3,14 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils;
 import android.content.Context;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.os.Environment;
 import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -437,5 +440,20 @@ public class AppMiscUtils {
 
     public static int changeColorAlpha(int colorRes, int alpha){
         return Color.argb(alpha, Color.red(colorRes), Color.green(colorRes), Color.blue(colorRes));
+    }
+
+    /**
+     * Get app specific folder's path
+     * @return
+     */
+    public static File getAppSpecificFolder(Context ctx) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            // External directory
+            File[] files = ContextCompat.getExternalFilesDirs(ctx, null);
+            return files[0];
+        } else {
+            // Internal directory
+            return ctx.getFilesDir();
+        }
     }
 }
