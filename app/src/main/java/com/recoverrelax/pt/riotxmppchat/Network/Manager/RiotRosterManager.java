@@ -85,7 +85,7 @@ public class RiotRosterManager implements RosterListener{
     @Override
     public void presenceChanged(Presence presence) {
 
-        if(!MainApplication.getInstance().getRiotXmppService().getConnection().isConnected())
+        if(!MainApplication.getInstance().getConnection().isConnected())
             return;
 
         String xmppAddress = AppXmppUtils.parseXmppAddress(presence.getFrom());

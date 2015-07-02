@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Riot.Model;
 
 import android.support.annotation.NonNull;
 
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
@@ -307,6 +308,17 @@ public class Friend implements Comparable<Friend>{
             return -1;
                     else
                         return 1;
+    }
+
+    public String getChampionDragonUrl() {
+
+        String championName = getChampionName();
+        String formattedChampionName = championName.substring(0, 1).toUpperCase() + championName.substring(1).toLowerCase();
+
+        String championUrl = AppGlobals.RiotEndPoint.CHAMPION_SQUARE + formattedChampionName + ".png";
+        championUrl = championUrl.replace(" ", "_");
+
+        return championUrl;
     }
 
     public static class OnlineOfflineComparator implements Comparator<Friend> {

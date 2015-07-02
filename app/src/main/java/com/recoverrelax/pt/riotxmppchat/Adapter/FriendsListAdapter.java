@@ -17,6 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
@@ -153,6 +156,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             .placeholder(R.drawable.profile_icon_example)
                             .error(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
+
+                    Picasso.with(context).load(holderOnline.current.getChampionDragonUrl())
+                            .into(holderOnline.championSquare);
                 }
 
                 break;
@@ -286,6 +292,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Bind(R.id.card_more)
         ImageView card_more;
+
+        @Bind(R.id.champion_square)
+        ImageView championSquare;
 
         protected Friend current;
 

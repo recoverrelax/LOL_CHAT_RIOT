@@ -40,7 +40,7 @@ public class RiotXmppDashboardImpl {
 
     public RiotXmppDashboardImpl(RiotXmppDashboardImplCallbacks callback) {
         this.callback = callback;
-        this.connection = MainApplication.getInstance().getRiotXmppService().getConnection();
+        this.connection = MainApplication.getInstance().getConnection();
         this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
         this.riotXmppDBRepository = new RiotXmppDBRepository();
         this.globalImpl = new GlobalImpl(connection);
