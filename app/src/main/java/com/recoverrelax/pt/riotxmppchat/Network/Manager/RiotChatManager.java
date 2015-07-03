@@ -8,7 +8,6 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceive
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.GlobalImpl;
 import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -24,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import LolChatRiotDb.MessageDb;
-import rx.Observable;
-import rx.Subscriber;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
@@ -37,7 +34,6 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     private RiotRosterManager riotRosterManager;
     private Context context;
     private Bus busInstance;
-    private GlobalImpl globalImpl;
 
     private RiotXmppDBRepository riotXmppDBRepository;
 
@@ -50,7 +46,6 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         this.context = context;
         this.busInstance = MainApplication.getInstance().getBusInstance();
         this.riotXmppDBRepository = new RiotXmppDBRepository();
-        this.globalImpl = new GlobalImpl(connection);
     }
 
     public void addChatListener() {
@@ -80,13 +75,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         if (messageFrom != null && message.getBody() != null) {
             MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
-//            globalImpl.insertMessage(message1)
-//                .subscribe(new Subscriber<Long>() {
-//                    @Override public void onCompleted() { }
-//                    @Override public void onError(Throwable e) { }
-//                    @Override public void onNext(Long aLong) { } });
-
-            globalImpl.insertMessageNoRx(message1);
+            new RiotXmppDBRepository().insertMessage(message1);
             notifyNewMessage(message, messageFrom);
         }
     }
@@ -119,7 +108,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         new NotificationCenter(userXmppAddress)
                 .sendMessageNotification(message.getBody());
 
-        String name = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(userXmppAddress).getName();
+        String name = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(userXmppAddress).getName();
         MainApplication.getInstance().getBusInstance().post(new OnNewMessageReceivedEventEvent(message, userXmppAddress, name));
     }
 

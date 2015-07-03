@@ -19,7 +19,6 @@ import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.GlobalImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
@@ -27,7 +26,6 @@ import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.squareup.otto.Subscribe;
@@ -44,15 +42,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Subscriber;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
-import static com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl.*;
 import static com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity.*;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PersonalMessageFragment extends RiotXmppCommunicationFragment implements PersonalMessageImplCallbacks {
+public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
 
     @Bind(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
@@ -78,7 +77,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
      * Adapter
      */
     private PersonalMessageAdapter adapter;
-    private PersonalMessageHelper personalMessageHelper;
+    private PersonalMessageImpl personalMessageImpl;
 
     private String friendXmppName;
     private String friendUsername;
@@ -87,6 +86,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
     private int defaultMessageNrReturned = AppGlobals.Message.DEFAULT_MESSAGES_RETURNED;
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
 
 
     public PersonalMessageFragment() {
@@ -132,10 +132,10 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
             adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
             messageRecyclerView.setAdapter(adapter);
 
-            personalMessageHelper = new PersonalMessageImpl(this);
-            personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
+            personalMessageImpl = new PersonalMessageImpl();
+            getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
 
-            swipeRefreshListener = () -> personalMessageHelper.getLastXPersonalMessageList(doubleLoadedItems(), friendXmppName);
+            swipeRefreshListener = () -> getLastXPersonalMessageList(doubleLoadedItems(), friendXmppName);
 
             swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
 
@@ -143,6 +143,38 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
             swipeRefreshLayout.setBackgroundColor(bgColor);
 //            ((BaseActivity)getActivity()).getToolbar().getBackground().setAlpha(0);
         }
+    }
+
+    public void getLastXPersonalMessageList(int itemQtt, String friendXmppName){
+        Subscription subscribe = personalMessageImpl.getLastXPersonalMessageList(itemQtt, friendXmppName)
+                .subscribe(new Subscriber<List<MessageDb>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onGeneralThrowableEvent(e);
+                    }
+
+                    @Override
+                    public void onNext(List<MessageDb> messageDbs) {
+                        if (messageDbs != null)
+                            setAllMessagesRead();
+
+                        adapter.setItems(messageDbs, swipeRefreshLayout.isRefreshing() ? null : PersonalMessageAdapter.ScrollTo.FIRST_ITEM);
+
+                        if (swipeRefreshLayout.isRefreshing())
+                            swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+        subscriptions.add(subscribe);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        subscriptions.clear();
     }
 
     public static int convertDIPToPixels(Context context, int dip) {
@@ -158,7 +190,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
     @OnClick(R.id.expandButton)
     public void sendMessageButton(View view) {
         String message = chatEditText.getText().toString();
-        Presence rosterPresence = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterPresence(friendXmppName);
+        Presence rosterPresence = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterPresence2(friendXmppName);
 
         if (!message.equals("") && rosterPresence.isAvailable()) {
 
@@ -167,30 +199,13 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
             MessageDb messageDb = new MessageDb(null, MainApplication.getInstance().getConnectedUserString(),
                     friendXmppName, MessageDirection.TO.getId(), new Date(), message, false);
 
-            new GlobalImpl(MainApplication.getInstance().getConnection()).insertMessage(messageDb)
-                    .subscribe(new Subscriber<Long>() {
-                        @Override public void onCompleted() { }
-                        @Override public void onError(Throwable e) { }
-                        @Override public void onNext(Long aLong) { }
-                    });
-
+            new RiotXmppDBRepository().insertMessage(messageDb);
             OnNewMessageReceived(null);
-            new GlobalImpl(MainApplication.getInstance().getConnection()).updateInappLog(new InAppLogDb(null, InAppLogIds.FRIEND_PM.getOperationId(), new Date(),
+
+            new RiotXmppDBRepository().insertOrReplaceInappLog(new InAppLogDb(null, InAppLogIds.FRIEND_PM.getOperationId(), new Date(),
                     "You said to  " + friendUsername + ": " + message,
-                    MainApplication.getInstance().getConnectedUserString(), friendXmppName))
-                    .subscribe(new Subscriber<Long>() {
-                        @Override
-                        public void onCompleted() {
-                        }
+                    MainApplication.getInstance().getConnectedUserString(), friendXmppName));
 
-                        @Override
-                        public void onError(Throwable e) {
-                        }
-
-                        @Override
-                        public void onNext(Long aLong) {
-                        }
-                    });
 
             MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
             // clear text
@@ -202,14 +217,14 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
         List<MessageDb> allMessages = adapter.getAllMessages();
         for (MessageDb message : allMessages)
             message.setWasRead(true);
-        RiotXmppDBRepository.updateMessages(allMessages);
+        new RiotXmppDBRepository().updateMessages(allMessages);
     }
 
     @Override
     public void onResume() {
         super.onResume();
 //        MainApplication.getInstance().getBusInstance().register(this);
-        personalMessageHelper.getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
+        getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
     }
 
     @Subscribe
@@ -219,47 +234,39 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment imple
 
                 // this means that i have sent a message
                 if (messageReceived == null) {
-                    personalMessageHelper.getLastPersonalMessage(friendXmppName);
+                    getLastPersonalMessage(friendXmppName);
                 } else {
                     // if its not for me, don't update
                     if (this.friendXmppName.equals(messageReceived.getMessageFrom()))
-                        personalMessageHelper.getLastPersonalMessage(friendXmppName);
+                        getLastPersonalMessage(friendXmppName);
                 }
             });
         }
     }
 
-        @Override
-        public void onLastXPersonalMessageListReceived (List < MessageDb > messageDbs) {
-            if (messageDbs != null)
-                setAllMessagesRead();
+    public void getLastPersonalMessage(String friendXmppName){
+        Subscription subscribe = personalMessageImpl.getLastPersonalMessage(friendXmppName)
+                .subscribe(new Subscriber<MessageDb>() {
+                    @Override public void onCompleted() { }
 
-            adapter.setItems(messageDbs, swipeRefreshLayout.isRefreshing() ? null : PersonalMessageAdapter.ScrollTo.FIRST_ITEM);
+                    @Override
+                    public void onError(Throwable e) {
+                        onGeneralThrowableEvent(e);
+                    }
 
-            if (swipeRefreshLayout.isRefreshing())
-                swipeRefreshLayout.setRefreshing(false);
-        }
+                    @Override
+                    public void onNext(MessageDb messageDb) {
+                        if (messageDb != null)
+                            setAllMessagesRead();
 
-        @Override
-        public void onLastXPersonalMessageListFailedReception (Throwable e){
-            onGeneralThrowableEvent(e);
-        }
+                        adapter.addItem(messageDb);
 
-        @Override
-        public void onLastPersonalMessageReceived (MessageDb message){
-            if (message != null)
-                setAllMessagesRead();
-
-            adapter.addItem(message);
-
-            if (swipeRefreshLayout.isRefreshing())
-                swipeRefreshLayout.setRefreshing(false);
-        }
-
-        @Override
-        public void onLastPersonalMessageFailedReception (Throwable e){
-            onGeneralThrowableEvent(e);
-        }
+                        if (swipeRefreshLayout.isRefreshing())
+                            swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+        subscriptions.add(subscribe);
+    }
 
     public void onGeneralThrowableEvent(Throwable e) {
         LOGE(TAG, "", e);

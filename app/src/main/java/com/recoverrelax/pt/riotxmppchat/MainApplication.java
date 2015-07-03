@@ -14,7 +14,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.GlobalImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
@@ -41,7 +40,6 @@ public class MainApplication extends Application {
     private Intent intentService;
     private DaoSession daoSession;
     private Bus bus;
-    private GlobalImpl globalImpl;
 
     private BaseActivity baseActivity;
 
@@ -138,8 +136,6 @@ public class MainApplication extends Application {
             mService = binder.getService();
             mBound = true;
 
-            globalImpl = new GlobalImpl(mService.getConnection());
-
             /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
             getBusInstance().post(new OnServiceBindedEvent());
         }
@@ -165,39 +161,15 @@ public class MainApplication extends Application {
         return mService;
     }
 
-    public AbstractXMPPConnection getConnection(){
-        return mService.getConnection();
-    }
-
     public void bindService() {
         if(!mBound)
             bindService(intentService, mConnection, BIND_AUTO_CREATE);
         else {
             /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
             getBusInstance().post(new OnServiceBindedEvent());
-            globalImpl = new GlobalImpl(mService.getConnection());
+
         }
     }
-
-    public GlobalImpl getGlobalImpl() {
-        return globalImpl;
-    }
-
-    public Observable<String> getConnectedUser(){
-        if(globalImpl == null)
-            globalImpl = new GlobalImpl(mService.getConnection());
-
-        return globalImpl.getConnectedXmppUser();
-    }
-
-    /**
-     * TODO: CHEAT - RESOLVE THIS
-     * @return
-     */
-    public String getConnectedUserString(){
-        return AppXmppUtils.parseXmppAddress(mService.getConnection().getUser());
-    }
-
 
     public void unbindService() {
         if(mConnection != null) {
@@ -216,5 +188,23 @@ public class MainApplication extends Application {
 
     public Bus getBusInstance(){
         return this.bus;
+    }
+
+    public AbstractXMPPConnection getConnection() {
+        return getRiotXmppService().getConnectionNoRx();
+    }
+
+
+
+    public Observable<String> getConnectedUser() {
+        return getRiotXmppService().getConnectedUser();
+    }
+
+    /**
+     * TODO REMOVE THIS
+     * @return
+     */
+    public String getConnectedUserString() {
+        return AppXmppUtils.parseXmppAddress(getRiotXmppService().getConnectionNoRx().getUser());
     }
 }

@@ -33,21 +33,24 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.squareup.otto.Subscribe;
+
+import org.jivesoftware.smack.packet.Presence;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import static com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl.RiotXmppRosterImplCallbacks;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendListFragment extends RiotXmppCommunicationFragment implements FriendsListAdapter.OnAdapterChildClick, RiotXmppRosterImplCallbacks {
+public class FriendListFragment extends RiotXmppCommunicationFragment implements FriendsListAdapter.OnAdapterChildClick {
 
     private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
@@ -73,7 +76,10 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
      * Data Loading
      */
 
-    private RiotXmppRosterHelper riotXmppRosterHelper;
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
+
+
+    private RiotXmppRosterImpl riotXmppRosterImpl;
 
     public FriendListFragment() {
         // Required empty public constructor
@@ -88,6 +94,12 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         super.onCreate(savedInstanceState);
         mDataStorage = DataStorage.getInstance();
         SHOW_OFFLINE_USERS = mDataStorage.showOfflineUsers();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        subscriptions.clear();
     }
 
     @Override
@@ -113,7 +125,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         adapter.setAdapterClickListener(this);
 
         myFriendsListRecyclerView.setAdapter(adapter);
-        riotXmppRosterHelper = new RiotXmppRosterImpl(this, MainApplication.getInstance().getConnection());
+        riotXmppRosterImpl = new RiotXmppRosterImpl();
 
         getFullFriendList(SHOW_OFFLINE_USERS);
     }
@@ -133,7 +145,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         popupMenu.setOnMenuItemClickListener(menuItem -> {
 
 
-            switch(menuItem.getItemId()){
+            switch (menuItem.getItemId()) {
                 case R.id.notifications:
                     FragmentManager manager = getActivity().getFragmentManager();
                     String connectedXmppUser = MainApplication.getInstance().getConnectedUserString();
@@ -145,10 +157,10 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                             50);
                     break;
                 case R.id.other_1:
-                    String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppAddress).getName();
+                    String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(friendXmppAddress).getName();
                     new Handler().postDelayed(
                             () -> AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName, friendXmppAddress),
-                    50);
+                            50);
                     break;
                 default:
                     break;
@@ -160,7 +172,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     @Override
     public void onResume() {
         super.onResume();
-            getFullFriendList(SHOW_OFFLINE_USERS);
+        getFullFriendList(SHOW_OFFLINE_USERS);
     }
 
     @Subscribe
@@ -170,9 +182,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
     @Subscribe
     public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
-        getActivity().runOnUiThread(
-                () -> riotXmppRosterHelper.getPresenceChanged(friendPresence.getPresence(), SHOW_OFFLINE_USERS)
-        );
+        getSingleFriend(friendPresence.getPresence());
     }
 
     public void showProgressBar(boolean state) {
@@ -252,7 +262,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                 public void afterTextChanged(Editable editable) {
                     String s = editable.toString();
                     if (!s.equals("") && !s.equals(" ")) {
-                        riotXmppRosterHelper.searchFriendsList(s);
+                        getSearchFriendsList(s);
                         modifiedOriginal[0] = true;
                     }
                 }
@@ -267,6 +277,55 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                     );
 
         }
+    }
+
+    public void getSingleFriend(Presence presence){
+        Subscription subscribe = riotXmppRosterImpl.getPresenceChanged(presence)
+                .subscribe(new Subscriber<Friend>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(Friend friend) {
+                        if (adapter != null) {
+                            if (friend != null) {
+                                adapter.setFriendChanged(friend);
+                            }
+                            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
+                        }
+                    }
+                });
+        subscriptions.add(subscribe);
+    }
+
+    private void getSearchFriendsList(String s) {
+        Subscription subscribe = riotXmppRosterImpl.searchFriendsList(s)
+                .subscribe(new Subscriber<List<Friend>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Friend> friends) {
+                        if (adapter != null) {
+                            adapter.setItems(friends);
+                            showProgressBar(false);
+                            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
+                        }
+                    }
+                });
+        subscriptions.add(subscribe);
     }
 
     @Override
@@ -293,41 +352,28 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     }
 
     private void getFullFriendList(boolean showOffline) {
-        riotXmppRosterHelper.getFullFriendsList(showOffline);
+        Subscription subscribe = riotXmppRosterImpl.getFullFriendsList(showOffline)
+                .subscribe(new Subscriber<List<Friend>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(List<Friend> friends) {
+                        if (adapter != null) {
+                            adapter.setItems(friends);
+                            showProgressBar(false);
+                            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
+                        }
+                    }
+                });
+
+        subscriptions.add(subscribe);
     }
-
-    @Override
-    public void onFullFriendsListReceived(List<Friend> friendList) {
-        if (adapter != null) {
-            adapter.setItems(friendList);
-            showProgressBar(false);
-            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
-        }
-    }
-
-    @Override public void onFullFriendsListFailedReception() { }
-
-    @Override
-    public void onSearchedFriendListReceived(List<Friend> friendList) {
-        onFullFriendsListReceived(friendList);
-    }
-
-    @Override public void onSearchedFriendListFailedReception() { }
-
-    @Override
-    public void onSingleFriendReceived(Friend friend) {
-        if (adapter != null) {
-            if (friend != null) {
-                adapter.setFriendChanged(friend);
-            }
-            setToolbarTitle(getResources().getString(R.string.friends_online) + " " + adapter.getOnlineFriendsCount());
-        }
-        /**
-         * TODO: there is a bug here, review the adaptar fag
-         */
-    }
-
-    @Override public void onSingleFriendFailedReception() { }
-
-
 }

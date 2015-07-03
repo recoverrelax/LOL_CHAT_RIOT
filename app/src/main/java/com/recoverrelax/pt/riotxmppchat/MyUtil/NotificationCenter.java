@@ -1,13 +1,10 @@
 package com.recoverrelax.pt.riotxmppchat.MyUtil;
 
-import android.os.Handler;
-
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.GlobalImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
@@ -17,7 +14,6 @@ import java.util.Date;
 
 import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.NotificationDb;
-import rx.Subscriber;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
@@ -47,7 +43,7 @@ public class NotificationCenter extends NotificationCenterHelper{
         this.connectedXmppUser = MainApplication.getInstance().getConnectedUserString();
         this.targetXmppUser = targetXmppUser;
         this.notificationDb = RiotXmppDBRepository.getNotificationByUser(connectedXmppUser, targetXmppUser);
-        this.targetUserName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(this.targetXmppUser).getName();
+        this.targetUserName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(this.targetXmppUser).getName();
 
         xmppRepository = new RiotXmppDBRepository();
     }
@@ -203,13 +199,8 @@ public class NotificationCenter extends NotificationCenterHelper{
     }
 
     private void saveToLog(Integer logId, String logMessage) {
-         new GlobalImpl(MainApplication.getInstance().getConnection()).updateInappLog(new InAppLogDb(null, logId, new Date(),
-                logMessage, connectedXmppUser, targetXmppUser))
-                .subscribe(new Subscriber<Long>() {
-                    @Override public void onCompleted() {}
-                    @Override public void onError(Throwable e) {}
-                    @Override public void onNext(Long aLong) {}
-                });
+         new RiotXmppDBRepository().insertOrReplaceInappLog(new InAppLogDb(null, logId, new Date(),
+                 logMessage, connectedXmppUser, targetXmppUser));
 
         // With a delay in order to not update the dashboard at the same time the snackbar is on
         MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());

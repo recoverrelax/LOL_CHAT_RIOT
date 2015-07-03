@@ -58,7 +58,8 @@
     <string name="activity_login_password_hint">Password Here</string>
     <string name="activity_login_label_connect_button">Connect</string>
     <string name="activity_login_checkbox_label">Save Credentials</string>
-    <string name="activity_login_cannot_connect">Connection to the server failed. Make sure you have internet connection, your credentials and server are valid!</string>
+    <string name="activity_connection_failed">Connection to the server failed. Make sure you have internet connection.</string>
+    <string name="activity_login_failed">Make sure your credentials and server are valid or try again later!</string>
     <string name="activity_login_progress_dialog_title">Attempting to Login</string>
     <string name="activity_login_progress_dialog_message">Please wait …</string>
     <string name="drawer_default_title">League of Legends \nFriends Alerter</string>

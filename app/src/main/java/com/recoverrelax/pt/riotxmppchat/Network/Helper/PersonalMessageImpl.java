@@ -1,75 +1,32 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 
 import java.util.List;
 
 import LolChatRiotDb.MessageDb;
 import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class PersonalMessageImpl implements PersonalMessageHelper {
+public class PersonalMessageImpl {
 
-    private PersonalMessageImplCallbacks callbacks;
-    private RiotXmppDBRepository riotXmppDBRepository;
-    private GlobalImpl globalImpl;
+    private RiotRosterManager riotRosterManager;
 
-    public PersonalMessageImpl(PersonalMessageImplCallbacks callbacks) {
-        this.callbacks = callbacks;
-        this.riotXmppDBRepository = new RiotXmppDBRepository();
-        this.globalImpl = new GlobalImpl(MainApplication.getInstance().getConnection());
+    public PersonalMessageImpl() {
+        this.riotRosterManager = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager();
     }
 
-    @Override
-    public void getLastXPersonalMessageList(final int x, final String userToGetMessagesFrom) {
-        globalImpl.getLastXMessages(x, userToGetMessagesFrom)
+    public Observable<List<MessageDb>> getLastXPersonalMessageList(final int x, final String userToGetMessagesFrom) {
+        return riotRosterManager.getLastXMessages(x, userToGetMessagesFrom)
                 .observeOn(Schedulers.newThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<MessageDb>>() {
-                    @Override public void onCompleted() { }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if (callbacks != null)
-                            callbacks.onLastXPersonalMessageListFailedReception(e);
-                    }
-
-                    @Override
-                    public void onNext(List<MessageDb> messageList) {
-                        if (callbacks != null)
-                            callbacks.onLastXPersonalMessageListReceived(messageList);
-                    }
-                });
+                .subscribeOn(AndroidSchedulers.mainThread());
     }
 
-    @Override
-    public void getLastPersonalMessage(final String userToGetMessagesFrom) {
-        globalImpl.getLastMessage(userToGetMessagesFrom)
+    public Observable<MessageDb> getLastPersonalMessage(final String userToGetMessagesFrom) {
+        return riotRosterManager.getLastMessage(userToGetMessagesFrom)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<MessageDb>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) {
-                        if(callbacks != null)
-                            callbacks.onLastPersonalMessageFailedReception(e);
-                    }
-
-                    @Override
-                    public void onNext(MessageDb messageDbs) {
-                        if(callbacks != null)
-                            callbacks.onLastPersonalMessageReceived(messageDbs);
-                    }
-                });
-    }
-
-    public interface PersonalMessageImplCallbacks{
-        void onLastXPersonalMessageListReceived(List<MessageDb> messageList);
-        void onLastXPersonalMessageListFailedReception(Throwable e);
-
-        void onLastPersonalMessageReceived(MessageDb message);
-        void onLastPersonalMessageFailedReception(Throwable e);
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

@@ -18,7 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -175,15 +176,19 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onFailure(OnConnectionOrLoginFailureEvent event) {
+    public void onConnectionFailure(OnConnectionFailureEvent event) {
         materialDialog.dismiss();
-//        snackBar = new SnackBar.Builder(this)
-//                .withMessageId(R.string.activity_login_cannot_connect)
-//                .withTextColorId(R.color.primaryColor)
-//                .withDuration((short) 7000)
-//                .show();
         Snackbar
-                .make(getWindow().getDecorView().getRootView(), R.string.activity_login_cannot_connect, Snackbar.LENGTH_LONG).show();
+                .make(getWindow().getDecorView().getRootView(),
+                        R.string.activity_connection_failed, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void onLoginFailure(OnLoginFailureEvent event) {
+        materialDialog.dismiss();
+        Snackbar
+                .make(getWindow().getDecorView().getRootView(),
+                        R.string.activity_login_failed, Snackbar.LENGTH_LONG).show();
     }
 
     @Subscribe

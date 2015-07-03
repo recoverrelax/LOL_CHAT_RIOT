@@ -138,7 +138,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
 
             notification = RiotXmppDBRepository.getNotificationByUser(connectedUserName, friendXmppUser);
 
-            RosterEntry connUserName2 = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppUser);
+            RosterEntry connUserName2 = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(friendXmppUser);
             if(connUserName2 != null)
                 title.setText("Notify me when " + connUserName2.getName() + ":");
 

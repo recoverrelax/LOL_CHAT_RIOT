@@ -44,7 +44,7 @@ public class FriendStatusTracker {
     }
 
     public void checkForFriendNotificationToSend(String xmppAddress, Presence newPresence) {
-        String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(xmppAddress).getName();
+        String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(xmppAddress).getName();
 
         FriendStates oldState = friendList.containsKey(friendName) ? friendList.get(friendName) : FriendStates.OFFLINE;
         FriendStates newState = getFriendState(new Friend(friendName, xmppAddress, newPresence));

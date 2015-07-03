@@ -7,12 +7,13 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnConnectionLostListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectSuccessListenerEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionOrLoginFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
@@ -24,23 +25,30 @@ import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
-import com.recoverrelax.pt.riotxmppchat.Riot.Interface.RiotXmppConnectionHelper;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.net.ssl.SSLSocketFactory;
 
+import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 import static junit.framework.Assert.assertTrue;
 
-public class RiotXmppService extends Service implements RiotXmppConnectionImpl.RiotXmppConnectionImplCallbacks {
+public class RiotXmppService extends Service {
 
     private static final String TAG = RiotXmppService.class.getSimpleName();
     private static final int ONGOING_SERVICE_NOTIFICATION_ID = 12345;
@@ -66,12 +74,11 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
 
     private XMPPTCPConnectionConfiguration connectionConfig;
     private AbstractXMPPConnection connection;
-    private RiotXmppConnectionHelper connectionHelper;
+    private RiotXmppConnectionImpl connectionHelper;
 
     private RiotConnectionManager riotConnectionManager;
     private RiotRosterManager riotRosterManager;
     private RiotChatManager riotChatManager;
-
 
 
     /**
@@ -174,7 +181,7 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
 
         prepareConnectionConfig(serverDomain, serverHost, serverPort);
         connection = new XMPPTCPConnection(connectionConfig);
-        connectionHelper = new RiotXmppConnectionImpl(this);
+        connectionHelper = new RiotXmppConnectionImpl();
 
         connect();
     }
@@ -194,16 +201,32 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
         assertTrue("To start a connection to the server, you must first call init() method!",
                 this.connectionConfig != null);
 
-        connectionHelper.connect(connection);
+        connectionHelper.connectWithRetry(connection)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<AbstractXMPPConnection>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LOGI(TAG, "ConnectionHelper Connection onError\n");
+
+                        /**{@link LoginActivity#onConnectionFailure(OnConnectionFailureEvent)} */
+                        MainApplication.getInstance().getBusInstance().post(new OnConnectionFailureEvent());
+                    }
+
+                    @Override
+                    public void onNext(AbstractXMPPConnection connection) {
+                        LOGI(TAG, "ConnectionHelper Connection onNext");
+                        onConnected();
+                    }
+                });
     }
 
     public void onConnected() {
         login();
-    }
-
-    public void onFailedConnecting() {
-        /**{@link LoginActivity#onFailure(OnConnectionOrLoginFailureEvent)} */
-        MainApplication.getInstance().getBusInstance().post(new OnConnectionOrLoginFailureEvent());
     }
 
     public void login() {
@@ -211,44 +234,97 @@ public class RiotXmppService extends Service implements RiotXmppConnectionImpl.R
         assertTrue("To start a connection to the server, you must first call init() method!",
                 this.connectionConfig != null || this.connection != null);
 
-        connectionHelper.login(connection);
+        connectionHelper.loginWithRetry(connection)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<AbstractXMPPConnection>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LOGI(TAG, "ConnectionHelper Login onError\n");
+                        LOGI(TAG, e.toString());
+
+                        /**{@link LoginActivity#onLoginFailure(OnLoginFailureEvent)} */
+                        MainApplication.getInstance().getBusInstance().post(new OnLoginFailureEvent());
+                    }
+
+                    @Override
+                    public void onNext(AbstractXMPPConnection connection) {
+                        LOGI(TAG, "ConnectionHelper Login onNext");
+                        onLoggedIn();
+                    }
+                });
     }
 
-    @Override
     public void onLoggedIn() {
-        /**{@link LoginActivity#onSuccessLogin(OnSuccessLoginEvent)} */
-        MainApplication.getInstance().getBusInstance().post(new OnSuccessLoginEvent());
+        LOGI(TAG, "onLoggedIn entered");
 
-        new Handler().postDelayed(() -> {
+        Observable.timer(DELAY_BEFORE_ROSTER_LISTENER, TimeUnit.MILLISECONDS)
+                .flatMap(aLong -> getConnection())
+                .flatMap(this::createListeners)
+                .observeOn(Schedulers.newThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override public void onCompleted() {
+                        LOGI(TAG, "onLoggedIn onCompleted\n");
+                    }
+                    @Override public void onError(Throwable e) {
+                        LOGI(TAG, "Error Creating Chat, Roster, and Connection Listeners\n");
+                        LOGI(TAG, e.toString());
+                    }
 
-            MainApplication.getInstance().getConnectedUser().subscribe(new Subscriber<String>() {
-                @Override public void onCompleted() { }
-                @Override public void onError(Throwable e) { }
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        LOGI(TAG, "onLoggedIn onNext\n");
+                        if(aBoolean)
+                        /**{@link LoginActivity#onSuccessLogin(OnSuccessLoginEvent)} */
+                            MainApplication.getInstance().getBusInstance().post(new OnSuccessLoginEvent());
+                    }
+                });
+    }
 
-                @Override
-                public void onNext(String connectedUSer) {
+    public Observable<AbstractXMPPConnection> getConnection() {
+        return Observable.just(connection);
+    }
+
+    public Observable<String> getConnectedUser() {
+        return getConnection()
+                .flatMap(connection -> Observable.just(AppXmppUtils.parseXmppAddress(connection.getUser())));
+    }
+
+    public AbstractXMPPConnection getConnectionNoRx() {
+        return connection;
+    }
+
+    public Observable<Boolean> createListeners(AbstractXMPPConnection connection){
+        LOGI(TAG, "Enters createListeners\n");
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                try {
+                    LOGI(TAG, "Enters createListeners try \n");
+                    String connectedUser = AppXmppUtils.parseXmppAddress(connection.getUser());
+
                     riotRosterManager = new RiotRosterManager(RiotXmppService.this, connection);
                     riotRosterManager.addRosterListener();
 
-                    riotChatManager = new RiotChatManager(RiotXmppService.this, connection, connectedUSer, getRiotRosterManager());
+                    riotChatManager = new RiotChatManager(RiotXmppService.this, connection, connectedUser, getRiotRosterManager());
                     riotChatManager.addChatListener();
 
                     riotConnectionManager = new RiotConnectionManager(connection);
                     riotConnectionManager.addConnectionListener();
+
+                    subscriber.onNext(true);
+                    subscriber.onCompleted();
+                }catch(Exception e){
+                    LOGI(TAG, "Enters createListeners catch \n");
+                    subscriber.onError(e);
                 }
-            });
-
-        }, DELAY_BEFORE_ROSTER_LISTENER);
-    }
-
-    @Override
-    public void onFailedLoggin() {
-        /**{@link LoginActivity#onFailure(OnConnectionOrLoginFailureEvent)} */
-        MainApplication.getInstance().getBusInstance().post(new OnConnectionOrLoginFailureEvent());
-    }
-
-    public AbstractXMPPConnection getConnection() {
-        return connection;
+            }
+        });
     }
 
     @Override

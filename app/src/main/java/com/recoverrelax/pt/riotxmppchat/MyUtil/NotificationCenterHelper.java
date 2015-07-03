@@ -46,7 +46,7 @@ public abstract class NotificationCenterHelper {
 
             if (userXmppName != null && buttonLabel != null) {
                 snackbar.setAction(buttonLabel, view -> {
-                    String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(userXmppName).getName();
+                    String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(userXmppName).getName();
                     if (activity instanceof BaseActivity)
                         ((BaseActivity) activity).goToMessageActivity(username, userXmppName);
                 });

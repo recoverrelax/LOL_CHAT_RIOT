@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Helper;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
@@ -13,52 +14,29 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class FriendMessageListImpl implements FriendMessageListHelper {
+public class FriendMessageListImpl {
 
-    private RiotXmppService riotXmppService;
-    private FriendMessageListImplCallbacks callback;
-    private GlobalImpl globalImpl;
+    private RiotRosterManager riotRosterManager;
 
-    public FriendMessageListImpl(FriendMessageListImplCallbacks callback) {
-        this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
-        this.callback = callback;
-        this.globalImpl = new GlobalImpl(MainApplication.getInstance().getConnection());
+    public FriendMessageListImpl() {
+        this.riotRosterManager = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager();
     }
 
-    @Override
-    public void getPersonalMessageSingleItem(final String userToReturn) {
+    public Observable<FriendListChat> getPersonalMessageSingleItem(final String userToReturn) {
 
-        Observable<Friend> friendFromRosterEntry = globalImpl.getFriendFromXmppAddress(userToReturn, riotXmppService);
-        Observable<MessageDb> friendLastMessage = globalImpl.getFriendLastMessage(friendFromRosterEntry);
+        Observable<Friend> friendFromRosterEntry = riotRosterManager.getFriendFromXmppAddress(userToReturn);
+        Observable<MessageDb> friendLastMessage = riotRosterManager.getFriendLastMessage(friendFromRosterEntry);
 
-        Observable.zip(friendFromRosterEntry, friendLastMessage, FriendListChat::new)
+        return Observable.zip(friendFromRosterEntry, friendLastMessage, FriendListChat::new)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<FriendListChat>() {
-
-                    @Override public void onCompleted() { }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if (callback != null)
-                            callback.onFriendsMessageSingleFailedReception(e);
-                    }
-
-                    @Override
-                    public void onNext(FriendListChat friendListChat) {
-                        if (callback != null)
-                            callback.onFriendsMessageSingleReceived(friendListChat);
-                    }
-                });
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    @Override
-    public void getPersonalMessageList() {
-        Observable.from(riotXmppService.getRiotRosterManager().getRosterEntries())
+    public Observable<List<FriendListChat>> getPersonalMessageList() {
+        return riotRosterManager.getRosterEntries()
                 .flatMap(rosterEntry -> {
-
-                    Observable<Friend> friendFromRosterEntry = globalImpl.getFriendFromRosterEntry(rosterEntry, riotXmppService);
-                    Observable<MessageDb> friendLastMessage = globalImpl.getFriendLastMessage(friendFromRosterEntry);
+                    Observable<Friend> friendFromRosterEntry = riotRosterManager.getFriendFromRosterEntry(rosterEntry);
+                    Observable<MessageDb> friendLastMessage = riotRosterManager.getFriendLastMessage(friendFromRosterEntry);
 
                     return Observable.zip(friendFromRosterEntry, friendLastMessage, FriendListChat::new);
                 })
@@ -70,33 +48,6 @@ public class FriendMessageListImpl implements FriendMessageListHelper {
                     return Observable.just(friendListChatList);
                 })
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<FriendListChat>>() {
-
-                               @Override
-                               public void onCompleted() {
-                               }
-
-                               @Override
-                               public void onError(Throwable e) {
-                                   if (callback != null)
-                                       callback.onFriendsMessageListFailedReception(e);
-                               }
-
-                               @Override
-                               public void onNext(List<FriendListChat> friendListChat) {
-                                   if (callback != null)
-                                       callback.onFriendsMessageListReceived(friendListChat);
-                               }
-                           }
-                );
-    }
-
-    public interface FriendMessageListImplCallbacks{
-        void onFriendsMessageSingleReceived(FriendListChat friendListChat);
-        void onFriendsMessageSingleFailedReception(Throwable e);
-
-        void onFriendsMessageListReceived(List<FriendListChat> friendListChat);
-        void onFriendsMessageListFailedReception(Throwable e);
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

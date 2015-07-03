@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.widget.ProgressBar;
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListHelper;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
@@ -28,13 +26,16 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
+
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
-import static com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl.FriendMessageListImplCallbacks;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendMessageListFragment extends RiotXmppCommunicationFragment implements FriendMessageListImplCallbacks {
+public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
 
     @Bind(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
@@ -49,7 +50,8 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
      */
     private FriendMessageListAdapter adapter;
 
-    private FriendMessageListHelper friendMessageListHelper;
+    private FriendMessageListImpl friendMessageListHelper;
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
 
     public FriendMessageListFragment() {
         // Required empty public constructor
@@ -75,6 +77,8 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
         showProgressBar(true);
     }
 
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -97,7 +101,7 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
                     AppContextUtils.startPersonalMessageActivityBgColor(getActivity(), friendName, friendXmppAddress, cardColor, null);
                 });
 
-        friendMessageListHelper = new FriendMessageListImpl(this);
+        friendMessageListHelper = new FriendMessageListImpl();
     }
 
     public void showProgressBar(boolean state) {
@@ -107,48 +111,63 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment imp
     @Override
     public void onResume() {
         super.onResume();
-        friendMessageListHelper.getPersonalMessageList();
+        getPersonalMessageList();
+    }
+
+    private void getPersonalMessageList() {
+        Subscription subscribe = friendMessageListHelper.getPersonalMessageList()
+                .subscribe(new Subscriber<List<FriendListChat>>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
+
+                    @Override
+                    public void onNext(List<FriendListChat> friendListChats) {
+                        adapter.setItems(friendListChats);
+                        showProgressBar(false);
+                    }
+                });
+        subscriptions.add(subscribe);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        subscriptions.clear();
     }
 
     @Subscribe
     public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
         getActivity().runOnUiThread(() -> {
             if (adapter.contains(messageReceived.getMessageFrom())) {
-                friendMessageListHelper.getPersonalMessageSingleItem(messageReceived.getMessageFrom());
+                getPersonalMessageSingleItem(messageReceived.getMessageFrom());
             } else {
-                friendMessageListHelper.getPersonalMessageList();
+                getPersonalMessageList();
             }
         });
     }
 
+    private void getPersonalMessageSingleItem(String messageReceived) {
+        Subscription subscribe = friendMessageListHelper.getPersonalMessageSingleItem(messageReceived)
+                .subscribe(new Subscriber<FriendListChat>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        onGeneralThrowableEvent(e);
+                    }
+
+                    @Override
+                    public void onNext(FriendListChat friendListChat) {
+                        adapter.setSingleItem(friendListChat);
+                        showProgressBar(false);
+                    }
+                });
+        subscriptions.add(subscribe);
+    }
+
     public void onGeneralThrowableEvent(Throwable e){
         LOGE(TAG, "", e);
-    }
-
-    @Override
-    public void onFriendsMessageSingleReceived(FriendListChat friendListChat) {
-        adapter.setSingleItem(friendListChat);
-        showProgressBar(false);
-    }
-
-    @Override
-    public void onFriendsMessageSingleFailedReception(Throwable e) {
-        onGeneralThrowableEvent(e);
-    }
-
-    @Override
-    public void onFriendsMessageListReceived(List<FriendListChat> friendListChat) {
-        adapter.setItems(friendListChat);
-        showProgressBar(false);
-    }
-
-    @Override
-    public void onFriendsMessageListFailedReception(Throwable e) {
-        onGeneralThrowableEvent(e);
     }
 }

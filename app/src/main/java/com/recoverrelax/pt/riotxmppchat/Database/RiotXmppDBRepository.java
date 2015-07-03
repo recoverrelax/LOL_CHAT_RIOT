@@ -25,16 +25,62 @@ public class RiotXmppDBRepository {
      * MessageDao
      */
 
+    private static final String TAG = RiotXmppDBRepository.class.getCanonicalName();
+
     private static MessageDbDao messageDao = MainApplication.getInstance().getDaoSession().getMessageDbDao();
     private static InAppLogDbDao inAppLogDbDao = MainApplication.getInstance().getDaoSession().getInAppLogDbDao();
     private static NotificationDbDao notificationDao = MainApplication.getInstance().getDaoSession().getNotificationDbDao();
 
-    public static long insertMessageNoRx(MessageDb message) {
-        return messageDao.insert(message);
+    public void insertOrReplaceInappLog(InAppLogDb inappLog){
+        Observable.just(RiotXmppDBRepository.getInAppLogDbDao().insertOrReplace(inappLog))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<Long>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        LOGI(TAG, "Inserted InAppLogDb with id: " + aLong + " in the DB");
+                    }
+                });
     }
 
-    public static void updateMessages(List<MessageDb> messages){
-        messageDao.updateInTx(messages);
+    public void updateMessages(List<MessageDb> messages){
+        Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                try{
+                    messageDao.updateInTx(messages);
+                    subscriber.onNext(true);
+                    subscriber.onCompleted();
+                }catch(Exception e){
+                    subscriber.onError(e);
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean b) {
+                        LOGI(TAG, "Setted messages to Read");
+                    }
+                });
     }
 
     public static boolean hasUnreadedMessages(){
@@ -45,6 +91,57 @@ public class RiotXmppDBRepository {
                 MessageDbDao.Properties.WasRead.eq(false))
                 .build();
         return qb.list().size()>0;
+    }
+
+    public Observable<List<InAppLogDb>> getLast20List(String connectedUser){
+        return Observable.just(RiotXmppDBRepository.getInAppLogDbDao().queryBuilder())
+                .flatMap(qb -> {
+                    qb.where(InAppLogDbDao.Properties.UserXmppId.eq(connectedUser))
+                            .orderDesc(InAppLogDbDao.Properties.Id)
+                            .limit(20).build();
+                    QueryBuilder.LOG_SQL = true;
+
+                    List<InAppLogDb> logList = qb.list();
+
+                    if(logList.size() == 0)
+                        return Observable.just(null);
+                    else
+                        return Observable.just(logList);
+                });
+    }
+
+    public void insertMessage(MessageDb message){
+        Observable.just(messageDao.insert(message))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Long>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        LOGI(TAG, "Inserted MessageDb with id: " + aLong + " in the DB");
+                    }
+                });
+    }
+
+    public Observable<Integer> getUnreadedMessages(){
+        return MainApplication.getInstance().getRiotXmppService().getConnectedUser()
+                .flatMap(connectedUser -> {
+                    QueryBuilder qb = messageDao.queryBuilder();
+                    qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
+                            MessageDbDao.Properties.Direction.eq(MessageDirection.FROM.getId()),
+                            MessageDbDao.Properties.WasRead.eq(false))
+                            .build();
+                    return Observable.just(qb.list().size());
+                });
     }
 
     public static NotificationDb getNotificationByUser(String currentUser, String friendUser) {
