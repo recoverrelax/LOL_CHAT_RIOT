@@ -180,40 +180,40 @@
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="Away" />
 
-                <LinearLayout
+                <RelativeLayout
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp">
+                    android:layout_height="wrap_content">
 
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                    <ImageView
-                        tools:src="@drawable/profile_icon_example"
-                        android:id="@+id/champion_square"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerInside"/>
-                    </FrameLayout>
 
                     <TextView
                         android:id="@+id/gameStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical|left"
-                        android:layout_gravity="center_vertical|left"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
-                        android:paddingRight="@dimen/friends_list_recycler_child_textview_margin"
+                        android:minLines="2"
+                        android:gravity="left"
+                        android:layout_alignParentTop="true"
                         android:textSize="@dimen/text_size_micro"
-                        tools:text="Playing as Ashe for 45 minutes" />
+                        tools:text="Playing as Ashe for 45 minutes"
+                        android:layout_toLeftOf="@+id/champion_square"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
 
-                </LinearLayout>
+                    <ImageView
+                            tools:src="@drawable/profile_icon_example"
+                            android:id="@+id/champion_square"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:adjustViewBounds="true"
+                            android:scaleType="centerInside"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignTop="@id/gameStatus"
+                            android:layout_alignBottom="@id/gameStatus"/>
+
+
+                </RelativeLayout>
 
             </LinearLayout>
 

@@ -23,6 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import LolChatRiotDb.MessageDb;
+import LolChatRiotDb.NotificationDb;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
@@ -75,7 +81,12 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         if (messageFrom != null && message.getBody() != null) {
             MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
-            new RiotXmppDBRepository().insertMessage(message1);
+            new RiotXmppDBRepository().insertMessage(message1)
+                    .subscribe(new Subscriber<Long>() {
+                        @Override public void onCompleted() { }
+                        @Override public void onError(Throwable e) { }
+                        @Override public void onNext(Long aLong) { }
+                    });
             notifyNewMessage(message, messageFrom);
         }
     }
@@ -105,19 +116,55 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
 
-        new NotificationCenter(userXmppAddress)
-                .sendMessageNotification(message.getBody());
+        Observable.zip
+                (
+                        riotXmppDBRepository.getNotificationByUser(userXmppAddress),
+                        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(userXmppAddress)
+                                .flatMap(rosterEntry -> Observable.just(rosterEntry.getName()))
+                                .doOnNext(friendName -> MainApplication.getInstance().getBusInstance().post(
+                                        new OnNewMessageReceivedEventEvent(message, userXmppAddress, friendName))),
 
-        String name = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(userXmppAddress).getName();
-        MainApplication.getInstance().getBusInstance().post(new OnNewMessageReceivedEventEvent(message, userXmppAddress, name));
+                        (notificationDb, friendName) -> new NotificationCenter(userXmppAddress, friendName, notificationDb)
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<NotificationCenter>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(NotificationCenter notificationCenter) {
+                        notificationCenter.sendMessageNotification(message.getBody());
+                    }
+                });
+
+//        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(userXmppAddress)
+//        String name = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(userXmppAddress).getName();
+//        MainApplication.getInstance().getBusInstance().post(new OnNewMessageReceivedEventEvent(message, userXmppAddress, name));
     }
 
-    public void sendMessage(String message, String userXmppName) {
-        try {
-            Chat chat = getChat(userXmppName);
-            chat.sendMessage(message);
-        } catch (SmackException.NotConnectedException e) {
-            e.printStackTrace();
-        }
+    public Observable<Boolean> sendMessage(String message, String userXmppName) {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber) {
+                try {
+                    Chat chat = getChat(userXmppName);
+                    chat.sendMessage(message);
+
+                    subscriber.onNext(true);
+                    subscriber.onCompleted();
+                } catch (SmackException.NotConnectedException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                }
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

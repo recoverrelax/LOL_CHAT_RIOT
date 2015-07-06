@@ -41,8 +41,13 @@ import LolChatRiotDb.MessageDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
@@ -190,34 +195,70 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
     @OnClick(R.id.expandButton)
     public void sendMessageButton(View view) {
         String message = chatEditText.getText().toString();
-        Presence rosterPresence = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterPresence2(friendXmppName);
 
-        if (!message.equals("") && rosterPresence.isAvailable()) {
+        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterPresence(friendXmppName)
+                .flatMap(rosterPresence -> Observable.just(rosterPresence.isAvailable()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
 
-            MainApplication.getInstance().getRiotXmppService().getRiotChatManager().sendMessage(message, friendXmppName);
+                    @Override
+                    public void onNext(Boolean isAvailable) {
+                        if(isAvailable && !message.equals(""))
+                            sendMessage(message);
+                    }
+                });
+    }
 
-            MessageDb messageDb = new MessageDb(null, MainApplication.getInstance().getConnectedUserString(),
-                    friendXmppName, MessageDirection.TO.getId(), new Date(), message, false);
+    public void sendMessage(String message){
+        MainApplication.getInstance().getRiotXmppService().getRiotChatManager().sendMessage(message, friendXmppName)
+                .flatMap(sentMessageId -> MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser())
+                .flatMap(connectedUser -> new RiotXmppDBRepository().insertMessage(new MessageDb(null,
+                                connectedUser,
+                                friendXmppName,
+                                MessageDirection.TO.getId(),
+                                new Date(),
+                                message,
+                                false))
+                        .doOnNext(aLong -> {
+                            if (aLong != null)
+                                OnNewMessageReceived(null);
+                        })
+                        .map(aLong -> connectedUser)
+                )
+                .flatMap(connectedUser -> new RiotXmppDBRepository().insertOrReplaceInappLog(new InAppLogDb(null,
+                        InAppLogIds.FRIEND_PM.getOperationId(),
+                        new Date(),
+                        "You said to  " + friendUsername + ": " + message,
+                        connectedUser, friendXmppName)))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Long>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
 
-            new RiotXmppDBRepository().insertMessage(messageDb);
-            OnNewMessageReceived(null);
-
-            new RiotXmppDBRepository().insertOrReplaceInappLog(new InAppLogDb(null, InAppLogIds.FRIEND_PM.getOperationId(), new Date(),
-                    "You said to  " + friendUsername + ": " + message,
-                    MainApplication.getInstance().getConnectedUserString(), friendXmppName));
-
-
-            MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
-            // clear text
-            chatEditText.setText("");
-        }
+                    @Override
+                    public void onNext(Long aLong) {
+                        if (aLong != null)
+                            MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
+                        // clear text
+                        chatEditText.setText("");
+                    }
+                });
     }
 
     private void setAllMessagesRead() {
         List<MessageDb> allMessages = adapter.getAllMessages();
         for (MessageDb message : allMessages)
             message.setWasRead(true);
-        new RiotXmppDBRepository().updateMessages(allMessages);
+        new RiotXmppDBRepository().updateMessages(allMessages)
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
+                    @Override public void onNext(Boolean aBoolean) { }
+                });
     }
 
     @Override

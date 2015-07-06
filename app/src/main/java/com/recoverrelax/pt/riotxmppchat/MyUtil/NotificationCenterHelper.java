@@ -35,8 +35,8 @@ public abstract class NotificationCenterHelper {
         mNotificationManager.notify(notificationId, mBuilder.build());
     }
 
-    protected void hSendSnackbarNotification(@Nullable Activity activity, @Nullable String userXmppName, @NonNull String message,
-                                                @Nullable String buttonLabel, boolean combinedPermission) {
+    protected void hSendSnackbarNotification(@Nullable Activity activity, @Nullable String userXmppName, @Nullable String username,
+                                             @NonNull String message, @Nullable String buttonLabel, boolean combinedPermission) {
 
         if(!combinedPermission || activity == null)
             return;
@@ -46,7 +46,6 @@ public abstract class NotificationCenterHelper {
 
             if (userXmppName != null && buttonLabel != null) {
                 snackbar.setAction(buttonLabel, view -> {
-                    String username = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(userXmppName).getName();
                     if (activity instanceof BaseActivity)
                         ((BaseActivity) activity).goToMessageActivity(username, userXmppName);
                 });

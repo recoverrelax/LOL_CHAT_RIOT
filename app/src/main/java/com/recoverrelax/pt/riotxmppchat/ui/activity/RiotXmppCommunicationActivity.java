@@ -4,11 +4,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.FriendStatusChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.squareup.otto.Subscribe;
+
+import rx.Subscriber;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public abstract class RiotXmppCommunicationActivity extends BaseActivity{
 
@@ -34,42 +40,42 @@ public abstract class RiotXmppCommunicationActivity extends BaseActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        boolean b = super.onCreateOptionsMenu(menu);
-
-        boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
+        super.onCreateOptionsMenu(menu);
         MenuItem messageItem = menu.findItem(R.id.newMessage);
-        if(hasNewMessageIcon()) {
-            if (hasUnreaded) {
-                messageItem.setVisible(true);
-//
-//            messageItem.setActionView(R.layout.new_message_view);
-//            View actionView = messageItem.getActionView();
-//
-//            imageviewMessage = ButterKnife.findById(actionView, R.id.newMessage);
-//            actionView.setOnClickListener(view -> goToMessageListActivity());
-//
-//            AppContextUtils.setBlinkAnimation(imageviewMessage, true);
-            } else {
-                messageItem.setVisible(false);
-//            messageItem.setActionView(null);
-//            if(imageviewMessage != null)
-//                AppContextUtils.setBlinkAnimation(imageviewMessage, false);
-            }
-        }
 
-        return b;
+        if(hasNewMessageIcon())
+        new RiotXmppDBRepository().hasUnreadedMessages()
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        messageItem.setVisible(aBoolean);
+                    }
+                });
+        return true;
     }
 
     public void resetMessageIcon(){
-        boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
-
         Toolbar toolbar = getToolbar();
-        if(toolbar != null){
-            MenuItem item = toolbar.getMenu().findItem(R.id.newMessage);
-            if(item != null)
-                runOnUiThread(() -> item.setVisible(hasUnreaded));
-        }
+        MenuItem item = toolbar.getMenu().findItem(R.id.newMessage);
 
+        new RiotXmppDBRepository().hasUnreadedMessages()
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if(toolbar != null){
+                            if(item != null) {
+                                item.setVisible(aBoolean);
+                                LOGI("111", aBoolean ? "true" : "false");
+                            }
+                        }
+                    }
+                });
     }
 
     public abstract boolean hasNewMessageIcon();

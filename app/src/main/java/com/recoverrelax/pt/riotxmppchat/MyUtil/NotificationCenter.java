@@ -9,11 +9,10 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.DashBoardActivity;
-
-import java.util.Date;
-
-import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.NotificationDb;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
@@ -30,22 +29,21 @@ public class NotificationCenter extends NotificationCenterHelper{
     private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
 
     private DataStorage dataStorageInstance;
-    private NotificationDb notificationDb;
 
-    private String connectedXmppUser;
     private String targetXmppUser;
     private String targetUserName;
     private RiotXmppDBRepository xmppRepository;
+    private NotificationDb notificationDb;
 
-    public NotificationCenter(String targetXmppUser){
+    public NotificationCenter(String targetXmppUser, String targetUserName, NotificationDb notificationDb){
         dataStorageInstance = DataStorage.getInstance();
 
-        this.connectedXmppUser = MainApplication.getInstance().getConnectedUserString();
         this.targetXmppUser = targetXmppUser;
-        this.notificationDb = RiotXmppDBRepository.getNotificationByUser(connectedXmppUser, targetXmppUser);
-        this.targetUserName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(this.targetXmppUser).getName();
-
+        this.notificationDb = notificationDb;
+        this.targetUserName = targetUserName;
         xmppRepository = new RiotXmppDBRepository();
+
+//        this.targetUserName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(this.targetXmppUser).getName();
     }
 
     public void sendMessageNotification(String message){
@@ -59,6 +57,7 @@ public class NotificationCenter extends NotificationCenterHelper{
         if(!(currentOpenedActivity instanceof DashBoardActivity))
         hSendSnackbarNotification(currentOpenedActivity,
                 targetXmppUser,
+                targetUserName,
                 targetUserName + "says: \n" + message,
                 "CHAT",
                 getMessageForegroundPermission());
@@ -83,6 +82,7 @@ public class NotificationCenter extends NotificationCenterHelper{
         if(!(currentOpenedActivity instanceof DashBoardActivity))
         hSendSnackbarNotification(MainApplication.getInstance().getCurrentOpenedActivity(),
                 targetXmppUser,
+                targetUserName,
                 targetUserName + " " + message,
                 "CHAT",
                 getOnlineOfflineForegroundTextPermission(status));
@@ -106,6 +106,7 @@ public class NotificationCenter extends NotificationCenterHelper{
         if(!(currentOpenedActivity instanceof DashBoardActivity))
         hSendSnackbarNotification(MainApplication.getInstance().getCurrentOpenedActivity(),
                 targetXmppUser,
+                targetUserName,
                 targetUserName + " " + message,
                 "CHAT",
                 getStartedLeftGameForegroundTextPermission(playingOrIdle));
@@ -199,10 +200,23 @@ public class NotificationCenter extends NotificationCenterHelper{
     }
 
     private void saveToLog(Integer logId, String logMessage) {
-         new RiotXmppDBRepository().insertOrReplaceInappLog(new InAppLogDb(null, logId, new Date(),
-                 logMessage, connectedXmppUser, targetXmppUser));
+         new RiotXmppDBRepository().insertOrReplaceInappLog(logId, logMessage, targetXmppUser)
+                 .observeOn(AndroidSchedulers.mainThread())
+                 .subscribeOn(Schedulers.io())
+                 .subscribe(new Subscriber<Long>() {
+                     @Override
+                     public void onCompleted() {
+                     }
 
-        // With a delay in order to not update the dashboard at the same time the snackbar is on
-        MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
+                     @Override
+                     public void onError(Throwable e) {
+                     }
+
+                     @Override
+                     public void onNext(Long aLong) {
+                         MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
+                     }
+                 });
+
     }
 }

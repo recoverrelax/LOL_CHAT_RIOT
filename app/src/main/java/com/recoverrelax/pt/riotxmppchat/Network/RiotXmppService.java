@@ -5,13 +5,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnConnectionLostListenerEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectSuccessListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
@@ -26,11 +22,8 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
-import com.squareup.otto.Subscribe;
-
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
@@ -39,10 +32,8 @@ import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLSocketFactory;
 
 import rx.Observable;
-import rx.Observer;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
@@ -126,7 +117,7 @@ public class RiotXmppService extends Service {
             /**
              * USER LOGGED IN, JUST START THE APP
              */
-            onLoggedIn();
+            onLoggedIn(connection);
         } else {
             /**
              * USER NOT LOGGED IN
@@ -254,19 +245,18 @@ public class RiotXmppService extends Service {
                     @Override
                     public void onNext(AbstractXMPPConnection connection) {
                         LOGI(TAG, "ConnectionHelper Login onNext");
-                        onLoggedIn();
+                        onLoggedIn(connection);
                     }
                 });
     }
 
-    public void onLoggedIn() {
+    public void onLoggedIn(AbstractXMPPConnection connection) {
         LOGI(TAG, "onLoggedIn entered");
 
         Observable.timer(DELAY_BEFORE_ROSTER_LISTENER, TimeUnit.MILLISECONDS)
-                .flatMap(aLong -> getConnection())
-                .flatMap(this::createListeners)
-                .observeOn(Schedulers.newThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .flatMap(aLong -> createListeners(connection))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Boolean>() {
                     @Override public void onCompleted() {
                         LOGI(TAG, "onLoggedIn onCompleted\n");
@@ -286,19 +276,6 @@ public class RiotXmppService extends Service {
                 });
     }
 
-    public Observable<AbstractXMPPConnection> getConnection() {
-        return Observable.just(connection);
-    }
-
-    public Observable<String> getConnectedUser() {
-        return getConnection()
-                .flatMap(connection -> Observable.just(AppXmppUtils.parseXmppAddress(connection.getUser())));
-    }
-
-    public AbstractXMPPConnection getConnectionNoRx() {
-        return connection;
-    }
-
     public Observable<Boolean> createListeners(AbstractXMPPConnection connection){
         LOGI(TAG, "Enters createListeners\n");
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
@@ -314,7 +291,7 @@ public class RiotXmppService extends Service {
                     riotChatManager = new RiotChatManager(RiotXmppService.this, connection, connectedUser, getRiotRosterManager());
                     riotChatManager.addChatListener();
 
-                    riotConnectionManager = new RiotConnectionManager(connection);
+                    riotConnectionManager = new RiotConnectionManager(connection, riotRosterManager);
                     riotConnectionManager.addConnectionListener();
 
                     subscriber.onNext(true);
@@ -335,16 +312,6 @@ public class RiotXmppService extends Service {
 
         connection = null;
         super.onDestroy();
-    }
-
-    @Subscribe
-    public void onReconnect(OnReconnectSuccessListenerEvent event){
-        getRiotRosterManager().getFriendStatusTracker().setEnabled(true);
-    }
-
-    @Subscribe
-    public void onConnectionLost(OnConnectionLostListenerEvent event){
-        getRiotRosterManager().getFriendStatusTracker().setEnabled(false);
     }
 
     public RiotRosterManager getRiotRosterManager() {

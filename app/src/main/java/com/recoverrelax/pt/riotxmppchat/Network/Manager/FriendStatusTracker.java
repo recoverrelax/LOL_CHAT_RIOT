@@ -1,8 +1,11 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewFriendPlayingEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
@@ -11,6 +14,12 @@ import org.jivesoftware.smack.packet.Presence;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import LolChatRiotDb.NotificationDb;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
@@ -31,6 +40,10 @@ public class FriendStatusTracker {
         friendList.put(friend.getName(), state);
     }
 
+    public void clear(){
+        this.friendList.clear();
+    }
+
     public FriendStates getFriendState(Friend friend){
         FriendStates state;
 
@@ -44,25 +57,49 @@ public class FriendStatusTracker {
     }
 
     public void checkForFriendNotificationToSend(String xmppAddress, Presence newPresence) {
-        String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(xmppAddress).getName();
 
-        FriendStates oldState = friendList.containsKey(friendName) ? friendList.get(friendName) : FriendStates.OFFLINE;
-        FriendStates newState = getFriendState(new Friend(friendName, xmppAddress, newPresence));
+        Observable.zip
+                (
+                        new RiotXmppDBRepository().getNotificationByUser(xmppAddress),
+                        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(xmppAddress)
+                                .flatMap(rosterEntry -> Observable.just(rosterEntry.getName())),
+                        (notificationDb, friendName) -> {
+                            NotificationCenter notificationCenter = new NotificationCenter(xmppAddress, friendName, notificationDb);
+                            return new Pair<>(friendName, notificationCenter);
+                        }
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Pair<String, NotificationCenter>>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
 
-        if (enabled) {
-            if (oldState.isOffline() && !newState.isOffline()) {
-                new NotificationCenter(xmppAddress).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.ONLINE);
-            }else if (!oldState.isOffline() && newState.isOffline())
-                    new NotificationCenter(xmppAddress).sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.OFFLINE);
-            else if(!oldState.isPlaying() && newState.isPlaying()) {
-                new NotificationCenter(xmppAddress).sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.STARTED_GAME);
-                MainApplication.getInstance().getBusInstance().post(new OnNewFriendPlayingEvent());
-            }
-            else if(oldState.isPlaying() && !newState.isPlaying()) {
-                new NotificationCenter(xmppAddress).sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.ENDED_GAME);
-                MainApplication.getInstance().getBusInstance().post(new OnNewFriendPlayingEvent());
-            }
-        }
+                    @Override
+                    public void onNext(Pair<String, NotificationCenter> stringNotificationCenterPair) {
+                        String friendName = stringNotificationCenterPair.first;
+                        NotificationCenter notificationCenter = stringNotificationCenterPair.second;
+
+                        FriendStates oldState = friendList.containsKey(friendName) ? friendList.get(friendName) : FriendStates.OFFLINE;
+                        FriendStates newState = getFriendState(new Friend(friendName, xmppAddress, newPresence));
+
+                        if (enabled) {
+                            if (oldState.isOffline() && !newState.isOffline()) {
+                                notificationCenter.sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.ONLINE);
+                            }else if (!oldState.isOffline() && newState.isOffline())
+                                notificationCenter.sendOnlineOfflineNotification(NotificationCenter.OnlineOffline.OFFLINE);
+                            else if(!oldState.isPlaying() && newState.isPlaying()) {
+                                notificationCenter.sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.STARTED_GAME);
+                                MainApplication.getInstance().getBusInstance().post(new OnNewFriendPlayingEvent());
+                            }
+                            else if(oldState.isPlaying() && !newState.isPlaying()) {
+                                notificationCenter.sendStartedEndedGameNotification(NotificationCenter.PlayingIddle.ENDED_GAME);
+                                MainApplication.getInstance().getBusInstance().post(new OnNewFriendPlayingEvent());
+                            }
+                        }
+
+                    }
+                });
+
     }
 
     public void setEnabled(boolean state){

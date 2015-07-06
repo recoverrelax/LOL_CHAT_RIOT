@@ -157,8 +157,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             .error(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
 
-                    Picasso.with(context).load(holderOnline.current.getChampionDragonUrl())
+                    if(holderOnline.current.isPlaying())
+                        Picasso.with(context).load(holderOnline.current.getChampionDragonUrl())
                             .into(holderOnline.championSquare);
+                    else
+                        holderOnline.championSquare.setImageDrawable(null);
                 }
 
                 break;

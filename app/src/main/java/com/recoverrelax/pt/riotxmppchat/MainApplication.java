@@ -96,10 +96,10 @@ public class MainApplication extends Application {
     }
 
     public void printActivityState(){
-        LOGI("1111", isApplicationPaused() ? "isPaused? yes" : "isPaused? no");
-        LOGI("1111", isApplicationClosed() ? "isClosed? yes" : "isClosed? no");
-        LOGI("1111", !isApplicationClosed() && !isApplicationPaused() ? "isOppened? yes" : "isOppened? no");
-        LOGI("1111", "\n\n");
+//        LOGI("1111", isApplicationPaused() ? "isPaused? yes" : "isPaused? no");
+//        LOGI("1111", isApplicationClosed() ? "isClosed? yes" : "isClosed? no");
+//        LOGI("1111", !isApplicationClosed() && !isApplicationPaused() ? "isOppened? yes" : "isOppened? no");
+//        LOGI("1111", "\n\n");
     }
 
     public boolean isApplicationClosed(){
@@ -116,10 +116,6 @@ public class MainApplication extends Application {
 
     public BaseActivity setBaseActivity(BaseActivity act){
         return this.baseActivity = act;
-    }
-
-    public boolean hasNewMessages(){
-        return RiotXmppDBRepository.hasUnreadedMessages();
     }
 
     private void setupDatabase() {
@@ -190,21 +186,4 @@ public class MainApplication extends Application {
         return this.bus;
     }
 
-    public AbstractXMPPConnection getConnection() {
-        return getRiotXmppService().getConnectionNoRx();
-    }
-
-
-
-    public Observable<String> getConnectedUser() {
-        return getRiotXmppService().getConnectedUser();
-    }
-
-    /**
-     * TODO REMOVE THIS
-     * @return
-     */
-    public String getConnectedUserString() {
-        return AppXmppUtils.parseXmppAddress(getRiotXmppService().getConnectionNoRx().getUser());
-    }
 }

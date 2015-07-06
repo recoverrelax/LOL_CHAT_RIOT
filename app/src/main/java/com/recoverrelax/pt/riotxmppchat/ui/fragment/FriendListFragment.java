@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
+import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnReconnectSuccessListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -45,6 +46,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -148,20 +151,31 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
             switch (menuItem.getItemId()) {
                 case R.id.notifications:
                     FragmentManager manager = getActivity().getFragmentManager();
-                    String connectedXmppUser = MainApplication.getInstance().getConnectedUserString();
-
-                    NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance(friendXmppAddress, connectedXmppUser);
+                    NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance(friendXmppAddress);
 
                     new Handler().postDelayed(
                             () -> myDialog.show(manager, "baseDialog"),
                             50);
                     break;
                 case R.id.other_1:
-                    String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(friendXmppAddress).getName();
-                    new Handler().postDelayed(
-                            () -> AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName, friendXmppAddress),
-                            50);
+//                    String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(friendXmppAddress).getName();
+//                    new Handler().postDelayed(
+//                            () -> AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName, friendXmppAddress),
+//                            50);
+//                    break;
+                        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getFriendNameFromXmppAddress(friendXmppAddress)
+                                .subscribe(new Subscriber<String>() {
+                                    @Override public void onCompleted() { }
+                                    @Override public void onError(Throwable e) { }
+
+                                    @Override
+                                    public void onNext(String friendName) {
+                                        AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName,
+                                                friendXmppAddress);
+                                    }
+                                });
                     break;
+
                 default:
                     break;
             }
@@ -182,7 +196,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
     @Subscribe
     public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
-        getSingleFriend(friendPresence.getPresence());
+        getActivity().runOnUiThread(() -> getSingleFriend(friendPresence.getPresence()));
     }
 
     public void showProgressBar(boolean state) {
@@ -195,8 +209,21 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-        final boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
+//        final boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
 
+        new RiotXmppDBRepository().hasUnreadedMessages()
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        setOptionsMenu(menu, aBoolean);
+                    }
+                });
+    }
+
+    private void setOptionsMenu(Menu menu, boolean hasUnreaded) {
         final MenuItem refresh = menu.findItem(R.id.refresh);
         refresh.setVisible(true);
 
@@ -240,7 +267,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                         getFullFriendList(SHOW_OFFLINE_USERS);
                     refresh.setVisible(true);
                     addFriend.setVisible(true);
-                    if(hasUnreaded) {
+                    if (hasUnreaded) {
                         newMessage.setVisible(true);
                     }
                     return true;

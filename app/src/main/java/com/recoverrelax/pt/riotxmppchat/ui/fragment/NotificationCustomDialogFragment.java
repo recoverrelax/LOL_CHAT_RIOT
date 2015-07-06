@@ -28,6 +28,7 @@ import LolChatRiotDb.NotificationDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Subscriber;
 
 public class NotificationCustomDialogFragment extends DialogFragment {
 
@@ -49,19 +50,16 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     @Bind(R.id.hasSentPm)
     SwitchCompat hasSentPm;
 
-    public static String USER_XMPP_ADDRESS = "user_xmpp_address";
     public static String FRIEND_XMPP_ADDRESS = "friend_xmpp_address";
 
-    private String connectedUserName;
     private String friendXmppUser;
     private NotificationDb notification;
 
-    public static NotificationCustomDialogFragment newInstance(String friendXmppAddress, String connectedXmppAddress) {
+    public static NotificationCustomDialogFragment newInstance(String friendXmppAddress) {
 
         NotificationCustomDialogFragment notificationCustomDialogFragment = new NotificationCustomDialogFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putString(USER_XMPP_ADDRESS, connectedXmppAddress);
         bundle.putString(FRIEND_XMPP_ADDRESS, friendXmppAddress);
 
         notificationCustomDialogFragment.setArguments(bundle);
@@ -120,7 +118,13 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        RiotXmppDBRepository.updateNotification(notification);
+
+        new RiotXmppDBRepository().updateNotification(notification)
+                .subscribe(new Subscriber<Long>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
+                    @Override public void onNext(Long aLong) { }
+                });
     }
 
     @Override
@@ -133,21 +137,35 @@ public class NotificationCustomDialogFragment extends DialogFragment {
         if(savedInstanceState == null){
             Bundle extra = getArguments();
 
-            connectedUserName = extra.getString(USER_XMPP_ADDRESS);
             friendXmppUser = extra.getString(FRIEND_XMPP_ADDRESS);
+            new RiotXmppDBRepository().getNotificationByUser(friendXmppUser)
+                    .subscribe(new Subscriber<NotificationDb>() {
+                        @Override public void onCompleted() { }
+                        @Override public void onError(Throwable e) { }
 
-            notification = RiotXmppDBRepository.getNotificationByUser(connectedUserName, friendXmppUser);
+                        @Override
+                        public void onNext(NotificationDb notificationDb) {
+                            notification = notificationDb;
+                            isOffline.setChecked(notification.getIsOffline());
+                            isOnline.setChecked(notification.getIsOnline());
 
-            RosterEntry connUserName2 = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(friendXmppUser);
-            if(connUserName2 != null)
-                title.setText("Notify me when " + connUserName2.getName() + ":");
+                            hasSentPm.setChecked(notification.getHasSentMePm());
+                            hasLeftGame.setChecked(notification.getHasLefGame());
+                            hasStartedGame.setChecked(notification.getHasStartedGame());
+                        }
+                    });
 
-            isOffline.setChecked(notification.getIsOffline());
-            isOnline.setChecked(notification.getIsOnline());
+            MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppUser)
+                    .filter(rosterEntry -> rosterEntry != null)
+                    .subscribe(new Subscriber<RosterEntry>() {
+                        @Override public void onCompleted() { }
+                        @Override public void onError(Throwable e) { }
 
-            hasSentPm.setChecked(notification.getHasSentMePm());
-            hasLeftGame.setChecked(notification.getHasLefGame());
-            hasStartedGame.setChecked(notification.getHasStartedGame());
+                        @Override
+                        public void onNext(RosterEntry rosterEntry) {
+                            title.setText("Notify me when " + rosterEntry.getName() + ":");
+                        }
+                    });
         }
     }
 }

@@ -63,7 +63,7 @@ public class Settings_Notification extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        MainApplication.getInstance().getConnectedUser()
+        MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
                 .subscribe(new Subscriber<String>() {
                     @Override public void onCompleted() { } @Override public void onError(Throwable e) { }
 

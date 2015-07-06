@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Database;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
+import java.util.Date;
 import java.util.List;
 
 import LolChatRiotDb.InAppLogDb;
@@ -14,10 +15,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class RiotXmppDBRepository {
 
@@ -31,138 +29,103 @@ public class RiotXmppDBRepository {
     private static InAppLogDbDao inAppLogDbDao = MainApplication.getInstance().getDaoSession().getInAppLogDbDao();
     private static NotificationDbDao notificationDao = MainApplication.getInstance().getDaoSession().getNotificationDbDao();
 
-    public void insertOrReplaceInappLog(InAppLogDb inappLog){
-        Observable.just(RiotXmppDBRepository.getInAppLogDbDao().insertOrReplace(inappLog))
+    public Observable<Long> insertOrReplaceInappLog(InAppLogDb inappLog){
+        return Observable.defer(() -> Observable.just(RiotXmppDBRepository.getInAppLogDbDao().insertOrReplace(inappLog)))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Long>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(Long aLong) {
-                        LOGI(TAG, "Inserted InAppLogDb with id: " + aLong + " in the DB");
-                    }
-                });
+                .subscribeOn(Schedulers.io());
     }
 
-    public void updateMessages(List<MessageDb> messages){
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
+    public Observable<Long> insertOrReplaceInappLog(Integer logId, String logMessage, String targetXmppUser){
+        return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
+                .map(connectedUser -> new InAppLogDb(null, logId, new Date(), logMessage, connectedUser, targetXmppUser))
+                .flatMap(this::insertOrReplaceInappLog)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Boolean> updateMessages(List<MessageDb> messages){
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
-                try{
+                try {
                     messageDao.updateInTx(messages);
                     subscriber.onNext(true);
                     subscriber.onCompleted();
-                }catch(Exception e){
+                } catch (Exception e) {
                     subscriber.onError(e);
                 }
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Boolean>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Boolean b) {
-                        LOGI(TAG, "Setted messages to Read");
-                    }
-                });
+        });
     }
 
-    public static boolean hasUnreadedMessages(){
-        String connectedUser = MainApplication.getInstance().getConnectedUserString();
-        QueryBuilder qb = messageDao.queryBuilder();
-        qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
-                MessageDbDao.Properties.Direction.eq(MessageDirection.FROM.getId()),
-                MessageDbDao.Properties.WasRead.eq(false))
-                .build();
-        return qb.list().size()>0;
+    public Observable<Boolean> hasUnreadedMessages(){
+        return getUnreadedMessages()
+                .map(unreadedMessages -> unreadedMessages > 0)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<List<InAppLogDb>> getLast20List(String connectedUser){
-        return Observable.just(RiotXmppDBRepository.getInAppLogDbDao().queryBuilder())
-                .flatMap(qb -> {
+        return Observable.defer( () ->
+                Observable.just(RiotXmppDBRepository.getInAppLogDbDao().queryBuilder())
+                .map(qb -> {
                     qb.where(InAppLogDbDao.Properties.UserXmppId.eq(connectedUser))
                             .orderDesc(InAppLogDbDao.Properties.Id)
                             .limit(20).build();
-                    QueryBuilder.LOG_SQL = true;
-
                     List<InAppLogDb> logList = qb.list();
 
-                    if(logList.size() == 0)
-                        return Observable.just(null);
+                    if (logList.size() == 0)
+                        return null;
                     else
-                        return Observable.just(logList);
-                });
+                        return logList;
+                })
+        );
     }
 
-    public void insertMessage(MessageDb message){
-        Observable.just(messageDao.insert(message))
+    public Observable<Long> insertMessage(MessageDb message){
+        return Observable.defer(() -> Observable.just(messageDao.insert(message)))
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Long>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Long aLong) {
-                        LOGI(TAG, "Inserted MessageDb with id: " + aLong + " in the DB");
-                    }
-                });
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<Integer> getUnreadedMessages(){
-        return MainApplication.getInstance().getRiotXmppService().getConnectedUser()
-                .flatMap(connectedUser -> {
+        return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
+                .map(connectedUser -> {
                     QueryBuilder qb = messageDao.queryBuilder();
                     qb.where(MessageDbDao.Properties.UserXmppId.eq(connectedUser),
                             MessageDbDao.Properties.Direction.eq(MessageDirection.FROM.getId()),
                             MessageDbDao.Properties.WasRead.eq(false))
                             .build();
-                    return Observable.just(qb.list().size());
+                    return qb.list().size();
                 });
     }
 
-    public static NotificationDb getNotificationByUser(String currentUser, String friendUser) {
-        QueryBuilder qb = getNotificationDao().queryBuilder();
-        qb.where(NotificationDbDao.Properties.UserXmppId.eq(currentUser),
-                NotificationDbDao.Properties.FriendXmppId.eq(friendUser))
-                .build();
+    public Observable<NotificationDb> getNotificationByUser(String friendUser) {
+        return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
+                .map(connectedUser -> {
+                    QueryBuilder qb = getNotificationDao().queryBuilder();
+                    qb.where(NotificationDbDao.Properties.UserXmppId.eq(connectedUser),
+                            NotificationDbDao.Properties.FriendXmppId.eq(friendUser))
+                            .build();
 
-        if (qb.list().size() == 0) {
-            NotificationDb notificationDb = new NotificationDb(null, currentUser, friendUser, false, false, false, false, false);
-            LOGI("123", notificationDb.toString());
-            return notificationDb;
-        } else {
-            NotificationDb notificationDb = (NotificationDb) qb.list().get(0);
-            LOGI("123", notificationDb.toString());
-            return notificationDb;
-        }
+                    NotificationDb notificationDb;
+
+                    if (qb.list().size() == 0) {
+                        notificationDb = new NotificationDb(null, connectedUser, friendUser, false, false, false, false, false);
+                    } else {
+                        notificationDb = (NotificationDb) qb.list().get(0);
+                    }
+                    return notificationDb;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
     }
 
-    public static void updateNotification(NotificationDb notif) {
-        getNotificationDao().insertOrReplace(notif);
+    public Observable<Long> updateNotification(NotificationDb notif) {
+        return Observable.defer(() -> Observable.just(getNotificationDao().insertOrReplace(notif)))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public static MessageDbDao getMessageDao() {

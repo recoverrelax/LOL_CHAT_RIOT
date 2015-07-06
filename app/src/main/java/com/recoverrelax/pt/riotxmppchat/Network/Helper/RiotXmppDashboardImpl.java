@@ -16,33 +16,22 @@ import LolChatRiotDb.InAppLogDbDao;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class RiotXmppDashboardImpl {
 
-    private AbstractXMPPConnection connection;
     private RiotXmppService riotXmppService;
     private RiotXmppDBRepository riotXmppDBRepository;
 
-    private Integer messageCount;
-
     public RiotXmppDashboardImpl() {
-        this.connection = MainApplication.getInstance().getConnection();
         this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
         this.riotXmppDBRepository = new RiotXmppDBRepository();
     }
 
     public Observable<String> getUnreadedMessagesCount() {
-        if (messageCount == null)
-            messageCount = 0;
-        else
-            messageCount = messageCount++;
-
-        return Observable.zip(Observable.just(messageCount), new RiotXmppDBRepository().getUnreadedMessages(),
-                (integer, integer2) -> {
-                    int max = Math.max(integer, integer2);
-                    return String.valueOf(max);
-                })
+        return riotXmppDBRepository.getUnreadedMessages()
+                .map(String::valueOf)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -50,51 +39,45 @@ public class RiotXmppDashboardImpl {
     public Observable<FriendStatusInfo> getFriendStatusInfo() {
         final FriendStatusInfo friendStatusInfo = new FriendStatusInfo();
 
-        return Observable.from(riotXmppService.getRiotRosterManager().getRosterEntries2()) // Observable<Collection<RosterEntry>>
-                .flatMap(rosterEntry -> {
-                    Presence rosterPresence = riotXmppService.getRiotRosterManager().getRosterPresence2(rosterEntry.getUser());
-                    String userXmppAddress = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
+            return riotXmppService.getRiotRosterManager().getRosterEntries()
+                   .flatMap(rosterEntry -> riotXmppService.getRiotRosterManager().getFriendFromRosterEntry(rosterEntry))
+                   .doOnNext(friend -> {
+                       if (friend.isPlaying())
+                           friendStatusInfo.addFriendPlaying();
+                       if (friend.isOnline())
+                           friendStatusInfo.addFriendOnline();
+                       if (friend.isOffline())
+                           friendStatusInfo.addFriendOffline();
+                   })
+                    .toList()
+                    .map(friends -> friendStatusInfo)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread());
 
-                    Friend f = new Friend(rosterEntry.getName(), userXmppAddress, rosterPresence);
-                    return Observable.just(f);
-                })
-                .doOnNext(friend -> {
-                    if (friend.isPlaying())
-                        friendStatusInfo.addFriendPlaying();
-                    if (friend.isOnline())
-                        friendStatusInfo.addFriendOnline();
-                    if (friend.isOffline())
-                        friendStatusInfo.addFriendOffline();
-                })
-                .toList()
-                .flatMap(friends -> Observable.just(friendStatusInfo))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+
     }
 
     public Observable<InAppLogDb> getLogSingleItem() {
-        return riotXmppService.getConnectedUser()
-                .flatMap(connectedUser -> {
+        return riotXmppService.getRiotConnectionManager().getConnectedUser()
+                .map(connectedUser -> {
                     QueryBuilder qb = RiotXmppDBRepository.getInAppLogDbDao().queryBuilder();
                     qb.where(InAppLogDbDao.Properties.UserXmppId.eq(connectedUser))
                             .orderDesc(InAppLogDbDao.Properties.Id)
                             .limit(1).build();
-                    QueryBuilder.LOG_SQL = true;
-
                     List<InAppLogDb> logList = qb.list();
 
-                    if(logList.size() == 0)
-                        return Observable.just(null);
+                    if (logList.size() == 0)
+                        return null;
                     else
-                        return Observable.just(logList.get(0));
+                        return logList.get(0);
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<List<InAppLogDb>> getLogLast20List() {
-        return riotXmppService.getConnectedUser()
-                .flatMap(connectedUser -> new RiotXmppDBRepository().getLast20List(connectedUser))
+        return riotXmppService.getRiotConnectionManager().getConnectedUser()
+                .flatMap(riotXmppDBRepository::getLast20List)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

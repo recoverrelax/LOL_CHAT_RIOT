@@ -147,7 +147,7 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
     }
 
     private void getPersonalMessageSingleItem(String messageReceived) {
-        Subscription subscribe = friendMessageListHelper.getPersonalMessageSingleItem(messageReceived)
+        Subscription subscribe = friendMessageListHelper.getPersonalMessage(messageReceived)
                 .subscribe(new Subscriber<FriendListChat>() {
                     @Override
                     public void onCompleted() {

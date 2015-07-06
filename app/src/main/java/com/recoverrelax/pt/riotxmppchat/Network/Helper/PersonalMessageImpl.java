@@ -20,12 +20,12 @@ public class PersonalMessageImpl {
 
     public Observable<List<MessageDb>> getLastXPersonalMessageList(final int x, final String userToGetMessagesFrom) {
         return riotRosterManager.getLastXMessages(x, userToGetMessagesFrom)
-                .observeOn(Schedulers.newThread())
-                .subscribeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread());
     }
 
     public Observable<MessageDb> getLastPersonalMessage(final String userToGetMessagesFrom) {
-        return riotRosterManager.getLastMessage(userToGetMessagesFrom)
+        return riotRosterManager.getFriendLastMessage(userToGetMessagesFrom)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

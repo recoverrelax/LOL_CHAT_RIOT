@@ -20,7 +20,7 @@ import com.squareup.otto.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SettingActivity extends RiotXmppCommunicationActivity {
+public class SettingActivity extends BaseActivity {
 
     @Bind(R.id.settings_pager)
     ViewPager settings_pager;
@@ -99,15 +99,5 @@ public class SettingActivity extends RiotXmppCommunicationActivity {
     public void onBackPressed() {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
-    }
-
-    @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
-        super.OnNewMessageReceived(messageReceived);
-    }
-
-    @Override
-    public boolean hasNewMessageIcon() {
-        return true;
     }
 }
