@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewLogEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
@@ -29,8 +29,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.squareup.otto.Subscribe;
-
-import org.jivesoftware.smack.packet.Presence;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,8 +43,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -269,7 +265,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
     }
 
     @Subscribe
-    public void OnNewMessageReceived(OnNewMessageReceivedEventEvent messageReceived) {
+    public void OnNewMessageReceived(OnNewMessageEventEvent messageReceived) {
         if (this.friendXmppName != null) {
             getActivity().runOnUiThread(() -> {
 
@@ -278,7 +274,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
                     getLastPersonalMessage(friendXmppName);
                 } else {
                     // if its not for me, don't update
-                    if (this.friendXmppName.equals(messageReceived.getMessageFrom()))
+                    if (this.friendXmppName.equals(messageReceived.getUserXmppAddress()))
                         getLastPersonalMessage(friendXmppName);
                 }
             });

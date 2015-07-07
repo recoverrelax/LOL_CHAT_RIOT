@@ -9,14 +9,13 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
-import com.squareup.otto.Subscribe;
 
 import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PersonalMessageActivity extends RiotXmppCommunicationActivity {
+public class PersonalMessageActivity extends RiotXmppNewMessageActivity {
 
     public static final String INTENT_FRIEND_NAME = "intent_friend_name";
     public static final String INTENT_FRIEND_XMPPNAME = "intent_friend_xmppname";
@@ -79,5 +78,10 @@ public class PersonalMessageActivity extends RiotXmppCommunicationActivity {
     @Override
     public boolean hasNewMessageIcon() {
         return false;
+    }
+
+    @Override
+    public boolean doesReceiveMessages() {
+        return true;
     }
 }

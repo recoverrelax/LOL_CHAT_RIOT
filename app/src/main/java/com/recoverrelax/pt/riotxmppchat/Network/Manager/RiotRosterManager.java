@@ -4,10 +4,8 @@ import android.content.Context;
 
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Bus;
@@ -25,15 +23,12 @@ import LolChatRiotDb.MessageDb;
 import LolChatRiotDb.MessageDbDao;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
-public class RiotRosterManager implements RosterListener{
+public class RiotRosterManager implements RosterListener {
 
     private AbstractXMPPConnection connection;
     private Roster roster;
@@ -52,7 +47,7 @@ public class RiotRosterManager implements RosterListener{
         if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
             this.roster = Roster.getInstanceFor(connection);
             this.roster.addRosterListener(this);
-            this.friendStatusTracker = new FriendStatusTracker(context);
+            this.friendStatusTracker = new FriendStatusTracker();
         }
     }
 
@@ -66,23 +61,31 @@ public class RiotRosterManager implements RosterListener{
         return friendStatusTracker;
     }
 
-    @Override public void entriesAdded(Collection<String> addresses) { }
-    @Override public void entriesUpdated(Collection<String> addresses) { }
-    @Override public void entriesDeleted(Collection<String> addresses) { }
+    @Override
+    public void entriesAdded(Collection<String> addresses) {
+    }
 
-    public Observable<RosterEntry> getRosterEntries(){
+    @Override
+    public void entriesUpdated(Collection<String> addresses) {
+    }
+
+    @Override
+    public void entriesDeleted(Collection<String> addresses) {
+    }
+
+    public Observable<RosterEntry> getRosterEntries() {
         return Observable.defer(() -> Observable.from(roster.getEntries()));
     }
 
-    public Observable<Friend> getFriendFromRosterEntry(RosterEntry entry){
+    public Observable<Friend> getFriendFromRosterEntry(RosterEntry entry) {
         return getRosterPresence(entry.getUser())
-               .map(rosterPresence -> {
-                   String finalUserXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
-                   return new Friend(entry.getName(), finalUserXmppAddress, rosterPresence);
-               });
+                .map(rosterPresence -> {
+                    String finalUserXmppAddress = AppXmppUtils.parseXmppAddress(entry.getUser());
+                    return new Friend(entry.getName(), finalUserXmppAddress, rosterPresence);
+                });
     }
 
-    public Observable<MessageDb> getFriendLastMessage(String friendUser){
+    public Observable<MessageDb> getFriendLastMessage(String friendUser) {
 
         return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
                 .map(connectedUser -> {
@@ -98,7 +101,7 @@ public class RiotRosterManager implements RosterListener{
                 });
     }
 
-    public Observable<List<MessageDb>> getLastXMessages(int x, String userToGetMessagesFrom){
+    public Observable<List<MessageDb>> getLastXMessages(int x, String userToGetMessagesFrom) {
         return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
                 .map(connectedUser -> {
                     QueryBuilder qb = RiotXmppDBRepository.getMessageDao().queryBuilder();
@@ -111,20 +114,20 @@ public class RiotRosterManager implements RosterListener{
                 });
     }
 
-    public Observable<String> getFriendNameFromXmppAddress(String friendXmppAddress){
+    public Observable<String> getFriendNameFromXmppAddress(String friendXmppAddress) {
         return MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppAddress)
                 .map(RosterEntry::getName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<Friend> getFriendFromXmppAddress(String userXmppAddress){
+    public Observable<Friend> getFriendFromXmppAddress(String userXmppAddress) {
         return getRosterEntry(userXmppAddress)
                 .flatMap(rosterEntry -> getRosterPresence(rosterEntry.getUser())
-                                        .map(presence -> {
-                                            String finalUserXmppAddress = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
-                                            return new Friend(rosterEntry.getName(), finalUserXmppAddress, presence);
-                                        }));
+                        .map(presence -> {
+                            String finalUserXmppAddress = AppXmppUtils.parseXmppAddress(rosterEntry.getUser());
+                            return new Friend(rosterEntry.getName(), finalUserXmppAddress, presence);
+                        }));
     }
 
     public Observable<RosterEntry> getRosterEntry(String user) {
@@ -139,26 +142,12 @@ public class RiotRosterManager implements RosterListener{
 
     @Override
     public void presenceChanged(Presence presence) {
+        if (friendStatusTracker != null) {
+            getFriendStatusTracker().checkForFriendNotificationToSend(presence);
+        }
 
-        String xmppAddress = AppXmppUtils.parseXmppAddress(presence.getFrom());
-
-        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getFriendFromXmppAddress(xmppAddress)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Friend>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
-
-                    @Override
-                    public void onNext(Friend friend) {
-                        if(friendStatusTracker != null){
-                            getFriendStatusTracker().checkForFriendNotificationToSend(xmppAddress, presence);
-                        }
-
-                        getFriendStatusTracker().updateFriend(friend);
-                        /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)} */
-                        busInstance.post(new OnFriendPresenceChangedEvent(presence));
-                    }
-                });
+        /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)} */
+        busInstance.post(new OnFriendPresenceChangedEvent(presence));
     }
+
 }

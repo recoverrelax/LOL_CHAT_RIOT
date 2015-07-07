@@ -6,8 +6,10 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter.StatusNotification;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Subscribe;
@@ -15,7 +17,9 @@ import com.squareup.otto.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FriendListActivity extends RiotXmppCommunicationActivity {
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+
+public class FriendListActivity extends RiotXmppNewMessageActivity {
 
     @Nullable
     @Bind(R.id.appBarLayout)
@@ -33,12 +37,27 @@ public class FriendListActivity extends RiotXmppCommunicationActivity {
     }
 
     @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
+    public void OnNewMessageReceived(final OnNewMessageEventEvent messageReceived) {
         super.OnNewMessageReceived(messageReceived);
+    }
+
+    @Subscribe
+    public void OnMessageSnackBarReady(MessageNotification event){
+        super.OnMessageSnackBarReady(event);
+    }
+
+    @Subscribe
+    public void OnStatusSnackBarReady(StatusNotification event){
+        super.OnStatusSnackBarReady(event);
     }
 
     @Override
     public boolean hasNewMessageIcon() {
+        return true;
+    }
+
+    @Override
+    public boolean doesReceiveMessages() {
         return true;
     }
 

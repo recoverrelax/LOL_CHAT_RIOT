@@ -17,7 +17,7 @@ import com.recoverrelax.pt.riotxmppchat.Adapter.DashBoardLogAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewLogEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppRosterImpl;
@@ -274,7 +274,7 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
     }
 
     @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
+    public void OnNewMessageReceived(final OnNewMessageEventEvent messageReceived) {
         getUnreadedMessageCount();
     }
 

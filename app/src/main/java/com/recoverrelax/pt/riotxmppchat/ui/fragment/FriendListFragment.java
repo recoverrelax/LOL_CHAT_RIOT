@@ -196,7 +196,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
     @Subscribe
     public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
-        getActivity().runOnUiThread(() -> getSingleFriend(friendPresence.getPresence()));
+        getSingleFriend(friendPresence.getPresence());
     }
 
     public void showProgressBar(boolean state) {

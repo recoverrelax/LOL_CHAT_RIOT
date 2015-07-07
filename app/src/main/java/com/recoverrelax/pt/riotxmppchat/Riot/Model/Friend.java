@@ -61,7 +61,7 @@ public class Friend implements Comparable<Friend>{
      */
     private Element buildCustomAttrFromStatusMessage() {
 
-        if (userRosterPresence.getStatus() == null)
+        if (userRosterPresence == null || userRosterPresence.getStatus() == null)
             return null;
         else {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

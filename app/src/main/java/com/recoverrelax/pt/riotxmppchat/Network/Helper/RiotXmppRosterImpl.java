@@ -22,7 +22,7 @@ public class RiotXmppRosterImpl {
         return riotRosterManager.getRosterEntries()
                 .flatMap(riotRosterManager::getFriendFromRosterEntry)
                 .filter(friend -> getOffline || friend.isOnline())
-                .doOnNext(friend -> riotRosterManager.getFriendStatusTracker().updateFriend(friend))
+                .doOnNext(friend -> riotRosterManager.getFriendStatusTracker().updateFriend(friend.getUserRosterPresence()))
                 .toSortedList((a, b) -> {
                     if (samePresence(a, b))
                         return 0;
@@ -49,7 +49,7 @@ public class RiotXmppRosterImpl {
         return riotRosterManager.getRosterEntries()
                 .flatMap(riotRosterManager::getFriendFromRosterEntry)
                 .filter(friend -> friend.getName().toLowerCase().contains(searchString.toLowerCase()))
-                .doOnNext(friend -> riotRosterManager.getFriendStatusTracker().updateFriend(friend))
+                .doOnNext(friend -> riotRosterManager.getFriendStatusTracker().updateFriend(friend.getUserRosterPresence()))
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

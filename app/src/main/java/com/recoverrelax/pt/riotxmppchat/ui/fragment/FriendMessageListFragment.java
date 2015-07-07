@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -136,18 +136,16 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
     }
 
     @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageReceivedEventEvent messageReceived) {
-        getActivity().runOnUiThread(() -> {
-            if (adapter.contains(messageReceived.getMessageFrom())) {
-                getPersonalMessageSingleItem(messageReceived.getMessageFrom());
+    public void OnNewMessageReceived(final OnNewMessageEventEvent event) {
+            if (adapter.contains(event.getUserXmppAddress())) {
+                getPersonalMessageSingleItem(event.getUserXmppAddress());
             } else {
                 getPersonalMessageList();
             }
-        });
     }
 
-    private void getPersonalMessageSingleItem(String messageReceived) {
-        Subscription subscribe = friendMessageListHelper.getPersonalMessage(messageReceived)
+    private void getPersonalMessageSingleItem(String userXmppAddress) {
+        Subscription subscribe = friendMessageListHelper.getPersonalMessage(userXmppAddress)
                 .subscribe(new Subscriber<FriendListChat>() {
                     @Override
                     public void onCompleted() {

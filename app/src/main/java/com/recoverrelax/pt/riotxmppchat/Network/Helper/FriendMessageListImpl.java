@@ -18,11 +18,12 @@ public class FriendMessageListImpl {
         this.riotRosterManager = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager();
     }
 
-    public Observable<FriendListChat> getPersonalMessage(final String userToReturn) {
-        return riotRosterManager.getFriendFromXmppAddress(userToReturn)
+    public Observable<FriendListChat> getPersonalMessage(final String userXmppAddress) {
+        return riotRosterManager.getFriendFromXmppAddress(userXmppAddress)
                     .flatMap(friend -> riotRosterManager.getFriendLastMessage(friend.getUserXmppAddress())
                                         .map(messageDb -> new FriendListChat(friend, messageDb))
-                    ).subscribeOn(Schedulers.io())
+                    )
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

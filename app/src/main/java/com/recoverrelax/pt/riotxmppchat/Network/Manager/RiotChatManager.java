@@ -4,10 +4,10 @@ import android.content.Context;
 
 import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageReceivedEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter3;
 import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -23,11 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import LolChatRiotDb.MessageDb;
-import LolChatRiotDb.NotificationDb;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
@@ -115,37 +113,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
      * Notify all Observers of new messages
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
-
-        Observable.zip
-                (
-                        riotXmppDBRepository.getNotificationByUser(userXmppAddress),
-                        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(userXmppAddress)
-                                .flatMap(rosterEntry -> Observable.just(rosterEntry.getName()))
-                                .doOnNext(friendName -> MainApplication.getInstance().getBusInstance().post(
-                                        new OnNewMessageReceivedEventEvent(message, userXmppAddress, friendName))),
-
-                        (notificationDb, friendName) -> new NotificationCenter(userXmppAddress, friendName, notificationDb)
-                )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<NotificationCenter>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(NotificationCenter notificationCenter) {
-                        notificationCenter.sendMessageNotification(message.getBody());
-                    }
-                });
-
-//        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(userXmppAddress)
-//        String name = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(userXmppAddress).getName();
-//        MainApplication.getInstance().getBusInstance().post(new OnNewMessageReceivedEventEvent(message, userXmppAddress, name));
+        new MessageNotification(userXmppAddress, message).sendMessageNotification();
     }
 
     public Observable<Boolean> sendMessage(String message, String userXmppName) {

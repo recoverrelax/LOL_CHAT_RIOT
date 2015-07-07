@@ -7,11 +7,10 @@ import android.support.v4.app.FragmentManager;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
-import com.squareup.otto.Subscribe;
 
 import butterknife.ButterKnife;
 
-public class FriendMessageListActivity extends RiotXmppCommunicationActivity {
+public class FriendMessageListActivity extends RiotXmppNewMessageActivity {
 
     @Override
     public int getLayoutResources() {
@@ -48,5 +47,10 @@ public class FriendMessageListActivity extends RiotXmppCommunicationActivity {
     @Override
     public boolean hasNewMessageIcon() {
         return false;
+    }
+
+    @Override
+    public boolean doesReceiveMessages() {
+        return true;
     }
 }
