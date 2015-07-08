@@ -24,6 +24,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
+
 public class Friend implements Comparable<Friend>{
     private String name;
     private String userXmppAddress;
@@ -246,6 +248,7 @@ public class Friend implements Comparable<Friend>{
         boolean noTimeStamp = timeStamp.equals(NO_DATA);
 
         String championName = getChampionName();
+        LOGI("TAG", championName);
         boolean noChampionName = championName.equals(NO_DATA);
 
         String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
@@ -280,11 +283,17 @@ public class Friend implements Comparable<Friend>{
                         .append(minutes).toString();
             }else{
                 // TIMESTAMP - CHAMPIONNAME
-                return returnString.delete(0, returnString.length())
-                        .append(playingAs)
-                        .append(championName)
+//                return returnString.delete(0, returnString.length())
+//                        .append(playingAs)
+//                        .append(championName)
+//                        .append(" ")
+//                        .append(playingAsFor)
+//                        .append(timeStamp)
+//                        .append(" ")
+//                        .append(minutes).toString();
+                        return returnString.delete(0, returnString.length())
+                        .append("Playing for")
                         .append(" ")
-                        .append(playingAsFor)
                         .append(timeStamp)
                         .append(" ")
                         .append(minutes).toString();
@@ -303,7 +312,7 @@ public class Friend implements Comparable<Friend>{
     @Override
     public int compareTo(@NonNull Friend friend) {
         if ((this.isOnline() && friend.isOnline()) || (!this.isOnline() && !friend.isOnline()))
-                        return this.getName().compareTo(friend.getName());
+            return this.getName().compareTo(friend.getName());
                     else if (this.isOnline())
             return -1;
                     else
@@ -313,7 +322,7 @@ public class Friend implements Comparable<Friend>{
     public String getChampionDragonUrl() {
 
         String championName = getChampionName();
-        String formattedChampionName = championName.substring(0, 1).toUpperCase() + championName.substring(1).toLowerCase();
+        String formattedChampionName = championName.substring(0, 1).toUpperCase() + championName.substring(1);
 
         String championUrl = AppGlobals.RiotEndPoint.CHAMPION_SQUARE + formattedChampionName + ".png";
         championUrl = championUrl.replace(" ", "_");

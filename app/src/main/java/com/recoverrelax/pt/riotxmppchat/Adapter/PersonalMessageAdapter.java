@@ -11,17 +11,27 @@ import android.widget.TextView;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import LolChatRiotDb.MessageDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<MessageDb> personalMessageList;
+    private List<MessageDb> personalMessageList;
     private LayoutInflater inflater;
     private Context context;
     private RecyclerView recyclerView;
@@ -34,6 +44,9 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final int VIEW_HOLDER_FROM_ID = 0;
     private final int VIEW_HOLDER_TO_ID = 1;
 
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final int updateInterval = 10000;
+
     public PersonalMessageAdapter(Context context, ArrayList<MessageDb> personalMessageList, int layout_from, int layout_to, RecyclerView recycler) {
         inflater = LayoutInflater.from(context);
         this.context = context;
@@ -42,8 +55,6 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.personalMessageList = personalMessageList;
         this.recyclerView = recycler;
     }
-
-
 
     @Override
     public int getItemViewType(int position) {
@@ -75,24 +86,25 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        MessageDb message = personalMessageList.get(position);
+        final MessageDb message = personalMessageList.get(position);
 
         switch (holder.getItemViewType()) {
             case VIEW_HOLDER_FROM_ID:
                 final MyViewHolderFrom holderFrom = (MyViewHolderFrom) holder;
                 holderFrom.messageDb = message;
-                AppDateUtils.setTimeElapsedWithHandler(holderFrom.date, holderFrom.messageDb.getDate());
 
-                holderFrom.message.setText(message.getMessage());
+                holderFrom.startUpdatingTimeStamp();
+
+                holderFrom.message.setText(holderFrom.messageDb.getMessage());
                 break;
 
             case VIEW_HOLDER_TO_ID:
                 final MyViewHolderTo holderTo = (MyViewHolderTo) holder;
                 holderTo.messageDb = message;
 
-                AppDateUtils.setTimeElapsedWithHandler(holderTo.date, holderTo.messageDb.getDate());
+                holderTo.startUpdatingTimeStamp();
 
-                holderTo.message.setText(message.getMessage());
+                holderTo.message.setText(holderTo.messageDb.getMessage());
                 break;
         }
     }
@@ -126,6 +138,10 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         return personalMessageList.size();
     }
 
+    public void removeSubscriptions(){
+        subscriptions.clear();
+    }
+
     class MyViewHolderFrom extends RecyclerView.ViewHolder {
 
         @Bind(R.id.message)
@@ -134,11 +150,32 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         @Bind(R.id.date)
         TextView date;
 
-        MessageDb messageDb;
+        private MessageDb messageDb;
+        private Subscription subscription;
 
         public MyViewHolderFrom(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void startUpdatingTimeStamp(){
+            date.setText(AppDateUtils.getFormatedDate(messageDb.getDate()));
+
+            subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
+                    .map(aLong -> AppDateUtils.getFormatedDate(messageDb.getDate()))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<String>() {
+                        @Override public void onCompleted() { }
+                        @Override public void onError(Throwable e) { }
+
+                        @Override
+                        public void onNext(String formattedDate) {
+                            LOGI("TAG", formattedDate);
+                            date.setText(formattedDate);
+                        }
+                    });
+            subscriptions.add(subscription);
         }
     }
 
@@ -150,11 +187,32 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         @Bind(R.id.date)
         TextView date;
 
-        MessageDb messageDb;
+        private MessageDb messageDb;
+        private Subscription subscription;
 
         public MyViewHolderTo(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void startUpdatingTimeStamp(){
+            date.setText(AppDateUtils.getFormatedDate(messageDb.getDate()));
+
+            subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
+                    .map(aLong -> AppDateUtils.getFormatedDate(messageDb.getDate()))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<String>() {
+                        @Override public void onCompleted() { }
+                        @Override public void onError(Throwable e) { }
+
+                        @Override
+                        public void onNext(String formattedDate) {
+                            LOGI("TAG", formattedDate);
+                            date.setText(formattedDate);
+                        }
+                    });
+            subscriptions.add(subscription);
         }
     }
 }

@@ -5,6 +5,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +23,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
 
-    List<FriendListChat> friendMessageList;
+    private List<FriendListChat> friendMessageList;
     private LayoutInflater inflater;
     private Context context;
     private Random random;
     private OnRowClick clickCallback;
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
 
     @LayoutRes
     int layoutRes = R.layout.friend_message_list_child_layout;
@@ -41,7 +53,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.friendMessageList = friendMessageList;
-        random = new Random();
+        this.random = new Random();
     }
 
     @Override
@@ -52,25 +64,23 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
     @Override
     public void onBindViewHolder(final FriendMessageListAdapter.ViewHolder holder, int position) {
-        FriendListChat friendListChat = friendMessageList.get(position);
-        holder.friendListChat = friendListChat;
+        holder.friendListChat = friendMessageList.get(position);;
 
-        holder.name.setText(friendListChat.getFriendName());
-
-
-        holder.lastMessage.setText(friendListChat.getFriendLastMessage());
+        holder.name.setText(holder.friendListChat.getFriendName());
+        holder.lastMessage.setText(holder.friendListChat.getFriendLastMessage());
 
         /**
          * Properly format the date
          */
-        final Date friendLastMessageDate = friendListChat.getFriendLastMessageDate();
+        final Date friendLastMessageDate = holder.friendListChat.getFriendLastMessageDate();
 
         if(friendLastMessageDate != null) {
-            AppDateUtils.setTimeElapsedWithHandler(holder.date, friendLastMessageDate);
+            holder.startTimestampUpdate();
         }else
-            holder.date.setText(friendListChat.getFriendLastMessageDateAsString());
+            holder.stopTimestampUpdate();
 
         Boolean wasRead = holder.friendListChat.getLastMessage().getWasRead();
+
         if(!wasRead && holder.friendListChat.getLastMessage().getDirection() == MessageDirection.FROM.getId()){
             holder.wasRead.setVisibility(View.VISIBLE);
             AppContextUtils.setBlinkAnimation(holder.wasRead, true);
@@ -110,7 +120,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
     /**
      * Get the array position corresponding to the given xmppName of the user
      * @param xmppName
-     * @return the position or -1 for cudn't fined
+     * @return the position or -1 for cudn't find
      */
     public int getFriendMessageListPositionByFriendName(String xmppName){
         int friendMessageListSize = friendMessageList.size();
@@ -122,12 +132,16 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         return -1;
     }
 
+    public void removeSubscriptions(){
+        subscriptions.clear();
+    }
+
     @Override
     public int getItemCount() {
         return friendMessageList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         @Bind(R.id.name)
         TextView name;
@@ -148,6 +162,9 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         @ColorRes int cardColor;
 
+        private Subscription subscription;
+        private final int updateInterval = 10000;
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -158,10 +175,33 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
                 cardColor = AppMiscUtils.changeColorAlpha(cardColor, 190);
                 friends_list_cardview.setCardBackgroundColor(cardColor);
             }
-            itemView.setOnClickListener(this);
         }
 
-        @Override
+        public void startTimestampUpdate(){
+            // The initialValue, the Observable delay applies in the firstTime
+            date.setText(AppDateUtils.getFormatedDate(friendListChat.getFriendLastMessageDate()));
+
+            subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
+                    .map(aLong -> AppDateUtils.getFormatedDate(friendListChat.getFriendLastMessageDate()))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<String>() {
+                        @Override public void onCompleted() { }
+                        @Override public void onError(Throwable e) { }
+
+                        @Override
+                        public void onNext(String formattedDate) {
+                            date.setText(formattedDate);
+                        }
+                    });
+            subscriptions.add(subscription);
+        }
+
+        public void stopTimestampUpdate(){
+            subscriptions.remove(subscription);
+        }
+
+        @OnClick(R.id.friends_list_cardview)
         public void onClick(View view) {
             if(clickCallback != null)
                 clickCallback.onRowClick(view, friendListChat.getFriendName(), friendListChat.getUserXmppAddress(), cardColor);

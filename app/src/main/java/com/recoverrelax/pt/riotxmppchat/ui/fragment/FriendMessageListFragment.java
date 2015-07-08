@@ -133,6 +133,9 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
     public void onPause() {
         super.onPause();
         subscriptions.clear();
+
+        if(adapter != null)
+            adapter.removeSubscriptions();
     }
 
     @Subscribe

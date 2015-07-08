@@ -101,6 +101,8 @@
     <string name="add_friend_soon">Feature Coming Soon! Add friend in the client and use the refresh button to see new friends</string>
     <string name="drawer_logout_label">LOGOUT</string>
     <string name="settings_show_hide_offline">Show/Hide Offline</string>
+    <string name="settings_order_alphabetically">Sort By Name</string>
+    <string name="settings_order_status">Sort By Status</string>
     <string name="champion_name_here">Champion Name Here</string>
 
 </resources>

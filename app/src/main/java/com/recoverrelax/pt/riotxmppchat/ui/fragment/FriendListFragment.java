@@ -53,7 +53,6 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class FriendListFragment extends RiotXmppCommunicationFragment implements FriendsListAdapter.OnAdapterChildClick {
 
-    private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
 
     @Bind(R.id.myFriendsListRecyclerView)
@@ -101,6 +100,9 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     public void onPause() {
         super.onPause();
         subscriptions.clear();
+
+        if(adapter != null)
+            adapter.removeSubscriptions();
     }
 
     @Override
@@ -156,11 +158,6 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                             50);
                     break;
                 case R.id.other_1:
-//                    String friendName = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry2(friendXmppAddress).getName();
-//                    new Handler().postDelayed(
-//                            () -> AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName, friendXmppAddress),
-//                            50);
-//                    break;
                         MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getFriendNameFromXmppAddress(friendXmppAddress)
                                 .subscribe(new Subscriber<String>() {
                                     @Override public void onCompleted() { }
@@ -227,6 +224,12 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
         final MenuItem showHideOffline = menu.findItem(R.id.show_hide_offline);
         showHideOffline.setVisible(true);
+
+        final MenuItem orderAlphabetical = menu.findItem(R.id.order_alphabetically);
+        orderAlphabetical.setVisible(true);
+
+        final MenuItem orderStatus = menu.findItem(R.id.order_status);
+        orderStatus.setVisible(true);
 
 
         final MenuItem newMessage = menu.findItem(R.id.newMessage);
@@ -370,6 +373,12 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                 SHOW_OFFLINE_USERS = !mDataStorage.showOfflineUsers();
                 mDataStorage.showOfflineUsers(SHOW_OFFLINE_USERS);
                 getFullFriendList(SHOW_OFFLINE_USERS);
+                return true;
+
+            case R.id.order_alphabetically:
+            case R.id.order_status:
+                Snackbar.make(getActivity().getWindow().getDecorView().getRootView(),
+                        "Feature Coming soon!", Snackbar.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

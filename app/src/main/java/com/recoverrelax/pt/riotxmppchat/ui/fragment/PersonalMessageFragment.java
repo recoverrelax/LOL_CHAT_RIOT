@@ -176,6 +176,9 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
     public void onPause() {
         super.onPause();
         subscriptions.clear();
+
+        if(adapter != null)
+            adapter.removeSubscriptions();
     }
 
     public static int convertDIPToPixels(Context context, int dip) {

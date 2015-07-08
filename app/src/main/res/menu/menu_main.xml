@@ -48,4 +48,14 @@
         android:visible="false"
         android:id="@+id/show_hide_offline"
         android:title="@string/settings_show_hide_offline"/>
+
+    <item
+        android:visible="false"
+        android:id="@+id/order_alphabetically"
+        android:title="@string/settings_order_alphabetically"/>
+
+    <item
+        android:visible="false"
+        android:id="@+id/order_status"
+        android:title="@string/settings_order_status"/>
 </menu>

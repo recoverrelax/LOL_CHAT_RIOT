@@ -3,9 +3,9 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
@@ -28,10 +28,17 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
@@ -39,12 +46,19 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final String TAG = FriendsListAdapter.class.getSimpleName();
 
-    List<Friend> friendsList;
+    private List<Friend> friendsList;
     private LayoutInflater inflater;
     private Context context;
     private OnAdapterChildClick onAdapterChildClickCallback;
     private RecyclerView recyclerView;
     private StringBuilder stringBuilder = new StringBuilder();
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
+
+    /**
+     * Adapter RecyclerGradient Object
+     */
+    private GradientDrawable gradientDrawable;
+    private Drawable drawable;
     
     @LayoutRes
     int layout_online = R.layout.friends_list_recyclerview_child_online;
@@ -77,7 +91,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-
         if (friendsList.get(position).isOnline())
             return VIEW_HOLDER_ONLINE_ID;
         else
@@ -101,8 +114,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Friend friend = friendsList.get(position);
-        PresenceMode friendMode = friend.getFriendMode();
+        final Friend friend = friendsList.get(position);
+        final PresenceMode friendMode = friend.getFriendMode();
 
         switch (holder.getItemViewType()) {
             case VIEW_HOLDER_ONLINE_ID:
@@ -110,11 +123,14 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 final MyViewHolderOnline holderOnline = (MyViewHolderOnline) holder;
 
                 holderOnline.current = friend;
-                holderOnline.friendName.setText(friend.getName());
+                holderOnline.friendName.setText(holderOnline.current.getName());
 
-                if (friend.getGameStatus().equals(GameStatus.IN_QUEUE) || friend.getGameStatus().equals(GameStatus.INGAME)) {
+                if (holderOnline.current.getGameStatus().equals(GameStatus.IN_QUEUE)
+                        || holderOnline.current.getGameStatus().equals(GameStatus.INGAME)) {
+
                     holderOnline.startRepeatingTask();
                 } else {
+                    holderOnline.gameStatus.setText("");
                     holderOnline.stopRepeatingTask();
                 }
 
@@ -125,20 +141,21 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holderOnline.friendPresenceMode.setText(friendMode.getDescriptiveName());
                 holderOnline.friendPresenceMode.setTextColor(COLOR_WHITE);
 
-                GradientDrawable drawable = (GradientDrawable) holderOnline.friendPresenceMode.getBackground();
-                drawable.setColor(context.getResources().getColor(friendMode.getStatusColor()));
+                gradientDrawable = null;
+                gradientDrawable = (GradientDrawable) holderOnline.friendPresenceMode.getBackground();
+                gradientDrawable.setColor(context.getResources().getColor(friendMode.getStatusColor()));
 
 
-                holderOnline.wins.setText(friend.getWins());
-                holderOnline.ranked_icon.setImageDrawable(context.getResources().getDrawable(friend.getProfileIconResId()));
-                holderOnline.division_league.setText(friend.getLeagueDivisionAndTier().getDescriptiveName());
+                holderOnline.wins.setText(holderOnline.current.getWins());
+                holderOnline.ranked_icon.setImageDrawable(context.getResources().getDrawable(holderOnline.current.getProfileIconResId()));
+                holderOnline.division_league.setText(holderOnline.current.getLeagueDivisionAndTier().getDescriptiveName());
                 holderOnline.division_league.setSelected(true);
 
                 /**
                  * Load Image from LolKing Server
                  */
 
-                if (friend.getProfileIconId().equals("")) {
+                if (holderOnline.current.getProfileIconId().equals("")) {
                     Picasso.with(context)
                             .load(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
@@ -146,7 +163,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Picasso pic = Picasso.with(context);
 
                     stringBuilder.delete(0, stringBuilder.length());
-                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL).append(friend.getProfileIconId()).append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
+                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL)
+                                 .append(holderOnline.current.getProfileIconId())
+                                 .append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
 
                     pic.load(stringBuilder.toString())
                             .placeholder(R.drawable.profile_icon_example)
@@ -172,7 +191,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                  * Load Image from LolKing Server
                  */
 
-                if (friend.getProfileIconId().equals("")) {
+                if (holderOffline.current.getProfileIconId().equals("")) {
                     Picasso.with(context)
                             .load(R.drawable.profile_icon_example)
                             .into(holderOffline.profileIcon);
@@ -180,20 +199,18 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Picasso pic = Picasso.with(context);
 
                     stringBuilder.delete(0, stringBuilder.length());
-                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL).append(friend.getProfileIconId()).append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
+                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL).append(holderOffline.current.getProfileIconId()).append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
                     pic.load(stringBuilder.toString())
                             .placeholder(R.drawable.profile_icon_example)
                             .error(R.drawable.profile_icon_example)
                             .into(holderOffline.profileIcon);
                 }
-
                 break;
         }
     }
 
     public void setItems(List<Friend> items) {
         friendsList = items;
-//        sortFriendsList(SortMethod.ONLINE_FIRST);
         notifyDataSetChanged();
     }
 
@@ -217,7 +234,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     /**
-     * Two types of Changed:
+     * Two types of Changes:
      * - User changed Presence.Type
      * - User changed Presence.Mode
      */
@@ -261,12 +278,16 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    public void removeSubscriptions(){
+        subscriptions.clear();
+    }
+
     @Override
     public int getItemCount() {
         return friendsList.size();
     }
 
-    class MyViewHolderOnline extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MyViewHolderOnline extends RecyclerView.ViewHolder {
 
         @Bind(R.id.gameStatus)
         TextView gameStatus;
@@ -295,56 +316,63 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @Bind(R.id.champion_square)
         ImageView championSquare;
 
-        protected Friend current;
+        private Friend current;
 
-        private final int mHandlerInterval = 60000;
-        private Handler mHandler;
-        private Runnable mStatusChecker;
+        private final int updateInterval = 30000;
+        private Subscription subscription;
 
         public MyViewHolderOnline(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            Drawable drawable = card_more.getDrawable();
+            drawable = null;
+            drawable = card_more.getDrawable();
             drawable.mutate();
             drawable.setColorFilter(COLOR_BLACK, PorterDuff.Mode.SRC_IN);
-
-            mHandler = new Handler();
-            mStatusChecker = new Runnable() {
-                @Override
-                public void run() {
-                    String gameStatusToPrint = current.getGameStatusToPrint();
-                    gameStatus.setText(gameStatusToPrint);
-                    mHandler.postDelayed(mStatusChecker, mHandlerInterval);
-                }
-            };
-            itemView.setOnClickListener(this);
         }
 
-        @OnClick(R.id.card_more_layout)
-        public void onCardOptionsClick(View view) {
-            if (onAdapterChildClickCallback != null)
-                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress());
-        }
-
-        @Override
+        // ParentClick
+        @OnClick(R.id.friends_list_cardview)
         public void onClick(View view) {
             if (onAdapterChildClickCallback != null) {
                 onAdapterChildClickCallback.onAdapterFriendClick(current.getName(), current.getUserXmppAddress());
             }
         }
 
+        // CardClick
+        @OnClick(R.id.card_more_layout)
+        public void onCardOptionsClick(View view) {
+            if (onAdapterChildClickCallback != null)
+                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress());
+        }
+
+
         public void startRepeatingTask() {
-            mStatusChecker.run();
+            gameStatus.setText(current.getGameStatusToPrint());
+
+            subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
+                    .map(aLong -> current.getGameStatusToPrint())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<String>() {
+                        @Override public void onCompleted() { }
+                        @Override public void onError(Throwable e) { }
+
+                        @Override
+                        public void onNext(String gameStatusToPrint) {
+                            LOGI(TAG, "UI Adapter Updated: " + gameStatusToPrint);
+                            gameStatus.setText(gameStatusToPrint);
+                        }
+                    });
+            subscriptions.add(subscription);
         }
 
         void stopRepeatingTask() {
-            mHandler.removeCallbacks(mStatusChecker);
-            gameStatus.setText("");
+            subscriptions.remove(subscription);
         }
     }
 
-    class MyViewHolderOffline extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MyViewHolderOffline extends RecyclerView.ViewHolder {
 
         @Bind(R.id.friendName)
         TextView friendName;
@@ -361,14 +389,14 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            Drawable drawable = card_more.getDrawable();
+            drawable = null;
+            drawable = card_more.getDrawable();
             drawable.mutate();
             drawable.setColorFilter(COLOR_WHITE, PorterDuff.Mode.SRC_IN);
-
-            itemView.setOnClickListener(this);
         }
 
-        @Override
+        // RowClick
+        @OnClick(R.id.friends_list_cardview)
         public void onClick(View view) {
                     Snackbar
                             .make(((Activity) context).getWindow().getDecorView().getRootView(),
@@ -376,9 +404,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     Snackbar.LENGTH_LONG).show();
         }
 
+        // CardClick
         @OnClick(R.id.card_more_layout)
         public void onCardOptionsClick(View view) {
-            LOGI("123", "12312121: " + current.getUserXmppAddress());
             if (onAdapterChildClickCallback != null)
                 onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress());
         }
@@ -399,10 +427,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public boolean isSortAlphabetically() {
             return this.equals(SortMethod.ALPHABETICALLY);
         }
-
         public boolean isSortOnlineFirst() {
             return this.equals(SortMethod.ONLINE_FIRST);
         }
-
     }
 }
