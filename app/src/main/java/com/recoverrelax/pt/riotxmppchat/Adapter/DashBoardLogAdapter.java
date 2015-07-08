@@ -1,18 +1,16 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppDateUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import java.util.ArrayList;
 import java.util.List;

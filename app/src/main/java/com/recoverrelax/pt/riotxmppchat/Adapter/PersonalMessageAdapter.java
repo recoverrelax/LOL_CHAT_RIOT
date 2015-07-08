@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppDateUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
 
 import java.util.ArrayList;
 import java.util.List;

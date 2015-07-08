@@ -14,9 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageEventEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.FriendMessageListImpl;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.FriendMessageListImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 import com.squareup.otto.Subscribe;
@@ -30,7 +30,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGE;
 
 /**
  * A simple {@link Fragment} subclass.

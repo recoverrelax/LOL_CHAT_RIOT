@@ -8,29 +8,23 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 
 import com.crashlytics.android.Crashlytics;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.MessageSpeechNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnServiceBindedEvent;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
-
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
 import io.fabric.sdk.android.Fabric;
-import rx.Observable;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
@@ -41,18 +35,13 @@ public class MainApplication extends Application {
     private DaoSession daoSession;
     private Bus bus;
 
-    private BaseActivity baseActivity;
-
     /**
      * This value is stored as a buffer because its accessed many times.
      * When the app start, this value is reseted (set to null)
      */
 
     private static MainApplication instance;
-    private int resumedActivityCounter = 0;
-    private int pausedActivityCounter = 0;
-    private int startedActivityCounter = 0;
-    private int stoppedActivityCounter = 0;
+    private WeakReference<BaseActivity> currentBaseActivity = null;
 
     @Override
     public void onCreate() {
@@ -77,45 +66,16 @@ public class MainApplication extends Application {
             file.mkdir();
     }
 
-    public void addResumedActivity() {
-        resumedActivityCounter = resumedActivityCounter+1;
-        printActivityState();
-    }
-    public void addPausedActivity() {
-        pausedActivityCounter = pausedActivityCounter+1;
-        printActivityState();
+    public void setCurrentBaseActivity(BaseActivity baseActivity){
+        this.currentBaseActivity = new WeakReference<>(baseActivity);
     }
 
-    public void addStartedActivity() {
-        startedActivityCounter = startedActivityCounter+1;
-        printActivityState();
-    }
-    public void addStoppedActivity() {
-        stoppedActivityCounter = stoppedActivityCounter+1;
-        printActivityState();
+    public BaseActivity getCurrentBaseActivity(){
+        return this.currentBaseActivity.get();
     }
 
-    public void printActivityState(){
-//        LOGI("1111", isApplicationPaused() ? "isPaused? yes" : "isPaused? no");
-//        LOGI("1111", isApplicationClosed() ? "isClosed? yes" : "isClosed? no");
-//        LOGI("1111", !isApplicationClosed() && !isApplicationPaused() ? "isOppened? yes" : "isOppened? no");
-//        LOGI("1111", "\n\n");
-    }
-
-    public boolean isApplicationClosed(){
-        return resumedActivityCounter == pausedActivityCounter && startedActivityCounter == stoppedActivityCounter;
-    }
-
-    public boolean isApplicationPaused(){
-        return resumedActivityCounter == pausedActivityCounter && startedActivityCounter > stoppedActivityCounter;
-    }
-
-    public BaseActivity getCurrentOpenedActivity(){
-        return this.baseActivity;
-    }
-
-    public BaseActivity setBaseActivity(BaseActivity act){
-        return this.baseActivity = act;
+    public boolean isApplicationPausedOrClosed(){
+        return getCurrentBaseActivity() == null;
     }
 
     private void setupDatabase() {

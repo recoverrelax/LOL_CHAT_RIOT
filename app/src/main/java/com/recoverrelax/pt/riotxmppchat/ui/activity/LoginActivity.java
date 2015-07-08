@@ -18,13 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionFailureEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnLoginFailureEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnServiceBindedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnConnectionFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnLoginFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnServiceBindedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.squareup.otto.Subscribe;
@@ -224,12 +224,10 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mainApplication.getBusInstance().register(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mainApplication.getBusInstance().unregister(this);
     }
 }

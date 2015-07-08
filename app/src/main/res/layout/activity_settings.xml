@@ -4,18 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/login_screen"
     tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity">
 
         <include
             android:id="@+id/app_bar"
-            layout="@layout/app_bar_t" />
+            layout="@layout/app_bar" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primaryColorDarkT2"
+            android:background="@color/primaryColor"
             app:tabTextColor="@color/white190T"
             app:tabSelectedTextColor="@color/white"
             android:textColor="@color/whiteT"/>

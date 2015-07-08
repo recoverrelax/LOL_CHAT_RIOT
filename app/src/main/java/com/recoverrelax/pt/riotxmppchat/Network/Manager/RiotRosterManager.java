@@ -2,10 +2,10 @@ package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
 import android.content.Context;
 
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.FriendList.OnFriendPresenceChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Bus;
@@ -26,7 +26,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class RiotRosterManager implements RosterListener {
 

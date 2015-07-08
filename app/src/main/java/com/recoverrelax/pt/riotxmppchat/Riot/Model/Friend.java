@@ -2,7 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Riot.Model;
 
 import android.support.annotation.NonNull;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;

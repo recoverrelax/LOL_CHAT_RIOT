@@ -56,6 +56,11 @@
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
+    <style name="darkToolbarStyle">
+        <item name="android:background">@color/primaryColorDark</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
 
     <style name="settings_title">
         <item name="android:paddingRight">16dp</item>

@@ -2,12 +2,11 @@ package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
 import android.content.Context;
 
-import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter.MessageNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter3;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageNotification;
 import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -28,7 +27,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class RiotChatManager implements ChatManagerListener, ChatMessageListener {
 

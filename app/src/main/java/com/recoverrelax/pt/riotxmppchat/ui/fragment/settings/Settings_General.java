@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment.settings;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,9 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppMiscUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -31,7 +30,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.view.ViewObservable;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class Settings_General extends Fragment {
 

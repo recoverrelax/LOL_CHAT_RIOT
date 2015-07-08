@@ -1,25 +1,13 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
-import android.support.v4.util.Pair;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter.StatusNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter3;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-
 import org.jivesoftware.smack.packet.Presence;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
 
 public class FriendStatusTracker {
 

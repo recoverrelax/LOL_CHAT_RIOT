@@ -21,8 +21,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 
 import butterknife.Bind;
@@ -66,7 +66,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResources());
         ButterKnife.bind(this);
-        MainApplication.getInstance().addStartedActivity();
 
         if(savedInstanceState != null){
             fromSavedInstanceState = true;
@@ -101,7 +100,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MainApplication.getInstance().addStoppedActivity();
     }
 
     private void setupDrawerContent() {
@@ -306,14 +304,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onResume() {
         super.onResume();
-        MainApplication.getInstance().setBaseActivity(this);
-        MainApplication.getInstance().addResumedActivity();
+        MainApplication.getInstance().getBusInstance().register(this);
+        MainApplication.getInstance().setCurrentBaseActivity(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MainApplication.getInstance().setBaseActivity(null);
-        MainApplication.getInstance().addPausedActivity();
+        MainApplication.getInstance().getBusInstance().unregister(this);
+        MainApplication.getInstance().setCurrentBaseActivity(null);
     }
 }

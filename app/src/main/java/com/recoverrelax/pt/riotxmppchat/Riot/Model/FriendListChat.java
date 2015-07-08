@@ -1,6 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.Model;
 
-import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
 import java.util.Comparator;
 import java.util.Date;
 import LolChatRiotDb.MessageDb;

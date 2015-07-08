@@ -9,7 +9,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
@@ -26,16 +26,12 @@ public class SettingActivity extends BaseActivity {
     @Bind(R.id.tabs)
     TabLayout tabs;
 
-    private PagerAdapter pagerAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
         setTitle("Settings");
-        if(toolbar != null)
-            toolbar.setBackgroundColor(getResources().getColor(R.color.primaryColorDarkT2));
 
         ActionBar supportActionBar = getSupportActionBar();
         if(supportActionBar != null) {
@@ -43,7 +39,7 @@ public class SettingActivity extends BaseActivity {
             supportActionBar.setHomeButtonEnabled(true);
         }
 
-        pagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
+        PagerAdapter pagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
         settings_pager.setAdapter(pagerAdapter);
         tabs.setupWithViewPager(settings_pager);
 

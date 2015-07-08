@@ -1,58 +1,27 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageEventEvent;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter.MessageNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter.StatusNotification;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.NotificationCenter2;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.squareup.otto.Subscribe;
 
 import rx.Subscriber;
-import rx.Subscription;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public abstract class RiotXmppNewMessageActivity extends BaseActivity{
-
-    private Subscription subscribe;
 
     @Override
     protected void onResume() {
         super.onResume();
-        MainApplication.getInstance().getBusInstance().register(this);
-        if(hasNewMessageIcon())
-            resetMessageIcon();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MainApplication.getInstance().getBusInstance().unregister(this);
-
-        if(subscribe != null && !subscribe.isUnsubscribed())
-            subscribe.unsubscribe();
     }
 
     public void OnNewMessageReceived(final OnNewMessageEventEvent messageReceived) {
         if(hasNewMessageIcon())
             resetMessageIcon();
-    }
-
-    public void OnMessageSnackBarReady(MessageNotification event){
-        if(doesReceiveMessages())
-            event.sendSnackbarNotification(this);
-    }
-
-    public void OnStatusSnackBarReady(StatusNotification event){
-        if(doesReceiveMessages())
-            event.sendSnackbarNotification(this);
     }
 
     @Override
@@ -96,6 +65,4 @@ public abstract class RiotXmppNewMessageActivity extends BaseActivity{
     }
 
     public abstract boolean hasNewMessageIcon();
-    public abstract boolean doesReceiveMessages();
-
 }

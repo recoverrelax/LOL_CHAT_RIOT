@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 
 import butterknife.ButterKnife;
 
-public class FriendMessageListActivity extends RiotXmppNewMessageActivity {
+public class FriendMessageListActivity extends BaseActivity {
 
     @Override
     public int getLayoutResources() {
@@ -42,15 +42,5 @@ public class FriendMessageListActivity extends RiotXmppNewMessageActivity {
     public void onBackPressed() {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
-    }
-
-    @Override
-    public boolean hasNewMessageIcon() {
-        return false;
-    }
-
-    @Override
-    public boolean doesReceiveMessages() {
-        return true;
     }
 }

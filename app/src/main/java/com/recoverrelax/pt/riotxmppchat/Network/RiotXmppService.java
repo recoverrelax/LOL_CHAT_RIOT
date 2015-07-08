@@ -8,13 +8,13 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnConnectionFailureEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnLoginFailureEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Login.OnSuccessLoginEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnConnectionFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnLoginFailureEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.RiotXmppConnectionImpl;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotChatManager;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotConnectionManager;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
@@ -36,7 +36,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGI;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 import static junit.framework.Assert.assertTrue;
 
 public class RiotXmppService extends Service {

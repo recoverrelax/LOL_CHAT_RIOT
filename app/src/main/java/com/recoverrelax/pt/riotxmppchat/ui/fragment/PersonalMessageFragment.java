@@ -17,16 +17,16 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewLogEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Global.OnNewMessageEventEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewLogEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
-import com.recoverrelax.pt.riotxmppchat.Database.MessageDirection;
-import com.recoverrelax.pt.riotxmppchat.Database.RiotXmppDBRepository;
+import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppUtils.AppGlobals;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils;
-import com.recoverrelax.pt.riotxmppchat.Network.Helper.PersonalMessageImpl;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.PersonalMessageImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.squareup.otto.Subscribe;
 
@@ -46,7 +46,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.google.LogUtils.LOGE;
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGE;
 import static com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity.*;
 
 /**
