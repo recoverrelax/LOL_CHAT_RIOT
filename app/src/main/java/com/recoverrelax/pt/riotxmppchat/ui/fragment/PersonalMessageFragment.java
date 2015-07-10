@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.MessageDb;
 import butterknife.Bind;
@@ -78,7 +80,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
      * Adapter
      */
     private PersonalMessageAdapter adapter;
-    private PersonalMessageImpl personalMessageImpl;
+    @Inject PersonalMessageImpl personalMessageImpl;
 
     private String friendXmppName;
     private String friendUsername;
@@ -105,6 +107,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_personal_message, container, false);
         ButterKnife.bind(this, view);
+        MainApplication.getInstance().getAppComponent().inject(this);
         return view;
     }
 
@@ -133,7 +136,6 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
             adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
             messageRecyclerView.setAdapter(adapter);
 
-            personalMessageImpl = new PersonalMessageImpl();
             getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
 
             swipeRefreshListener = () -> getLastXPersonalMessageList(doubleLoadedItems(), friendXmppName);
@@ -214,7 +216,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
     public void sendMessage(String message){
         MainApplication.getInstance().getRiotXmppService().getRiotChatManager().sendMessage(message, friendXmppName)
                 .flatMap(sentMessageId -> MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser())
-                .flatMap(connectedUser -> new RiotXmppDBRepository().insertMessage(new MessageDb(null,
+                .flatMap(connectedUser -> riotXmppDBRepository.insertMessage(new MessageDb(null,
                                 connectedUser,
                                 friendXmppName,
                                 MessageDirection.TO.getId(),
@@ -227,7 +229,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
                         })
                         .map(aLong -> connectedUser)
                 )
-                .flatMap(connectedUser -> new RiotXmppDBRepository().insertOrReplaceInappLog(new InAppLogDb(null,
+                .flatMap(connectedUser -> riotXmppDBRepository.insertOrReplaceInappLog(new InAppLogDb(null,
                         InAppLogIds.FRIEND_PM.getOperationId(),
                         new Date(),
                         "You said to  " + friendUsername + ": " + message,
@@ -252,7 +254,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
         List<MessageDb> allMessages = adapter.getAllMessages();
         for (MessageDb message : allMessages)
             message.setWasRead(true);
-        new RiotXmppDBRepository().updateMessages(allMessages)
+        riotXmppDBRepository.updateMessages(allMessages)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override public void onCompleted() { }
                     @Override public void onError(Throwable e) { }

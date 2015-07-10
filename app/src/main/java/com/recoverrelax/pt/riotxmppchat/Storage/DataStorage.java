@@ -28,35 +28,24 @@ public class DataStorage {
     private static final String PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT = "backg_text";
     private static final String PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH = "backg_speech";
 
-
-
-    private static DataStorage sInstance;
+//    private static DataStorage sInstance;
     private final SecurePreferences mSettings;
 
-    /**
-     * <p>Initialize the {@link DataStorage} singleton</p>
-     */
-    public static synchronized void init(Context ctx){
-        if (sInstance == null) {
-            synchronized (DataStorage.class) {
-                if (sInstance == null) {
-                    sInstance = new DataStorage(ctx);
-                }
-            }
-        }
-    }
+//    /**
+//     * <p>Initialize the {@link DataStorage} singleton</p>
+//     */
+//    public static synchronized void init(Context ctx){
+//        if (sInstance == null) {
+//            synchronized (DataStorage.class) {
+//                if (sInstance == null) {
+//                    sInstance = new DataStorage(ctx);
+//                }
+//            }
+//        }
+//    }
 
-    private DataStorage(Context context) {
+    public DataStorage(Context context) {
         mSettings = new SecurePreferences(context);
-    }
-
-    /**
-     * Returns singleton class sInstance
-     **/
-    public static synchronized DataStorage getInstance() {
-        if(sInstance ==null)
-            throw new NullPointerException("You must initialized first");
-        return sInstance;
     }
 
     public synchronized boolean isFirstRun(){

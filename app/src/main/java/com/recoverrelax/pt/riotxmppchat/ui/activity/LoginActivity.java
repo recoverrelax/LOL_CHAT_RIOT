@@ -24,7 +24,6 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.OnServiceBindedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.squareup.otto.Subscribe;
@@ -61,8 +60,6 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.login_main_layout)
     LinearLayout login_main_layout;
 
-    private DataStorage mDataStorage;
-
     private boolean usernameLengthControl = false;
     private boolean passwordLengthControl = false;
     private MainApplication mainApplication;
@@ -71,7 +68,6 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainApplication = MainApplication.getInstance();
-        mDataStorage = DataStorage.getInstance();
 
         /**
          * Set initial Title Scalling to 0.7f

@@ -42,6 +42,8 @@ import org.jivesoftware.smack.packet.Presence;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Subscriber;
@@ -61,10 +63,8 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     @Bind(R.id.progressBarCircularIndeterminate)
     ProgressBar progressBarCircularIndeterminate;
 
-
-
     private RecyclerView.LayoutManager layoutManager;
-    private DataStorage mDataStorage;
+
     private boolean SHOW_OFFLINE_USERS;
     private SearchView searchView;
 
@@ -79,7 +79,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
 
-    private RiotXmppRosterImpl riotXmppRosterImpl;
+    @Inject RiotXmppRosterImpl riotXmppRosterImpl;
 
     public FriendListFragment() {
         // Required empty public constructor
@@ -92,8 +92,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDataStorage = DataStorage.getInstance();
-        SHOW_OFFLINE_USERS = mDataStorage.showOfflineUsers();
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
     @Override
@@ -112,6 +111,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         View view = inflater.inflate(R.layout.friend_list_fragment, container, false);
 
         ButterKnife.bind(this, view);
+        SHOW_OFFLINE_USERS = mDataStorage.showOfflineUsers();
         setHasOptionsMenu(true);
         showProgressBar(true);
         return view;
@@ -124,11 +124,10 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new FriendsListAdapter(this, new ArrayList<>(), myFriendsListRecyclerView);
+        adapter = new FriendsListAdapter(this, new ArrayList<>(), mDataStorage.showOfflineUsers() , myFriendsListRecyclerView);
         adapter.setAdapterClickListener(this);
 
         myFriendsListRecyclerView.setAdapter(adapter);
-        riotXmppRosterImpl = new RiotXmppRosterImpl();
 
         getFullFriendList(SHOW_OFFLINE_USERS);
     }
@@ -206,7 +205,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
 //        final boolean hasUnreaded = MainApplication.getInstance().hasNewMessages();
 
-        new RiotXmppDBRepository().hasUnreadedMessages()
+        riotXmppDBRepository.hasUnreadedMessages()
                 .subscribe(new Subscriber<Boolean>() {
                     @Override public void onCompleted() { }
                     @Override public void onError(Throwable e) { }

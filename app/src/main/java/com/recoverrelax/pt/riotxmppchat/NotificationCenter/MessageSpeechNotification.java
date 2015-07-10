@@ -27,30 +27,8 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     private long lastMessageDateMillis = 0;
     private String lastMessageFrom = null;
 
-    /**
-     * <p>Initialize the {@link MessageSpeechNotification} singleton</p>
-     */
-    public static synchronized void init(Context ctx){
-        if (sInstance == null) {
-            synchronized (MessageSpeechNotification.class) {
-                if (sInstance == null) {
-                    sInstance = new MessageSpeechNotification(ctx);
-                }
-            }
-        }
-    }
-
-    private MessageSpeechNotification(Context context) {
+    public MessageSpeechNotification(Context context) {
         this.context = context;
-    }
-
-    /**
-     * Returns singleton class sInstance
-     **/
-    public static synchronized MessageSpeechNotification getInstance() {
-        if(sInstance ==null)
-            throw new NullPointerException("You must initialized first");
-        return sInstance;
     }
 
     public void getReady(){

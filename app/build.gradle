@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
 android {
@@ -76,10 +77,20 @@ dependencies {
     compile 'com.android.support:design:22+'
 
     /**
-     * View Injection
+     * Dependency Injection
      */
-//    compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.jakewharton:butterknife:7.0.0'
+        /**
+         * View Injection
+         */
+            compile 'com.jakewharton:butterknife:7.0.0'
+
+        /**
+         * Others
+         */
+            compile 'com.google.dagger:dagger:2.1-SNAPSHOT'
+            apt 'com.google.dagger:dagger-compiler:2.1-SNAPSHOT'
+            provided 'org.glassfish:javax.annotation:10.0-b28'
+
 
     /**
      * Roboto Fonts Library

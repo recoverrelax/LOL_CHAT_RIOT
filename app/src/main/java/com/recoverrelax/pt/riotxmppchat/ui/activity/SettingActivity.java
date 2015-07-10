@@ -11,8 +11,8 @@ import android.support.v7.app.ActionBar;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.SettingsGeneralFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Alert;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_General;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
 
 import butterknife.Bind;
@@ -72,7 +72,7 @@ public class SettingActivity extends BaseActivity {
                 case 0:
                     return Settings_Notification.newInstance();
                 case 1:
-                    return Settings_General.newInstance();
+                    return SettingsGeneralFragment.newInstance();
                 default:
                     return Settings_Alert.newInstance();
             }

@@ -14,6 +14,9 @@ import org.jivesoftware.smack.XMPPConnection;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import rx.Observable;
 import rx.Subscriber;
 
@@ -66,11 +69,24 @@ public class RiotConnectionManager implements ConnectionListener {
         MainApplication.getInstance().getBusInstance().post(new OnReconnectSuccessListenerEvent());
 
         this.riotRosterManager.getFriendStatusTracker().clear();
+        /**
+         * TODO: Without this, notifications are not being sent because the Presence Collection
+         * is not innitialized
+         */
+
         new RiotXmppRosterImpl().getFullFriendsList(true)
                 .subscribe(new Subscriber<List<Friend>>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
-                    @Override public void onNext(List<Friend> friends) {}
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(List<Friend> friends) {
+                    }
                 });
     }
 

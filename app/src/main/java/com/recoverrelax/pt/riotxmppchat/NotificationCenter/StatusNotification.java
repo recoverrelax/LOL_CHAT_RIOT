@@ -13,6 +13,8 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 
+import javax.inject.Inject;
+
 import LolChatRiotDb.NotificationDb;
 import rx.Observable;
 import rx.Subscriber;
@@ -22,8 +24,9 @@ import rx.schedulers.Schedulers;
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class StatusNotification extends NotificationHelper{
-    private RiotXmppDBRepository riotXmppRepository;
-    private DataStorage dataStorageInstance;
+
+    @Inject DataStorage dataStorageInstance;
+
     private String userXmppAddress;
     private String username;
     private NotificationDb notificationDb;
@@ -37,15 +40,15 @@ public class StatusNotification extends NotificationHelper{
     private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
 
     public StatusNotification(String userXmppAddress, String username2, Status status){
-        riotXmppRepository = new RiotXmppDBRepository();
-        dataStorageInstance = DataStorage.getInstance();
+        super();
         this.userXmppAddress = userXmppAddress;
         this.status = status;
         this.username = username2;
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
     public void sendStatusNotification(){
-        riotXmppRepository.getNotificationByUser(userXmppAddress)
+        riotXmppDBRepository.getNotificationByUser(userXmppAddress)
                 .doOnNext(notification -> {
                     this.notificationDb = notification;
 

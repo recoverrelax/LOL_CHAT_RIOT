@@ -15,6 +15,8 @@ import com.recoverrelax.pt.riotxmppchat.ui.activity.RiotXmppNewMessageActivity;
 
 import org.jivesoftware.smack.packet.Message;
 
+import javax.inject.Inject;
+
 import LolChatRiotDb.NotificationDb;
 import rx.Observable;
 import rx.Subscriber;
@@ -24,8 +26,11 @@ import rx.schedulers.Schedulers;
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class MessageNotification extends NotificationHelper{
-    private RiotXmppDBRepository riotXmppRepository;
-    private DataStorage dataStorageInstance;
+
+
+    @Inject
+    DataStorage dataStorageInstance;
+
     private String userXmppAddress;
     private String username;
     private Message messageContent;
@@ -35,8 +40,9 @@ public class MessageNotification extends NotificationHelper{
     private static final int MESSAGE_NOTIFICATION_DRAWABLE = R.drawable.ic_action_question_answer_green;
 
     public MessageNotification(String userXmppAddress, Message messageContent){
-        riotXmppRepository = new RiotXmppDBRepository();
-        dataStorageInstance = DataStorage.getInstance();
+        super();
+        MainApplication.getInstance().getAppComponent().inject(this);
+
         this.userXmppAddress = userXmppAddress;
         this.messageContent = messageContent;
     }
@@ -45,7 +51,7 @@ public class MessageNotification extends NotificationHelper{
 
         String message = messageContent.getBody();
 
-        riotXmppRepository.getNotificationByUser(userXmppAddress)
+        riotXmppDBRepository.getNotificationByUser(userXmppAddress)
                 .doOnNext(notification ->
                         this.notificationDb = notification
                 )

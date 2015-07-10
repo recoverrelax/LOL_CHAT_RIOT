@@ -29,6 +29,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
 import javax.net.ssl.SSLSocketFactory;
 
 import rx.Observable;
@@ -45,7 +46,6 @@ public class RiotXmppService extends Service {
     private static final int ONGOING_SERVICE_NOTIFICATION_ID = 12345;
 
     private final IBinder mBinder = new MyBinder();
-    private DataStorage dataStorage;
 
     public static final String INTENT_SERVER_HOST_CONST = "server";
     public static final String INTENT_SERVER_USERNAME = "username";
@@ -65,9 +65,11 @@ public class RiotXmppService extends Service {
 
     private XMPPTCPConnectionConfiguration connectionConfig;
     private AbstractXMPPConnection connection;
-    private RiotXmppConnectionImpl connectionHelper;
 
-    private RiotConnectionManager riotConnectionManager;
+    @Inject RiotXmppConnectionImpl connectionHelper;
+    @Inject DataStorage dataStorage;
+    private RiotConnectionManager connectionManager;
+
     private RiotRosterManager riotRosterManager;
     private RiotChatManager riotChatManager;
 
@@ -94,7 +96,8 @@ public class RiotXmppService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        dataStorage = DataStorage.getInstance();
+        MainApplication.getInstance().getAppComponent().inject(this);
+//        MainApplication.getInstance().getStorageComponent().inject(this);
 
         /**
          * Get credentials from intent
@@ -172,8 +175,6 @@ public class RiotXmppService extends Service {
 
         prepareConnectionConfig(serverDomain, serverHost, serverPort);
         connection = new XMPPTCPConnection(connectionConfig);
-        connectionHelper = new RiotXmppConnectionImpl();
-
         connect();
     }
 
@@ -291,8 +292,8 @@ public class RiotXmppService extends Service {
                     riotChatManager = new RiotChatManager(RiotXmppService.this, connection, connectedUser, getRiotRosterManager());
                     riotChatManager.addChatListener();
 
-                    riotConnectionManager = new RiotConnectionManager(connection, riotRosterManager);
-                    riotConnectionManager.addConnectionListener();
+                    connectionManager = new RiotConnectionManager(connection, riotRosterManager);
+                    connectionManager.addConnectionListener();
 
                     subscriber.onNext(true);
                     subscriber.onCompleted();
@@ -323,6 +324,6 @@ public class RiotXmppService extends Service {
     }
 
     public RiotConnectionManager getRiotConnectionManager() {
-        return riotConnectionManager;
+        return connectionManager;
     }
 }

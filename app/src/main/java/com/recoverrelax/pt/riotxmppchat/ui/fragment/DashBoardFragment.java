@@ -18,6 +18,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.OnFriendPresenceChangedEve
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
@@ -28,6 +29,8 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.inject.Inject;
 
 import LolChatRiotDb.InAppLogDb;
 import butterknife.Bind;
@@ -78,8 +81,10 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
     private boolean firstTimeOnCreate = true;
 
     private DashBoardLogAdapter adapter;
-    private RiotXmppRosterImpl rosterImpl;
-    private RiotXmppDashboardImpl dashboardImpl;
+
+    @Inject RiotXmppRosterImpl rosterImpl;
+    @Inject RiotXmppDashboardImpl dashboardImpl;
+
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
 
@@ -94,12 +99,19 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         ButterKnife.bind(this, view);
+        MainApplication.getInstance().getAppComponent().inject(this);
+
         setHasOptionsMenu(true);
         showProgressBar(true);
         return view;
@@ -142,9 +154,6 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
         dashboard_2.setBackgroundColor(colorList.get(1));
         dashboard_3.setBackgroundColor(colorList.get(2));
         dashboard_4.setBackgroundColor(colorList.get(3));
-
-        dashboardImpl = new RiotXmppDashboardImpl();
-        rosterImpl = new RiotXmppRosterImpl();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);

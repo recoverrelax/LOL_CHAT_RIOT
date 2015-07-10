@@ -10,6 +10,8 @@ import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -20,6 +22,12 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 public class NotificationHelper {
 
     private final Context applicationContext = MainApplication.getInstance().getApplicationContext();
+    @Inject RiotXmppDBRepository riotXmppDBRepository;
+    @Inject MessageSpeechNotification messageSpeechNotification;
+
+    public NotificationHelper(){
+        MainApplication.getInstance().getAppComponent().inject(this);
+    }
 
     protected Observable<Boolean> sendSystemNotification(@NonNull String title, @NonNull String message, @DrawableRes int systemNotifId, int notificationId,
                                                          boolean hasPermissions){
@@ -54,7 +62,7 @@ public class NotificationHelper {
     }
 
     protected void saveToLog(Integer logId, String logMessage, String targetXmppUser) {
-        new RiotXmppDBRepository().insertOrReplaceInappLog(logId, logMessage, targetXmppUser)
+        riotXmppDBRepository.insertOrReplaceInappLog(logId, logMessage, targetXmppUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Long>() {
@@ -77,14 +85,14 @@ public class NotificationHelper {
 
         if(!combinedPermission)
             return;
-        MessageSpeechNotification.getInstance().sendMessageSpeechNotification(message, user);
+        messageSpeechNotification.sendMessageSpeechNotification(message, user);
     }
 
     protected void hSendStatusSpeechNotification(String message, boolean combinedPermission){
 
         if(!combinedPermission)
             return;
-        MessageSpeechNotification.getInstance().sendStatusSpeechNotification(message);
+        messageSpeechNotification.sendStatusSpeechNotification(message);
     }
 
 }

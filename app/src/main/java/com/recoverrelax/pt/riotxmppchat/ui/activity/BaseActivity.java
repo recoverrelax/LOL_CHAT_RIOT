@@ -24,6 +24,9 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,7 +57,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     private boolean userLearnedDrawer;
     private boolean fromSavedInstanceState;
-    private DataStorage sDataStorage = DataStorage.getInstance();
+
+    @Inject DataStorage mDataStorage;
+    @Inject
+    RiotXmppDBRepository riotRepository;
 
     private Handler mHandler;
     private ActionBarDrawerToggle drawerToggle;
@@ -66,12 +72,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResources());
         ButterKnife.bind(this);
+        MainApplication.getInstance().getAppComponent().inject(this);
 
         if(savedInstanceState != null){
             fromSavedInstanceState = true;
         }
 
-        userLearnedDrawer = sDataStorage.userLearnedDrawer();
+        userLearnedDrawer = mDataStorage.userLearnedDrawer();
 
         if(getResources().getBoolean(R.bool.isTablet)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
@@ -107,7 +114,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         if (drawer_username != null) {
             drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
-                    DataStorage.getInstance().getUsername());
+                    mDataStorage.getUsername());
         }
 
         drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
@@ -116,7 +123,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 if(!userLearnedDrawer){
-                    sDataStorage.setUserLearnedDrawer();
+                    mDataStorage.setUserLearnedDrawer();
                 }
             }
 
@@ -156,7 +163,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public void onDrawerLogout(View view){
         this.finish();
 
-        if(!DataStorage.getInstance().getNotificationsAlwaysOn())
+        if(!mDataStorage.getNotificationsAlwaysOn())
             MainApplication.getInstance().getRiotXmppService().stopSelf();
     }
 

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.inject.Inject;
+
 public class AppMiscUtils {
 
     public static boolean isPhoneSilenced(){

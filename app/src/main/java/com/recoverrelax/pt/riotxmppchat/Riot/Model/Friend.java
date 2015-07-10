@@ -116,12 +116,6 @@ public class Friend implements Comparable<Friend>{
         return getStringFromXmlTag(RANKED_WINS, rootElement);
     }
 
-    /**
-     * Mode only available for online users
-     *
-     * @return
-     */
-
     public PresenceMode getFriendMode() {
         if (!this.userRosterPresence.isAvailable())
             return PresenceMode.UNAVAILABLE;

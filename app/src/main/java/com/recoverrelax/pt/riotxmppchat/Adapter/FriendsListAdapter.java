@@ -68,6 +68,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private final int VIEW_HOLDER_ONLINE_ID = 0;
     private final int VIEW_HOLDER_OFFLINE_ID = 1;
+    private boolean showOfflineUsers;
 
     @ColorRes
     int COLOR_BLACK;
@@ -75,10 +76,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @ColorRes
     int COLOR_WHITE;
 
-    public FriendsListAdapter(Fragment frag, ArrayList<Friend> friendsList, RecyclerView recyclerView) {
+    public FriendsListAdapter(Fragment frag, ArrayList<Friend> friendsList, boolean showOfflineUsers, RecyclerView recyclerView) {
         this.context = frag.getActivity();
         inflater = LayoutInflater.from(this.context);
         this.friendsList = friendsList;
+        this.showOfflineUsers = showOfflineUsers;
         this.recyclerView = recyclerView;
 
         COLOR_BLACK = frag.getActivity().getResources().getColor(R.color.black);
@@ -262,7 +264,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if (oldFriend.isOnline()) {
                     // ONLINE - OFFLINE
                     friendsList.remove(positionFriend);
-                    if(DataStorage.getInstance().showOfflineUsers())
+                    if(showOfflineUsers)
                         friendsList.add(newFriend);
                     notifyItemRemoved(positionFriend);
                 } else {

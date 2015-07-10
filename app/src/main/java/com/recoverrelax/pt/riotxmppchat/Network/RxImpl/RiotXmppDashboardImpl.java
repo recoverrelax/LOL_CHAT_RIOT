@@ -6,6 +6,8 @@ import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.InAppLogDbDao;
 import de.greenrobot.dao.query.QueryBuilder;
@@ -15,12 +17,11 @@ import rx.schedulers.Schedulers;
 
 public class RiotXmppDashboardImpl {
 
-    private RiotXmppService riotXmppService;
-    private RiotXmppDBRepository riotXmppDBRepository;
+    private RiotXmppService riotXmppService = MainApplication.getInstance().getRiotXmppService();
+    RiotXmppDBRepository riotXmppDBRepository;
 
-    public RiotXmppDashboardImpl() {
-        this.riotXmppService = MainApplication.getInstance().getRiotXmppService();
-        this.riotXmppDBRepository = new RiotXmppDBRepository();
+    public RiotXmppDashboardImpl(RiotXmppDBRepository repository) {
+        this.riotXmppDBRepository = repository;
     }
 
     public Observable<String> getUnreadedMessagesCount() {

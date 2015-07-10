@@ -24,6 +24,8 @@ import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.Random;
 
+import javax.inject.Inject;
+
 import LolChatRiotDb.NotificationDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,6 +51,9 @@ public class NotificationCustomDialogFragment extends DialogFragment {
 
     @Bind(R.id.hasSentPm)
     SwitchCompat hasSentPm;
+
+    @Inject
+    RiotXmppDBRepository riotXmppDBRepository;
 
     public static String FRIEND_XMPP_ADDRESS = "friend_xmpp_address";
 
@@ -90,6 +95,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
     @OnClick({R.id.isOnline, R.id.isOffline, R.id.hasSentPm, R.id.hasStartedGame, R.id.hasLeftGame})
@@ -119,7 +125,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
 
-        new RiotXmppDBRepository().updateNotification(notification)
+        riotXmppDBRepository.updateNotification(notification)
                 .subscribe(new Subscriber<Long>() {
                     @Override public void onCompleted() { }
                     @Override public void onError(Throwable e) { }
@@ -138,7 +144,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
             Bundle extra = getArguments();
 
             friendXmppUser = extra.getString(FRIEND_XMPP_ADDRESS);
-            new RiotXmppDBRepository().getNotificationByUser(friendXmppUser)
+            riotXmppDBRepository.getNotificationByUser(friendXmppUser)
                     .subscribe(new Subscriber<NotificationDb>() {
                         @Override public void onCompleted() { }
                         @Override public void onError(Throwable e) { }

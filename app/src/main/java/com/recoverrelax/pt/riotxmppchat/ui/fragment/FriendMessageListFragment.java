@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.FriendMessageListImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -23,6 +24,8 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,7 +53,7 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
      */
     private FriendMessageListAdapter adapter;
 
-    private FriendMessageListImpl friendMessageListHelper;
+    @Inject FriendMessageListImpl friendMessageListHelper;
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
     public FriendMessageListFragment() {
@@ -67,6 +70,8 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friend_message_list, container, false);
         ButterKnife.bind(this, view);
+        MainApplication.getInstance().getAppComponent().inject(this);
+
         return view;
     }
 
@@ -100,8 +105,6 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
 
                     AppContextUtils.startPersonalMessageActivityBgColor(getActivity(), friendName, friendXmppAddress, cardColor, null);
                 });
-
-        friendMessageListHelper = new FriendMessageListImpl();
     }
 
     public void showProgressBar(boolean state) {

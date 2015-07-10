@@ -30,7 +30,7 @@ public abstract class RiotXmppNewMessageActivity extends BaseActivity{
         MenuItem messageItem = menu.findItem(R.id.newMessage);
 
         if(hasNewMessageIcon())
-        new RiotXmppDBRepository().hasUnreadedMessages()
+            riotRepository.hasUnreadedMessages()
                 .subscribe(new Subscriber<Boolean>() {
                     @Override public void onCompleted() { }
                     @Override public void onError(Throwable e) { }
@@ -47,7 +47,7 @@ public abstract class RiotXmppNewMessageActivity extends BaseActivity{
         Toolbar toolbar = getToolbar();
         MenuItem item = toolbar.getMenu().findItem(R.id.newMessage);
 
-        new RiotXmppDBRepository().hasUnreadedMessages()
+        riotRepository.hasUnreadedMessages()
                 .subscribe(new Subscriber<Boolean>() {
                     @Override public void onCompleted() { }
                     @Override public void onError(Throwable e) { }

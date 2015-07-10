@@ -9,11 +9,15 @@ import org.jivesoftware.smack.XMPPException;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
+
 
 public class RiotXmppConnectionImpl {
 
@@ -21,7 +25,6 @@ public class RiotXmppConnectionImpl {
     private final int MAX_CONNECTION_TRIES = 4;
 
     public RiotXmppConnectionImpl() { }
-
 
     public Observable<AbstractXMPPConnection> connect(final AbstractXMPPConnection connection) {
         return Observable.<AbstractXMPPConnection>create(subscriber -> {

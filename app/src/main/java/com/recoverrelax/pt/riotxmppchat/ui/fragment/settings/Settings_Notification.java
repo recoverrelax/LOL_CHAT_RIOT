@@ -12,6 +12,8 @@ import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,7 +37,8 @@ public class Settings_Notification extends Fragment {
     SwitchCompat notificationAlwaysOn;
 
     private String connectedXmppUser;
-    private DataStorage dataStorage;
+
+    @Inject DataStorage dataStorage;
 
     public Settings_Notification(){
 
@@ -48,7 +51,7 @@ public class Settings_Notification extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dataStorage = DataStorage.getInstance();
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
     @Nullable

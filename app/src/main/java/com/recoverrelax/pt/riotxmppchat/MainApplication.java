@@ -10,9 +10,12 @@ import android.os.IBinder;
 import com.crashlytics.android.Crashlytics;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnServiceBindedEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.ImplModule;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Storage.AppModuleModule;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.squareup.otto.Bus;
@@ -43,20 +46,24 @@ public class MainApplication extends Application {
     private static MainApplication instance;
     private WeakReference<BaseActivity> currentBaseActivity = null;
 
+    /**
+     * Dagger Components
+     */
+
+    private static AppComponent appComponent;
+
     @Override
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         instance = this;
-        DataStorage.init(this);
-        MessageSpeechNotification.init(this);
-
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/Roboto-Light.ttf")
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
         setupDatabase();
+        initAppComponents();
 
         bus = new Bus(ThreadEnforcer.ANY);
 
@@ -64,6 +71,17 @@ public class MainApplication extends Application {
 
         if(!file.exists())
             file.mkdir();
+    }
+
+    private void initAppComponents() {
+        appComponent = DaggerAppComponent.builder()
+                .appModuleModule(new AppModuleModule(new DataStorage(this), new RiotXmppDBRepository(), new MessageSpeechNotification(this)))
+                .implModule(new ImplModule())
+                .build();
+    }
+
+    public AppComponent getAppComponent(){
+        return appComponent;
     }
 
     public void setCurrentBaseActivity(BaseActivity baseActivity){

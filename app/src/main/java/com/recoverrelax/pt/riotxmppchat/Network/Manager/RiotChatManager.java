@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import LolChatRiotDb.MessageDb;
 import rx.Observable;
 import rx.Subscriber;
@@ -38,7 +40,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     private Context context;
     private Bus busInstance;
 
-    private RiotXmppDBRepository riotXmppDBRepository;
+    @Inject RiotXmppDBRepository riotXmppDBRepository;
 
     private Map<String, Chat> chatList;
 
@@ -48,7 +50,8 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         this.riotRosterManager = riotRosterManager;
         this.context = context;
         this.busInstance = MainApplication.getInstance().getBusInstance();
-        this.riotXmppDBRepository = new RiotXmppDBRepository();
+
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
     public void addChatListener() {
@@ -78,7 +81,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         if (messageFrom != null && message.getBody() != null) {
             MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
-            new RiotXmppDBRepository().insertMessage(message1)
+            riotXmppDBRepository.insertMessage(message1)
                     .subscribe(new Subscriber<Long>() {
                         @Override public void onCompleted() { }
                         @Override public void onError(Throwable e) { }
