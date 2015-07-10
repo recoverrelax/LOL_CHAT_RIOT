@@ -7,7 +7,7 @@ import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.ImplModule;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageNotification;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.NotificationHelper;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
-import com.recoverrelax.pt.riotxmppchat.Storage.AppModuleModule;
+import com.recoverrelax.pt.riotxmppchat.Storage.AppModule;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
@@ -23,7 +23,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {ImplModule.class, AppModuleModule.class})
+@Component(modules = {ImplModule.class, AppModule.class})
 public interface AppComponent {
 
     /**

@@ -30,7 +30,7 @@ public class RiotXmppDBRepository {
     private static NotificationDbDao notificationDao = MainApplication.getInstance().getDaoSession().getNotificationDbDao();
 
     public Observable<Long> insertOrReplaceInappLog(InAppLogDb inappLog){
-        return Observable.defer(() -> Observable.just(RiotXmppDBRepository.getInAppLogDbDao().insertOrReplace(inappLog)))
+        return Observable.defer(() -> Observable.just(getInAppLogDbDao().insertOrReplace(inappLog)))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
@@ -67,7 +67,7 @@ public class RiotXmppDBRepository {
 
     public Observable<List<InAppLogDb>> getLast20List(String connectedUser){
         return Observable.defer( () ->
-                Observable.just(RiotXmppDBRepository.getInAppLogDbDao().queryBuilder())
+                Observable.just(getInAppLogDbDao().queryBuilder())
                 .map(qb -> {
                     qb.where(InAppLogDbDao.Properties.UserXmppId.eq(connectedUser))
                             .orderDesc(InAppLogDbDao.Properties.Id)

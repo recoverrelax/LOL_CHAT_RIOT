@@ -13,7 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.ImplModule;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
-import com.recoverrelax.pt.riotxmppchat.Storage.AppModuleModule;
+import com.recoverrelax.pt.riotxmppchat.Storage.AppModule;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
@@ -75,7 +75,7 @@ public class MainApplication extends Application {
 
     private void initAppComponents() {
         appComponent = DaggerAppComponent.builder()
-                .appModuleModule(new AppModuleModule(new DataStorage(this), new RiotXmppDBRepository(), new MessageSpeechNotification(this)))
+                .appModule(new AppModule(new DataStorage(this), new RiotXmppDBRepository(), new MessageSpeechNotification(this)))
                 .implModule(new ImplModule())
                 .build();
     }

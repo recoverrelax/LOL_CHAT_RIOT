@@ -8,14 +8,14 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class AppModuleModule {
+public class AppModule {
 
     private DataStorage dataStorage;
     private RiotXmppDBRepository riotXmppDBRepository;
     private MessageSpeechNotification messageSpeechNotif;
 
     @Inject
-    public AppModuleModule(DataStorage dataStorage, RiotXmppDBRepository riotXmppDBRepository, MessageSpeechNotification messageSpeechNotif){
+    public AppModule(DataStorage dataStorage, RiotXmppDBRepository riotXmppDBRepository, MessageSpeechNotification messageSpeechNotif){
         this.dataStorage = dataStorage;
         this.messageSpeechNotif = messageSpeechNotif;
         this.riotXmppDBRepository = riotXmppDBRepository;
