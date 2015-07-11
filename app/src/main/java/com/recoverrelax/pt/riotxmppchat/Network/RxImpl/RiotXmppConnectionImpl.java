@@ -9,9 +9,6 @@ import org.jivesoftware.smack.XMPPException;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -26,6 +23,11 @@ public class RiotXmppConnectionImpl {
 
     public RiotXmppConnectionImpl() { }
 
+    /**
+     * Attempt top connect with the specified connection.
+     * @param connection the connection to connect to
+     * @return the connect if successfully connected
+     */
     public Observable<AbstractXMPPConnection> connect(final AbstractXMPPConnection connection) {
         return Observable.<AbstractXMPPConnection>create(subscriber -> {
             try {
@@ -42,6 +44,11 @@ public class RiotXmppConnectionImpl {
         .doOnError(throwable -> LOGI("111", "Connection OnError called"));
     }
 
+    /**
+     * Attemps to connect with the input connection and tries at most 4 times with a delay of 1, 2, 3, 4 seconds
+     * @param connection
+     * @return
+     */
     public Observable<AbstractXMPPConnection> connectWithRetry(final AbstractXMPPConnection connection) {
        return connect(connection)
                .retryWhen(attempts -> attempts.zipWith(Observable.range(1, MAX_CONNECTION_TRIES), (throwable, integer) -> new Pair<>(throwable, integer))
@@ -52,6 +59,11 @@ public class RiotXmppConnectionImpl {
                        }));
     }
 
+    /**
+     * Attempts to login with the specified connection
+     * @param connection the connection to login to
+     * @return the connection if successfully logged in
+     */
     public Observable<AbstractXMPPConnection> login(final AbstractXMPPConnection connection) {
         return Observable.<AbstractXMPPConnection>create(subscriber -> {
             try {
@@ -73,6 +85,11 @@ public class RiotXmppConnectionImpl {
                 .subscribeOn(Schedulers.io());
     }
 
+    /**
+     * Attepts to login to the server at most 3 times, with a delay of 1, 2, 3 seconds accordingly
+     * @param connection to login to
+     * @return the connection if successfully loggedIn
+     */
     public Observable<AbstractXMPPConnection> loginWithRetry(final AbstractXMPPConnection connection) {
         return login(connection)
                 .retryWhen(attempts -> attempts.zipWith(Observable.range(1, MAX_LOGIN_TRIES), (throwable, integer) -> new Pair<>(throwable, integer))

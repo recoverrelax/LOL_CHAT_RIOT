@@ -1,12 +1,10 @@
 package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.InAppLogDbDao;
@@ -24,6 +22,9 @@ public class RiotXmppDashboardImpl {
         this.riotXmppDBRepository = repository;
     }
 
+    /**
+     * @return the number of unreaded messages for the connected user
+     */
     public Observable<String> getUnreadedMessagesCount() {
         return riotXmppDBRepository.getUnreadedMessages()
                 .map(String::valueOf)
@@ -31,6 +32,14 @@ public class RiotXmppDashboardImpl {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * get roster entries FROM
+     * get friend for each entry
+     * for each friend, update the friendStatusObject
+     * converts back to a list
+     * ingores this list and retuns the created friendStatusInfo
+     * @return
+     */
     public Observable<FriendStatusInfo> getFriendStatusInfo() {
         final FriendStatusInfo friendStatusInfo = new FriendStatusInfo();
 
@@ -52,6 +61,11 @@ public class RiotXmppDashboardImpl {
 
     }
 
+    /**
+     * get the connected user
+     * attemps to get the last log for that user
+     * @return the last log for that user
+     */
     public Observable<InAppLogDb> getLogSingleItem() {
         return riotXmppService.getRiotConnectionManager().getConnectedUser()
                 .map(connectedUser -> {
@@ -70,6 +84,9 @@ public class RiotXmppDashboardImpl {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * @return Get the last 20 log messages for the connected user
+     */
     public Observable<List<InAppLogDb>> getLogLast20List() {
         return riotXmppService.getRiotConnectionManager().getConnectedUser()
                 .flatMap(riotXmppDBRepository::getLast20List)

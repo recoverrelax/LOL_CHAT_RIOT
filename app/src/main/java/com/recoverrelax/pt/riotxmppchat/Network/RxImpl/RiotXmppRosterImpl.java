@@ -18,6 +18,16 @@ public class RiotXmppRosterImpl {
         this.riotRosterManager = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager();
     }
 
+    /**
+     * get roster entries FROM
+     * get Friends for roster entry FROM
+     * filter offline friends
+     * each friend, update friend status
+     * join the list and sort
+     * enable friend tracker
+     * @param getOffline: filter to show or not offline friends
+     * @return
+     */
     public Observable<List<Friend>> getFullFriendsList(final boolean getOffline) {
         return riotRosterManager.getRosterEntries()
                 .flatMap(riotRosterManager::getFriendFromRosterEntry)
@@ -36,6 +46,12 @@ public class RiotXmppRosterImpl {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * Give two friends, check if they have the same status
+     * @param Friend a
+     * @param Friend b
+     * @return true if same status
+     */
     public boolean samePresence(Friend a, Friend b) {
         if (a.getUserRosterPresence().isAvailable() && b.getUserRosterPresence().isAvailable())
             return true;
@@ -45,6 +61,15 @@ public class RiotXmppRosterImpl {
         return false;
     }
 
+    /**
+     * get roster entries FROM
+     * get friend for each entry
+     * filter and get each friend for the search query
+     * for each result, update friend status
+     * convert back to a list
+     * @param searchString
+     * @return
+     */
     public Observable<List<Friend>> searchFriendsList(final String searchString) {
         return riotRosterManager.getRosterEntries()
                 .flatMap(riotRosterManager::getFriendFromRosterEntry)
@@ -55,6 +80,11 @@ public class RiotXmppRosterImpl {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * get a friend from the roster manager
+     * @param presence
+     * @return
+     */
     public Observable<Friend> getPresenceChanged(final Presence presence) {
         return riotRosterManager.getFriendFromXmppAddress(presence.getFrom())
                 .subscribeOn(Schedulers.io())

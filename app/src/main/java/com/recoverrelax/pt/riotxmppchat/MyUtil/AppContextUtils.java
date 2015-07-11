@@ -11,6 +11,12 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
 
 public class AppContextUtils {
+    /**
+     *
+     *
+     * @param view
+     * @param state
+     */
     public static void setBlinkAnimation(final View view, boolean state) {
         if(view == null)
             return;
