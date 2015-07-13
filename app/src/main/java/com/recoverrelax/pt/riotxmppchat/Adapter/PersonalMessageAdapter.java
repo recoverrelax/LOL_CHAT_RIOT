@@ -32,9 +32,9 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<MessageDb> personalMessageList;
-    private LayoutInflater inflater;
-    private Context context;
-    private RecyclerView recyclerView;
+    private final LayoutInflater inflater;
+    private final Context context;
+    private final RecyclerView recyclerView;
 
     @LayoutRes
     int layout_from = R.layout.personal_message_from;

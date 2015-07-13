@@ -15,8 +15,6 @@ import com.squareup.otto.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
-
 public class FriendListActivity extends RiotXmppNewMessageActivity {
 
     @Nullable

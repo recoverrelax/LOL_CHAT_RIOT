@@ -25,9 +25,9 @@ public class RiotXmppDBRepository {
 
     private static final String TAG = RiotXmppDBRepository.class.getCanonicalName();
 
-    private static MessageDbDao messageDao = MainApplication.getInstance().getDaoSession().getMessageDbDao();
-    private static InAppLogDbDao inAppLogDbDao = MainApplication.getInstance().getDaoSession().getInAppLogDbDao();
-    private static NotificationDbDao notificationDao = MainApplication.getInstance().getDaoSession().getNotificationDbDao();
+    private static final MessageDbDao messageDao = MainApplication.getInstance().getDaoSession().getMessageDbDao();
+    private static final InAppLogDbDao inAppLogDbDao = MainApplication.getInstance().getDaoSession().getInAppLogDbDao();
+    private static final NotificationDbDao notificationDao = MainApplication.getInstance().getDaoSession().getNotificationDbDao();
 
     /**
      * Insert the specified log into the db
@@ -180,7 +180,7 @@ public class RiotXmppDBRepository {
         return inAppLogDbDao;
     }
 
-    public static NotificationDbDao getNotificationDao() {
+    private static NotificationDbDao getNotificationDao() {
         return notificationDao;
     }
 }

@@ -20,9 +20,9 @@ public enum RiotServer {
     TW(12, "Taiwan", "chattw.lol.garenanow.com"),
     VN(13, "Vietnam", "chatvn.lol.garenanow.com");
 
-    public final String serverName;
-    public final String serverHost;
-    public int position;
+    private final String serverName;
+    private final String serverHost;
+    private int position;
 
     RiotServer(int position, String serverName, String serverHost) {
         this.position = position;

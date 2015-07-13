@@ -69,8 +69,6 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     @Inject
     RiotRosterManager riotRosterManager;
 
-    private RecyclerView.LayoutManager layoutManager;
-
     private boolean SHOW_OFFLINE_USERS;
     private SearchView searchView;
 
@@ -127,7 +125,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
 
         adapter = new FriendsListAdapter(this, new ArrayList<>(), mDataStorage.showOfflineUsers() , myFriendsListRecyclerView);

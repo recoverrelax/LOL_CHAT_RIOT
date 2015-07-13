@@ -19,7 +19,7 @@ public abstract class RiotXmppNewMessageActivity extends BaseActivity{
         super.onResume();
     }
 
-    public void OnNewMessageReceived(final OnNewMessageEventEvent messageReceived) {
+    void OnNewMessageReceived(final OnNewMessageEventEvent messageReceived) {
         if(hasNewMessageIcon())
             resetMessageIcon();
     }
@@ -43,7 +43,7 @@ public abstract class RiotXmppNewMessageActivity extends BaseActivity{
         return true;
     }
 
-    public void resetMessageIcon(){
+    void resetMessageIcon(){
         Toolbar toolbar = getToolbar();
         MenuItem item = toolbar.getMenu().findItem(R.id.newMessage);
 
@@ -64,5 +64,5 @@ public abstract class RiotXmppNewMessageActivity extends BaseActivity{
                 });
     }
 
-    public abstract boolean hasNewMessageIcon();
+    protected abstract boolean hasNewMessageIcon();
 }

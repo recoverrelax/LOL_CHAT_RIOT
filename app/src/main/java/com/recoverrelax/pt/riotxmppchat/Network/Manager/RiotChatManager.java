@@ -31,9 +31,9 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     private ChatManager chatManager;
     private String connectedXmppUser = null;
 
-    private RiotXmppDBRepository riotXmppDBRepository;
+    private final RiotXmppDBRepository riotXmppDBRepository;
     private Map<String, Chat> chatList;
-    private MessageNotification messageNotification;
+    private final MessageNotification messageNotification;
 
     @Inject
     public RiotChatManager(RiotXmppDBRepository riotXmppDBRepository, MessageNotification messageNotification){

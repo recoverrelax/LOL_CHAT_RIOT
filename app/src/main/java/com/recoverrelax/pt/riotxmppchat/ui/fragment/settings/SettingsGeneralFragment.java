@@ -97,7 +97,7 @@ public class SettingsGeneralFragment extends Fragment {
                 });
     }
 
-    public void downloadImages(){
+    private void downloadImages(){
 
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setIndeterminate(true);
@@ -153,7 +153,7 @@ public class SettingsGeneralFragment extends Fragment {
                 });
     }
 
-    public Observable<File> downloadSingleImageObservable(String championName, int skinNumber) {
+    private Observable<File> downloadSingleImageObservable(String championName, int skinNumber) {
 
         String finalChampionString = championName.substring(0, 1).toUpperCase() + championName.substring(1).toLowerCase();
 

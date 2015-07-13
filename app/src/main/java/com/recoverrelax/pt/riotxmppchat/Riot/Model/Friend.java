@@ -30,25 +30,25 @@ public class Friend implements Comparable<Friend>{
     private String name;
     private String userXmppAddress;
     private Presence userRosterPresence;
-    Element rootElement;
+    private Element rootElement;
 
     /**
      * CONSTANTS
      */
-    public static final String PROFILE_ICON = "profileIcon";
-    public static final String LEVEL = "level";
-    public static final String RANKED_WINS = "rankedWins";
-    public static final String RANKED_LEAGUE_TIER = "rankedLeagueTier";
-    public static final String RANKED_LEAGUE_DIVISION = "rankedLeagueDivision";
-    public static final String STATUS_MSG = "statusMsg";
-    public static final String CHAMPION_MASTERY_SCORE = "championMasteryScore";
-    public static final String CHAMPION_NAME = "skinname";
-    public static final String TIME_STAMP = "timeStamp";
-    public static final String GAME_STATUS = "gameStatus";
-    public static final String GAME_STATUS_NO_VIEW = "-1";
-    public static final String PERSONAL_MESSAGE_NO_VIEW = "-1";
+    private static final String PROFILE_ICON = "profileIcon";
+    private static final String LEVEL = "level";
+    private static final String RANKED_WINS = "rankedWins";
+    private static final String RANKED_LEAGUE_TIER = "rankedLeagueTier";
+    private static final String RANKED_LEAGUE_DIVISION = "rankedLeagueDivision";
+    private static final String STATUS_MSG = "statusMsg";
+    private static final String CHAMPION_MASTERY_SCORE = "championMasteryScore";
+    private static final String CHAMPION_NAME = "skinname";
+    private static final String TIME_STAMP = "timeStamp";
+    private static final String GAME_STATUS = "gameStatus";
+    private static final String GAME_STATUS_NO_VIEW = "-1";
+    private static final String PERSONAL_MESSAGE_NO_VIEW = "-1";
 
-    public static final String NO_DATA = "-";
+    private static final String NO_DATA = "-";
 
     public Friend(String name, String userXmppAddress, Presence userRosterPresence) {
         this.name = name;
@@ -88,7 +88,7 @@ public class Friend implements Comparable<Friend>{
     /**
      * @return The extracted String or EMPTY_STRING ("")
      */
-    public static String getStringFromXmlTag(String tagName, Element rootElement) {
+    private static String getStringFromXmlTag(String tagName, Element rootElement) {
         if (rootElement == null)
             return NO_DATA;
         else {
@@ -149,11 +149,11 @@ public class Friend implements Comparable<Friend>{
         return userXmppAddress;
     }
 
-    public String getRankedLeagueTier() {
+    private String getRankedLeagueTier() {
         return getStringFromXmlTag(RANKED_LEAGUE_TIER, rootElement);
     }
 
-    public String getRankedLeagueDivision() {
+    private String getRankedLeagueDivision() {
         return getStringFromXmlTag(RANKED_LEAGUE_DIVISION, rootElement);
     }
 
@@ -211,7 +211,7 @@ public class Friend implements Comparable<Friend>{
         }
     }
 
-    public String formatChampionSelectText(){
+    private String formatChampionSelectText(){
         String timeStamp = getTimeStampDifference();
         boolean noTimeStamp = timeStamp.equals(NO_DATA);
         String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
@@ -225,7 +225,7 @@ public class Friend implements Comparable<Friend>{
         return message.toString();
     }
 
-    public String getTimeStampDifference(){
+    private String getTimeStampDifference(){
         try {
             long serverTimeStamp = Long.parseLong(getTimeStamp());
             long nowTimeStamp = System.currentTimeMillis();
@@ -237,7 +237,7 @@ public class Friend implements Comparable<Friend>{
         }
     }
 
-    public String formatInGameText(){
+    private String formatInGameText(){
         String timeStamp = getTimeStampDifference();
         boolean noTimeStamp = timeStamp.equals(NO_DATA);
 
@@ -295,11 +295,11 @@ public class Friend implements Comparable<Friend>{
         }
     }
 
-    public String getChampionName(){
+    private String getChampionName(){
         return getStringFromXmlTag(CHAMPION_NAME, rootElement);
     }
 
-    public String getTimeStamp() {
+    private String getTimeStamp() {
         return getStringFromXmlTag(TIME_STAMP, rootElement);
     }
 

@@ -40,13 +40,14 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
 
     private List<FriendListChat> friendMessageList;
-    private LayoutInflater inflater;
-    private Context context;
-    private Random random;
+    private final LayoutInflater inflater;
+    private final Context context;
+    private final Random random;
     private OnRowClick clickCallback;
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
     @LayoutRes
+    private final
     int layoutRes = R.layout.friend_message_list_child_layout;
 
     public FriendMessageListAdapter(Context context, ArrayList<FriendListChat> friendMessageList) {
@@ -64,7 +65,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
     @Override
     public void onBindViewHolder(final FriendMessageListAdapter.ViewHolder holder, int position) {
-        holder.friendListChat = friendMessageList.get(position);;
+        holder.friendListChat = friendMessageList.get(position);
 
         holder.name.setText(holder.friendListChat.getFriendName());
         holder.lastMessage.setText(holder.friendListChat.getFriendLastMessage());
@@ -122,7 +123,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
      * @param xmppName
      * @return the position or -1 for cudn't find
      */
-    public int getFriendMessageListPositionByFriendName(String xmppName){
+    private int getFriendMessageListPositionByFriendName(String xmppName){
         int friendMessageListSize = friendMessageList.size();
 
         for(int i = 0 ; i < friendMessageListSize; i++){

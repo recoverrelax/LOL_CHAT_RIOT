@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 public class BaseFragment extends Fragment {
 
     // stuff
-    public void setToolbarTitle(String title){
+    void setToolbarTitle(String title){
             getActivity().setTitle(title);
 
     }

@@ -1,8 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
-import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -10,8 +8,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Bus;
-import com.squareup.picasso.StatsSnapshot;
-
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
@@ -45,8 +41,8 @@ public class RiotRosterManager implements RosterListener {
     private Map<String, Presence> friendList; // friendXmppAddress, Presence
     private boolean enabled = false;
 
-    private Bus busInstance;
-    private Provider<StatusNotification> statusNotificationProvider;
+    private final Bus busInstance;
+    private final Provider<StatusNotification> statusNotificationProvider;
 
 
     @Inject
@@ -130,8 +126,7 @@ public class RiotRosterManager implements RosterListener {
                             MessageDbDao.Properties.FromTo.eq(userToGetMessagesFrom))
                             .orderDesc(MessageDbDao.Properties.Id)
                             .limit(x).build();
-                    List<MessageDb> messageList = qb.list();
-                    return messageList;
+                    return qb.list();
                 });
     }
 

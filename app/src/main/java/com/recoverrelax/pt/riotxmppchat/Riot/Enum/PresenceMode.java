@@ -15,7 +15,8 @@ public enum PresenceMode {
     UNAVAILABLE("OFF", R.color.presence_mode_unavailable);
 
     private String descriptiveName;
-    private @ColorRes int statusColor;
+    private @ColorRes
+    final int statusColor;
 
     PresenceMode(String descriptiveName, @ColorRes int statusColor){
         this.descriptiveName = descriptiveName;

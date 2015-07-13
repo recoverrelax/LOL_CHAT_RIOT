@@ -16,7 +16,14 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {AppModule.class, RxImplModule.class, NotificationModule.class, ManagerModule.class})
+@Component(
+        modules = {
+        AppModule.class,
+        RxImplModule.class,
+        NotificationModule.class,
+        ManagerModule.class
+        }
+)
 public interface AppComponent {
 
     /**

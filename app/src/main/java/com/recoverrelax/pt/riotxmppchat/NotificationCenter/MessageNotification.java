@@ -32,8 +32,8 @@ import static junit.framework.Assert.assertTrue;
 public class MessageNotification extends NotificationHelper{
 
 
-    private DataStorage dataStorageInstance;
-    private RiotRosterManager riotRosterManager;
+    private final DataStorage dataStorageInstance;
+    private final RiotRosterManager riotRosterManager;
 
     private String userXmppAddress;
     private String username;

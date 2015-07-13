@@ -28,7 +28,7 @@ public class RiotXmppConnectionImpl {
      * @param connection the connection to connect to
      * @return the connect if successfully connected
      */
-    public Observable<AbstractXMPPConnection> connect(final AbstractXMPPConnection connection) {
+    private Observable<AbstractXMPPConnection> connect(final AbstractXMPPConnection connection) {
         return Observable.<AbstractXMPPConnection>create(subscriber -> {
             try {
                 AbstractXMPPConnection connection2 = connection.connect();
@@ -78,9 +78,7 @@ public class RiotXmppConnectionImpl {
                 subscriber.onCompleted();
             }
         })
-                .doOnError(throwable -> {
-                    LOGI("111", "Login OnError called");
-                })
+                .doOnError(throwable -> LOGI("111", "Login OnError called"))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }

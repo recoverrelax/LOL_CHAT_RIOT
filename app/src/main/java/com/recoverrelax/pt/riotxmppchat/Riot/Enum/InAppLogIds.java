@@ -7,7 +7,7 @@ public enum InAppLogIds {
     FRIEND_STARTED_GAME(3),
     FRIEND_ENDED_GAME(4);
 
-    private int operationId;
+    private final int operationId;
 
     InAppLogIds(int operationId){
         this.operationId = operationId;

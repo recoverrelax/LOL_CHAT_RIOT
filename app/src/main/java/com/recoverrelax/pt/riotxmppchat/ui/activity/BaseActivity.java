@@ -64,7 +64,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Inject Bus bus;
 
     private Handler mHandler;
-    private ActionBarDrawerToggle drawerToggle;
     // delay to launch nav drawer item, to allow close animation to play
     private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
@@ -118,12 +117,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                     mDataStorage.getUsername());
         }
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if(!userLearnedDrawer){
+                if (!userLearnedDrawer) {
                     mDataStorage.setUserLearnedDrawer();
                 }
             }
@@ -168,15 +167,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             MainApplication.getInstance().getRiotXmppService().stopSelf();
     }
 
-    public abstract @LayoutRes int getLayoutResources();
+    protected abstract @LayoutRes int getLayoutResources();
 
     /**
      * @return Position or -1 for no-position
      */
-    public abstract int getNavigationViewPosition();
+    protected abstract int getNavigationViewPosition();
 
 
-    public void setNavigationViewPosition(int menuItemId){
+    private void setNavigationViewPosition(int menuItemId){
         MenuItem item = null;
         if (navigationView != null) {
             item = navigationView.getMenu().findItem(menuItemId);
@@ -225,7 +224,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     @Nullable
-    public Toolbar getToolbar(){
+    Toolbar getToolbar(){
         return toolbar;
     }
 

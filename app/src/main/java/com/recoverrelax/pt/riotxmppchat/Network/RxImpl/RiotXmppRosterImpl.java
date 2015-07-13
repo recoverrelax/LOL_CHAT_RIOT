@@ -14,7 +14,7 @@ import rx.schedulers.Schedulers;
 
 public class RiotXmppRosterImpl {
 
-    private RiotRosterManager riotRosterManager;
+    private final RiotRosterManager riotRosterManager;
 
     @Inject
     public RiotXmppRosterImpl(RiotRosterManager riotRosterManager) {
@@ -55,7 +55,7 @@ public class RiotXmppRosterImpl {
      * @param Friend b
      * @return true if same status
      */
-    public boolean samePresence(Friend a, Friend b) {
+    private boolean samePresence(Friend a, Friend b) {
         if (a.getUserRosterPresence().isAvailable() && b.getUserRosterPresence().isAvailable())
             return true;
         else if (!a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable()) {

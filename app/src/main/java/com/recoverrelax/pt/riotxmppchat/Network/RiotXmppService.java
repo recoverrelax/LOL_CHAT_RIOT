@@ -165,8 +165,8 @@ public class RiotXmppService extends Service {
                 && dataStorage.getServer().equals(RiotServer.getRiotServerHost(serverHost).getServerName());
     }
 
-    public void connectToRiotXmppServer(String serverHost, int serverPort, String serverDomain,
-                                        String username, String password) {
+    private void connectToRiotXmppServer(String serverHost, int serverPort, String serverDomain,
+                                         String username, String password) {
 
         this.serverHost = serverHost;
         this.serverPort = serverPort;
@@ -180,7 +180,7 @@ public class RiotXmppService extends Service {
         connect();
     }
 
-    public void prepareConnectionConfig(String serverDomain, String serverHost, int serverPort) {
+    private void prepareConnectionConfig(String serverDomain, String serverHost, int serverPort) {
         this.connectionConfig = XMPPTCPConnectionConfiguration.builder()
                 .setSocketFactory(SSLSocketFactory.getDefault())
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
@@ -191,7 +191,7 @@ public class RiotXmppService extends Service {
                 .build();
     }
 
-    public void connect() {
+    private void connect() {
         assertTrue("To start a connection to the server, you must first call init() method!",
                 this.connectionConfig != null);
 
@@ -219,11 +219,11 @@ public class RiotXmppService extends Service {
                 });
     }
 
-    public void onConnected() {
+    private void onConnected() {
         login();
     }
 
-    public void login() {
+    private void login() {
 
         assertTrue("To start a connection to the server, you must first call init() method!",
                 this.connectionConfig != null || this.connection != null);
@@ -253,7 +253,7 @@ public class RiotXmppService extends Service {
                 });
     }
 
-    public void onLoggedIn(AbstractXMPPConnection connection) {
+    private void onLoggedIn(AbstractXMPPConnection connection) {
         LOGI(TAG, "onLoggedIn entered");
 
         Observable.timer(DELAY_BEFORE_ROSTER_LISTENER, TimeUnit.MILLISECONDS)
@@ -282,7 +282,7 @@ public class RiotXmppService extends Service {
                 });
     }
 
-    public Observable<Boolean> createListeners(AbstractXMPPConnection connection){
+    private Observable<Boolean> createListeners(AbstractXMPPConnection connection){
         LOGI(TAG, "Enters createListeners\n");
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override

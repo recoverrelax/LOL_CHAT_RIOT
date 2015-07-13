@@ -47,10 +47,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final String TAG = FriendsListAdapter.class.getSimpleName();
 
     private List<Friend> friendsList;
-    private LayoutInflater inflater;
-    private Context context;
+    private final LayoutInflater inflater;
+    private final Context context;
     private OnAdapterChildClick onAdapterChildClickCallback;
-    private RecyclerView recyclerView;
+    private final RecyclerView recyclerView;
     private StringBuilder stringBuilder = new StringBuilder();
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
@@ -61,9 +61,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Drawable drawable;
     
     @LayoutRes
+    private final
     int layout_online = R.layout.friends_list_recyclerview_child_online;
     
     @LayoutRes
+    private final
     int layout_offline = R.layout.friends_list_recyclerview_child_offline;
 
     private final int VIEW_HOLDER_ONLINE_ID = 0;
@@ -71,9 +73,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private boolean showOfflineUsers;
 
     @ColorRes
+    private final
     int COLOR_BLACK;
 
     @ColorRes
+    private final
     int COLOR_WHITE;
 
     public FriendsListAdapter(Fragment frag, ArrayList<Friend> friendsList, boolean showOfflineUsers, RecyclerView recyclerView) {

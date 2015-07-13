@@ -22,13 +22,14 @@ import butterknife.ButterKnife;
 
 public class DashBoardLogAdapter extends RecyclerView.Adapter<DashBoardLogAdapter.ViewHolder> {
 
-    List<InAppLogDb> logList;
-    private LayoutInflater inflater;
-    private Context context;
-    private Random random;
-    private RecyclerView recyclerView;
+    private List<InAppLogDb> logList;
+    private final LayoutInflater inflater;
+    private final Context context;
+    private final Random random;
+    private final RecyclerView recyclerView;
 
     @LayoutRes
+    private final
     int layoutRes = R.layout.dashboard_log_layout;
 
     public DashBoardLogAdapter(Context context, ArrayList<InAppLogDb> logList, RecyclerView recyclerView) {

@@ -10,7 +10,7 @@ import rx.schedulers.Schedulers;
 
 public class PersonalMessageImpl {
 
-    private RiotRosterManager riotRosterManager;
+    private final RiotRosterManager riotRosterManager;
 
     @Inject
     public PersonalMessageImpl(RiotRosterManager riotRosterManager) {

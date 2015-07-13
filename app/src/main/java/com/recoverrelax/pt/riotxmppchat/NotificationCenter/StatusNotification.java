@@ -27,7 +27,7 @@ import static junit.framework.Assert.assertTrue;
 
 public class StatusNotification extends NotificationHelper{
 
-    private DataStorage dataStorageInstance;
+    private final DataStorage dataStorageInstance;
 
     private String userXmppAddress;
     private String username;
@@ -58,7 +58,7 @@ public class StatusNotification extends NotificationHelper{
         this.username = friendName;
     }
 
-    public void checkInit(){
+    private void checkInit(){
         assertTrue("must first call init", userXmppAddress != null && username != null && status !=null);
     }
 
@@ -106,7 +106,7 @@ public class StatusNotification extends NotificationHelper{
                 });
     }
 
-    public void sendSnackbarNotification(@Nullable Activity activity) {
+    private void sendSnackbarNotification(@Nullable Activity activity) {
         checkInit();
         boolean permission = getStatusPermissionFromStatus(status);
 

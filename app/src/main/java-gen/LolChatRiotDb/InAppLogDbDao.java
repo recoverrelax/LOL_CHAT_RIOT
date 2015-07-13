@@ -29,8 +29,7 @@ public class InAppLogDbDao extends AbstractDao<InAppLogDb, Long> {
         public final static Property LogMessage = new Property(3, String.class, "logMessage", false, "LOG_MESSAGE");
         public final static Property UserXmppId = new Property(4, String.class, "userXmppId", false, "USER_XMPP_ID");
         public final static Property FriendXmppId = new Property(5, String.class, "friendXmppId", false, "FRIEND_XMPP_ID");
-    };
-
+    }
 
     public InAppLogDbDao(DaoConfig config) {
         super(config);

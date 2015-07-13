@@ -18,10 +18,10 @@ import rx.schedulers.Schedulers;
 
 public class RiotXmppDashboardImpl {
 
-    private RiotXmppService riotXmppService = MainApplication.getInstance().getRiotXmppService();
+    private final RiotXmppService riotXmppService = MainApplication.getInstance().getRiotXmppService();
 
-    private RiotXmppDBRepository riotXmppDBRepository;
-    private RiotRosterManager riotRosterManager;
+    private final RiotXmppDBRepository riotXmppDBRepository;
+    private final RiotRosterManager riotRosterManager;
 
     @Inject
     public RiotXmppDashboardImpl(RiotXmppDBRepository riotXmppDBRepository, RiotRosterManager riotRosterManager) {
@@ -41,7 +41,7 @@ public class RiotXmppDashboardImpl {
         final FriendStatusInfo friendStatusInfo = new FriendStatusInfo();
 
             return riotRosterManager.getRosterEntries()
-                    .flatMap(rosterEntry -> riotRosterManager.getFriendFromRosterEntry(rosterEntry))
+                    .flatMap(riotRosterManager::getFriendFromRosterEntry)
                    .doOnNext(friend -> {
                        if (friend.isPlaying())
                            friendStatusInfo.addFriendPlaying();

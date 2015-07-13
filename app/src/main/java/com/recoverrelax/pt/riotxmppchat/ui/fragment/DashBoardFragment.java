@@ -76,8 +76,6 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
     ProgressBar progressBar;
 
 
-    private boolean firstTimeFragmentStart = true;
-    private static final long DELAY_BEFORE_LOAD_ITEMS = 500;
     private boolean firstTimeOnCreate = true;
 
     private DashBoardLogAdapter adapter;
@@ -165,13 +163,6 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
         getFriendStatusInfo();
         getLogLast20();
         getFullFriendsList();
-
-
-        /**
-         * Handler to Update the TimeStamp
-         * of friends Playing or inQueue
-         */
-        firstTimeFragmentStart = false;
     }
 
     private void getFullFriendsList() {
@@ -292,7 +283,7 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
         getFriendStatusInfo();
     }
 
-    public void showProgressBar(boolean state){
+    private void showProgressBar(boolean state){
         progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
     }
 
