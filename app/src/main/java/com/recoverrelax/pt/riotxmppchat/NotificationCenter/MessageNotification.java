@@ -3,6 +3,8 @@ package com.recoverrelax.pt.riotxmppchat.NotificationCenter;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -12,6 +14,7 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.RiotXmppNewMessageActivity;
+import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.packet.Message;
 
@@ -24,12 +27,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
+import static junit.framework.Assert.assertTrue;
 
 public class MessageNotification extends NotificationHelper{
 
 
-    @Inject
-    DataStorage dataStorageInstance;
+    private DataStorage dataStorageInstance;
+    private RiotRosterManager riotRosterManager;
 
     private String userXmppAddress;
     private String username;
@@ -39,23 +43,33 @@ public class MessageNotification extends NotificationHelper{
     private static final int MESSAGE_NOTIFICATION_ID = 1111111;
     private static final int MESSAGE_NOTIFICATION_DRAWABLE = R.drawable.ic_action_question_answer_green;
 
-    public MessageNotification(String userXmppAddress, Message messageContent){
-        super();
-        MainApplication.getInstance().getAppComponent().inject(this);
+    @Inject
+    public MessageNotification(Bus bus, DataStorage dataStorageInstance, RiotRosterManager riotRosterManager, RiotXmppDBRepository xmppDBRepository, MessageSpeechNotification speechNotification){
+        this.riotXmppDBRepository = xmppDBRepository;
+        this.messageSpeechNotification = speechNotification;
+        this.bus = bus;
+        this.dataStorageInstance = dataStorageInstance;
+        this.riotRosterManager = riotRosterManager;
+    }
 
+    public void init(String userXmppAddress, Message messageContent){
         this.userXmppAddress = userXmppAddress;
         this.messageContent = messageContent;
     }
 
-    public void sendMessageNotification(){
+    public void checkInit(){
+        assertTrue("first call init", userXmppAddress != null && messageContent != null);
+    }
 
+    public void sendMessageNotification(){
+        checkInit();
         String message = messageContent.getBody();
 
         riotXmppDBRepository.getNotificationByUser(userXmppAddress)
                 .doOnNext(notification ->
                         this.notificationDb = notification
                 )
-                .flatMap(notification -> MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getFriendNameFromXmppAddress(userXmppAddress))
+                .flatMap(notification -> riotRosterManager.getFriendNameFromXmppAddress(userXmppAddress))
                 .doOnNext(targetUserName -> {
                     saveToLog(InAppLogIds.FRIEND_PM.getOperationId(), targetUserName + " says: " + message, userXmppAddress);
                     hSendMessageSpeechNotification(targetUserName, message, getMessageSpeechPermission());
@@ -66,7 +80,7 @@ public class MessageNotification extends NotificationHelper{
                         return sendSystemNotification(targetUserName + " says:", message, MESSAGE_NOTIFICATION_DRAWABLE, MESSAGE_NOTIFICATION_ID,
                                 getMessageBackgroundPermission());
                     } else {
-                        MainApplication.getInstance().getBusInstance().post(new OnNewMessageEventEvent(userXmppAddress));
+                        bus.post(new OnNewMessageEventEvent(userXmppAddress));
 
                         /**
                          * {@link RiotXmppNewMessageActivity#OnMessageSnackBarReady(MessageNotification)}
@@ -86,6 +100,7 @@ public class MessageNotification extends NotificationHelper{
     }
 
     public void sendSnackbarNotification(@Nullable Activity activity) {
+        checkInit();
         boolean permission = getMessageForegroundPermission();
         String buttonLabel = "CHAT";
         String message = username + " said: " + messageContent.getBody();

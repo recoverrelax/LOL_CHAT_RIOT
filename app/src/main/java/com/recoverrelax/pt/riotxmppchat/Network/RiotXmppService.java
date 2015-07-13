@@ -13,6 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.OnLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotChatManager;
@@ -22,6 +23,8 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
+import com.squareup.otto.Bus;
+
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -68,11 +71,11 @@ public class RiotXmppService extends Service {
 
     @Inject RiotXmppConnectionImpl connectionHelper;
     @Inject DataStorage dataStorage;
-    private RiotConnectionManager connectionManager;
+    @Inject RiotConnectionManager connectionManager;
 
-    private RiotRosterManager riotRosterManager;
-    private RiotChatManager riotChatManager;
-
+    @Inject RiotRosterManager riotRosterManager;
+    @Inject RiotChatManager riotChatManager;
+    @Inject Bus bus;
 
     /**
      * Callbacks
@@ -97,7 +100,6 @@ public class RiotXmppService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         MainApplication.getInstance().getAppComponent().inject(this);
-//        MainApplication.getInstance().getStorageComponent().inject(this);
 
         /**
          * Get credentials from intent
@@ -206,7 +208,7 @@ public class RiotXmppService extends Service {
                         LOGI(TAG, "ConnectionHelper Connection onError\n");
 
                         /**{@link LoginActivity#onConnectionFailure(OnConnectionFailureEvent)} */
-                        MainApplication.getInstance().getBusInstance().post(new OnConnectionFailureEvent());
+                        bus.post(new OnConnectionFailureEvent());
                     }
 
                     @Override
@@ -240,7 +242,7 @@ public class RiotXmppService extends Service {
                         LOGI(TAG, e.toString());
 
                         /**{@link LoginActivity#onLoginFailure(OnLoginFailureEvent)} */
-                        MainApplication.getInstance().getBusInstance().post(new OnLoginFailureEvent());
+                        bus.post(new OnLoginFailureEvent());
                     }
 
                     @Override
@@ -259,10 +261,13 @@ public class RiotXmppService extends Service {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<Boolean>() {
-                    @Override public void onCompleted() {
+                    @Override
+                    public void onCompleted() {
                         LOGI(TAG, "onLoggedIn onCompleted\n");
                     }
-                    @Override public void onError(Throwable e) {
+
+                    @Override
+                    public void onError(Throwable e) {
                         LOGI(TAG, "Error Creating Chat, Roster, and Connection Listeners\n");
                         LOGI(TAG, e.toString());
                     }
@@ -270,9 +275,9 @@ public class RiotXmppService extends Service {
                     @Override
                     public void onNext(Boolean aBoolean) {
                         LOGI(TAG, "onLoggedIn onNext\n");
-                        if(aBoolean)
+                        if (aBoolean)
                         /**{@link LoginActivity#onSuccessLogin(OnSuccessLoginEvent)} */
-                            MainApplication.getInstance().getBusInstance().post(new OnSuccessLoginEvent());
+                            bus.post(new OnSuccessLoginEvent());
                     }
                 });
     }
@@ -284,15 +289,11 @@ public class RiotXmppService extends Service {
             public void call(Subscriber<? super Boolean> subscriber) {
                 try {
                     LOGI(TAG, "Enters createListeners try \n");
-                    String connectedUser = AppXmppUtils.parseXmppAddress(connection.getUser());
-
-                    riotRosterManager = new RiotRosterManager(RiotXmppService.this, connection);
+                    riotRosterManager.init(connection);
                     riotRosterManager.addRosterListener();
+                    riotChatManager.addChatListener(connection);
 
-                    riotChatManager = new RiotChatManager(RiotXmppService.this, connection, connectedUser, getRiotRosterManager());
-                    riotChatManager.addChatListener();
-
-                    connectionManager = new RiotConnectionManager(connection, riotRosterManager);
+                    connectionManager.init(connection);
                     connectionManager.addConnectionListener();
 
                     subscriber.onNext(true);
@@ -313,10 +314,6 @@ public class RiotXmppService extends Service {
 
         connection = null;
         super.onDestroy();
-    }
-
-    public RiotRosterManager getRiotRosterManager() {
-        return riotRosterManager;
     }
 
     public RiotChatManager getRiotChatManager() {

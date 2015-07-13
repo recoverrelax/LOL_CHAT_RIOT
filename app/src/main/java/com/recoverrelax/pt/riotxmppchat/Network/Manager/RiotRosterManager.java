@@ -1,7 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
-import android.content.Context;
-
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -9,6 +10,7 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.squareup.otto.Bus;
+import com.squareup.picasso.StatsSnapshot;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
@@ -17,48 +19,67 @@ import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 import LolChatRiotDb.MessageDb;
 import LolChatRiotDb.MessageDbDao;
 import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
+import static junit.framework.Assert.assertTrue;
 
 public class RiotRosterManager implements RosterListener {
 
-    private AbstractXMPPConnection connection;
     private Roster roster;
-    private Context context;
-    private FriendStatusTracker friendStatusTracker;
+    private AbstractXMPPConnection connection;
+
+    private Map<String, Presence> friendList; // friendXmppAddress, Presence
+    private boolean enabled = false;
 
     private Bus busInstance;
+    private Provider<StatusNotification> statusNotificationProvider;
 
-    public RiotRosterManager(Context context, AbstractXMPPConnection connection) {
-        this.context = context;
+
+    @Inject
+    public RiotRosterManager(Bus busInstance, Provider<StatusNotification> statusNotificationProvider) {
+        this.busInstance = busInstance;
+        this.statusNotificationProvider = statusNotificationProvider;
+
+    }
+
+    public void init(AbstractXMPPConnection connection){
         this.connection = connection;
-        this.busInstance = MainApplication.getInstance().getBusInstance();
+        this.friendList = new HashMap<>();
+        LOGI("123", "HERE");
     }
 
     public void addRosterListener() {
+        checkConnectionInit();
+
         if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
             this.roster = Roster.getInstanceFor(connection);
             this.roster.addRosterListener(this);
-            this.friendStatusTracker = new FriendStatusTracker();
+            LOGI("123", "HERE2");
         }
+    }
+
+    public void checkConnectionInit(){
+        assertTrue("Must call init first", connection != null);
     }
 
     public void removeRosterListener(RosterListener rosterListener) {
         if (roster != null && rosterListener != null) {
             roster.removeRosterListener(rosterListener);
         }
-    }
-
-    public FriendStatusTracker getFriendStatusTracker() {
-        return friendStatusTracker;
     }
 
     @Override
@@ -115,7 +136,7 @@ public class RiotRosterManager implements RosterListener {
     }
 
     public Observable<String> getFriendNameFromXmppAddress(String friendXmppAddress) {
-        return MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppAddress)
+        return getRosterEntry(friendXmppAddress)
                 .map(RosterEntry::getName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -140,14 +161,109 @@ public class RiotRosterManager implements RosterListener {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+
+
     @Override
     public void presenceChanged(Presence presence) {
-        if (friendStatusTracker != null) {
-            getFriendStatusTracker().checkForFriendNotificationToSend(presence);
-        }
-
+        checkForFriendNotificationToSend(presence);
+        LOGI("123", "HERE3");
         /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)} */
         busInstance.post(new OnFriendPresenceChangedEvent(presence));
+    }
+
+    public void updateFriend(Presence presence){
+        String from = presence.getFrom();
+        String friendXmppAddress = AppXmppUtils.parseXmppAddress(from);
+
+        friendList.put(friendXmppAddress, presence);
+    }
+
+    public void clear(){
+        this.friendList.clear();
+    }
+
+    public FriendStates getFriendState(Friend friend){
+        FriendStates state;
+
+        if(friend == null ||friend.isOffline())
+            state = FriendStates.OFFLINE;
+        else if(friend.isPlaying())
+            state = FriendStates.PLAYINNG;
+        else
+            state = FriendStates.IDLE;
+        return state;
+    }
+
+    public void checkForFriendNotificationToSend(Presence newPresence) {
+        String xmppAddress = AppXmppUtils.parseXmppAddress(newPresence.getFrom());
+        LOGI("123", "HERE4");
+        getFriendNameFromXmppAddress(xmppAddress)
+                .subscribe(new Subscriber<String>() {
+                    @Override public void onCompleted() { }
+                    @Override public void onError(Throwable e) { }
+
+                    @Override
+                    public void onNext(String friendName) {
+                        Presence oldPresence = friendList.containsKey(xmppAddress) ? friendList.get(xmppAddress) : null;
+
+                        Friend friendOldStatus = new Friend(friendName, xmppAddress, oldPresence);
+                        Friend friendNewStatus = new Friend(friendName, xmppAddress, newPresence);
+
+                        FriendStates oldState = getFriendState(friendOldStatus);
+                        FriendStates newState = getFriendState(friendNewStatus);
+
+                        friendOldStatus = null;
+                        friendNewStatus = null;
+
+                        StatusNotification.Status statusNotificationStatus;
+
+                        if (enabled) {
+                            if (oldState.isOffline() && !newState.isOffline()) {
+                                LOGI("1212", "friend has went online");
+                                statusNotificationStatus = StatusNotification.Status.ONLINE;
+                            } else if (!oldState.isOffline() && newState.isOffline()) {
+                                LOGI("1212", "friend has went offline");
+                                statusNotificationStatus = StatusNotification.Status.OFFLINE;
+                            } else if (!oldState.isPlaying() && newState.isPlaying()) {
+                                LOGI("1212", "friend started a game");
+                                statusNotificationStatus = StatusNotification.Status.STARTED_GAME;
+                            } else if (oldState.isPlaying() && !newState.isPlaying()) {
+                                LOGI("1212", "friend left a game");
+                                statusNotificationStatus = StatusNotification.Status.LEFT_GAME;
+                            } else {
+                                LOGI("1212", "friend in the last position");
+                                statusNotificationStatus = StatusNotification.Status.OFFLINE;
+                            }
+                            StatusNotification sn = statusNotificationProvider.get();
+                            sn.init(xmppAddress, friendName, statusNotificationStatus);
+                            sn.sendStatusNotification();
+                        }
+                        updateFriend(newPresence);
+                    }
+                });
+    }
+
+    public void setEnabled(boolean state){
+        this.enabled = state;
+    }
+
+
+    public enum FriendStates {
+        OFFLINE,
+        PLAYINNG,
+        IDLE;
+
+        public boolean isOffline(){
+            return this.equals(FriendStates.OFFLINE);
+        }
+
+        public boolean isPlaying(){
+            return this.equals(FriendStates.PLAYINNG);
+        }
+
+        public boolean isIdle(){
+            return this.equals(FriendStates.IDLE);
+        }
     }
 
 }

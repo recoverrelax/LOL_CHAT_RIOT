@@ -10,19 +10,14 @@ import android.os.IBinder;
 import com.crashlytics.android.Crashlytics;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnServiceBindedEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
-import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.ImplModule;
-import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
-import com.recoverrelax.pt.riotxmppchat.Storage.AppModule;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.squareup.otto.Bus;
-import com.squareup.otto.ThreadEnforcer;
-
 import java.io.File;
 import java.lang.ref.WeakReference;
+
+import javax.inject.Inject;
 
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
@@ -36,7 +31,8 @@ public class MainApplication extends Application {
     private boolean mBound = false;
     private Intent intentService;
     private DaoSession daoSession;
-    private Bus bus;
+
+    @Inject Bus bus;
 
     /**
      * This value is stored as a buffer because its accessed many times.
@@ -64,9 +60,7 @@ public class MainApplication extends Application {
         );
         setupDatabase();
         initAppComponents();
-
-        bus = new Bus(ThreadEnforcer.ANY);
-
+        appComponent.inject(this);
         File file = new File(AppMiscUtils.getAppSpecificFolder(this).getPath() + "/champion_skins/");
 
         if(!file.exists())
@@ -75,8 +69,10 @@ public class MainApplication extends Application {
 
     private void initAppComponents() {
         appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(new DataStorage(this), new RiotXmppDBRepository(), new MessageSpeechNotification(this)))
-                .implModule(new ImplModule())
+                .appModule(new AppModule(this))
+                .rxImplModule(new RxImplModule())
+                .notificationModule(new NotificationModule())
+                .managerModule(new ManagerModule())
                 .build();
     }
 
@@ -111,7 +107,7 @@ public class MainApplication extends Application {
             mBound = true;
 
             /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
-            getBusInstance().post(new OnServiceBindedEvent());
+            bus.post(new OnServiceBindedEvent());
         }
 
         @Override
@@ -140,7 +136,7 @@ public class MainApplication extends Application {
             bindService(intentService, mConnection, BIND_AUTO_CREATE);
         else {
             /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
-            getBusInstance().post(new OnServiceBindedEvent());
+            bus.post(new OnServiceBindedEvent());
 
         }
     }
@@ -159,9 +155,4 @@ public class MainApplication extends Application {
     public DaoSession getDaoSession() {
         return daoSession;
     }
-
-    public Bus getBusInstance(){
-        return this.bus;
-    }
-
 }

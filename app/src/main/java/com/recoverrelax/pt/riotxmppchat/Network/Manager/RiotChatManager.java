@@ -1,14 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
-import android.content.Context;
-
 import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageNotification;
-import com.squareup.otto.Bus;
-
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat.Chat;
@@ -33,32 +28,25 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class RiotChatManager implements ChatManagerListener, ChatMessageListener {
 
-    private AbstractXMPPConnection connection;
     private ChatManager chatManager;
-    private String connectedXmppUser;
-    private RiotRosterManager riotRosterManager;
-    private Context context;
-    private Bus busInstance;
+    private String connectedXmppUser = null;
 
-    @Inject RiotXmppDBRepository riotXmppDBRepository;
-
+    private RiotXmppDBRepository riotXmppDBRepository;
     private Map<String, Chat> chatList;
+    private MessageNotification messageNotification;
 
-    public RiotChatManager(Context context, AbstractXMPPConnection connection, String connectedXmppUser, RiotRosterManager riotRosterManager){
-        this.connection = connection;
-        this.connectedXmppUser = connectedXmppUser;
-        this.riotRosterManager = riotRosterManager;
-        this.context = context;
-        this.busInstance = MainApplication.getInstance().getBusInstance();
-
-        MainApplication.getInstance().getAppComponent().inject(this);
+    @Inject
+    public RiotChatManager(RiotXmppDBRepository riotXmppDBRepository, MessageNotification messageNotification){
+        this.riotXmppDBRepository = riotXmppDBRepository;
+        this.messageNotification = messageNotification;
     }
 
-    public void addChatListener() {
+    public void addChatListener(AbstractXMPPConnection connection) {
         if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
             this.chatManager = ChatManager.getInstanceFor(connection);
             this.chatManager.addChatListener(this);
         }
+        connectedXmppUser = AppXmppUtils.parseXmppAddress(connection != null ? connection.getUser() : null);
     }
 
     public void removeChatListener() {
@@ -79,14 +67,24 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         addChat(chat, messageFrom);
 
         if (messageFrom != null && message.getBody() != null) {
-            MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
+            if(connectedXmppUser != null) {
+                MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
-            riotXmppDBRepository.insertMessage(message1)
-                    .subscribe(new Subscriber<Long>() {
-                        @Override public void onCompleted() { }
-                        @Override public void onError(Throwable e) { }
-                        @Override public void onNext(Long aLong) { }
-                    });
+                riotXmppDBRepository.insertMessage(message1)
+                        .subscribe(new Subscriber<Long>() {
+                            @Override
+                            public void onCompleted() {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+
+                            @Override
+                            public void onNext(Long aLong) {
+                            }
+                        });
+            }
             notifyNewMessage(message, messageFrom);
         }
     }
@@ -115,7 +113,8 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
      * Notify all Observers of new messages
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
-        new MessageNotification(userXmppAddress, message).sendMessageNotification();
+        messageNotification.init(userXmppAddress, message);
+        messageNotification.sendMessageNotification();
     }
 
     public Observable<Boolean> sendMessage(String message, String userXmppName) {

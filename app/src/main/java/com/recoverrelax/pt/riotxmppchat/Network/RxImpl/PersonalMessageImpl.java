@@ -1,10 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
-
 import java.util.List;
-
+import javax.inject.Inject;
 import LolChatRiotDb.MessageDb;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -14,8 +12,9 @@ public class PersonalMessageImpl {
 
     private RiotRosterManager riotRosterManager;
 
-    public PersonalMessageImpl() {
-        this.riotRosterManager = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager();
+    @Inject
+    public PersonalMessageImpl(RiotRosterManager riotRosterManager) {
+        this.riotRosterManager = riotRosterManager;
     }
 
     public Observable<List<MessageDb>> getLastXPersonalMessageList(final int x, final String userToGetMessagesFrom) {

@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.NotificationCenter;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -9,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -22,12 +24,9 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 public class NotificationHelper {
 
     private final Context applicationContext = MainApplication.getInstance().getApplicationContext();
-    @Inject RiotXmppDBRepository riotXmppDBRepository;
-    @Inject MessageSpeechNotification messageSpeechNotification;
-
-    public NotificationHelper(){
-        MainApplication.getInstance().getAppComponent().inject(this);
-    }
+    protected RiotXmppDBRepository riotXmppDBRepository;
+    protected MessageSpeechNotification messageSpeechNotification;
+    protected Bus bus;
 
     protected Observable<Boolean> sendSystemNotification(@NonNull String title, @NonNull String message, @DrawableRes int systemNotifId, int notificationId,
                                                          boolean hasPermissions){
@@ -76,7 +75,7 @@ public class NotificationHelper {
 
                     @Override
                     public void onNext(Long aLong) {
-                        MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
+                        bus.post(new OnNewLogEvent());
                     }
                 });
     }

@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnReconnectSuccessListenerEvent;
@@ -50,6 +51,8 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -62,6 +65,9 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
     @Bind(R.id.progressBarCircularIndeterminate)
     ProgressBar progressBarCircularIndeterminate;
+
+    @Inject
+    RiotRosterManager riotRosterManager;
 
     private RecyclerView.LayoutManager layoutManager;
 
@@ -157,7 +163,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                             50);
                     break;
                 case R.id.other_1:
-                        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getFriendNameFromXmppAddress(friendXmppAddress)
+                        riotRosterManager.getFriendNameFromXmppAddress(friendXmppAddress)
                                 .subscribe(new Subscriber<String>() {
                                     @Override public void onCompleted() { }
                                     @Override public void onError(Throwable e) { }
@@ -190,6 +196,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
     @Subscribe
     public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
+        LOGI("123", "HERE5");
         getSingleFriend(friendPresence.getPresence());
     }
 

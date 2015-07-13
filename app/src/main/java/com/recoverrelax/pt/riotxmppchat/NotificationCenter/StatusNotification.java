@@ -12,6 +12,7 @@ import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -22,15 +23,16 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
+import static junit.framework.Assert.assertTrue;
 
 public class StatusNotification extends NotificationHelper{
 
-    @Inject DataStorage dataStorageInstance;
+    private DataStorage dataStorageInstance;
 
     private String userXmppAddress;
     private String username;
-    private NotificationDb notificationDb;
     private Status status;
+    private NotificationDb notificationDb;
 
     private static final int STATUS_NOTIFICATION_ID  = 2222222;
 
@@ -39,21 +41,37 @@ public class StatusNotification extends NotificationHelper{
     private static final int START_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
 
-    public StatusNotification(String userXmppAddress, String username2, Status status){
-        super();
-        this.userXmppAddress = userXmppAddress;
-        this.status = status;
-        this.username = username2;
-        MainApplication.getInstance().getAppComponent().inject(this);
+    @Inject
+    public StatusNotification(Bus bus, DataStorage dataStorage, RiotXmppDBRepository xmppDBRepository, MessageSpeechNotification speechNotification){
+        LOGI("1212", "enter StatusNotification");
+        this.dataStorageInstance = dataStorage;
+        this.riotXmppDBRepository = xmppDBRepository;
+        this.messageSpeechNotification = speechNotification;
+        this.bus = bus;
+
+
+    }
+
+    public void init(String xmppAddress, String friendName, Status statusNotificationStatus){
+        this.userXmppAddress = xmppAddress;
+        this.status = statusNotificationStatus;
+        this.username = friendName;
+    }
+
+    public void checkInit(){
+        assertTrue("must first call init", userXmppAddress != null && username != null && status !=null);
     }
 
     public void sendStatusNotification(){
+        LOGI("1212", "enter sendStatusNotification");
+        checkInit();
+
         riotXmppDBRepository.getNotificationByUser(userXmppAddress)
                 .doOnNext(notification -> {
                     this.notificationDb = notification;
-
+                    LOGI("1212", "enter doOnNext");
                     if(status.isStartedGame() || status.isLeftGame())
-                        MainApplication.getInstance().getBusInstance().post(new OnNewFriendPlayingEvent());
+                        bus.post(new OnNewFriendPlayingEvent());
 
                     int logId = getLogIdFromStatus(status);
                     String logMessage = getLogMessageFromStatus(status, username);
@@ -64,6 +82,7 @@ public class StatusNotification extends NotificationHelper{
 
                 })
                 .flatMap(notification -> {
+                    LOGI("1212", "enter flatMap");
                     if (isPausedOrClosed()) {
                         String systemNotificationMessage = getMessageFromStatus(status);
                         int notificationDrawable = getNotificationDrawableFromStatus(status);
@@ -81,12 +100,14 @@ public class StatusNotification extends NotificationHelper{
                 .subscribe(new Subscriber<Boolean>() {
                     @Override public void onCompleted() { }
                     @Override public void onError(Throwable e) { }
-                    @Override public void onNext(Boolean aBoolean) { }
+                    @Override public void onNext(Boolean aBoolean) {
+                        LOGI("1212", "called onNext");
+                    }
                 });
     }
 
     public void sendSnackbarNotification(@Nullable Activity activity) {
-
+        checkInit();
         boolean permission = getStatusPermissionFromStatus(status);
 
         if(!permission || activity == null)

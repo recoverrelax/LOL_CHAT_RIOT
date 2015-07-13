@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
@@ -54,6 +55,8 @@ public class NotificationCustomDialogFragment extends DialogFragment {
 
     @Inject
     RiotXmppDBRepository riotXmppDBRepository;
+    @Inject
+    RiotRosterManager riotRosterManager;
 
     public static String FRIEND_XMPP_ADDRESS = "friend_xmpp_address";
 
@@ -161,7 +164,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
                         }
                     });
 
-            MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterEntry(friendXmppUser)
+            riotRosterManager.getRosterEntry(friendXmppUser)
                     .filter(rosterEntry -> rosterEntry != null)
                     .subscribe(new Subscriber<RosterEntry>() {
                         @Override public void onCompleted() { }

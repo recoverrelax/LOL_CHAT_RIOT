@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
@@ -28,6 +29,7 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.PersonalMessageImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -81,6 +83,9 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
      */
     private PersonalMessageAdapter adapter;
     @Inject PersonalMessageImpl personalMessageImpl;
+    @Inject RiotRosterManager riotRosterManager;
+
+    @Inject Bus bus;
 
     private String friendXmppName;
     private String friendUsername;
@@ -197,7 +202,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
     public void sendMessageButton(View view) {
         String message = chatEditText.getText().toString();
 
-        MainApplication.getInstance().getRiotXmppService().getRiotRosterManager().getRosterPresence(friendXmppName)
+        riotRosterManager.getRosterPresence(friendXmppName)
                 .flatMap(rosterPresence -> Observable.just(rosterPresence.isAvailable()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -243,7 +248,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
                     @Override
                     public void onNext(Long aLong) {
                         if (aLong != null)
-                            MainApplication.getInstance().getBusInstance().post(new OnNewLogEvent());
+                            bus.post(new OnNewLogEvent());
                         // clear text
                         chatEditText.setText("");
                     }

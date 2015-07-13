@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
@@ -18,10 +19,15 @@ import rx.schedulers.Schedulers;
 public class RiotXmppDashboardImpl {
 
     private RiotXmppService riotXmppService = MainApplication.getInstance().getRiotXmppService();
-    RiotXmppDBRepository riotXmppDBRepository;
 
-    public RiotXmppDashboardImpl(RiotXmppDBRepository repository) {
-        this.riotXmppDBRepository = repository;
+    private RiotXmppDBRepository riotXmppDBRepository;
+    private RiotRosterManager riotRosterManager;
+
+    @Inject
+    public RiotXmppDashboardImpl(RiotXmppDBRepository riotXmppDBRepository, RiotRosterManager riotRosterManager) {
+
+        this.riotXmppDBRepository = riotXmppDBRepository;
+        this.riotRosterManager = riotRosterManager;
     }
 
     public Observable<String> getUnreadedMessagesCount() {
@@ -34,8 +40,8 @@ public class RiotXmppDashboardImpl {
     public Observable<FriendStatusInfo> getFriendStatusInfo() {
         final FriendStatusInfo friendStatusInfo = new FriendStatusInfo();
 
-            return riotXmppService.getRiotRosterManager().getRosterEntries()
-                   .flatMap(rosterEntry -> riotXmppService.getRiotRosterManager().getFriendFromRosterEntry(rosterEntry))
+            return riotRosterManager.getRosterEntries()
+                    .flatMap(rosterEntry -> riotRosterManager.getFriendFromRosterEntry(rosterEntry))
                    .doOnNext(friend -> {
                        if (friend.isPlaying())
                            friendStatusInfo.addFriendPlaying();

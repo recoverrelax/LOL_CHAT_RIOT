@@ -25,6 +25,7 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -59,8 +60,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     private boolean fromSavedInstanceState;
 
     @Inject DataStorage mDataStorage;
-    @Inject
-    RiotXmppDBRepository riotRepository;
+    @Inject RiotXmppDBRepository riotRepository;
+    @Inject Bus bus;
 
     private Handler mHandler;
     private ActionBarDrawerToggle drawerToggle;
@@ -311,14 +312,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onResume() {
         super.onResume();
-        MainApplication.getInstance().getBusInstance().register(this);
+        bus.register(this);
         MainApplication.getInstance().setCurrentBaseActivity(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MainApplication.getInstance().getBusInstance().unregister(this);
+        bus.unregister(this);
         MainApplication.getInstance().setCurrentBaseActivity(null);
     }
 }

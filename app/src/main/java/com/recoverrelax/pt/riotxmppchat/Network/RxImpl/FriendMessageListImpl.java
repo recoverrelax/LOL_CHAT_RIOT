@@ -1,11 +1,10 @@
 package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 import java.util.Collections;
 import java.util.List;
-
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -14,8 +13,9 @@ public class FriendMessageListImpl {
 
     private RiotRosterManager riotRosterManager;
 
-    public FriendMessageListImpl() {
-        this.riotRosterManager = MainApplication.getInstance().getRiotXmppService().getRiotRosterManager();
+    @Inject
+    public FriendMessageListImpl(RiotRosterManager riotRosterManager) {
+        this.riotRosterManager = riotRosterManager;
     }
 
     public Observable<FriendListChat> getPersonalMessage(final String userXmppAddress) {

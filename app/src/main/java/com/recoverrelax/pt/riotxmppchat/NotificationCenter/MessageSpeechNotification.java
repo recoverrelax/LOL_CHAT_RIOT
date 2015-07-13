@@ -14,7 +14,6 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
 
     private Context context;
-    private static MessageSpeechNotification sInstance;
     private TextToSpeech tts;
     private final String TAG = "MessageSpeechNotification";
     private String message;

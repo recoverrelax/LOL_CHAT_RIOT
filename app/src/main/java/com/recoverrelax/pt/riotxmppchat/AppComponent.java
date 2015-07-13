@@ -1,13 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat;
 
-import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotChatManager;
-import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotConnectionManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
-import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.ImplModule;
-import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageNotification;
-import com.recoverrelax.pt.riotxmppchat.NotificationCenter.NotificationHelper;
-import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
-import com.recoverrelax.pt.riotxmppchat.Storage.AppModule;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
@@ -23,7 +16,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {ImplModule.class, AppModule.class})
+@Component(modules = {AppModule.class, RxImplModule.class, NotificationModule.class, ManagerModule.class})
 public interface AppComponent {
 
     /**
@@ -45,20 +38,14 @@ public interface AppComponent {
     void inject(FriendMessageListFragment frag);
     void inject(PersonalMessageFragment fragment);
     void inject(SettingsGeneralFragment settings_generalFragment);
+    void inject(Settings_Notification settings_notification);
+    void inject(RiotXmppCommunicationFragment riotXmppCommunicationFragment);
+    void inject(NotificationCustomDialogFragment notificationCustomDialogFragment);
+
+    void inject(MainApplication mainApplication);
+
 
     /**
      * Others
      */
-    void inject(Settings_Notification settings_notification);
-    void inject(StatusNotification statusNotification);
-    void inject(MessageNotification messageNotification);
-    void inject(RiotConnectionManager manager);
-
-    void inject(RiotChatManager riotChatManager);
-
-    void inject(NotificationHelper notificationHelper);
-
-    void inject(RiotXmppCommunicationFragment riotXmppCommunicationFragment);
-
-    void inject(NotificationCustomDialogFragment notificationCustomDialogFragment);
 }
