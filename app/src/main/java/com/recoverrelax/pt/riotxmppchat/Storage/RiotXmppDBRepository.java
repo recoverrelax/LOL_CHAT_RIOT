@@ -29,12 +29,24 @@ public class RiotXmppDBRepository {
     private static InAppLogDbDao inAppLogDbDao = MainApplication.getInstance().getDaoSession().getInAppLogDbDao();
     private static NotificationDbDao notificationDao = MainApplication.getInstance().getDaoSession().getNotificationDbDao();
 
+    /**
+     * Insert the specified log into the db
+     * @param inappLog
+     * @return
+     */
     public Observable<Long> insertOrReplaceInappLog(InAppLogDb inappLog){
         return Observable.defer(() -> Observable.just(getInAppLogDbDao().insertOrReplace(inappLog)))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
 
+    /**
+     * Create a log from the input parameters and the save it in the database
+     * @param logId logId of the log
+     * @param logMessage the message of the log
+     * @param targetXmppUser the user whose log is about
+     * @return the id of the newly added log
+     */
     public Observable<Long> insertOrReplaceInappLog(Integer logId, String logMessage, String targetXmppUser){
         return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
                 .map(connectedUser -> new InAppLogDb(null, logId, new Date(), logMessage, connectedUser, targetXmppUser))
@@ -43,6 +55,11 @@ public class RiotXmppDBRepository {
                 .subscribeOn(Schedulers.io());
     }
 
+    /**
+     * Update all the logs with a transaction
+     * @param messages the messages to update
+     * @return true if the update was successfull
+     */
     public Observable<Boolean> updateMessages(List<MessageDb> messages){
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
@@ -58,6 +75,10 @@ public class RiotXmppDBRepository {
         });
     }
 
+    /**
+     * Check if the connected user has unreaded messages
+     * @return
+     */
     public Observable<Boolean> hasUnreadedMessages(){
         return getUnreadedMessages()
                 .map(unreadedMessages -> unreadedMessages > 0)
@@ -65,6 +86,11 @@ public class RiotXmppDBRepository {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * Get the last 20 loggs for the connected input user
+     * @param connectedUser to get logs from
+     * @return list of logs
+     */
     public Observable<List<InAppLogDb>> getLast20List(String connectedUser){
         return Observable.defer( () ->
                 Observable.just(getInAppLogDbDao().queryBuilder())
@@ -82,12 +108,20 @@ public class RiotXmppDBRepository {
         );
     }
 
+    /**
+     * Insert this message into the db
+     * @param message to insert to the db
+     * @return the message id
+     */
     public Observable<Long> insertMessage(MessageDb message){
         return Observable.defer(() -> Observable.just(messageDao.insert(message)))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * @return number of unreaded messages for the connected user
+     */
     public Observable<Integer> getUnreadedMessages(){
         return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
                 .map(connectedUser -> {
@@ -100,6 +134,11 @@ public class RiotXmppDBRepository {
                 });
     }
 
+    /**
+     *
+     * @param friendUser user to get notification from
+     * @return the notification belonging to user
+     */
     public Observable<NotificationDb> getNotificationByUser(String friendUser) {
         return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
                 .map(connectedUser -> {
@@ -122,6 +161,11 @@ public class RiotXmppDBRepository {
 
     }
 
+    /**
+     * Updates the notification
+     * @param notif notification to update
+     * @return the id of the updated notification
+     */
     public Observable<Long> updateNotification(NotificationDb notif) {
         return Observable.defer(() -> Observable.just(getNotificationDao().insertOrReplace(notif)))
                 .subscribeOn(Schedulers.io())
