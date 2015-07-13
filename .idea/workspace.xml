@@ -63,37 +63,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de6acd81-b195-49a3-ab5a-46c53206eac6" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ManagerModule.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationModule.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/RxImplModule.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/Manager/FriendStatusTracker.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/ImplModule.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Storage/AppModule.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/AppModule.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/outputFileStates.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/outputFileStates.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/AppComponent.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/AppComponent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/activity/BaseActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/activity/BaseActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/fragment/FriendListFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/fragment/FriendListFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/FriendMessageListImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/FriendMessageListImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/MainApplication.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/MainApplication.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationCenter/MessageNotification.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationCenter/MessageNotification.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationCenter/MessageSpeechNotification.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationCenter/MessageSpeechNotification.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/fragment/NotificationCustomDialogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/fragment/NotificationCustomDialogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationCenter/NotificationHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationCenter/NotificationHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/fragment/PersonalMessageFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/fragment/PersonalMessageFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/PersonalMessageImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/PersonalMessageImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/Manager/RiotChatManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/Manager/RiotChatManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/Manager/RiotConnectionManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/Manager/RiotConnectionManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/Manager/RiotRosterManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/Manager/RiotRosterManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/fragment/RiotXmppCommunicationFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/ui/fragment/RiotXmppCommunicationFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/RiotXmppDashboardImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/RiotXmppDashboardImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/RiotXmppRosterImpl.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RxImpl/RiotXmppRosterImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RiotXmppService.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/Network/RiotXmppService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationCenter/StatusNotification.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/recoverrelax/pt/riotxmppchat/NotificationCenter/StatusNotification.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="LOL_CHAT_RIOT.iws" />
@@ -2604,12 +2573,6 @@
       <option name="number" value="Default" />
       <updated>1432061106926</updated>
     </task>
-    <task id="LOCAL-00008" summary="- fixed fragment overlap bug&#10;- added fragment backstack navigation&#10;- added pull-up to add more items in personalMessageFrag&#10;- added teeto a a sender message button&#10;- changed layout drawer&#10;- updated backstack drawer item selection code">
-      <created>1432813400832</created>
-      <option name="number" value="00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1432813400832</updated>
-    </task>
     <task id="LOCAL-00009" summary="-- added stuff">
       <created>1432835583060</created>
       <option name="number" value="00009" />
@@ -2898,7 +2861,13 @@
       <option name="project" value="LOCAL" />
       <updated>1436549194491</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="- completed the refactoring with dagger">
+      <created>1436803452512</created>
+      <option name="number" value="00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1436803452545</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TodoView" selected-index="3">
@@ -2995,7 +2964,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="- fixed a bug that was causing layout inconsistencies in the friendlistfragment" />
     <MESSAGE value="- changed timeStamps in all the app to be more user friendly like: x seconds ago, x minutes ago, x hours ago, today, yesterday, 3 days ago, etc ..&#10;- small bugFixed&#10;" />
     <MESSAGE value="- fixed some bugs. removed material libraries and coverted everything to design library practices" />
     <MESSAGE value="- small bugFixes.&#10;- add primitive 'friend has left game' feature" />
@@ -3020,7 +2988,8 @@
     <MESSAGE value="- properly formated gitIgnore" />
     <MESSAGE value="-added dagger 2 dependecy. maybe need refactoring, dont understand a shi.t about dagger2" />
     <MESSAGE value="- bump" />
-    <option name="LAST_COMMIT_MESSAGE" value="- bump" />
+    <MESSAGE value="- completed the refactoring with dagger" />
+    <option name="LAST_COMMIT_MESSAGE" value="- completed the refactoring with dagger" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -3118,6 +3087,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
           <caret line="470" column="24" selection-start-line="470" selection-start-column="24" selection-end-line="470" selection-end-column="24" />
+          <folding>
+            <element signature="e#19034#19035#0" expanded="false" />
+            <element signature="e#19061#19062#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3125,6 +3098,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="166" column="29" selection-start-line="166" selection-start-column="29" selection-end-line="166" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3147,6 +3121,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7837838">
           <caret line="43" column="61" selection-start-line="43" selection-start-column="61" selection-end-line="43" selection-end-column="61" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3154,6 +3129,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3161,6 +3139,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5405405">
           <caret line="46" column="53" selection-start-line="46" selection-start-column="53" selection-end-line="46" selection-end-column="53" />
+          <folding>
+            <element signature="e#1180#1181#0" expanded="false" />
+            <element signature="e#1230#1231#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3183,6 +3165,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.15151516">
           <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3190,6 +3173,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
           <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3197,6 +3183,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.42424244">
           <caret line="22" column="19" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
+          <folding>
+            <element signature="e#940#941#0" expanded="false" />
+            <element signature="e#978#979#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3204,6 +3194,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.15151516">
           <caret line="87" column="12" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3221,6 +3212,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.2727273">
           <caret line="54" column="54" selection-start-line="54" selection-start-column="54" selection-end-line="54" selection-end-column="54" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3238,6 +3230,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.24242425">
           <caret line="8" column="11" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
+          <folding>
+            <element signature="e#241#242#0" expanded="false" />
+            <element signature="e#281#282#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3245,6 +3241,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.36363637">
           <caret line="198" column="26" selection-start-line="198" selection-start-column="26" selection-end-line="198" selection-end-column="26" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3259,6 +3256,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.121212125">
           <caret line="49" column="17" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="17" />
+          <folding>
+            <element signature="method#sendSnackbarNotification#0;class#MessageNotification#0" expanded="false" />
+            <element signature="method#getMessageSpeechPermission#0;class#MessageNotification#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -3388,7 +3389,7 @@
         <state vertical-scroll-proportion="0.4848485">
           <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
