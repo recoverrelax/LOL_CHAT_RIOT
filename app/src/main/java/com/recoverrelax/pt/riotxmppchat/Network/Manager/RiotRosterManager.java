@@ -43,13 +43,21 @@ public class RiotRosterManager implements RosterListener {
 
     private final Bus busInstance;
     private final Provider<StatusNotification> statusNotificationProvider;
-
+    private boolean notificationsEnabled = true;
 
     @Inject
     public RiotRosterManager(Bus busInstance, Provider<StatusNotification> statusNotificationProvider) {
         this.busInstance = busInstance;
         this.statusNotificationProvider = statusNotificationProvider;
 
+    }
+
+    public void enableNotifications(){
+        this.notificationsEnabled = true;
+    }
+
+    public void disableNotifications(){
+        this.notificationsEnabled = false;
     }
 
     public void init(AbstractXMPPConnection connection){
@@ -160,7 +168,9 @@ public class RiotRosterManager implements RosterListener {
 
     @Override
     public void presenceChanged(Presence presence) {
-        checkForFriendNotificationToSend(presence);
+        if(connection != null && connection.isConnected() && notificationsEnabled)
+            checkForFriendNotificationToSend(presence);
+
         LOGI("123", "HERE3");
         /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)} */
         busInstance.post(new OnFriendPresenceChangedEvent(presence));
@@ -173,7 +183,7 @@ public class RiotRosterManager implements RosterListener {
         friendList.put(friendXmppAddress, presence);
     }
 
-    public void clear(){
+    public void clearFriendList(){
         this.friendList.clear();
     }
 

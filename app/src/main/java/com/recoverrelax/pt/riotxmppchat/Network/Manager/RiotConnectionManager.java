@@ -71,17 +71,19 @@ public class RiotConnectionManager implements ConnectionListener {
     @Override public void connectionClosed() {
         bus.post(new OnConnectionLostListenerEvent());
         riotRosterManager.setEnabled(false);
+        riotRosterManager.disableNotifications();
     }
     @Override public void connectionClosedOnError(Exception e) {
         bus.post(new OnConnectionLostListenerEvent());
         riotRosterManager.setEnabled(false);
+        riotRosterManager.disableNotifications();
     }
 
     @Override
     public void reconnectionSuccessful() {
         bus.post(new OnReconnectSuccessListenerEvent());
 
-        this.riotRosterManager.clear();
+        this.riotRosterManager.clearFriendList();
         /**
          * TODO: Without this, notifications are not being sent because the Presence Collection
          * is not innitialized
@@ -99,6 +101,7 @@ public class RiotConnectionManager implements ConnectionListener {
 
                     @Override
                     public void onNext(List<Friend> friends) {
+                        riotRosterManager.enableNotifications();
                     }
                 });
     }

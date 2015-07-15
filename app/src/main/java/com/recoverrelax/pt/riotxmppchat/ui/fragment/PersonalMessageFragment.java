@@ -249,7 +249,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
                     public void onNext(Long aLong) {
                         if (aLong != null)
                             bus.post(new OnNewLogEvent());
-                        // clear text
+                        // clearFriendList text
                         chatEditText.setText("");
                     }
                 });
