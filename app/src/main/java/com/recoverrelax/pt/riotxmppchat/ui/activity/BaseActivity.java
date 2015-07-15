@@ -107,6 +107,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     private void setupDrawerContent() {

@@ -49,7 +49,7 @@ public class RiotXmppDashboardImpl {
                            friendStatusInfo.addFriendOnline();
                        if (friend.isOffline())
                            friendStatusInfo.addFriendOffline();
-                   })
+            })
                     .toList()
                     .map(friends -> friendStatusInfo)
                     .subscribeOn(Schedulers.io())

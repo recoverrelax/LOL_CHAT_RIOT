@@ -70,6 +70,12 @@ public class PersonalMessageActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);

@@ -17,6 +17,7 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class SplashScreenActivity extends AppCompatActivity {
     // Splash screen timer
@@ -44,6 +45,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         logo.setAnimation(scaleAnimation);
         scaleAnimation.start();
         showAfterSplashIntent();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Nullable

@@ -49,6 +49,12 @@ public class SettingActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
     public int getLayoutResources() {
         return R.layout.activity_settings;
     }

@@ -29,6 +29,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
@@ -118,8 +119,6 @@ public class LoginActivity extends BaseActivity {
         } else
             connectbutton.setEnabled(false);
     }
-
-
 
     @OnTextChanged(R.id.username)
     public void onUsernameTextChanged(CharSequence cs) {
@@ -215,6 +214,7 @@ public class LoginActivity extends BaseActivity {
 
         if(materialDialog != null)
             materialDialog.dismiss();
+        ButterKnife.unbind(this);
     }
 
     @Override
