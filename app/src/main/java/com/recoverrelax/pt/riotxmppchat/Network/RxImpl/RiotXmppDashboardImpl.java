@@ -8,6 +8,7 @@ import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.InAppLogDbDao;
@@ -16,18 +17,17 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+@Singleton
 public class RiotXmppDashboardImpl {
 
     private final RiotXmppService riotXmppService = MainApplication.getInstance().getRiotXmppService();
 
-    private final RiotXmppDBRepository riotXmppDBRepository;
-    private final RiotRosterManager riotRosterManager;
+    @Inject RiotXmppDBRepository riotXmppDBRepository;
+    @Inject RiotRosterManager riotRosterManager;
 
+    @Singleton
     @Inject
-    public RiotXmppDashboardImpl(RiotXmppDBRepository riotXmppDBRepository, RiotRosterManager riotRosterManager) {
-
-        this.riotXmppDBRepository = riotXmppDBRepository;
-        this.riotRosterManager = riotRosterManager;
+    public RiotXmppDashboardImpl() {
     }
 
     public Observable<String> getUnreadedMessagesCount() {

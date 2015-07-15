@@ -9,19 +9,25 @@ import org.jivesoftware.smack.XMPPException;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
-
+@Singleton
 public class RiotXmppConnectionImpl {
 
     private final int MAX_LOGIN_TRIES = 3;
     private final int MAX_CONNECTION_TRIES = 4;
 
-    public RiotXmppConnectionImpl() { }
+    @Singleton
+    @Inject
+    public RiotXmppConnectionImpl() {
+    }
 
     /**
      * Attempt top connect with the specified connection.

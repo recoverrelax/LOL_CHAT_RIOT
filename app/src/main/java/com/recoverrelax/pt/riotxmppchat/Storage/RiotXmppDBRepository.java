@@ -5,6 +5,9 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import LolChatRiotDb.InAppLogDb;
 import LolChatRiotDb.InAppLogDbDao;
 import LolChatRiotDb.MessageDb;
@@ -17,6 +20,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+@Singleton
 public class RiotXmppDBRepository {
 
     /**
@@ -29,11 +33,12 @@ public class RiotXmppDBRepository {
     private static final InAppLogDbDao inAppLogDbDao = MainApplication.getInstance().getDaoSession().getInAppLogDbDao();
     private static final NotificationDbDao notificationDao = MainApplication.getInstance().getDaoSession().getNotificationDbDao();
 
-    /**
-     * Insert the specified log into the db
-     * @param inappLog
-     * @return
-     */
+    @Singleton
+    @Inject
+    public RiotXmppDBRepository(){
+
+    }
+
     public Observable<Long> insertOrReplaceInappLog(InAppLogDb inappLog){
         return Observable.defer(() -> Observable.just(getInAppLogDbDao().insertOrReplace(inappLog)))
                 .observeOn(AndroidSchedulers.mainThread())

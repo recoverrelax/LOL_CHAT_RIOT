@@ -3,18 +3,22 @@ package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import LolChatRiotDb.MessageDb;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+@Singleton
 public class PersonalMessageImpl {
 
-    private final RiotRosterManager riotRosterManager;
+    @Inject RiotRosterManager riotRosterManager;
 
+    @Singleton
     @Inject
-    public PersonalMessageImpl(RiotRosterManager riotRosterManager) {
-        this.riotRosterManager = riotRosterManager;
+    public PersonalMessageImpl() {
+
     }
 
     /**

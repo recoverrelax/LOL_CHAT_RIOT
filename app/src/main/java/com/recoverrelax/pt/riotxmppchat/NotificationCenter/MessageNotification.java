@@ -32,9 +32,6 @@ import static junit.framework.Assert.assertTrue;
 public class MessageNotification extends NotificationHelper{
 
 
-    private final DataStorage dataStorageInstance;
-    private final RiotRosterManager riotRosterManager;
-
     private String userXmppAddress;
     private String username;
     private Message messageContent;
@@ -43,13 +40,16 @@ public class MessageNotification extends NotificationHelper{
     private static final int MESSAGE_NOTIFICATION_ID = 1111111;
     private static final int MESSAGE_NOTIFICATION_DRAWABLE = R.drawable.ic_action_question_answer_green;
 
+    @Inject DataStorage dataStorageInstance;
+    @Inject RiotRosterManager riotRosterManager;
+
     @Inject
-    public MessageNotification(Bus bus, DataStorage dataStorageInstance, RiotRosterManager riotRosterManager, RiotXmppDBRepository xmppDBRepository, MessageSpeechNotification speechNotification){
-        this.riotXmppDBRepository = xmppDBRepository;
-        this.messageSpeechNotification = speechNotification;
-        this.bus = bus;
-        this.dataStorageInstance = dataStorageInstance;
-        this.riotRosterManager = riotRosterManager;
+    public MessageNotification(){
+//        this.riotXmppDBRepository = xmppDBRepository;
+//        this.messageSpeechNotification = speechNotification;
+//        this.bus = bus;
+//        this.dataStorageInstance = dataStorageInstance;
+//        this.riotRosterManager = riotRosterManager;
     }
 
     public void init(String userXmppAddress, Message messageContent){

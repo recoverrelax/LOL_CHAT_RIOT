@@ -70,9 +70,6 @@ public class MainApplication extends Application {
     private void initAppComponents() {
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
-                .rxImplModule(new RxImplModule())
-                .notificationModule(new NotificationModule())
-                .managerModule(new ManagerModule())
                 .build();
     }
 

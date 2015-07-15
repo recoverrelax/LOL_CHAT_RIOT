@@ -24,9 +24,10 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 public class NotificationHelper {
 
     private final Context applicationContext = MainApplication.getInstance().getApplicationContext();
-    protected RiotXmppDBRepository riotXmppDBRepository;
-    protected MessageSpeechNotification messageSpeechNotification;
-    protected Bus bus;
+
+    @Inject RiotXmppDBRepository riotXmppDBRepository;
+    @Inject MessageSpeechNotification messageSpeechNotification;
+    @Inject Bus bus;
 
     protected Observable<Boolean> sendSystemNotification(@NonNull String title, @NonNull String message, @DrawableRes int systemNotifId, int notificationId,
                                                          boolean hasPermissions){

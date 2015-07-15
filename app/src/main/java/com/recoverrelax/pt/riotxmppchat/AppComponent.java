@@ -18,13 +18,11 @@ import dagger.Component;
 @Singleton
 @Component(
         modules = {
-        AppModule.class,
-        RxImplModule.class,
-        NotificationModule.class,
-        ManagerModule.class
+                AppModule.class
         }
 )
 public interface AppComponent {
+
 
     /**
      * Core

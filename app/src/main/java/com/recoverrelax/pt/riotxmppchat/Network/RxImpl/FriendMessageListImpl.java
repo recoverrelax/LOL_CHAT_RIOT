@@ -5,17 +5,20 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+@Singleton
 public class FriendMessageListImpl {
 
-    private RiotRosterManager riotRosterManager;
+    @Inject RiotRosterManager riotRosterManager;
 
+    @Singleton
     @Inject
-    public FriendMessageListImpl(RiotRosterManager riotRosterManager) {
-        this.riotRosterManager = riotRosterManager;
+    public FriendMessageListImpl() {
     }
 
     /**

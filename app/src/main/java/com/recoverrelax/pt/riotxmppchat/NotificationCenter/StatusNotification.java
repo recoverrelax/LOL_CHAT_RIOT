@@ -27,8 +27,6 @@ import static junit.framework.Assert.assertTrue;
 
 public class StatusNotification extends NotificationHelper{
 
-    private final DataStorage dataStorageInstance;
-
     private String userXmppAddress;
     private String username;
     private Status status;
@@ -41,14 +39,10 @@ public class StatusNotification extends NotificationHelper{
     private static final int START_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
 
-    @Inject
-    public StatusNotification(Bus bus, DataStorage dataStorage, RiotXmppDBRepository xmppDBRepository, MessageSpeechNotification speechNotification){
-        LOGI("1212", "enter StatusNotification");
-        this.dataStorageInstance = dataStorage;
-        this.riotXmppDBRepository = xmppDBRepository;
-        this.messageSpeechNotification = speechNotification;
-        this.bus = bus;
+    @Inject DataStorage dataStorageInstance;
 
+    @Inject
+    public StatusNotification(){
 
     }
 

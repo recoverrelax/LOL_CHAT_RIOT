@@ -32,12 +32,11 @@ public class AppModule {
         return new DataStorage(applicationContext);
     }
 
-    @Provides
-    @Singleton
-    RiotXmppDBRepository provideRiotRepository(){
-        return new RiotXmppDBRepository();
-    }
-
+//    @Provides
+//    @Singleton
+//    RiotXmppDBRepository provideRiotRepository(){
+//        return new RiotXmppDBRepository();
+//    }
 
     @Provides
     @Singleton

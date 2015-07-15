@@ -5,11 +5,14 @@ import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
+
 import java.util.HashMap;
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGE;
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
 
@@ -26,7 +29,8 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     private long lastMessageDateMillis = 0;
     private String lastMessageFrom = null;
 
-    public MessageSpeechNotification(Context context) {
+    @Inject
+    public MessageSpeechNotification(MainApplication context) {
         this.context = context;
     }
 

@@ -15,22 +15,24 @@ import org.jivesoftware.smack.XMPPConnection;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import rx.Observable;
 import rx.Subscriber;
 
 import static junit.framework.Assert.assertTrue;
 
+@Singleton
 public class RiotConnectionManager implements ConnectionListener {
-    private RiotRosterManager riotRosterManager;
     private AbstractXMPPConnection connection;
-    private RiotXmppRosterImpl rosterImpl;
-    private Bus bus;
 
+    @Inject RiotRosterManager riotRosterManager;
+    @Inject RiotXmppRosterImpl rosterImpl;
+    @Inject Bus bus;
+
+    @Singleton
     @Inject
-    public RiotConnectionManager(Bus bus, RiotRosterManager riotRosterManager, RiotXmppRosterImpl rosterImpl) {
-        this.riotRosterManager = riotRosterManager;
-        this.rosterImpl = rosterImpl;
-        this.bus = bus;
+    public RiotConnectionManager() {
     }
 
     public void init(AbstractXMPPConnection connection){

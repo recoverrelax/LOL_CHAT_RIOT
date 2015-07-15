@@ -7,18 +7,21 @@ import org.jivesoftware.smack.packet.Presence;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+@Singleton
 public class RiotXmppRosterImpl {
 
-    private final RiotRosterManager riotRosterManager;
+    @Inject RiotRosterManager riotRosterManager;
 
+    @Singleton
     @Inject
-    public RiotXmppRosterImpl(RiotRosterManager riotRosterManager) {
-        this.riotRosterManager = riotRosterManager;
+    public RiotXmppRosterImpl() {
+
     }
 
     /**

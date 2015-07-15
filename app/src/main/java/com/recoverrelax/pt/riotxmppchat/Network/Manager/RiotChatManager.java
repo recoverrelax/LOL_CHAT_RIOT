@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import LolChatRiotDb.MessageDb;
 import rx.Observable;
@@ -26,19 +27,20 @@ import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
+@Singleton
 public class RiotChatManager implements ChatManagerListener, ChatMessageListener {
 
     private ChatManager chatManager;
     private String connectedXmppUser = null;
-
-    private final RiotXmppDBRepository riotXmppDBRepository;
     private Map<String, Chat> chatList;
-    private final MessageNotification messageNotification;
 
+    @Inject RiotXmppDBRepository riotXmppDBRepository;
+    @Inject MessageNotification messageNotification;
+
+    @Singleton
     @Inject
-    public RiotChatManager(RiotXmppDBRepository riotXmppDBRepository, MessageNotification messageNotification){
-        this.riotXmppDBRepository = riotXmppDBRepository;
-        this.messageNotification = messageNotification;
+    public RiotChatManager(){
+
     }
 
     public void addChatListener(AbstractXMPPConnection connection) {

@@ -37,11 +37,11 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class SettingsGeneralFragment extends Fragment {
 
-    @Bind(R.id.championName)
-    EditText championName;
-
-    @Bind(R.id.download)
-    Button download;
+//    @Bind(R.id.championName)
+//    EditText championName;
+//
+//    @Bind(R.id.download)
+//    Button download;
 
     private String connectedXmppUser;
 
@@ -74,7 +74,7 @@ public class SettingsGeneralFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewObservable.clicks(download)
+/*        ViewObservable.clicks(download)
                 .map(onClickEventObservable -> championName.getText() != null && championName.getText().length() > 3)
                 .subscribe(new Subscriber<Boolean>() {
                     @Override
@@ -94,63 +94,63 @@ public class SettingsGeneralFragment extends Fragment {
                         } else
                             LOGI("123", "OnClick pass with false");
                     }
-                });
+                });*/
     }
 
     private void downloadImages(){
 
-        ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setTitle("Downloading images, please wait");
-        progressDialog.show();
-
-        Observable.range(1, Integer.MAX_VALUE)
-                .concatMap(integer -> downloadSingleImageObservable(championName.getText().toString(), integer))
-                .takeWhile(file -> {
-
-                    LOGI("123", file == null ? "fileNull" : "fileNotNull");
-
-                    return file != null;
-                })
-                .subscribe(new Subscriber<File>() {
-                    @Override
-                    public void onCompleted() {
-                        LOGI("123", "onCompleted");
-                        progressDialog.hide();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LOGI("123", "onError");
-                        progressDialog.hide();
-                    }
-
-                    @Override
-                    public void onNext(File file) {
-                        LOGI("123", "Successfully saved: " + file.getAbsolutePath());
-                    }
-                });
+//        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setTitle("Downloading images, please wait");
+//        progressDialog.show();
+//
+//        Observable.range(1, Integer.MAX_VALUE)
+//                .concatMap(integer -> downloadSingleImageObservable(championName.getText().toString(), integer))
+//                .takeWhile(file -> {
+//
+//                    LOGI("123", file == null ? "fileNull" : "fileNotNull");
+//
+//                    return file != null;
+//                })
+//                .subscribe(new Subscriber<File>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        LOGI("123", "onCompleted");
+//                        progressDialog.hide();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        LOGI("123", "onError");
+//                        progressDialog.hide();
+//                    }
+//
+//                    @Override
+//                    public void onNext(File file) {
+//                        LOGI("123", "Successfully saved: " + file.getAbsolutePath());
+//                    }
+//                });
     }
 
     public void downloadImages2(){
-        downloadSingleImageObservable(championName.getText().toString(), 1)
-                .subscribe(new Subscriber<File>() {
-                    @Override
-                    public void onCompleted() {
-                        LOGI("123", "onCompleted");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        LOGI("123", "onError");
-                        LOGI("123", e.toString());
-                    }
-
-                    @Override
-                    public void onNext(File file) {
-                        LOGI("123", "Successfully saved: " + file.getAbsolutePath());
-                    }
-                });
+//        downloadSingleImageObservable(championName.getText().toString(), 1)
+//                .subscribe(new Subscriber<File>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        LOGI("123", "onCompleted");
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        LOGI("123", "onError");
+//                        LOGI("123", e.toString());
+//                    }
+//
+//                    @Override
+//                    public void onNext(File file) {
+//                        LOGI("123", "Successfully saved: " + file.getAbsolutePath());
+//                    }
+//                });
     }
 
     private Observable<File> downloadSingleImageObservable(String championName, int skinNumber) {
