@@ -3,14 +3,13 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "22.0.1"
 
     def versionMajor = 0
-    def versionMinor = 1
+    def versionMinor = 2
     def versionPatch = 0
     def versionBuild = 0 // bump for dogfood builds, public betas, etc.
-
 
     defaultConfig {
         applicationId "com.recoverrelax.pt.riotxmppchat"
@@ -22,8 +21,11 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
         }
     }
 
@@ -49,7 +51,7 @@ buildscript {
 
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.1.0'
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.19.2'
     }
 }
 
@@ -62,75 +64,62 @@ repositories {
 apply plugin: 'com.android.application' //or apply plugin: 'java'
 apply plugin: 'me.tatarka.retrolambda'
 
-
-
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     /**
      * Support Libraries from Google
      */
-    compile 'com.android.support:appcompat-v7:+'
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:cardview-v7:+'
-    compile 'com.android.support:palette-v7:+'
-    compile 'com.android.support:design:22+'
-
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:recyclerview-v7:23.0.0'
+    compile 'com.android.support:cardview-v7:23.0.0'
+    compile 'com.android.support:palette-v7:23.0.0'
+    compile 'com.android.support:design:23.0.0'
     /**
      * Dependency Injection
      */
-        /**
-         * View Injection
-         */
-            compile 'com.jakewharton:butterknife:7.0.0'
-
-        /**
-         * Others
-         */
-            compile 'com.google.dagger:dagger:2.1-SNAPSHOT'
-            apt 'com.google.dagger:dagger-compiler:2.1-SNAPSHOT'
-            provided 'org.glassfish:javax.annotation:10.0-b28'
-
-
+    /**
+     * View Injection
+     */
+    compile 'com.jakewharton:butterknife:7.0.0'
+    /**
+     * Others
+     */
+    compile 'com.google.dagger:dagger:2.1-SNAPSHOT'
+    apt 'com.google.dagger:dagger-compiler:2.1-SNAPSHOT'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
     /**
      * Roboto Fonts Library
      */
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
-
     /**
      * Database ORM
      */
     compile 'de.greenrobot:greendao:1.3.7'
-
     /**
      * Networking
      */
-    compile ("org.igniterealtime.smack:smack-android:4.1.0") {
+    compile('org.igniterealtime.smack:smack-android:4.1.0') {
         exclude(group: 'xpp3', module: 'xpp3')
     }
-    compile ("org.igniterealtime.smack:smack-tcp:4.1.0"){
+    compile('org.igniterealtime.smack:smack-tcp:4.1.0') {
         exclude(group: 'xpp3', module: 'xpp3')
     }
-
     compile 'com.squareup.picasso:picasso:2.5.2'
-
     /**
      * EventBus
      */
     compile 'com.squareup:otto:1.3.7'
-
     /**
      * Utility Libraries
      */
     compile 'joda-time:joda-time:2.8'
     compile 'com.scottyab:secure-preferences-lib:0.0.4'
-    compile 'com.afollestad:material-dialogs:0.7.6.0' // Material Design for ProgressDialogs
-
+    compile 'com.afollestad:material-dialogs:0.7.6.0'
+    // Material Design for ProgressDialogs
     /**
      * Event/Reactive Programming
      */
     compile 'io.reactivex:rxandroid:0.25.0'
-
     /**
      * Crash Reporting
      */

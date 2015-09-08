@@ -218,12 +218,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }
     }
 
-    public
-    @ColorRes
-    int getColor(@ColorRes int color) {
-        return getResources().getColor(color);
-    }
-
     @Nullable
     Toolbar getToolbar(){
         return toolbar;

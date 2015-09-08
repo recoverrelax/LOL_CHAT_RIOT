@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.recoverrelax.pt.riotxmppchat" >
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name="com.recoverrelax.pt.riotxmppchat.MainApplication"
         android:allowBackup="true"
@@ -42,8 +44,7 @@
         </activity>
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity"
-            android:noHistory="true"
-            android:label="@string/title_activity_login" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,12 +53,9 @@
         </activity>
 
         <service android:name="com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService"/>
-
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="03b822a9367abbf243c012a679a4a286e0e56c7a" />
-
     </application>
 
 </manifest>
