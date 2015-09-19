@@ -4,6 +4,7 @@ package com.recoverrelax.pt.riotxmppchat.NotificationCenter;
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
@@ -39,6 +40,7 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     }
 
     public void sendMessageSpeechNotification(String message, String from){
+        Log.i("111", "Enters here");
             if (isReady) {
                 speak(from, message);
             } else {
@@ -49,6 +51,7 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     }
 
     public void sendStatusSpeechNotification(String message) {
+
             if (isReady) {
                 speak(message);
             } else {
@@ -100,7 +103,7 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     }
 
     public void speak(String message) {
-        tts.setSpeechRate(1.0f);
+        tts.setSpeechRate(0.8f);
 
         HashMap<String, String> map = new HashMap<>();
         map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "messageID");

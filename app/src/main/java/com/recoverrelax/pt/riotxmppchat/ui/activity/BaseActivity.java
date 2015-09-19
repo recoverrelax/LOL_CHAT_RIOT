@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -22,8 +21,8 @@ import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.squareup.otto.Bus;
 
@@ -162,10 +161,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Nullable
     @OnClick(R.id.logout)
     public void onDrawerLogout(View view){
-        this.finish();
+        this.finishAffinity();
 
         if(!mDataStorage.getNotificationsAlwaysOn())
-            MainApplication.getInstance().getRiotXmppService().stopSelf();
+            MainApplication.getInstance().stopService();
     }
 
     protected abstract @LayoutRes int getLayoutResources();

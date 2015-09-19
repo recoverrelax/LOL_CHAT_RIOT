@@ -138,10 +138,18 @@ public class MainApplication extends Application {
         }
     }
 
+    public void stopService(){
+        unbindService();
+        stopService(intentService);
+    }
+
+
     public void unbindService() {
         if(mConnection != null) {
-            if(mBound)
+            if(mBound) {
                 unbindService(mConnection);
+                mBound = false;
+            }
         }
     }
 

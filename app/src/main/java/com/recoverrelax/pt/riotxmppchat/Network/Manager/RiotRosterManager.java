@@ -218,7 +218,7 @@ public class RiotRosterManager implements RosterListener {
                         friendOldStatus = null;
                         friendNewStatus = null;
 
-                        StatusNotification.Status statusNotificationStatus;
+                        StatusNotification.Status statusNotificationStatus = null;
 
                         if (enabled) {
                             if (oldState.isOffline() && !newState.isOffline()) {
@@ -233,13 +233,12 @@ public class RiotRosterManager implements RosterListener {
                             } else if (oldState.isPlaying() && !newState.isPlaying()) {
                                 LOGI("1212", "friend left a game");
                                 statusNotificationStatus = StatusNotification.Status.LEFT_GAME;
-                            } else {
-                                LOGI("1212", "friend in the last position");
-                                statusNotificationStatus = StatusNotification.Status.OFFLINE;
                             }
-                            StatusNotification sn = statusNotificationProvider.get();
-                            sn.init(xmppAddress, friendName, statusNotificationStatus);
-                            sn.sendStatusNotification();
+                            if(statusNotificationStatus != null) {
+                                StatusNotification sn = statusNotificationProvider.get();
+                                sn.init(xmppAddress, friendName, statusNotificationStatus);
+                                sn.sendStatusNotification();
+                            }
                         }
                         updateFriend(newPresence);
                     }

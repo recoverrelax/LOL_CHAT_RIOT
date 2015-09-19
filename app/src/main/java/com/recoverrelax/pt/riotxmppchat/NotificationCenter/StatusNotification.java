@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
-import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -72,6 +70,7 @@ public class StatusNotification extends NotificationHelper{
                     boolean speechPermission = getSpeechPermissionFromStatus(status);
 
                     saveToLog(logId, logMessage, userXmppAddress);
+                    LOGI("1212", "hSendStatusSpeechNotification");
                     hSendStatusSpeechNotification(logMessage, speechPermission);
 
                 })
