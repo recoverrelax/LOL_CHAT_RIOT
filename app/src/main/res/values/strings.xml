@@ -15,24 +15,6 @@
     <string name="navdrawer_item2">Message List</string>
     <string name="navdrawer_item3">Settings</string>
 
-    <string name="htm5_text">HTML5 everywhere: How and why YouTube uses the Web platform</string>
-    <string name="htm5_date">Qua, 13:00–13:45 na Room 3</string>
-    <string name="htm5_book">Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.
-    For some time, YouTube has offered its HTML5 beta, but not all videos were able to be served with it.\n\nIn particular, support in HTML5 for Encrypted Media Extensions (EME) has allowed YouTube to provide a ubiquitous digital rights management solution.
-    The last holdout on EME, Mozilla, folded on the issue in May last year.
-    /n/n
-    Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.
-    For some time, YouTube has offered its HTML5 beta, but not all videos were able to be served with it.\n\nIn particular, support in HTML5 for Encrypted Media Extensions (EME) has allowed YouTube to provide a ubiquitous digital rights management solution.
-    The last holdout on EME, Mozilla, folded on the issue in May last year.
-    \n\n
-    Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.
-    For some time, YouTube has offered its HTML5 beta, but not all videos were able to be served with it.\n\nIn particular, support in HTML5 for Encrypted Media Extensions (EME) has allowed YouTube to provide a ubiquitous digital rights management solution.
-    The last holdout on EME, Mozilla, folded on the issue in May last year.
-    /n/n
-    Users of Chrome and Internet Explorer 11, and current beta users of Firefox, have one less reason to use Flash as YouTube begins to serve up its HTML5 player by default.
-    For some time, YouTube has offered its HTML5 beta, but not all videos were able to be served with it.\n\nIn particular, support in HTML5 for Encrypted Media Extensions (EME) has allowed YouTube to provide a ubiquitous digital rights management solution.
-    The last holdout on EME, Mozilla, folded on the issue in May last year.</string>
-
     <string name="youtube_title">Youtube</string>
     <string name="youtube_text">Lastest videos just now!</string>
 
