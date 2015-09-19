@@ -4,17 +4,16 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 
-import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.RiotXmppNewMessageActivity;
-import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.packet.Message;
 
@@ -26,7 +25,6 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 import static junit.framework.Assert.assertTrue;
 
 public class MessageNotification extends NotificationHelper{
@@ -105,7 +103,7 @@ public class MessageNotification extends NotificationHelper{
         String buttonLabel = "CHAT";
         String message = username + " said: " + messageContent.getBody();
 
-                if(!permission || activity == null)
+                if(!permission || activity == null || activity instanceof PersonalMessageActivity)
                     return;
 
                     Snackbar snackbar = Snackbar

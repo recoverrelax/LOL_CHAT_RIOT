@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -26,13 +27,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
-import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnReconnectSuccessListenerEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
@@ -65,6 +64,9 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
     @Bind(R.id.progressBarCircularIndeterminate)
     ProgressBar progressBarCircularIndeterminate;
+
+    @Bind(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
     RiotRosterManager riotRosterManager;
@@ -133,7 +135,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
         myFriendsListRecyclerView.setAdapter(adapter);
 
-        getFullFriendList(SHOW_OFFLINE_USERS);
+        swipeRefreshLayout.setOnRefreshListener(() -> getFullFriendList(SHOW_OFFLINE_USERS));
     }
 
     @Override
@@ -224,7 +226,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
     private void setOptionsMenu(Menu menu, boolean hasUnreaded) {
         final MenuItem refresh = menu.findItem(R.id.refresh);
-        refresh.setVisible(true);
+        refresh.setVisible(false);
 
         final MenuItem showHideOffline = menu.findItem(R.id.show_hide_offline);
         showHideOffline.setVisible(true);
@@ -270,7 +272,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                 public boolean onMenuItemActionCollapse(MenuItem item) {
                     if (modifiedOriginal[0])
                         getFullFriendList(SHOW_OFFLINE_USERS);
-                    refresh.setVisible(true);
+                    refresh.setVisible(false);
                     addFriend.setVisible(true);
                     if (hasUnreaded) {
                         newMessage.setVisible(true);
@@ -394,7 +396,8 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                 .subscribe(new Subscriber<List<Friend>>() {
                     @Override
                     public void onCompleted() {
-
+                        if(swipeRefreshLayout != null)
+                            swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
