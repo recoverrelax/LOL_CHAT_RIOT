@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,8 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Parent.RecentGamesBySID;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.squareup.otto.Subscribe;
 
@@ -48,6 +51,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
@@ -136,6 +140,11 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
         myFriendsListRecyclerView.setAdapter(adapter);
 
         swipeRefreshLayout.setOnRefreshListener(() -> getFullFriendList(SHOW_OFFLINE_USERS));
+
+//        RiotApiServiceImpl.getInstance().updateMaintenenceScheduleStatus("euw", "27993128")
+//                .subscribe(recentGamesBySID -> {
+//                    Log.i(TAG, recentGamesBySID.getGames().length + "");
+//                });
     }
 
     @Override

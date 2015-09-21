@@ -114,6 +114,12 @@ dependencies {
     /**
      * Crash Reporting
      */
+
+    compile "org.parceler:parceler-api:1.0.3"
+
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.3.2@aar') {
         transitive = true;
     }
