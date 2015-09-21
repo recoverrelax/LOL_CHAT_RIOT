@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -224,11 +223,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     public TextView getToolbarTitleTextView(){
         return this.toolbar_title;
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override

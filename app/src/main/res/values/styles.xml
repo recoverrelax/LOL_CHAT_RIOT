@@ -1,5 +1,14 @@
 <resources>
 
+    <style name="TextViewStyle" parent="android:Widget.TextView" >
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText" >
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+
     <style name="ButtonLogin" parent="Widget.AppCompat.Button">
         <item name="android:paddingLeft">20dp</item>
         <item name="android:paddingRight">20dp</item>
@@ -15,7 +24,7 @@
 
 
 
-    <style name="login_edittext" parent="Widget.AppCompat.EditText">
+    <style name="login_edittext" parent="EditTextStyle">
         <item name="android:alpha">0.8</item>
         <item name="android:textColor">@color/primaryColor</item>
         <item name="android:textColorHint">@color/primaryColor</item>
@@ -39,7 +48,7 @@
         <item name="android:textSize">@dimen/text_size_micro</item>
     </style>
 
-    <style name="chatEditText" parent="Widget.AppCompat.EditText">
+    <style name="chatEditText" parent="EditTextStyle">
         <item name="android:gravity">top|left</item>
         <item name="android:padding">10dp</item>
         <item name="android:textColor">@color/white</item>
@@ -97,7 +106,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/abc_text_size_display_1_material</item>
         <item name="android:gravity">center</item>
-        <item name="fontPath">@string/app_caligraphy_text</item>
     </style>
 
     <dimen name="login_textview_padding_top_bottom">10dp</dimen>
@@ -122,6 +130,5 @@
     <!--<style name="AppTheme.Base.Widget.Spinner" parent="Base.Widget.AppCompat.Spinner">-->
         <!--<item name="fontPath">@string/app_caligraphy_text</item>-->
     <!--</style>-->
-    <string name="app_caligraphy_text" translatable="false">fonts/Roboto-Light.ttf</string>
     <color name="transparent">#00000000</color>
 </resources>

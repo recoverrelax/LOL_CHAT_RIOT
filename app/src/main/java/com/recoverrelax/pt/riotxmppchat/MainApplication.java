@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import LolChatRiotDb.DaoMaster;
 import LolChatRiotDb.DaoSession;
 import io.fabric.sdk.android.Fabric;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
@@ -53,11 +52,7 @@ public class MainApplication extends Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
         instance = this;
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/Roboto-Light.ttf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
-        );
+
         setupDatabase();
         initAppComponents();
         appComponent.inject(this);
