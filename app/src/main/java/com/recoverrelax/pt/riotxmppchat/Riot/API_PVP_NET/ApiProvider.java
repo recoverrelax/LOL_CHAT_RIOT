@@ -2,12 +2,14 @@ package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 
 import java.util.Date;
 
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.ErrorHandler;
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
@@ -26,6 +28,9 @@ public class ApiProvider {
                 .setLog(new AndroidLog(TAG))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(baseEndPoint)
+                .setRequestInterceptor(request ->
+                        request.addQueryParam("api_key", RiotGlobals.API_KEY)
+                )
                 .setConverter(new GsonConverter(gson)).build();
         this.riotApiService = this.mRestAdapter.create(RiotApiService.class);
     }

@@ -1,9 +1,21 @@
-package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.SubModel;
+package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game;
 
-public class Stat {
+
+import org.parceler.Parcel;
+
+/**
+ * This object contains raw stat information.
+ */
+@Parcel
+public class RawStatsDto {
 
     int assists;
-    int barracksKilled; // Number of enemy inhibitors killed.
+
+    /**
+     * Number of enemy inhibitors killed.
+     */
+    int barracksKilled;
+
     int championsKilled;
     int combatPlayerScore;
     int consumablesPurchased;
@@ -26,7 +38,12 @@ public class Stat {
     int killingSprees;
     int largestCriticalStrike;
     int largestKillingSpree;
-    int legendaryItemsCreated; // Number of tier 3 items built.
+
+    /**
+     * Number of tier 3 items built.
+     */
+    int legendaryItemsCreated;
+
     int level;
     int magicDamageDealtPlayer;
     int magicDamageDealtToChampions;
@@ -37,7 +54,10 @@ public class Stat {
     int neutralMinionsKilledEnemyJungle;
     int neutralMinionsKilledYourJungle;
 
-    boolean nexusKilled; // Flag specifying if the summoner got the killing blow on the nexus.
+    /**
+     * Flag specifying if the summoner got the killing blow on the nexus.
+     */
+    boolean nexusKilled;
 
     int nodeCapture;
     int nodeCaptureAssist;
@@ -50,14 +70,40 @@ public class Stat {
     int physicalDamageDealtPlayer;
     int physicalDamageDealtToChampions;
     int physicalDamageTaken;
-    int playerPosition; // PlayerPosition obj
-    int playerRole; // PlayerRole
+
+    /**
+     * Player position (Legal values: TOP(1), MIDDLE(2), JUNGLE(3), BOT(4))
+     */
+    int playerPosition;
+
+    /**
+     * Player role (Legal values: DUO(1), SUPPORT(2), CARRY(3), SOLO(4))
+     */
+    int playerRole;
+
     int quadraKills;
     int sightWardsBought;
-    int spell1Cast; // Number of times first champion spell was cast.
+
+    /**
+     * Number of times first champion spell was cast.
+     */
+    int spell1Cast;
+
+    /**
+     * Number of times second champion spell was cast.
+     */
     int spell2Cast;
+
+    /**
+     * Number of times third champion spell was cast.
+     */
     int spell3Cast;
+
+    /**
+     * Number of times fourth champion spell was cast.
+     */
     int spell4Cast;
+
     int summonSpell1Cast;
     int summonSpell2Cast;
     int superMonsterKilled;
