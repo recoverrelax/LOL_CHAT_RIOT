@@ -6,6 +6,9 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.ErrorHandler;
@@ -14,14 +17,17 @@ import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
 
+@Singleton
 public class ApiProvider {
     private static final String TAG = ApiProvider.class.getSimpleName();
     private RestAdapter mRestAdapter;
     private RiotApiService riotApiService;
-    private static volatile ApiProvider ApiProviderInstance = null;
+
     private static final Endpoint baseEndPoint = Endpoints.newFixedEndpoint("https://");
 
-    private ApiProvider() {
+    @Singleton
+    @Inject
+    public ApiProvider() {
         Gson gson = (new GsonBuilder()).registerTypeAdapter(Date.class, new DateTimeTypeAdapter()).create();
         this.mRestAdapter = (new RestAdapter.Builder())
                 .setErrorHandler(ErrorHandler.DEFAULT)
@@ -33,19 +39,6 @@ public class ApiProvider {
                 )
                 .setConverter(new GsonConverter(gson)).build();
         this.riotApiService = this.mRestAdapter.create(RiotApiService.class);
-    }
-
-    public static ApiProvider getInstance() {
-        if(ApiProviderInstance == null) {
-
-            synchronized(ApiProvider.class) {
-                if(ApiProviderInstance == null) {
-                    ApiProviderInstance = new ApiProvider();
-                }
-            }
-        }
-
-        return ApiProviderInstance;
     }
 
     public RiotApiService getRiotApiService() {

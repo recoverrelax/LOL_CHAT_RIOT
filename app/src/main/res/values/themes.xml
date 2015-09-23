@@ -38,4 +38,12 @@
         <item name="android:textColorPrimary">@color/black</item> <!-- ToobarPopup color text SecondaryPrimary-->
     </style>
 
+    <!--Custom Themes-->
+
+    <!-- Base application theme. -->
+    <style name="CurrentGameTheme" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:textViewStyle">@style/TextViewStyleWhite</item>
+    </style>
+
 </resources>

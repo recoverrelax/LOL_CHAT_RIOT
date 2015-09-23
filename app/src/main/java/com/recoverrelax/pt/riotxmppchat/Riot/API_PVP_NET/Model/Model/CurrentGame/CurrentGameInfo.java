@@ -1,6 +1,13 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame;
 
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.GameConstants.GameQueueConfigId;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.GameConstants.MapName;
+
 import org.parceler.Parcel;
+
+import java.util.Date;
+import java.util.List;
 
 @Parcel
 public class CurrentGameInfo {
@@ -8,7 +15,7 @@ public class CurrentGameInfo {
     /**
      * Banned champion information
      */
-    BannedChampion [] bannedChampions;
+    List<BannedChampion> bannedChampions;
 
     /**
      * The ID of the game
@@ -54,12 +61,80 @@ public class CurrentGameInfo {
     /**
      * The participant information
      */
-    CurrentGameParticipant participants;
+    CurrentGameParticipant[] participants;
 
     /**
      * The ID of the platform on which the game is being played
      */
     String platformId;
 
-    public CurrentGameInfo() {}
+    public CurrentGameInfo() {
+    }
+
+    public List<BannedChampion> getBannedChampions() {
+        return bannedChampions;
+    }
+
+    private long getGameId() {
+        return gameId;
+    }
+
+    private long getGameLength() {
+        return gameLength;
+    }
+
+    private long getGameLenghtMinutesFormatted() {
+        return Math.min(0, Math.round(gameLength / 60));
+    }
+
+    public String getGameMode() {
+        return gameMode;
+    }
+
+    private long getGameQueueConfigId() {
+        return gameQueueConfigId;
+    }
+
+    public String getGameQueueFormatted() {
+        long gameQueueConfigId = this.gameQueueConfigId;
+
+        GameQueueConfigId byQueueType = GameQueueConfigId.getByQueueType(gameQueueConfigId);
+        if (byQueueType != null)
+            return byQueueType.getName();
+        else
+            return "";
+    }
+
+    private long getGameStartTime() {
+        return gameStartTime;
+    }
+
+    private String getGameType() {
+        return gameType;
+    }
+
+    private long getMapId() {
+        return mapId;
+    }
+
+    public String getMapName() {
+        MapName byId = MapName.getById(this.mapId);
+        return byId == null ? "" : byId.getMapName();
+    }
+
+    public String getGameStartTimeFormatted() {
+        return AppDateUtils.getFormatedDate(new Date(gameStartTime));
+    }
+
+    private Observer getObservers() {
+        return observers;
+    }
+
+    private CurrentGameParticipant[] getParticipants() {
+        return participants;
+    }
+
+    private String getPlatformId() {
+        return platformId;
+    }
 }

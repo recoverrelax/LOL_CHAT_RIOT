@@ -72,23 +72,21 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final int VIEW_HOLDER_OFFLINE_ID = 1;
     private boolean showOfflineUsers;
 
-    @ColorRes
     private final
     int COLOR_BLACK;
 
-    @ColorRes
     private final
     int COLOR_WHITE;
 
-    public FriendsListAdapter(Fragment frag, ArrayList<Friend> friendsList, boolean showOfflineUsers, RecyclerView recyclerView) {
-        this.context = frag.getActivity();
+    public FriendsListAdapter(Context context, ArrayList<Friend> friendsList, boolean showOfflineUsers, RecyclerView recyclerView) {
+        this.context = context;
         inflater = LayoutInflater.from(this.context);
         this.friendsList = friendsList;
         this.showOfflineUsers = showOfflineUsers;
         this.recyclerView = recyclerView;
 
-        COLOR_BLACK = frag.getActivity().getResources().getColor(R.color.black);
-        COLOR_WHITE = frag.getActivity().getResources().getColor(R.color.white);
+        COLOR_BLACK = context.getResources().getColor(R.color.black);
+        COLOR_WHITE = context.getResources().getColor(R.color.white);
     }
 
     public void setAdapterClickListener(OnAdapterChildClick onAdapterChildClickCallback) {

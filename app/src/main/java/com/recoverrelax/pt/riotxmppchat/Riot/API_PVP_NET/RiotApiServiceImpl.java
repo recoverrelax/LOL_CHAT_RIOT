@@ -1,36 +1,70 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET;
 
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
+import android.util.Log;
+
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+@Singleton
 public class RiotApiServiceImpl {
 
     private static final String TAG = RiotApiServiceImpl.class.getSimpleName();
     private static RiotApiServiceImpl instance = null;
-    private RiotApiService riotApiService;
 
+    @Inject
+    RiotApiService riotApiService;
+
+    @Inject
+    DataStorage dataStorage;
+
+    @Singleton
+    @Inject
     public RiotApiServiceImpl() {
-        riotApiService = ApiProvider.getInstance().getRiotApiService();
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
-    public static RiotApiServiceImpl getInstance() {
-        if (instance == null) {
-            instance = new RiotApiServiceImpl();
+    /**
+     * platform id --> logged server
+     * region -- > logged server
+     */
+    public Observable<CurrentGameInfo> getCurrentGameInfoBySummonerId(long summonerId){
+        String server = dataStorage.getServer();
+        RiotServer riotServerByName = RiotServer.getRiotServerByName(server);
+
+        if(riotServerByName == null)
+            return Observable.just(null);
+
+        String region = riotServerByName.getServerRegion();
+        String platformId = riotServerByName.getServerPlatformId();
+
+        if(platformId == null && region != null){
+            return Observable.just(null);
         }
-        return instance;
-    }
-
-    public Observable<RecentGamesDto> updateMaintenenceScheduleStatus(String region, String summonerId){
-        return riotApiService.getRecentGamesBySummonerId(region, summonerId, getApiKey())
+        return riotApiService.getCurrentGameInfoBySummonerId(region, platformId, summonerId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
 
-    public String getApiKey(){
-        return RiotGlobals.API_KEY;
+    public Observable<ChampionListDto> getAllChampionBasicInfoFiltered(){
+        return riotApiService.getAllChampionBasicInfoFiltered()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<ChampionListDto> getAllChampionBasicInfo(){
+        return riotApiService.getAllChampionBasicInfo()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
     }
 }

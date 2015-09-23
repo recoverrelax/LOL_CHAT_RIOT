@@ -245,6 +245,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
                     case R.id.navigation_item_3:
+                        intent = new Intent(BaseActivity.this, CurrentGameActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        break;
+
+                    case R.id.navigation_item_4:
                         intent = new Intent(BaseActivity.this, SettingActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

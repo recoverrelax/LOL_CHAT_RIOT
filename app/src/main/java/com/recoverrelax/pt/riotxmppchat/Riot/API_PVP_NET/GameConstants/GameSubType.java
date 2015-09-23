@@ -26,17 +26,13 @@ public enum GameSubType {
     COUNTER_PICK("Nemesis games"),
     BILGEWATER("Black Market Brawlers games");
 
-    private String name;
+    private String description;
 
-    GameSubType(String name){
-        this.name = name;
+    GameSubType(String description){
+        this.description = description;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public String getDescription() {
+        return description;
     }
 }

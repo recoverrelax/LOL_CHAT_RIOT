@@ -16,7 +16,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity"
-            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/friends_online" >
         </activity>
         <activity
@@ -32,6 +32,12 @@
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity"
             android:windowSoftInputMode="adjustPan|stateVisible"
             android:label="@string/message_list_title" >
+        </activity>
+
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity"
+            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:label="@string/current_game_activity_title" >
         </activity>
 
         <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"

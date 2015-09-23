@@ -11,17 +11,21 @@ public enum GameMode {
     FIRSTBLOOD("Snowdown Showdown games"),
     KINGPORO("King Poro games");
 
-    private String name;
+    private String gameMode;
 
-    GameMode(String name){
-        this.name = name;
+    GameMode(String gameMode){
+        this.gameMode = gameMode;
     }
 
-    public String getName() {
-        return name;
+    public static GameMode getBySelf(String gameMode){
+        for(GameMode gm: GameMode.values()){
+            if(gm.toString().equals(gameMode))
+                return gm;
+        }
+        return null;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getGameMode() {
+        return gameMode;
     }
 }

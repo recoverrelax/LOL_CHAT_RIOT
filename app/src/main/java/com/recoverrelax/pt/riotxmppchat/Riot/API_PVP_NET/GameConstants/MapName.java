@@ -1,6 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.GameConstants;
 
-public enum MapNames {
+import android.support.annotation.Nullable;
+
+public enum MapName {
     SUMMONERS_RIFT_CV(11, "Summoner's Rift", "Current Version"),
     SUMMONERS_RIFT_SM(1, "Summoner's Rift", "Original Summer Variant"),
     SUMMONERS_RIFT_AV(2, "Summoner's Rift", "Original Autumn Variant"),
@@ -12,13 +14,22 @@ public enum MapNames {
     BUTCHERS_BRIDGE(14, "Butcher's Bridge", "ARAM Map");
 
     private String mapName;
-    private int mapId;
+    private long mapId;
     private String mapNotes;
 
-    MapNames(int mapId, String mapName, String mapNotes){
+    MapName(long mapId, String mapName, String mapNotes){
         this.mapId = mapId;
         this.mapName = mapName;
         this.mapNotes = mapNotes;
+    }
+
+    @Nullable
+    public static MapName getById(long mapId){
+        for(MapName map: MapName.values()){
+            if(map.getMapId() == mapId)
+                return map;
+        }
+        return null;
     }
 
     public String getMapName() {
@@ -29,11 +40,11 @@ public enum MapNames {
         this.mapName = mapName;
     }
 
-    public int getMapId() {
+    public long getMapId() {
         return mapId;
     }
 
-    public void setMapId(int mapId) {
+    public void setMapId(long mapId) {
         this.mapId = mapId;
     }
 

@@ -1,7 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat;
 
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
@@ -48,6 +50,10 @@ public interface AppComponent {
     void inject(NotificationCustomDialogFragment notificationCustomDialogFragment);
 
     void inject(MainApplication mainApplication);
+
+    void inject(CurrentGameFragment currentGameFragment);
+
+    void inject(RiotApiServiceImpl riotApiService);
 
 
     /**

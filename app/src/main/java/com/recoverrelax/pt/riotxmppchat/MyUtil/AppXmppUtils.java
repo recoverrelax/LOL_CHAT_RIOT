@@ -12,4 +12,10 @@ public class AppXmppUtils {
             return jid.substring(0, slashIndex);
         }
     }
+
+    public static long getSummonerIdByXmppAddress(String userXmppAddress){
+        String firstPart = "sum";
+        String secondPart = "@pvp.net";
+        return Long.parseLong(userXmppAddress.replace(firstPart, "").replace(secondPart, ""));
+    }
 }

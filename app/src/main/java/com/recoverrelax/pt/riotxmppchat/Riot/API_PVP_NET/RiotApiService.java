@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET;
 
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -10,14 +11,11 @@ import rx.Observable;
 
 public interface RiotApiService {
     String baseUrl = "/{region}.api.pvp.net";
+    String globalUrl = "/global.api.pvp.net";
 
     /**
      *  champion-v1.2
      */
-
-    @GET(baseUrl + "/api/lol/{region}/v1.3/champion")
-    Observable<RecentGamesDto> getAllChampionsBasicInfo(
-            @Path("region") String region);
 
     @GET(baseUrl + "/api/lol/{region}/v1.3/champion")
     Observable<RecentGamesDto> getAllFreeChampionsBasicInfo(
@@ -35,6 +33,18 @@ public interface RiotApiService {
 
     @GET(baseUrl + "/observer-mode/rest/consumer/getSpectatorGameInfo/{platformId}/{summonerId}")
     Observable<CurrentGameInfo> getCurrentGameInfoBySummonerId(
+            @Path("region") String region,
             @Path("platformId") String platformId,
-            @Query("summonerId") long summonerId);
+            @Path("summonerId") long summonerId);
+
+    @GET(globalUrl + "/api/lol/static-data/euw/v1.2/champion?champData=all")
+    Observable<ChampionListDto> getAllChampionBasicInfo();
+
+    /**
+     * lol-static-data
+     *
+     * id, title, name, imageName, key
+     */
+    @GET(globalUrl + "/api/lol/static-data/euw/v1.2/champion?champData=image")
+    Observable<ChampionListDto> getAllChampionBasicInfoFiltered();
 }

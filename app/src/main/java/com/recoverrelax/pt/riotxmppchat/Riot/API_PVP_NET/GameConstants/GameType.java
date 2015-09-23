@@ -5,17 +5,13 @@ public enum GameType {
     TUTORIAL_GAME("Tutorial games"),
     MATCHED_GAME("All other games");
 
-    private String name;
+    private String description;
 
-    GameType(String name){
-        this.name = name;
+    GameType(String description){
+        this.description = description;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public String getDescription() {
+        return description;
     }
 }

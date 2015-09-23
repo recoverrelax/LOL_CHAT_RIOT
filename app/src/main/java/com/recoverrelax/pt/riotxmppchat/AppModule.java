@@ -1,4 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.ApiProvider;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.squareup.otto.Bus;
@@ -31,6 +34,20 @@ public class AppModule {
     DataStorage provideDataStorage(){
         return new DataStorage(applicationContext);
     }
+
+    @Provides
+    @Singleton
+    RiotApiService provideRiotApiService(ApiProvider apiProvider){
+        return apiProvider.getRiotApiService();
+    }
+
+    @Provides
+    @Singleton
+    RiotApiServiceImpl provideRiotApiServiceImpl(){
+        return new RiotApiServiceImpl();
+    }
+
+
 
 //    @Provides
 //    @Singleton

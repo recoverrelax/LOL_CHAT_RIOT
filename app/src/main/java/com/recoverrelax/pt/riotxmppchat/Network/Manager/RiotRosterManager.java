@@ -29,6 +29,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
@@ -154,6 +155,22 @@ public class RiotRosterManager implements RosterListener {
 
     public Observable<RosterEntry> getRosterEntry(String user) {
         return Observable.defer(() -> Observable.just(roster.getEntry(user)));
+    }
+
+    /**
+     * sum12345678@pvp.net
+     */
+    public Observable<String> getSummonerIdByXmppName(String xmppName) {
+        return Observable.defer(
+                () -> Observable.just(roster.getEntry(xmppName).getUser())
+                .map(jid -> {
+                    String firstPart = "sum";
+                    String secondPart = "@pvp.net";
+                    return jid.replace(firstPart, "").replace(secondPart, "");
+                })
+        )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Observable<Presence> getRosterPresence(String xmppAddress) {

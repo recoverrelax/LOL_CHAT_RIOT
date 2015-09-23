@@ -5,30 +5,34 @@ import java.util.ArrayList;
 public enum RiotServer {
 
    
-    BR(0, "Brazil", "chat.br.lol.riotgames.com", true),
-    EUNE(1, "Europe Nordic and East", "chat.eun1.riotgames.com", true),
-    EUW(2, "Europe West", "chat.euw1.lol.riotgames.com", true),
-    KR(3, "Korea", "chat.kr.lol.riotgames.com", true),
-    LAN(4, "Latin America North", "chat.la1.lol.riotgames.com", true),
-    LAS(5, "Latin America South", "chat.la2.lol.riotgames.com", true),
-    NA(6, "North America", "chat.na1.lol.riotgames.com", true),
-    OCE(7, "Oceania", "chat.oc1.lol.riotgames.com", true),
-    PH(8, "Phillipines", "chatph.lol.garenanow.com", false),
-    RU(9, "Russia", "chat.ru.lol.riotgames.com", true),
-    TH(10, "Thailand", "chatth.lol.garenanow.com", false),
-    TR(11, "Turkey", "chat.tr.lol.riotgames.com", true),
-    TW(12, "Taiwan", "chattw.lol.garenanow.com", false),
-    VN(13, "Vietnam", "chatvn.lol.garenanow.com", false);
+    BR(0, "Brazil", "chat.br.lol.riotgames.com", "BR1", true, "br"),
+    EUNE(1, "Europe Nordic and East", "chat.eun1.riotgames.com", "EUN1", true, "eune"),
+    EUW(2, "Europe West", "chat.euw1.lol.riotgames.com", "EUW1", true, "euw"),
+    KR(3, "Korea", "chat.kr.lol.riotgames.com", "KR", true, "kr"),
+    LAN(4, "Latin America North", "chat.la1.lol.riotgames.com", "LA1", true, "lan"),
+    LAS(5, "Latin America South", "chat.la2.lol.riotgames.com", "LA2", true, "las"),
+    NA(6, "North America", "chat.na1.lol.riotgames.com", "NA1", true, "na"),
+    OCE(7, "Oceania", "chat.oc1.lol.riotgames.com", "OC1", true, "oce"),
+//    PH(8, "Phillipines", "chatph.lol.garenanow.com", null, false, null),
+    RU(9, "Russia", "chat.ru.lol.riotgames.com", "RU1", true, "ru"),
+//    TH(10, "Thailand", "chatth.lol.garenanow.com", null, false, null),
+    TR(11, "Turkey", "chat.tr.lol.riotgames.com", "TR1", true, "tr");
+//    TW(12, "Taiwan", "chattw.lol.garenanow.com", null, false, null),
+//    VN(13, "Vietnam", "chatvn.lol.garenanow.com", null, false, null);
 
     private final String serverName;
     private final String serverHost;
+    private final String platformId;
+    private final String region;
     private int position;
     private boolean apiAvailable;
 
-    RiotServer(int position, String serverName, String serverHost, boolean apiAvailable) {
+    RiotServer(int position, String serverName, String serverHost, String platformId, boolean apiAvailable,  String region) {
         this.position = position;
         this.serverName = serverName;
         this.serverHost = serverHost;
+        this.region = region;
+        this.platformId = platformId;
         this.apiAvailable = apiAvailable;
     }
 
@@ -39,7 +43,7 @@ public enum RiotServer {
             if(server.serverName.equals(serverName))
                 return server;
         }
-        throw new IllegalArgumentException("No RiotServer Enum for serverName: " + serverName);
+        return null;
     }
 
     public static RiotServer getRiotServerHost(String serverHost)
@@ -49,7 +53,7 @@ public enum RiotServer {
             if(server.serverHost.equals(serverHost))
                 return server;
         }
-        throw new IllegalArgumentException("No RiotServer Enum for serverHost: " + serverHost);
+        return null;
     }
 
     public int getPosition() {
@@ -62,6 +66,14 @@ public enum RiotServer {
 
     public String getServerHost() {
         return serverHost;
+    }
+
+    public String getServerRegion(){
+        return this.region;
+    }
+
+    public String getServerPlatformId(){
+        return platformId;
     }
 
     public static String [] getServerList(){

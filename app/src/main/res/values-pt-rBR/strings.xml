@@ -87,5 +87,6 @@
     <string name="settings_order_alphabetically">Ordenar por Nome</string>
     <string name="settings_order_status">Ordenar por Status</string>
     <string name="champion_name_here">Champion Name Here</string>
+    <string name="current_game_live">Live Game</string>
 
 </resources>
