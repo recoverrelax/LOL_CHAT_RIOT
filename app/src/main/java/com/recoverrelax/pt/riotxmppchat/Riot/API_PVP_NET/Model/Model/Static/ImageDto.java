@@ -15,5 +15,7 @@ public class ImageDto {
 
     ImageDto(){}
 
-
+    public String getFull() {
+        return full;
+    }
 }

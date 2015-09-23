@@ -49,4 +49,12 @@ public class ChampionDto {
                 ", title='" + title + '\'' +
                 '}';
     }
+
+    public ImageDto getImage() {
+        return image;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

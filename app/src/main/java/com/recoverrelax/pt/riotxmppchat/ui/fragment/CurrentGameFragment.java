@@ -13,12 +13,18 @@ import android.widget.TextView;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.BannedChampion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
+import com.squareup.picasso.Picasso;
 
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -50,7 +56,7 @@ public class CurrentGameFragment extends BaseFragment {
     TextView gameDuration;
 
     @Bind({R.id.ban1, R.id.ban2, R.id.ban3, R.id.ban4, R.id.ban5, R.id.ban6})
-    List<ImageView> banTextViews;
+    List<ImageView> banImages;
 
     @Inject
     RiotApiServiceImpl riotApiServiceImpl;
@@ -101,17 +107,66 @@ public class CurrentGameFragment extends BaseFragment {
 
         long userId_riotApi = AppXmppUtils.getSummonerIdByXmppAddress(friendXmppAddress);
 
-//        riotApiServiceImpl.getCurrentGameInfoBySummonerId(userId_riotApi)
-//                .doOnNext(this::fetchGameData)
-//                .doOnError(throwable -> Log.e(TAG, "", throwable))
-//                .flatMap(new Func1<CurrentGameInfo, Observable<CurrentGameInfo>>() {
+        String TEMPORATY_ICON_URL = "http://ddragon.leagueoflegends.com/cdn/5.18.1/img/champion/";
+
+        riotApiServiceImpl.getCurrentGameInfoBySummonerId(userId_riotApi)
+                .doOnNext(this::fetchGameData)
+                .flatMap(new Func1<CurrentGameInfo, Observable<?>>() {
+                    @Override
+                    public Observable<?> call(CurrentGameInfo currentGameInfo) {
+                        return riotApiServiceImpl.getAllChampionBasicInfoFiltered()
+                                .flatMap(championListDto -> getChampionDtoImportantInfo(championListDto.getChampionList()))
+                                .doOnNext(new Action1<Map<Integer, String>>() {
+                                    @Override // ChampionID - ChampionImage
+                                    public void call(Map<Integer, String> integerStringMap) {
+
+                                    }
+                                });
+                    }
+                });
+
+
+//        riotApiServiceImpl.getAllChampionBasicInfoFiltered()
+//                .flatMapIterable(new Func1<ChampionListDto, Iterable<?>>() {
 //                    @Override
-//                    public Observable<CurrentGameInfo> call(CurrentGameInfo currentGameInfo) {
-////                        return currentGameInfo.getBannedChampions().
+//                    public Iterable<?> call(ChampionListDto championListDto) {
+//                        return null;
 //                    }
-//                })
+//                });
+//                .subscribe(new Subscriber<ChampionListDto>() {
+//                    @Override
+//                    public void onCompleted() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    @Override
+//                    public void onNext(ChampionListDto championListDto) {
+//                        Log.i(TAG, championListDto.toString());
+//                    }
+//                });
 
+    }
 
+    public Observable<Map<Integer, String>> getChampionDtoImportantInfo(Map<String, ChampionDto> data){
+        return Observable.create(new Observable.OnSubscribe<Map<Integer, String>>() {
+            @Override
+            public void call(Subscriber<? super Map<Integer, String>> subscriber) {
+                Map<Integer, String> result = new HashMap<>();
+
+                for(Map.Entry<String, ChampionDto> entry: data.entrySet()){
+                    String imageName = entry.getValue().image.full;
+                    result.put(entry.getValue().getId(), imageName);
+                }
+
+                subscriber.onNext(result);
+                subscriber.onCompleted();
+            }
+        });
     }
 
     private void fetchGameData(CurrentGameInfo currentGameInfo) {

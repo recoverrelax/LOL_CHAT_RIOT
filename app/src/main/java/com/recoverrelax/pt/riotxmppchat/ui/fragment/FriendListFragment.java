@@ -148,33 +148,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
         swipeRefreshLayout.setOnRefreshListener(() -> getFullFriendList(SHOW_OFFLINE_USERS));
 
-//        riotApiServiceImpl.getAllChampionBasicInfoFiltered()
-//                .flatMapIterable(new Func1<ChampionListDto, Iterable<?>>() {
-//                    @Override
-//                    public Iterable<?> call(ChampionListDto championListDto) {
-//                        return null;
-//                    }
-//                })
-//                .subscribe(new Subscriber<ChampionListDto>() {
-//                    @Override
-//                    public void onCompleted() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    @Override
-//                    public void onNext(ChampionListDto championListDto) {
-//                        Log.i(TAG, championListDto.toString());
-//                    }
-//                });
-//        RiotApiServiceImpl.getInstance().updateMaintenenceScheduleStatus("euw", "27993128")
-//                .subscribe(recentGamesBySID -> {
-//                    Log.i(TAG, recentGamesBySID.getGames().length + "");
-//                });
+
     }
 
     @Override
