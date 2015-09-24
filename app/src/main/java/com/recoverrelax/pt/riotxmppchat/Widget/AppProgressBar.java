@@ -107,11 +107,11 @@ public class AppProgressBar extends RelativeLayout {
     }
 
     public void showText() {
-        this.mTextView.setVisibility(0);
+        this.mTextView.setVisibility(View.VISIBLE);
     }
 
     public void hideText() {
-        this.mTextView.setVisibility(8);
+        this.mTextView.setVisibility(View.GONE);
     }
 
     public void setText(String string) {
@@ -119,21 +119,21 @@ public class AppProgressBar extends RelativeLayout {
     }
 
     public boolean isVisible() {
-        return this.getVisibility() == 0;
+        return this.getVisibility() == View.VISIBLE;
     }
 
     private void showProgress(final boolean show) {
         byte shortAnimTime = 0;
-        this.setVisibility(show ? 0 : 8);
+        this.setVisibility(show ? View.VISIBLE : View.GONE);
         if (this.mMainView != null) {
-            this.mMainView.setVisibility(show ? 8 : 0);
+            this.mMainView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
 
         this.animate().setDuration((long) shortAnimTime).alpha(show ? 1.0F : 0.0F).setListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animation) {
-                AppProgressBar.this.setVisibility(show ? 0 : 8);
+                AppProgressBar.this.setVisibility(show ? View.VISIBLE : View.GONE);
                 if (AppProgressBar.this.mMainView != null) {
-                    AppProgressBar.this.mMainView.setVisibility(show ? 8 : 0);
+                    AppProgressBar.this.mMainView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
 
             }
