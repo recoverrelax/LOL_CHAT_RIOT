@@ -53,6 +53,22 @@ public class CurrentGameSingleParticipant extends PercentRelativeLayout {
         ButterKnife.bind(this);
     }
 
+    public ImageView getChampionPlaying() {
+        return championPlaying;
+    }
+
+    public TextView getPlayerName() {
+        return playerName;
+    }
+
+    public ImageView getSummonerSpell1() {
+        return summonerSpell1;
+    }
+
+    public ImageView getSummonerSpell2() {
+        return summonerSpell2;
+    }
+
     public void setChampionPlayingDrawable(Drawable drawable){
         this.championPlaying.setImageDrawable(drawable);
     }

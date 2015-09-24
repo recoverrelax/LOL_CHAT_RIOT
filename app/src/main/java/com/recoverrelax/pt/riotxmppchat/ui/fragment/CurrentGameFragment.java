@@ -196,7 +196,46 @@ public class CurrentGameFragment extends BaseFragment {
     }
 
     private void fetchParticipants(List<LiveGameParticipant> participants) {
+        List<LiveGameParticipant> team100 = new ArrayList<>();
+        List<LiveGameParticipant> team200 = new ArrayList<>();
 
+        for(LiveGameParticipant lg: participants){
+            if(lg.getTeamID() == 100){
+                team100.add(lg);
+            }
+            else{
+                team200.add(lg);
+            }
+        }
+
+        for(int i = 0; i < team100.size(); i++){
+            CurrentGameSingleParticipant cgp = this.team100.get(i);
+
+            ImageView imageView = cgp.getChampionPlaying();
+            TextView playerName = cgp.getPlayerName();
+
+            LiveGameParticipant liveGameParticipant = team100.get(i);
+            Picasso.with(this.getActivity())
+                    .load(TEMPORARY_ICON_URL + liveGameParticipant.getChampionImage())
+                    .into(imageView);
+
+            playerName.setText(liveGameParticipant.getSummonerName());
+        }
+
+        for(int i = 0; i < team200.size(); i++){
+            CurrentGameSingleParticipant cgp = this.team200.get(i);
+
+            ImageView imageView = cgp.getChampionPlaying();
+            TextView playerName = cgp.getPlayerName();
+
+            LiveGameParticipant liveGameParticipant = team200.get(i);
+
+            Picasso.with(this.getActivity())
+                    .load(TEMPORARY_ICON_URL + liveGameParticipant.getChampionImage())
+                    .into(imageView);
+
+            playerName.setText(liveGameParticipant.getSummonerName());
+        }
     }
 
     private void fetchGameData(CurrentGameInfo currentGameInfo) {

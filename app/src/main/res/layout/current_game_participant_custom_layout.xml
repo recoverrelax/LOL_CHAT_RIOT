@@ -4,29 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <FrameLayout
+        android:id="@+id/championPlayingLayout"
+        app:layout_widthPercent="50%"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageView
             android:id="@+id/championPlaying"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            app:layout_widthPercent="50%"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="fitStart"
             android:src="@drawable/ic_cross"/>
-
+    </FrameLayout>
         <TextView
             android:id="@+id/playerName"
             android:layout_marginBottom="5dp"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_toRightOf="@+id/championPlaying"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:singleLine="true"
+            android:layout_toRightOf="@+id/championPlayingLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:text="MyanMarking"/>
 
         <LinearLayout
-            android:layout_alignBottom="@+id/championPlaying"
+            android:layout_alignBottom="@+id/championPlayingLayout"
             android:layout_below="@+id/playerName"
-            android:layout_toRightOf="@+id/championPlaying"
+            android:layout_toRightOf="@+id/championPlayingLayout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
