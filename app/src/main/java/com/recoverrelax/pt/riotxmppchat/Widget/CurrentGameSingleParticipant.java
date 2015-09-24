@@ -1,0 +1,71 @@
+package com.recoverrelax.pt.riotxmppchat.Widget;
+
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.percent.PercentRelativeLayout;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.recoverrelax.pt.riotxmppchat.R;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+public class CurrentGameSingleParticipant extends PercentRelativeLayout {
+
+    @Bind(R.id.championPlaying)
+    ImageView championPlaying;
+
+    @Bind(R.id.playerName)
+    TextView playerName;
+
+    @Bind(R.id.summonerSpell1)
+    ImageView summonerSpell1;
+
+    @Bind(R.id.summonerSpell2)
+    ImageView summonerSpell2;
+
+    private Context context;
+
+    public CurrentGameSingleParticipant(Context context) {
+        super(context);
+        this.context = context;
+        inflateLayout();
+    }
+
+    public CurrentGameSingleParticipant(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        inflateLayout();
+    }
+
+    public CurrentGameSingleParticipant(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.context = context;
+        inflateLayout();
+    }
+
+    public void inflateLayout(){
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.current_game_participant_custom_layout, this);
+        ButterKnife.bind(this);
+    }
+
+    public void setChampionPlayingDrawable(Drawable drawable){
+        this.championPlaying.setImageDrawable(drawable);
+    }
+
+    public void setSpell1Drawable(Drawable drawable){
+        this.summonerSpell1.setImageDrawable(drawable);
+    }
+
+    public void setSpell2Drawable(Drawable drawable){
+        this.summonerSpell1.setImageDrawable(drawable);
+    }
+
+    public void setSummonerName(String text){
+        this.playerName.setText(text);
+    }
+}

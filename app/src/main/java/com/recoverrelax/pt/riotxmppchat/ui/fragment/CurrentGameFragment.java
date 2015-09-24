@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,6 +22,9 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
+import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameBanList;
+import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo;
+import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
 import com.squareup.picasso.Picasso;
 
@@ -49,29 +53,23 @@ public class CurrentGameFragment extends BaseFragment {
     @Bind(R.id.progressBar)
     AppProgressBar progressBar;
 
-    @Bind(R.id.mapName)
-    TextView mapName;
+    @Bind(R.id.currentGameGlobalInfo)
+    CurrentGameGlobalInfo currentGameGlobalInfo;
 
-    @Bind(R.id.gameQueueType)
-    TextView gameQueueType;
-
-    @Bind(R.id.gameMode)
-    TextView gameMode;
-
-    @Bind(R.id.gameDuration)
-    TextView gameDuration;
-
-    @Bind({R.id.ban1, R.id.ban2, R.id.ban3})
-    List<ImageView> banTeam1;
-
-    @Bind({R.id.ban4, R.id.ban5, R.id.ban6})
-    List<ImageView> banTeam2;
+    @Bind(R.id.banList)
+    CurrentGameBanList banList;
 
     @Inject
     RiotApiServiceImpl riotApiServiceImpl;
 
     @Inject
     RiotApiOperations riotApiOperations;
+
+    @Bind({R.id.team100_player1, R.id.team100_player1, R.id.team100_player1, R.id.team100_player1})
+    List<CurrentGameSingleParticipant> team100;
+
+    @Bind({R.id.team200_player1, R.id.team200_player1, R.id.team200_player1, R.id.team200_player1})
+    List<CurrentGameSingleParticipant> team200;
 
     private static String TEMPORARY_ICON_URL = "http://ddragon.leagueoflegends.com/cdn/5.18.1/img/champion/";
 
@@ -135,7 +133,7 @@ public class CurrentGameFragment extends BaseFragment {
                                 .toList() // list of BannedChampionImage objects
                                           // with Ids and teamIds set
                                 .flatMap(riotApiOperations::getChampionsImage) // set the image to the list
-                                .take((banTeam1.size() + banTeam2.size()))
+                                .take((banList.getSize()))
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .doOnNext(this::fetchBannedChampions)
                                 .map(o -> currentGameInfo))
@@ -167,10 +165,10 @@ public class CurrentGameFragment extends BaseFragment {
     }
 
     private void fetchGameData(CurrentGameInfo currentGameInfo) {
-        mapName.setText(currentGameInfo.getMapName());
-        gameQueueType.setText(currentGameInfo.getGameQueueFormatted());
-        gameMode.setText(currentGameInfo.getGameMode());
-        gameDuration.setText(currentGameInfo.getGameStartTimeFormatted());
+        currentGameGlobalInfo.setMapName(currentGameInfo.getMapName());
+        currentGameGlobalInfo.setGameQueueType(currentGameInfo.getGameQueueFormatted());
+        currentGameGlobalInfo.setGameMode(currentGameInfo.getGameMode());
+        currentGameGlobalInfo.setGameDuration(currentGameInfo.getGameStartTimeFormatted());
     }
 
     private void fetchBannedChampions(List<LiveGameBannedChamp> liveGameBannedChamps){
@@ -187,7 +185,7 @@ public class CurrentGameFragment extends BaseFragment {
         }
 
         for(int i = 0; i < team100.size(); i++){
-            ImageView imageView = banTeam1.get(i);
+            ImageView imageView = banList.getTeam100Bans().get(i);
 
             Picasso.with(this.getActivity())
                     .load(TEMPORARY_ICON_URL + team100.get(i).getChampionImage())
@@ -195,7 +193,7 @@ public class CurrentGameFragment extends BaseFragment {
         }
 
         for(int i = 0; i < team200.size(); i++){
-            ImageView imageView = banTeam2.get(i);
+            ImageView imageView = banList.getTeam200Bans().get(i);
 
             Picasso.with(this.getActivity())
                     .load(TEMPORARY_ICON_URL + team200.get(i).getChampionImage())

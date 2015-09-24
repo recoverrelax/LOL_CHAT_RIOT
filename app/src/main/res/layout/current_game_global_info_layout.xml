@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/primaryColor"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="10dp">
+
+    <TextView
+        android:id="@+id/mapName"
+        app:layout_widthPercent="50%"
+        tools:text="Summoners Rift"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/gameQueueType"
+        app:layout_widthPercent="50%"
+        tools:text="Normal 5v5 Blind Pick games"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mapName"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/gameMode"
+        app:layout_widthPercent="50%"
+        tools:text="Classic"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gameQueueType"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/gameDurationLabel"
+        app:layout_widthPercent="50%"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/mapName"
+        android:gravity="right"
+        android:text="@string/current_game_game_start"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/gameDuration"
+        app:layout_widthPercent="50%"
+        tools:text="15 minutes"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/gameDurationLabel"
+        android:gravity="right"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+</android.support.percent.PercentRelativeLayout>

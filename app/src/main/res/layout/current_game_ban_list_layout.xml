@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<TextView
+    app:layout_widthPercent="50%"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:gravity="center"
+    android:background="@color/primaryColor"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:text="@string/current_game_your_team"
+    android:id="@+id/yourTeam" />
+
+<TextView
+    app:layout_widthPercent="50%"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentRight="true"
+    android:gravity="center"
+    android:background="@color/primaryColor"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:text="@string/current_game_enemy_team"
+    android:id="@+id/enemyTeam" />
+
+<LinearLayout
+    android:layout_marginTop="5dp"
+    android:layout_below="@+id/yourTeam"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageView
+        android:id="@+id/ban1"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cross"
+        android:layout_height="wrap_content"/>
+
+    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageView
+        android:id="@+id/ban2"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cross"
+        android:layout_height="wrap_content"/>
+
+    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageView
+        android:id="@+id/ban3"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cross"
+        android:layout_height="wrap_content"/>
+
+    <Space
+        android:layout_width="20dp"
+        android:layout_height="wrap_content" />
+
+    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageView
+        android:id="@+id/ban4"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cross"
+        android:layout_height="wrap_content"/>
+
+    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageView
+        android:id="@+id/ban5"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cross"
+        android:layout_height="wrap_content"/>
+
+    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageView
+        android:id="@+id/ban6"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cross"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+</android.support.percent.PercentRelativeLayout>
