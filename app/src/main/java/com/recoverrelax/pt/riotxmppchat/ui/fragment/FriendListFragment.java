@@ -18,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,8 +35,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
@@ -47,16 +44,13 @@ import org.jivesoftware.smack.packet.Presence;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
@@ -157,7 +151,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     }
 
     @Override
-    public void onAdapterFriendOptionsClick(View view, String friendXmppAddress) {
+    public void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername) {
         final PopupMenu popupMenu = new PopupMenu(getActivity(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_friend_options, popupMenu.getMenu());
 
@@ -193,6 +187,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                     Intent intent = new Intent(this.getActivity(), CurrentGameActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     intent.putExtra(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                    intent.putExtra(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
                     startActivity(intent);
                     AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
 

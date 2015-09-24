@@ -3,10 +3,10 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,23 +19,20 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.HttpUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.KamehameUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameParticipant;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.LiveGameBannedChamp;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.LiveGameParticipant;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
-import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameBanList;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -44,8 +41,6 @@ import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,9 +49,13 @@ public class CurrentGameFragment extends BaseFragment {
 
     private final String TAG = CurrentGameFragment.this.getClass().getSimpleName();
     private String friendXmppAddress;
+    private String friendUsername;
 
 //    @Bind(R.id.progressBar)
 //    AppProgressBar progressBar;
+
+    @Bind(R.id.nestedScrollView)
+    NestedScrollView nestedScrollView;
 
     @Bind(R.id.currentGameGlobalInfo)
     CurrentGameGlobalInfo currentGameGlobalInfo;
@@ -82,11 +81,12 @@ public class CurrentGameFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    public static CurrentGameFragment newInstance(String friendXmppAddress) {
+    public static CurrentGameFragment newInstance(String friendXmppAddress, String friendUsername) {
         CurrentGameFragment frag = new CurrentGameFragment();
 
         Bundle args = new Bundle();
         args.putString(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+        args.putString(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
         frag.setArguments(args);
 
         return frag;
@@ -101,10 +101,15 @@ public class CurrentGameFragment extends BaseFragment {
             Bundle args = getArguments();
             if (args != null) {
                 friendXmppAddress = args.getString(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT);
+                friendUsername = args.getString(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT);
             }
         } else {
             friendXmppAddress = (String) savedInstanceState.getSerializable(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT);
+            friendUsername = (String) savedInstanceState.getSerializable(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT);
         }
+
+        ((BaseActivity)getActivity()).setTitle(getActivity().getResources().getString(R.string.current_game__fragment_title) + " " + friendUsername);
+
     }
 
     @Override
@@ -121,7 +126,6 @@ public class CurrentGameFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         long userId_riotApi = AppXmppUtils.getSummonerIdByXmppAddress(friendXmppAddress);
 
         riotApiServiceImpl.getCurrentGameInfoBySummonerId(userId_riotApi) // get Observable<CurrentGameInfo>
@@ -210,7 +214,7 @@ public class CurrentGameFragment extends BaseFragment {
 
         for(int i = 0; i < team100.size(); i++){
             CurrentGameSingleParticipant cgp = this.team100.get(i);
-
+            cgp.setVisibility(View.VISIBLE);
             ImageView imageView = cgp.getChampionPlaying();
             TextView playerName = cgp.getPlayerName();
 
@@ -224,7 +228,7 @@ public class CurrentGameFragment extends BaseFragment {
 
         for(int i = 0; i < team200.size(); i++){
             CurrentGameSingleParticipant cgp = this.team200.get(i);
-
+            cgp.setVisibility(View.VISIBLE);
             ImageView imageView = cgp.getChampionPlaying();
             TextView playerName = cgp.getPlayerName();
 
@@ -260,6 +264,7 @@ public class CurrentGameFragment extends BaseFragment {
 
         for(int i = 0; i < team100.size(); i++){
             ImageView imageView = banList.getTeam100Bans().get(i);
+            imageView.setVisibility(View.VISIBLE);
 
             Picasso.with(this.getActivity())
                     .load(TEMPORARY_ICON_URL + team100.get(i).getChampionImage())
@@ -268,6 +273,7 @@ public class CurrentGameFragment extends BaseFragment {
 
         for(int i = 0; i < team200.size(); i++){
             ImageView imageView = banList.getTeam200Bans().get(i);
+            imageView.setVisibility(View.VISIBLE);
 
             Picasso.with(this.getActivity())
                     .load(TEMPORARY_ICON_URL + team200.get(i).getChampionImage())

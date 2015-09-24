@@ -93,9 +93,10 @@
     <string name="current_game_general_info">General Info</string>
     <string name="current_game_ban_info">Ban Info</string>
     <string name="current_game_participants">Participants</string>
-    <string name="current_game_your_team">Your Team</string>
-    <string name="current_game_enemy_team">Enemy Team</string>
+    <string name="current_game_your_team">Team 1</string>
+    <string name="current_game_enemy_team">Team 2</string>
     <string name="current_game_summoner_not_in_game">Live Match not available. The game is no longer available.</string>
+    <string name="current_game__fragment_title">Live: </string>
 
 
 </resources>

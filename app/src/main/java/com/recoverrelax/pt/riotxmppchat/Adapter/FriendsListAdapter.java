@@ -3,13 +3,10 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.ColorRes;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
@@ -347,7 +343,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @OnClick(R.id.card_more_layout)
         public void onCardOptionsClick(View view) {
             if (onAdapterChildClickCallback != null)
-                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress());
+                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName());
         }
 
 
@@ -412,7 +408,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @OnClick(R.id.card_more_layout)
         public void onCardOptionsClick(View view) {
             if (onAdapterChildClickCallback != null)
-                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress());
+                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName());
         }
     }
 
@@ -420,7 +416,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface OnAdapterChildClick {
         void onAdapterFriendClick(String friendUsername, String friendXmppAddress);
-        void onAdapterFriendOptionsClick(View view, String friendXmppAddress);
+        void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername);
     }
 
     public enum SortMethod {

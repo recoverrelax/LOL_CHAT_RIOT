@@ -20,9 +20,12 @@ public class CurrentGameActivity extends BaseActivity {
     AppBarLayout appBarLayout;
 
     public static final String FRIEND_XMPP_ADDRESS_INTENT = "friend_xmpp_address_intent";
+    public static final String FRIEND_XMPP_USERNAME_INTENT = "friend_xmpp_username";
 
     private static final String friendXmppAddressDefault = null;
+    private static final String friendXmppUsernameDefault = null;
     private String friendXmppAddress;
+    private String friendXmppUsername;
 
     @Override
     public int getLayoutResources() {
@@ -44,14 +47,16 @@ public class CurrentGameActivity extends BaseActivity {
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
                 friendXmppAddress = extras.getString(FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddressDefault);
+                friendXmppUsername = extras.getString(FRIEND_XMPP_USERNAME_INTENT, friendXmppUsernameDefault);
             }
         } else {
             friendXmppAddress = (String) savedInstanceState.getSerializable(FRIEND_XMPP_ADDRESS_INTENT);
+            friendXmppUsername = (String) savedInstanceState.getSerializable(FRIEND_XMPP_USERNAME_INTENT);
         }
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = CurrentGameFragment.newInstance(friendXmppAddress);
+            Fragment fragment = CurrentGameFragment.newInstance(friendXmppAddress, friendXmppUsername);
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();

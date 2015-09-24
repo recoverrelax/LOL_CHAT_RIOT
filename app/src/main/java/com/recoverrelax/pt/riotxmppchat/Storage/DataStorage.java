@@ -62,7 +62,7 @@ public class DataStorage {
         return editor.commit();
     }
     public synchronized boolean showOfflineUsers(){
-        return mSettings.getBoolean(PREF_KEY_SHOW_OFFLINE_USERS, true);
+        return mSettings.getBoolean(PREF_KEY_SHOW_OFFLINE_USERS, false);
     }
 
     public synchronized boolean showOfflineUsers(boolean state){
