@@ -56,4 +56,44 @@ public class CurrentGameParticipant {
     long teamId;
 
     public CurrentGameParticipant() {}
+
+    public boolean isBot() {
+        return bot;
+    }
+
+    public long getChampionId() {
+        return championId;
+    }
+
+    public Mastery[] getMasteries() {
+        return masteries;
+    }
+
+    public long getProfileIcon() {
+        return profileIcon;
+    }
+
+    public Rune[] getRunes() {
+        return runes;
+    }
+
+    public long getSpell1Id() {
+        return spell1Id;
+    }
+
+    public long getSpell2Id() {
+        return spell2Id;
+    }
+
+    public long getSummonerId() {
+        return summonerId;
+    }
+
+    public String getSummonerName() {
+        return summonerName;
+    }
+
+    public long getTeamId() {
+        return teamId;
+    }
 }

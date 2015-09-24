@@ -1,9 +1,13 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET;
 
+import android.support.v4.util.Pair;
+
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.LiveGameBannedChamp;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.LiveGameParticipant;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +17,7 @@ import javax.inject.Singleton;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 @Singleton
@@ -29,30 +34,44 @@ public class RiotApiOperations {
 
     /**
      *
-     * @param liveGameBannedChamps : list of BannedChampionImage
+     * @param liveGamePair : pair.first - list banned champs ; pair.second - list participants
      * @return the same list filled with championImage
      */
-    public Observable<List<LiveGameBannedChamp>> getChampionsImage(List<LiveGameBannedChamp> liveGameBannedChamps){
+    public Observable<Pair<List<LiveGameBannedChamp>, List<LiveGameParticipant>>> getChampionsImage(Pair<List<LiveGameBannedChamp>, List<LiveGameParticipant>> liveGamePair){
         return riotApiServiceImpl.getAllChampionBasicInfoFiltered()
                 .flatMap(championListDto -> Observable.just(championListDto.getChampionList()))
-                .flatMap(championDtoMap -> Observable.create(new Observable.OnSubscribe<List<LiveGameBannedChamp>>() {
-                    @Override
-                    public void call(Subscriber<? super List<LiveGameBannedChamp>> subscriber) {
-                        for(Map.Entry<String, ChampionDto> entry: championDtoMap.entrySet()) {
-                            int id = entry.getValue().getId();
-                            for(LiveGameBannedChamp bci: liveGameBannedChamps){
-                                if(bci.getChampionID() == id){
-                                    bci.setChampionImage(entry.getValue().getImage().getFull());
-                                }
-                            }
-                        }
+                .flatMap(mapStringChamp -> {
+                    Map<Integer, String> newMap = new HashMap<>();
 
-                        subscriber.onNext(liveGameBannedChamps);
-                        subscriber.onCompleted();
-                     }
+                    for (Map.Entry<String, ChampionDto> entry : mapStringChamp.entrySet())
+                        newMap.put(entry.getValue().getId(), entry.getValue().getImage().getFull());
+
+                    return Observable.just(newMap);
                 })
-                )
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread());
+                .flatMap(imagesMap -> {
+
+                    List<LiveGameBannedChamp> liveBanned = liveGamePair.first;
+                    List<LiveGameParticipant> liveParticipants = liveGamePair.second;
+
+                    for(LiveGameBannedChamp lgb: liveBanned){
+                        String s = imagesMap.get(lgb.getChampionID());
+
+                        if(s != null){
+                            lgb.setChampionImage(s);
+                        }
+                    }
+
+                    for(LiveGameParticipant lgp: liveParticipants){
+                        String s = imagesMap.get((Integer)(int)lgp.getChampionId());
+
+                        if(s != null){
+                            lgp.setChampionImage(s);
+                        }
+                    }
+
+                    return Observable.just(liveGamePair);
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

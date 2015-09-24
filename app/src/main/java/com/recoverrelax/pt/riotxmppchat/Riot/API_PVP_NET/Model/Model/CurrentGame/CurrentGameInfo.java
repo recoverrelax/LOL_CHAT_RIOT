@@ -61,7 +61,7 @@ public class CurrentGameInfo {
     /**
      * The participant information
      */
-    CurrentGameParticipant[] participants;
+    List<CurrentGameParticipant> participants;
 
     /**
      * The ID of the platform on which the game is being played
@@ -133,7 +133,7 @@ public class CurrentGameInfo {
         return observers;
     }
 
-    private CurrentGameParticipant[] getParticipants() {
+    public List<CurrentGameParticipant> getParticipants() {
         return participants;
     }
 
