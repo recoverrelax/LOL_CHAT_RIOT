@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat;
 
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
@@ -54,6 +55,8 @@ public interface AppComponent {
     void inject(CurrentGameFragment currentGameFragment);
 
     void inject(RiotApiServiceImpl riotApiService);
+
+    void inject(RiotApiOperations riotApiOperations);
 
 
     /**

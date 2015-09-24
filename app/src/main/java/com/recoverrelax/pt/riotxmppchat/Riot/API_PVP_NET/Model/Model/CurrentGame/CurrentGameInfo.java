@@ -123,6 +123,9 @@ public class CurrentGameInfo {
     }
 
     public String getGameStartTimeFormatted() {
+        if(gameStartTime == 0)
+            return "Now";
+        else
         return AppDateUtils.getFormatedDate(new Date(gameStartTime));
     }
 

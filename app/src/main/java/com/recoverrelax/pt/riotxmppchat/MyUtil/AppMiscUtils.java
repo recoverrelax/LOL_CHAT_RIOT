@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.content.Context;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
@@ -457,5 +458,9 @@ public class AppMiscUtils {
             // Internal directory
             return ctx.getFilesDir();
         }
+    }
+
+    public static boolean hasMinimumVersion(int version) {
+        return Build.VERSION.SDK_INT >= version;
     }
 }

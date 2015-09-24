@@ -25,4 +25,8 @@ public class BannedChampion {
     public long getChampionId() {
         return championId;
     }
+
+    public long getTeamId() {
+        return teamId;
+    }
 }

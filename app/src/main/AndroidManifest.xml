@@ -36,7 +36,7 @@
 
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity"
-            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/current_game_activity_title" >
         </activity>
 

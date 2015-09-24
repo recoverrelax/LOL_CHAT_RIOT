@@ -2,8 +2,9 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +13,19 @@ import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.HttpUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.KamehameUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.BannedChampion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.LiveGameBannedChamp;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
+import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
 import com.squareup.picasso.Picasso;
 
-import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,6 +45,9 @@ public class CurrentGameFragment extends BaseFragment {
 
     private final String TAG = CurrentGameFragment.this.getClass().getSimpleName();
     private String friendXmppAddress;
+
+    @Bind(R.id.progressBar)
+    AppProgressBar progressBar;
 
     @Bind(R.id.mapName)
     TextView mapName;
@@ -55,11 +61,19 @@ public class CurrentGameFragment extends BaseFragment {
     @Bind(R.id.gameDuration)
     TextView gameDuration;
 
-    @Bind({R.id.ban1, R.id.ban2, R.id.ban3, R.id.ban4, R.id.ban5, R.id.ban6})
-    List<ImageView> banImages;
+    @Bind({R.id.ban1, R.id.ban2, R.id.ban3})
+    List<ImageView> banTeam1;
+
+    @Bind({R.id.ban4, R.id.ban5, R.id.ban6})
+    List<ImageView> banTeam2;
 
     @Inject
     RiotApiServiceImpl riotApiServiceImpl;
+
+    @Inject
+    RiotApiOperations riotApiOperations;
+
+    private static String TEMPORARY_ICON_URL = "http://ddragon.leagueoflegends.com/cdn/5.18.1/img/champion/";
 
     public CurrentGameFragment() {
         // Required empty public constructor
@@ -107,66 +121,49 @@ public class CurrentGameFragment extends BaseFragment {
 
         long userId_riotApi = AppXmppUtils.getSummonerIdByXmppAddress(friendXmppAddress);
 
-        String TEMPORATY_ICON_URL = "http://ddragon.leagueoflegends.com/cdn/5.18.1/img/champion/";
-
-        riotApiServiceImpl.getCurrentGameInfoBySummonerId(userId_riotApi)
-                .doOnNext(this::fetchGameData)
-                .flatMap(new Func1<CurrentGameInfo, Observable<?>>() {
+        riotApiServiceImpl.getCurrentGameInfoBySummonerId(userId_riotApi) // get Observable<CurrentGameInfo>
+                .doOnNext(this::fetchGameData) // update basic info in view
+                .flatMap(currentGameInfo ->
+                        Observable.from(currentGameInfo.getBannedChampions()) // for each bannedChampion Object
+                                .flatMap(bannedChampion -> // create new BannedChampionImage objects
+                                        Observable.just(
+                                                new LiveGameBannedChamp(
+                                                        (int) bannedChampion.getChampionId(),
+                                                        (int) bannedChampion.getTeamId()
+                                                )
+                                        ))
+                                .toList() // list of BannedChampionImage objects
+                                          // with Ids and teamIds set
+                                .flatMap(riotApiOperations::getChampionsImage) // set the image to the list
+                                .take((banTeam1.size() + banTeam2.size()))
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .doOnNext(this::fetchBannedChampions)
+                                .map(o -> currentGameInfo))
+                .subscribe(new Subscriber<CurrentGameInfo>() {
                     @Override
-                    public Observable<?> call(CurrentGameInfo currentGameInfo) {
-                        return riotApiServiceImpl.getAllChampionBasicInfoFiltered()
-                                .flatMap(championListDto -> getChampionDtoImportantInfo(championListDto.getChampionList()))
-                                .doOnNext(new Action1<Map<Integer, String>>() {
-                                    @Override // ChampionID - ChampionImage
-                                    public void call(Map<Integer, String> integerStringMap) {
+                    public void onCompleted() {
 
-                                    }
-                                });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (HttpUtils.is404NotFound(e)) {
+                            KamehameUtils.showSnackbar(CurrentGameFragment.this.getActivity(),
+                                    R.string.current_game_summoner_not_in_game,
+                                    false,
+                                    Snackbar.LENGTH_LONG,
+                                    null,
+                                    null);
+
+                            new Handler().postDelayed(() -> CurrentGameFragment.this.getActivity().finish(), 2000);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(CurrentGameInfo currentGameInfo) {
+                        showProgressBar(false);
                     }
                 });
-
-
-//        riotApiServiceImpl.getAllChampionBasicInfoFiltered()
-//                .flatMapIterable(new Func1<ChampionListDto, Iterable<?>>() {
-//                    @Override
-//                    public Iterable<?> call(ChampionListDto championListDto) {
-//                        return null;
-//                    }
-//                });
-//                .subscribe(new Subscriber<ChampionListDto>() {
-//                    @Override
-//                    public void onCompleted() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    @Override
-//                    public void onNext(ChampionListDto championListDto) {
-//                        Log.i(TAG, championListDto.toString());
-//                    }
-//                });
-
-    }
-
-    public Observable<Map<Integer, String>> getChampionDtoImportantInfo(Map<String, ChampionDto> data){
-        return Observable.create(new Observable.OnSubscribe<Map<Integer, String>>() {
-            @Override
-            public void call(Subscriber<? super Map<Integer, String>> subscriber) {
-                Map<Integer, String> result = new HashMap<>();
-
-                for(Map.Entry<String, ChampionDto> entry: data.entrySet()){
-                    String imageName = entry.getValue().image.full;
-                    result.put(entry.getValue().getId(), imageName);
-                }
-
-                subscriber.onNext(result);
-                subscriber.onCompleted();
-            }
-        });
     }
 
     private void fetchGameData(CurrentGameInfo currentGameInfo) {
@@ -174,5 +171,48 @@ public class CurrentGameFragment extends BaseFragment {
         gameQueueType.setText(currentGameInfo.getGameQueueFormatted());
         gameMode.setText(currentGameInfo.getGameMode());
         gameDuration.setText(currentGameInfo.getGameStartTimeFormatted());
+    }
+
+    private void fetchBannedChampions(List<LiveGameBannedChamp> liveGameBannedChamps){
+       List<LiveGameBannedChamp> team100 = new ArrayList<>();
+       List<LiveGameBannedChamp> team200 = new ArrayList<>();
+
+        for(LiveGameBannedChamp lg: liveGameBannedChamps){
+            if(lg.getTeamId() == 100){
+                team100.add(lg);
+            }
+            else{
+                team200.add(lg);
+            }
+        }
+
+        for(int i = 0; i < team100.size(); i++){
+            ImageView imageView = banTeam1.get(i);
+
+            Picasso.with(this.getActivity())
+                    .load(TEMPORARY_ICON_URL + team100.get(i).getChampionImage())
+                    .into(imageView);
+        }
+
+        for(int i = 0; i < team200.size(); i++){
+            ImageView imageView = banTeam2.get(i);
+
+            Picasso.with(this.getActivity())
+                    .load(TEMPORARY_ICON_URL + team200.get(i).getChampionImage())
+                    .into(imageView);
+        }
+    }
+
+    private void sortBannedChampionImageByTeam(List<LiveGameBannedChamp> liveGameBannedChamps){
+        Collections.sort(liveGameBannedChamps, (c1, c2) ->
+                (c1.getTeamId() > c2.getTeamId())
+                        ? 1
+                        : (c1.getTeamId() == c2.getTeamId())
+                        ? 0
+                        : -1);
+    }
+
+    public void showProgressBar(boolean state){
+        progressBar.setVisibility(state? View.VISIBLE : View.GONE);
     }
 }
