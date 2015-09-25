@@ -9,6 +9,8 @@ import org.parceler.Parcel;
 import java.util.Date;
 import java.util.List;
 
+import rx.Observable;
+
 @Parcel
 public class CurrentGameInfo {
 
@@ -67,6 +69,12 @@ public class CurrentGameInfo {
      * The ID of the platform on which the game is being played
      */
     String platformId;
+
+    /**
+     * NOT PART OF THE OBJECT SERIALIZATION
+     */
+
+
 
     public CurrentGameInfo() {
     }

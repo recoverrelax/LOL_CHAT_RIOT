@@ -313,12 +313,11 @@ public class Friend implements Comparable<Friend>{
                         return 1;
     }
 
-    public String getChampionDragonUrl() {
+    public String getChampionNameFormatted() {
 
         String championName = getChampionName();
-        String formattedChampionName = championName.substring(0, 1).toUpperCase() + championName.substring(1);
 
-        String championUrl = AppGlobals.RiotEndPoint.CHAMPION_SQUARE + formattedChampionName + ".png";
+        String championUrl = championName.substring(0, 1).toUpperCase() + championName.substring(1);
         championUrl = championUrl.replace(" ", "_");
 
         return championUrl;

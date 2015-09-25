@@ -14,7 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
@@ -26,6 +29,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,6 +38,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -41,6 +47,9 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = FriendsListAdapter.class.getSimpleName();
+
+    @Inject
+    RiotApiRealmDataVersion riotApiDdVersion;
 
     private List<Friend> friendsList;
     private final LayoutInflater inflater;
@@ -83,6 +92,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         COLOR_BLACK = context.getResources().getColor(R.color.black);
         COLOR_WHITE = context.getResources().getColor(R.color.white);
+
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
     public void setAdapterClickListener(OnAdapterChildClick onAdapterChildClickCallback) {
@@ -160,24 +171,43 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             .load(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
                 } else {
-                    Picasso pic = Picasso.with(context);
+//                    Picasso pic = Picasso.with(context);
+//
+//                    stringBuilder.delete(0, stringBuilder.length());
+//                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL)
+//                                 .append(holderOnline.current.getProfileIconId())
+//                                 .append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
+//
+//                    pic.load(stringBuilder.toString())
+//                            .placeholder(R.drawable.profile_icon_example)
+//                            .error(R.drawable.profile_icon_example)
+//                            .into(holderOnline.profileIcon);
 
-                    stringBuilder.delete(0, stringBuilder.length());
-                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL)
-                                 .append(holderOnline.current.getProfileIconId())
-                                 .append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
-
-                    pic.load(stringBuilder.toString())
-                            .placeholder(R.drawable.profile_icon_example)
-                            .error(R.drawable.profile_icon_example)
-                            .into(holderOnline.profileIcon);
-
-                    if(holderOnline.current.isPlaying())
-                        Picasso.with(context).load(holderOnline.current.getChampionDragonUrl())
-                            .into(holderOnline.championSquare);
-                    else
-                        holderOnline.championSquare.setImageDrawable(null);
+                    riotApiDdVersion.getProfileIconBaseUrl()
+                            .subscribe(profileUrl -> {
+                                Picasso.with(context)
+                                        .load(profileUrl + holderOnline.current.getProfileIconId() + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION)
+                                        .placeholder(R.drawable.profile_icon_example)
+                                        .error(R.drawable.profile_icon_example)
+                                        .into(holderOnline.profileIcon);
+                            });
                 }
+
+                if(holderOnline.current.isPlaying()) {
+//                    Picasso.with(context).load(holderOnline.current.getChampionDragonUrl())
+//                            .into(holderOnline.championSquare);
+
+                    riotApiDdVersion.getChampionDDBaseUrl()
+                            .subscribe(championUrl -> {
+                                Picasso.with(context)
+                                        .load(championUrl + holderOnline.current.getChampionNameFormatted()
+                                                + AppGlobals.DD_VERSION.CHAMPION_EXTENSION)
+                                        .into(holderOnline.championSquare);
+                            });
+
+                }
+                else
+                    holderOnline.championSquare.setImageDrawable(null);
 
                 break;
 
@@ -187,24 +217,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holderOffline.current = friend;
                 holderOffline.friendName.setText(friend.getName());
 
-                /**
-                 * Load Image from LolKing Server
-                 */
-
-                if (holderOffline.current.getProfileIconId().equals("")) {
-                    Picasso.with(context)
+                Picasso.with(context)
                             .load(R.drawable.profile_icon_example)
                             .into(holderOffline.profileIcon);
-                } else {
-                    Picasso pic = Picasso.with(context);
 
-                    stringBuilder.delete(0, stringBuilder.length());
-                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL).append(holderOffline.current.getProfileIconId()).append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
-                    pic.load(stringBuilder.toString())
-                            .placeholder(R.drawable.profile_icon_example)
-                            .error(R.drawable.profile_icon_example)
-                            .into(holderOffline.profileIcon);
-                }
                 break;
         }
     }
@@ -411,8 +427,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName());
         }
     }
-
-
 
     public interface OnAdapterChildClick {
         void onAdapterFriendClick(String friendUsername, String friendXmppAddress);

@@ -1,9 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.ApiProvider;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.ApiProvider;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiService;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 

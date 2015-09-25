@@ -121,14 +121,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if (!userLearnedDrawer) {
-                    mDataStorage.setUserLearnedDrawer();
-                }
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                if (!userLearnedDrawer) {
+                    mDataStorage.setUserLearnedDrawer();
+                }
             }
         };
 

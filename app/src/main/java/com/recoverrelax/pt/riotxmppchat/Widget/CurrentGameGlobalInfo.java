@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.percent.PercentRelativeLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -27,6 +28,13 @@ public class CurrentGameGlobalInfo extends PercentRelativeLayout{
 
     @Bind(R.id.gameDurationLabel)
     TextView gameDurationLabel;
+
+    @Bind(R.id.progressBar)
+    AppProgressBar progressBar;
+
+    @Bind(R.id.mainContent)
+    PercentRelativeLayout mainContent;
+
 
     private Context context;
 
@@ -72,5 +80,10 @@ public class CurrentGameGlobalInfo extends PercentRelativeLayout{
 
     public void setGameDurationLabel(String gameDurationLabel) {
         this.gameDurationLabel.setText(gameDurationLabel);
+    }
+
+    public void enableProgressBar(boolean state){
+        progressBar.setVisibility(state? View.VISIBLE : View.GONE);
+        mainContent.setVisibility(state? View.INVISIBLE : View.VISIBLE);
     }
 }

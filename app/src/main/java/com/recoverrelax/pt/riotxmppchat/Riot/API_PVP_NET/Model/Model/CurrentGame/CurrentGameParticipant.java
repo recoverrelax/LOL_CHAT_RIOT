@@ -55,6 +55,12 @@ public class CurrentGameParticipant {
      */
     long teamId;
 
+    /**
+     *
+     */
+
+    String championImage;
+
     public CurrentGameParticipant() {}
 
     public boolean isBot() {
@@ -95,5 +101,19 @@ public class CurrentGameParticipant {
 
     public long getTeamId() {
         return teamId;
+    }
+
+    /**
+     * This method should not be used. ChampionImage is not part of the Json Return Array
+     */
+    public String getChampionImage() {
+        return championImage;
+    }
+
+    /**
+     * This method should not be used. ChampionImage is not part of the Json Return Array
+     */
+    public void setChampionImage(String championImage) {
+        this.championImage = championImage;
     }
 }

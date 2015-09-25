@@ -1,8 +1,10 @@
 package com.recoverrelax.pt.riotxmppchat;
 
+import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiServiceImpl;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
@@ -57,6 +59,10 @@ public interface AppComponent {
     void inject(RiotApiServiceImpl riotApiService);
 
     void inject(RiotApiOperations riotApiOperations);
+
+    void inject(RiotApiRealmDataVersion riotApiRealmDataVersion);
+
+    void inject(FriendsListAdapter friendsListAdapter);
 
 
     /**

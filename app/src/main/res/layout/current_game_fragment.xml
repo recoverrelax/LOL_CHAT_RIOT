@@ -18,26 +18,44 @@
             android:orientation="vertical"
             tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity">
 
+            <TextView
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/white"
+                android:text="@string/current_game_general_info"
+                android:textColor="@color/black" />
+
             <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo
                 android:id="@+id/currentGameGlobalInfo"
                 app:layout_scrollFlags="scroll|enterAlways"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/current_game_ban_info"
-                    android:textColor="@color/black" />
+                <!--<TextView-->
+                    <!--android:gravity="center"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="10dp"-->
+                    <!--android:paddingTop="5dp"-->
+                    <!--android:paddingBottom="5dp"-->
+                    <!--android:background="@color/white"-->
+                    <!--android:text="@string/current_game_ban_info"-->
+                    <!--android:textColor="@color/black" />-->
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameBanList
                     android:id="@+id/banList"
@@ -45,13 +63,43 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:background="@color/white"
+                    android:text="@string/current_game_ban_info"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:background="@color/white"
                     android:text="@string/current_game_participants"
                     android:textColor="@color/black" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
+                        android:id="@+id/progressBar"
+                        android:visibility="visible"
+                        android:background="@color/white"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                <LinearLayout
+                    android:id="@+id/currentGameParticipantMainContent"
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -60,7 +108,7 @@
                     android:layout_marginRight="5dp"
                     android:orientation="horizontal">
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
                         android:id="@+id/team100_player1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -68,7 +116,7 @@
                         android:visibility="invisible"
                         tools:visibility="invisible" />
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
                         android:id="@+id/team200_player1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -84,7 +132,7 @@
                     android:layout_marginRight="5dp"
                     android:orientation="horizontal">
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
                         android:id="@+id/team100_player2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -92,7 +140,7 @@
                         android:visibility="invisible"
                         tools:visibility="invisible" />
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
                         android:id="@+id/team200_player2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -108,7 +156,7 @@
                     android:layout_marginRight="5dp"
                     android:orientation="horizontal">
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
                         android:id="@+id/team100_player3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -116,7 +164,7 @@
                         android:visibility="invisible"
                         tools:visibility="invisible" />
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
                         android:id="@+id/team200_player3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -132,7 +180,7 @@
                     android:layout_marginRight="5dp"
                     android:orientation="horizontal">
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
                         android:id="@+id/team100_player4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -140,7 +188,7 @@
                         android:visibility="invisible"
                         tools:visibility="invisible" />
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
                         android:id="@+id/team200_player4"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -156,7 +204,7 @@
                     android:layout_marginRight="5dp"
                     android:orientation="horizontal">
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
                         android:id="@+id/team100_player5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -164,7 +212,7 @@
                         android:visibility="invisible"
                         tools:visibility="invisible" />
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipant
+                    <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
                         android:id="@+id/team200_player5"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -172,6 +220,9 @@
                         android:visibility="invisible"
                         tools:visibility="invisible" />
                 </LinearLayout>
+                </LinearLayout>
+
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

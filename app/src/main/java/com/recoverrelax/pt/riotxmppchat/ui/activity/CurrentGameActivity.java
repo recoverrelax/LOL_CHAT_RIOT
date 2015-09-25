@@ -63,7 +63,7 @@ public class CurrentGameActivity extends BaseActivity {
         }
 
         if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+            appBarLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
     }
 
     @Override

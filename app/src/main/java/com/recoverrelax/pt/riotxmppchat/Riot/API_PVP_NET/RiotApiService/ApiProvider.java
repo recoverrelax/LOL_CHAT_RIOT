@@ -1,7 +1,8 @@
-package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET;
+package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.DateTimeTypeAdapter;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 
 import java.util.Date;
@@ -12,7 +13,6 @@ import javax.inject.Singleton;
 import retrofit.Endpoint;
 import retrofit.Endpoints;
 import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;

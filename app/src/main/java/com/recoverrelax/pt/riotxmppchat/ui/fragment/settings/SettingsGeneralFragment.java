@@ -209,7 +209,7 @@ public class SettingsGeneralFragment extends Fragment {
         // First all to lowerCase
         String finalChampionString = championName.substring(0, 1).toUpperCase() + championName.substring(1).toLowerCase() + "_" + skinNumber;
 
-        return AppGlobals.RiotEndPoint.CHAMPION_SKINS + finalChampionString + ".jpg";
+        return null;
     }
 
     private Bitmap resizeAndCrop(Bitmap image) {

@@ -13,7 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CurrentGameSingleParticipant extends PercentRelativeLayout {
+public abstract class CurrentGameSingleParticipantBase extends PercentRelativeLayout {
 
     @Bind(R.id.championPlaying)
     ImageView championPlaying;
@@ -29,19 +29,19 @@ public class CurrentGameSingleParticipant extends PercentRelativeLayout {
 
     private Context context;
 
-    public CurrentGameSingleParticipant(Context context) {
+    public CurrentGameSingleParticipantBase(Context context) {
         super(context);
         this.context = context;
         inflateLayout();
     }
 
-    public CurrentGameSingleParticipant(Context context, AttributeSet attrs) {
+    public CurrentGameSingleParticipantBase(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         inflateLayout();
     }
 
-    public CurrentGameSingleParticipant(Context context, AttributeSet attrs, int defStyle) {
+    public CurrentGameSingleParticipantBase(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.context = context;
         inflateLayout();
@@ -49,9 +49,11 @@ public class CurrentGameSingleParticipant extends PercentRelativeLayout {
 
     public void inflateLayout(){
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.current_game_participant_custom_layout, this);
+        inflater.inflate(getLayout(), this);
         ButterKnife.bind(this);
     }
+
+    public abstract int getLayout();
 
     public ImageView getChampionPlaying() {
         return championPlaying;

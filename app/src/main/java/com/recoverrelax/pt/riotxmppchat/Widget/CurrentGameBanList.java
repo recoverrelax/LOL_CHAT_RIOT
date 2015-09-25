@@ -4,7 +4,9 @@ import android.content.Context;
 import android.support.percent.PercentRelativeLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -27,6 +29,12 @@ public class CurrentGameBanList extends PercentRelativeLayout {
 
     @Bind({R.id.ban4, R.id.ban5, R.id.ban6})
     List<ImageView> team200Bans;
+
+    @Bind(R.id.progressBar)
+    AppProgressBar progressBar;
+
+    @Bind(R.id.mainContent)
+    LinearLayout mainContent;
 
     private Context context;
 
@@ -72,5 +80,10 @@ public class CurrentGameBanList extends PercentRelativeLayout {
 
     public int getSize(){
         return this.team100Bans.size() + this.team200Bans.size();
+    }
+
+    public void enableProgressBar(boolean state){
+        progressBar.setVisibility(state? View.VISIBLE : View.GONE);
+        mainContent.setVisibility(state? View.INVISIBLE : View.VISIBLE);
     }
 }
