@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -33,12 +32,6 @@ public class SettingActivity extends BaseActivity {
 
         setTitle("Settings");
 
-        ActionBar supportActionBar = getSupportActionBar();
-        if(supportActionBar != null) {
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setHomeButtonEnabled(true);
-        }
-
         PagerAdapter pagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
         settings_pager.setAdapter(pagerAdapter);
         tabs.setupWithViewPager(settings_pager);
@@ -61,7 +54,7 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public int getNavigationViewPosition() {
-        return -1;
+        return R.id.navigation_item_4;
     }
 
     private class SettingsPagerAdapter extends FragmentStatePagerAdapter {

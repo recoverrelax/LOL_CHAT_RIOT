@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -64,6 +65,12 @@ public class CurrentGameActivity extends BaseActivity {
 
         if(appBarLayout != null)
             appBarLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+        ActionBar supportActionBar = getSupportActionBar();
+        if(supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setHomeButtonEnabled(true);
+        }
     }
 
     @Override

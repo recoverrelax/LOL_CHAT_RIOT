@@ -46,7 +46,7 @@
         </activity>
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity"
-            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_sub" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
