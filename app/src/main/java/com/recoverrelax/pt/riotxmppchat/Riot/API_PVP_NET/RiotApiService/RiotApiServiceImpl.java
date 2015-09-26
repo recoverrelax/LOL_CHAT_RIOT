@@ -1,12 +1,12 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.RealmDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 
@@ -73,6 +73,17 @@ public class RiotApiServiceImpl {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<SummonerSpellListDto> getAllSummonerSpellBasicInfoFiltered(){
+        String region = getRegion();
+
+        if(region == null)
+            return Observable.error(new Throwable("For some reason, region is invalid"));
+
+        return riotApiService.getSummonerSpellListFiltered_STATIC_DATA(region)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
     public Observable<RealmDto> getRealmData(){
         String region = getRegion();
 
@@ -89,7 +100,6 @@ public class RiotApiServiceImpl {
         RiotServer riotServerByName = RiotServer.getRiotServerByName(server);
         return riotServerByName == null ? null : riotServerByName.getServerRegion();
     }
-
     private @Nullable String getPlatformId(){
         String server = dataStorage.getServer();
         RiotServer riotServerByName = RiotServer.getRiotServerByName(server);

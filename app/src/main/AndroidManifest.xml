@@ -30,7 +30,7 @@
 
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity"
-            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/message_list_title" >
         </activity>
 

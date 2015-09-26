@@ -20,7 +20,6 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
-import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.squareup.picasso.Picasso;
 
@@ -38,7 +37,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -187,7 +185,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             .subscribe(profileUrl -> {
                                 Picasso.with(context)
                                         .load(profileUrl + holderOnline.current.getProfileIconId() + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION)
-                                        .placeholder(R.drawable.profile_icon_example)
                                         .error(R.drawable.profile_icon_example)
                                         .into(holderOnline.profileIcon);
                             });

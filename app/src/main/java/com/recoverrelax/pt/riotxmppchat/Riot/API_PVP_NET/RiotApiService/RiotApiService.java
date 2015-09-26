@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.RealmDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellListDto;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -41,4 +42,14 @@ public interface RiotApiService {
 
     @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/realm")
     Observable<RealmDto> getRealmData_STATIC_DATA(@Path("region") String region);
+
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/summoner-spell?spellData=all")
+    Observable<SummonerSpellListDto> getSummonerSpellList_STATIC_DATA(
+            @Path("region") String region
+    );
+
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/summoner-spell?spellData=image")
+    Observable<SummonerSpellListDto> getSummonerSpellListFiltered_STATIC_DATA(
+            @Path("region") String region
+    );
 }

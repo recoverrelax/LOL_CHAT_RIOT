@@ -92,7 +92,7 @@
     <string name="current_game_game_start">Game Start</string>
     <string name="current_game_general_info">General Info</string>
     <string name="current_game_ban_info">Ban Info</string>
-    <string name="current_game_participants">Participants</string>
+    <string name="current_game_summoners">Summoners</string>
     <string name="current_game_your_team">Team 1</string>
     <string name="current_game_enemy_team">Team 2</string>
     <string name="current_game_summoner_not_in_game">Live Match not available. The game is no longer available.</string>

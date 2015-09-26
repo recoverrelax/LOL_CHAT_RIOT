@@ -60,6 +60,8 @@ public class CurrentGameParticipant {
      */
 
     String championImage;
+    String spell1Image;
+    String spell2Image;
 
     public CurrentGameParticipant() {}
 
@@ -115,5 +117,21 @@ public class CurrentGameParticipant {
      */
     public void setChampionImage(String championImage) {
         this.championImage = championImage;
+    }
+
+    public String getSpell2Image() {
+        return spell2Image;
+    }
+
+    public void setSpell2Image(String spell2Image) {
+        this.spell2Image = spell2Image;
+    }
+
+    public String getSpell1Image() {
+        return spell1Image;
+    }
+
+    public void setSpell1Image(String spell1Image) {
+        this.spell1Image = spell1Image;
     }
 }

@@ -3,7 +3,9 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,6 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.BannedChampion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameParticipant;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.LiveGameBannedChamp;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
@@ -30,7 +31,6 @@ import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +114,7 @@ public class CurrentGameFragment extends BaseFragment {
             friendXmppAddress = (String) savedInstanceState.getSerializable(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT);
             friendUsername = (String) savedInstanceState.getSerializable(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT);
         }
-        ((BaseActivity)getActivity()).setTitle(getActivity().getResources().getString(R.string.current_game__fragment_title) + " " + friendUsername);
+        ((BaseActivity) getActivity()).setTitle(getActivity().getResources().getString(R.string.current_game__fragment_title) + " " + friendUsername);
 
     }
 
@@ -135,11 +135,16 @@ public class CurrentGameFragment extends BaseFragment {
         long userId_riotApi = AppXmppUtils.getSummonerIdByXmppAddress(friendXmppAddress);
 
         Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId = riotApiServiceImpl.getCurrentGameInfoBySummonerId(userId_riotApi)
-                                                                        .cache()
-                                                                        .subscribeOn(Schedulers.io())
-                                                                        .observeOn(AndroidSchedulers.mainThread());
+                .cache()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
         Observable<Map<Integer, String>> obsChampionsImage = riotApiOperations.getChampionsImage()
+                .cache()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        Observable<Map<Integer, String>> obsSummonerSpellImage = riotApiOperations.getSummonerSpellImage()
                 .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -179,13 +184,14 @@ public class CurrentGameFragment extends BaseFragment {
                 .subscribe();
 
         /**
-         * Get the Picked Champions Information and Update the View
+         * Get the Picked Champions and Summoner Spell used Information and Update the View
          */
 
         obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
                 .doOnSubscribe(() -> enableProgressBarParticipantContent(true))
                 .map(CurrentGameInfo::getParticipants) // for each bannedChampion Object
                 .take((team100.size() + team200.size()))
+                        // for Champion Images
                 .flatMap(participantList ->
                                 obsChampionsImage
                                         .flatMap(championImagesMap ->
@@ -198,6 +204,22 @@ public class CurrentGameFragment extends BaseFragment {
                                                                 .toList()
                                         )
                 )
+                        // for SummonersSpell Images
+                .flatMap(participantList ->
+                                obsSummonerSpellImage
+                                        .flatMap(summonerSpellImagesMap ->
+                                                        Observable.from(participantList)
+                                                                .doOnNext(participant -> {
+                                                                    String s1 = summonerSpellImagesMap.get((int) participant.getSpell1Id());
+                                                                    if (s1 != null)
+                                                                        participant.setSpell1Image(s1);
+                                                                    String s2 = summonerSpellImagesMap.get((int) participant.getSpell2Id());
+                                                                    if (s2 != null)
+                                                                        participant.setSpell2Image(s2);
+                                                                })
+                                                                .toList()
+                                        )
+                )
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(this::fetchParticipants)
                 .subscribe();
@@ -206,8 +228,16 @@ public class CurrentGameFragment extends BaseFragment {
     private void fetchParticipants(List<CurrentGameParticipant> participants) {
 
         realmData.getChampionDDBaseUrl()
+                .flatMap(championSquareBaseUrl ->
+                                realmData.getSummonerSpellDDBaseUrl()
+                                        .map(summonerSpellBaseUrl ->
+                                                new Pair<>(championSquareBaseUrl, summonerSpellBaseUrl))
+                )
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ddChampionSquareUrl -> {
+                .subscribe(urlPair -> {
+
+                    String championSquareBaseUrl = urlPair.first;
+                    String summonerSpellBaseUrl = urlPair.second;
                     List<CurrentGameParticipant> team1001 = new ArrayList<>();
                     List<CurrentGameParticipant> team2001 = new ArrayList<>();
 
@@ -221,43 +251,72 @@ public class CurrentGameFragment extends BaseFragment {
 
                     for (int i = 0; i < team1001.size(); i++) {
                         CurrentGameSingleParticipantBase cgp = CurrentGameFragment.this.team100.get(i);
-                        cgp.setVisibility(View.VISIBLE);
-                        ImageView imageView = cgp.getChampionPlaying();
+
+                        ImageView champion = cgp.getChampionPlaying();
+                        ImageView summonerS1 = cgp.getSummonerSpell1();
+                        ImageView summonerS2 = cgp.getSummonerSpell2();
                         TextView playerName = cgp.getPlayerName();
 
                         CurrentGameParticipant liveGameParticipant = team1001.get(i);
 
-                        String path = ddChampionSquareUrl + liveGameParticipant.getChampionImage();
+                        String pathChampion = championSquareBaseUrl + liveGameParticipant.getChampionImage();
+                        String pathSS1 = summonerSpellBaseUrl + liveGameParticipant.getSpell1Image();
+                        String pathSS2 = summonerSpellBaseUrl + liveGameParticipant.getSpell2Image();
+                        Log.i(TAG, pathSS1);
+
                         Picasso.with(CurrentGameFragment.this.getActivity())
-                                .load(path)
-                                .into(imageView);
+                                .load(pathChampion)
+                                .into(champion);
+
+                        Picasso.with(CurrentGameFragment.this.getActivity())
+                                .load(pathSS1)
+                                .into(summonerS1);
+
+                        Picasso.with(CurrentGameFragment.this.getActivity())
+                                .load(pathSS2)
+                                .into(summonerS2);
 
                         playerName.setText(liveGameParticipant.getSummonerName());
+                        cgp.setVisibility(View.VISIBLE);
                     }
 
                     for (int i = 0; i < team2001.size(); i++) {
                         CurrentGameSingleParticipantBase cgp = CurrentGameFragment.this.team200.get(i);
-                        cgp.setVisibility(View.VISIBLE);
-                        ImageView imageView = cgp.getChampionPlaying();
+
+                        ImageView champion = cgp.getChampionPlaying();
+                        ImageView summonerS1 = cgp.getSummonerSpell1();
+                        ImageView summonerS2 = cgp.getSummonerSpell2();
                         TextView playerName = cgp.getPlayerName();
 
                         CurrentGameParticipant liveGameParticipant = team2001.get(i);
 
-                        String path = ddChampionSquareUrl + liveGameParticipant.getChampionImage();
+                        String pathChampion = championSquareBaseUrl + liveGameParticipant.getChampionImage();
+                        String pathSS1 = summonerSpellBaseUrl + liveGameParticipant.getSpell1Image();
+                        String pathSS2 = summonerSpellBaseUrl + liveGameParticipant.getSpell2Image();
+
                         Picasso.with(CurrentGameFragment.this.getActivity())
-                                .load(path)
-                                .into(imageView);
+                                .load(pathChampion)
+                                .into(champion);
+
+                        Picasso.with(CurrentGameFragment.this.getActivity())
+                                .load(pathSS1)
+                                .into(summonerS1);
+
+                        Picasso.with(CurrentGameFragment.this.getActivity())
+                                .load(pathSS2)
+                                .into(summonerS2);
 
                         playerName.setText(liveGameParticipant.getSummonerName());
+                        cgp.setVisibility(View.VISIBLE);
                     }
 
                     enableProgressBarParticipantContent(false);
                 });
     }
 
-    private void enableProgressBarParticipantContent(boolean state){
-        progressBar.setVisibility(state? View.VISIBLE : View.GONE);
-        currentGameParticipantMainContent.setVisibility(state? View.INVISIBLE : View.VISIBLE);
+    private void enableProgressBarParticipantContent(boolean state) {
+        progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
+        currentGameParticipantMainContent.setVisibility(state ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void fetchGameData(CurrentGameInfo currentGameInfo) {
@@ -267,22 +326,21 @@ public class CurrentGameFragment extends BaseFragment {
         currentGameGlobalInfo.setGameDuration(currentGameInfo.getGameStartTimeFormatted());
     }
 
-    private void fetchBannedChampions(List<BannedChampion> bannedChampions){
+    private void fetchBannedChampions(List<BannedChampion> bannedChampions) {
         realmData.getChampionDDBaseUrl()
                 .subscribe(ddChampionSquareUrl -> {
                     List<BannedChampion> team1001 = new ArrayList<>();
                     List<BannedChampion> team2001 = new ArrayList<>();
 
-                    for(BannedChampion bc: bannedChampions){
-                        if(bc.getTeamId() == 100){
+                    for (BannedChampion bc : bannedChampions) {
+                        if (bc.getTeamId() == 100) {
                             team1001.add(bc);
-                        }
-                        else{
+                        } else {
                             team2001.add(bc);
                         }
                     }
 
-                    for(int i = 0; i < team1001.size(); i++){
+                    for (int i = 0; i < team1001.size(); i++) {
                         ImageView imageView = banList.getTeam100Bans().get(i);
                         imageView.setVisibility(View.VISIBLE);
 
@@ -291,7 +349,7 @@ public class CurrentGameFragment extends BaseFragment {
                                 .into(imageView);
                     }
 
-                    for(int i = 0; i < team2001.size(); i++){
+                    for (int i = 0; i < team2001.size(); i++) {
                         ImageView imageView = banList.getTeam200Bans().get(i);
                         imageView.setVisibility(View.VISIBLE);
 
