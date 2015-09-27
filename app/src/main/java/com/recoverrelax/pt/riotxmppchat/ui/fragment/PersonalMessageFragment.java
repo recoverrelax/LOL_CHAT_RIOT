@@ -23,7 +23,6 @@ import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
@@ -138,7 +137,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
             messageRecyclerView.setLayoutManager(layoutManager);
 
-            adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<>(), R.layout.personal_message_from, R.layout.personal_message_to, messageRecyclerView);
+            adapter = new PersonalMessageAdapter(getActivity(), new ArrayList<>(), R.layout.personal_message_from_layout, R.layout.personal_message_to_layout, messageRecyclerView);
             messageRecyclerView.setAdapter(adapter);
 
             getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);

@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.BannedChampion;
@@ -157,6 +159,7 @@ public class CurrentGameFragment extends BaseFragment {
                 .doOnSubscribe(() -> currentGameGlobalInfo.enableProgressBar(true))
                 .doOnUnsubscribe(() -> currentGameGlobalInfo.enableProgressBar(false))
                 .doOnNext(this::fetchGameData)
+                .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_general_error, Snackbar.LENGTH_LONG))
                 .subscribe();
 
         /**
@@ -181,6 +184,7 @@ public class CurrentGameFragment extends BaseFragment {
                 )
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(this::fetchBannedChampions)
+                .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_banned_c_error, Snackbar.LENGTH_LONG))
                 .subscribe();
 
         /**
@@ -221,6 +225,7 @@ public class CurrentGameFragment extends BaseFragment {
                                         )
                 )
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_participants_error, Snackbar.LENGTH_LONG))
                 .doOnNext(this::fetchParticipants)
                 .subscribe();
     }

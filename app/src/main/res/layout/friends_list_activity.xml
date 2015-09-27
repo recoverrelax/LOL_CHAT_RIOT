@@ -2,44 +2,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
+    android:layout_below="@+id/app_bar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/app_bar">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/login_screen">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="?attr/actionBarSize">
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/primaryColor"
-                android:textColor="@color/whiteT"
-                app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/white190T" />
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/settings_pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white" />
-        </LinearLayout>
+            android:id="@+id/container"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
             style="@style/normalToolbarStyleT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
-            android:fitsSystemWindows="true">
+            android:background="@color/primaryColor120"
+            android:fitsSystemWindows="true"
+            android:id="@+id/appBarLayout">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/app_bar"
@@ -52,16 +36,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:background="@null"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:background="@null"
+                    tools:text="Toolbar Title"
                     android:textColor="@color/white"
-                    android:textSize="20sp"
-                    tools:text="Toolbar Title" />
+                    android:textSize="20sp"/>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
 
-    <include layout="@layout/navigation_view" />
+    <include layout="@layout/navigation_view_layout"/>
 
 </android.support.v4.widget.DrawerLayout>

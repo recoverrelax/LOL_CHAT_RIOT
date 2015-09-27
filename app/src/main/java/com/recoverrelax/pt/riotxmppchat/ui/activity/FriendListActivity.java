@@ -24,7 +24,7 @@ public class FriendListActivity extends RiotXmppNewMessageActivity {
     @Override
     public int getLayoutResources() {
 
-        return R.layout.activity_friend_list;
+        return R.layout.friends_list_activity;
     }
 
     @Override

@@ -30,7 +30,7 @@ public class PersonalMessageActivity extends BaseActivity {
 
     @Override
     public int getLayoutResources() {
-        return R.layout.activity_personal_message_list;
+        return R.layout.personal_message_list_activity;
     }
 
     @Override

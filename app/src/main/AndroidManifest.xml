@@ -37,7 +37,15 @@
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity"
             android:windowSoftInputMode="adjustPan"
+            android:noHistory="true"
             android:label="@string/current_game_activity_title" >
+        </activity>
+
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.ShardActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:noHistory="true"
+            android:label="@string/shard_activity_title" >
         </activity>
 
         <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"

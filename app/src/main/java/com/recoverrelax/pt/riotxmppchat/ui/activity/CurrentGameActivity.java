@@ -14,7 +14,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CurrentGameActivity extends BaseActivity {
+public class CurrentGameActivity extends RiotXmppNewMessageActivity {
 
     @Nullable
     @Bind(R.id.appBarLayout)
@@ -31,7 +31,7 @@ public class CurrentGameActivity extends BaseActivity {
     @Override
     public int getLayoutResources() {
 
-        return R.layout.activity_current_game;
+        return R.layout.current_game_activity;
     }
 
     @Override
@@ -83,5 +83,10 @@ public class CurrentGameActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
+    }
+
+    @Override
+    protected boolean hasNewMessageIcon() {
+        return true;
     }
 }

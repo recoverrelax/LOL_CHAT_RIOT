@@ -4,6 +4,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.RealmDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellListDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.ShardStatus;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -12,6 +13,7 @@ import rx.Observable;
 public interface RiotApiService {
     String BASE_REGION_PVP_NET = "/{region}.api.pvp.net";
     String BASE_GLOBAL_PVP_NET = "/global.api.pvp.net";
+    String BASE_STATUS_LOL = "/status.leagueoflegends.com";
 
     String STATIC_DATA_V = "v1.2";
 
@@ -50,6 +52,15 @@ public interface RiotApiService {
 
     @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/summoner-spell?spellData=image")
     Observable<SummonerSpellListDto> getSummonerSpellListFiltered_STATIC_DATA(
+            @Path("region") String region
+    );
+
+    /**
+     * STATUS
+     */
+
+    @GET(BASE_STATUS_LOL + "/shards/{region}")
+    Observable<ShardStatus> getShardStatus_STATUS(
             @Path("region") String region
     );
 }

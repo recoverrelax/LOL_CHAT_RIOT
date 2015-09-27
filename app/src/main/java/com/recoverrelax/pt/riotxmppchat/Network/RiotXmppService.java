@@ -12,21 +12,22 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.OnConnectionFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnLoginFailureEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.OnSuccessLoginEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotChatManager;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotConnectionManager;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
+import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
@@ -68,6 +69,8 @@ public class RiotXmppService extends Service {
 
     private XMPPTCPConnectionConfiguration connectionConfig;
     private AbstractXMPPConnection connection;
+
+    public PresenceMode myPresenceMode;
 
     @Inject RiotXmppConnectionImpl connectionHelper;
     @Inject DataStorage dataStorage;
@@ -296,6 +299,8 @@ public class RiotXmppService extends Service {
                     connectionManager.init(connection);
                     connectionManager.addConnectionListener();
 
+                    swapPresenceMode(true);
+
                     subscriber.onNext(true);
                     subscriber.onCompleted();
                 }catch(Exception e){
@@ -304,6 +309,48 @@ public class RiotXmppService extends Service {
                 }
             }
         });
+    }
+    public void swapPresenceMode(boolean firstTime){
+        /**
+         * Order:
+         * - available
+         * - busy
+         * - offline
+         */
+
+        Presence presence = null;
+        if(connection != null) {
+            if (firstTime) {
+                myPresenceMode = PresenceMode.AVAILABLE;
+                presence = new Presence(Presence.Type.available);
+
+            } else {
+                if (myPresenceMode.equals(PresenceMode.AVAILABLE)) {
+                    myPresenceMode = PresenceMode.AWAY;
+                    presence = new Presence(Presence.Type.available, null, 100, Presence.Mode.away);
+                } else if (myPresenceMode.equals(PresenceMode.AWAY)) {
+                    myPresenceMode = PresenceMode.UNAVAILABLE;
+                    presence = new Presence(Presence.Type.unavailable);
+                } else {
+                    myPresenceMode = PresenceMode.AVAILABLE;
+                    presence = new Presence(Presence.Type.available);
+                }
+            }
+            if(presence != null)
+                try {
+                    connection.sendStanza(presence);
+                } catch (SmackException.NotConnectedException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
+    public AbstractXMPPConnection getConnection() {
+        return connection;
+    }
+
+    public PresenceMode getPresenceMode() {
+        return myPresenceMode;
     }
 
     @Override

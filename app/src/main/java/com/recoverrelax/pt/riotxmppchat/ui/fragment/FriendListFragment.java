@@ -151,9 +151,11 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
     }
 
     @Override
-    public void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername) {
+    public void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername, boolean isPlaying) {
         final PopupMenu popupMenu = new PopupMenu(getActivity(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_friend_options, popupMenu.getMenu());
+
+        popupMenu.getMenu().findItem(R.id.current_game).setVisible(isPlaying);
 
         popupMenu.show();
         popupMenu.setOnMenuItemClickListener(menuItem -> {

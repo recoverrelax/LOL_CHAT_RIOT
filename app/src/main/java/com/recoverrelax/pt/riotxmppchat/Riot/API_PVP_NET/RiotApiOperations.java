@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET;
 
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -7,6 +8,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.LiveGameParticipant;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.Service;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 
 import java.util.HashMap;
@@ -147,6 +149,20 @@ public class RiotApiOperations {
 
                     return Observable.just(newMap);
                 })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Pair<String, List<Service>>> getShardIncidents(@Nullable String region){
+        return riotApiServiceImpl.getShardStatus(region)
+                .flatMap(shardStatus -> Observable.just(shardStatus.getName())
+                                .map(shardRegionName -> new Pair<>(
+                                                            shardRegionName,
+                                                            shardStatus.getServices()
+                                                        )
+                                )
+                )
+                .take(4)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread());
     }

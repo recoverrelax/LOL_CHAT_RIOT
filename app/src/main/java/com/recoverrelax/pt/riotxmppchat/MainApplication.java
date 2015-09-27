@@ -14,6 +14,7 @@ import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.squareup.otto.Bus;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 
@@ -47,6 +48,9 @@ public class MainApplication extends Application {
 
     private static AppComponent appComponent;
 
+
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -60,6 +64,8 @@ public class MainApplication extends Application {
 
         if(!file.exists())
             file.mkdir();
+
+
     }
 
     private void initAppComponents() {
@@ -147,6 +153,8 @@ public class MainApplication extends Application {
             }
         }
     }
+
+
 
     public static MainApplication getInstance() {
         return instance;

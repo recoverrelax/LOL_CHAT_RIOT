@@ -1,8 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.LayoutRes;
@@ -17,6 +18,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -53,6 +55,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Nullable
     @Bind(R.id.drawer_username)
     TextView drawer_username;
+
+    @Nullable
+    @Bind(R.id.statusIcon)
+    ImageView statusIcon;
 
     private boolean userLearnedDrawer;
     private boolean fromSavedInstanceState;
@@ -102,6 +108,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }
     }
 
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -114,6 +122,29 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         if (drawer_username != null) {
             drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
                     mDataStorage.getUsername());
+        }
+
+        if(statusIcon != null){
+            Drawable drawable = statusIcon.getDrawable();
+            drawable.mutate();
+
+            drawable.setColorFilter(getResources().getColor(
+                    MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()
+            ), PorterDuff.Mode.SRC_IN);
+
+            statusIcon.setImageDrawable(drawable);
+
+            statusIcon.setOnClickListener(view -> {
+                if(MainApplication.getInstance().getRiotXmppService().getConnection() != null) {
+                    MainApplication.getInstance().getRiotXmppService().swapPresenceMode(false);
+
+                    drawable.setColorFilter(getResources().getColor(
+                            MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()
+                    ), PorterDuff.Mode.SRC_IN);
+
+                    statusIcon.setImageDrawable(drawable);
+                }
+            });
         }
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
@@ -245,7 +276,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
                     case R.id.navigation_item_3:
-                        intent = new Intent(BaseActivity.this, CurrentGameActivity.class);
+                        intent = new Intent(BaseActivity.this, ShardActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
 
@@ -306,6 +337,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         super.onResume();
         bus.register(this);
         MainApplication.getInstance().setCurrentBaseActivity(this);
+        setNavigationViewPosition(getNavigationViewPosition());
     }
 
     @Override

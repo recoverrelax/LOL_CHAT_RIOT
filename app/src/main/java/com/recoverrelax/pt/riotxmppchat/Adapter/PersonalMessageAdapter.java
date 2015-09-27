@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +36,9 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private final RecyclerView recyclerView;
 
     @LayoutRes
-    int layout_from = R.layout.personal_message_from;
+    int layout_from = R.layout.personal_message_from_layout;
     @LayoutRes
-    int layout_to = R.layout.personal_message_to;
+    int layout_to = R.layout.personal_message_to_layout;
 
     private final int VIEW_HOLDER_FROM_ID = 0;
     private final int VIEW_HOLDER_TO_ID = 1;
