@@ -9,127 +9,132 @@ import org.parceler.Parcel;
 @Parcel
 public class RawStatsDto {
 
-    int assists;
+    private int assists;
 
     /**
      * Number of enemy inhibitors killed.
      */
-    int barracksKilled;
+    private int barracksKilled;
 
-    int championsKilled;
-    int combatPlayerScore;
-    int consumablesPurchased;
-    int damageDealtPlayer;
-    int doubleKills;
-    int firstBlood;
-    int gold;
-    int goldEarned;
-    int goldSpent;
+    private int championsKilled;
+    private int combatPlayerScore;
+    private int consumablesPurchased;
+    private int damageDealtPlayer;
+    private int doubleKills;
+    private int firstBlood;
+    private int gold;
+    private int goldEarned;
+    private int goldSpent;
 
-    int item0;
-    int item01;
-    int item02;
-    int item03;
-    int item04;
-    int item05;
-    int item06;
+    private int item0;
+    private int item01;
+    private int item02;
+    private int item03;
+    private int item04;
+    private int item05;
+    private int item06;
 
-    int itemsPurchased;
-    int killingSprees;
-    int largestCriticalStrike;
-    int largestKillingSpree;
+    private int itemsPurchased;
+    private int killingSprees;
+    private int largestCriticalStrike;
+    private int largestKillingSpree;
+
+    private int largestMultiKill;
 
     /**
      * Number of tier 3 items built.
      */
-    int legendaryItemsCreated;
+    private int legendaryItemsCreated;
 
-    int level;
-    int magicDamageDealtPlayer;
-    int magicDamageDealtToChampions;
-    int magicDamageTaken;
-    int minionsDenied;
-    int minionsKilled;
-    int neutralMinionsKilled;
-    int neutralMinionsKilledEnemyJungle;
-    int neutralMinionsKilledYourJungle;
+    private int level;
+    private int magicDamageDealtPlayer;
+    private int magicDamageDealtToChampions;
+    private int magicDamageTaken;
+    private int minionsDenied;
+    private int minionsKilled;
+    private int neutralMinionsKilled;
+    private int neutralMinionsKilledEnemyJungle;
+    private int neutralMinionsKilledYourJungle;
 
     /**
      * Flag specifying if the summoner got the killing blow on the nexus.
      */
-    boolean nexusKilled;
+    private boolean nexusKilled;
 
-    int nodeCapture;
-    int nodeCaptureAssist;
-    int nodeNeutralize;
-    int nodeNeutralizeAssist;
-    int numDeaths;
-    int numItemsBought;
-    int objectivePlayerScore;
-    int pentaKills;
-    int physicalDamageDealtPlayer;
-    int physicalDamageDealtToChampions;
-    int physicalDamageTaken;
+    private int nodeCapture;
+    private int nodeCaptureAssist;
+    private int nodeNeutralize;
+    private int nodeNeutralizeAssist;
+    private int numDeaths;
+    private int numItemsBought;
+    private int objectivePlayerScore;
+    private int pentaKills;
+    private int physicalDamageDealtPlayer;
+    private int physicalDamageDealtToChampions;
+    private int physicalDamageTaken;
 
     /**
      * Player position (Legal values: TOP(1), MIDDLE(2), JUNGLE(3), BOT(4))
      */
-    int playerPosition;
+    private int playerPosition;
 
     /**
      * Player role (Legal values: DUO(1), SUPPORT(2), CARRY(3), SOLO(4))
      */
-    int playerRole;
+    private int playerRole;
 
-    int quadraKills;
-    int sightWardsBought;
+    private int quadraKills;
+    private int sightWardsBought;
 
     /**
      * Number of times first champion spell was cast.
      */
-    int spell1Cast;
+    private int spell1Cast;
 
     /**
      * Number of times second champion spell was cast.
      */
-    int spell2Cast;
+    private int spell2Cast;
 
     /**
      * Number of times third champion spell was cast.
      */
-    int spell3Cast;
+    private int spell3Cast;
 
     /**
      * Number of times fourth champion spell was cast.
      */
-    int spell4Cast;
+    private int spell4Cast;
 
-    int summonSpell1Cast;
-    int summonSpell2Cast;
-    int superMonsterKilled;
-    int team;
-    int teamObjective;
-    int timePlayed;
-    int totalDamageDealt;
-    int totalDamageDealtToChampions;
-    int totalDamageTaken;
-    int totalHeal;
-    int totalPlayerScore;
-    int totalScoreRank;
-    int totalTimeCrowdControlDealt;
-    int totalUnitsHealed;
-    int tripleKills;
-    int trueDamageDealtPlayer;
-    int trueDamageDealtToChampions;
-    int trueDamageTaken;
-    int turretsKilled;
-    int unrealKills;
-    int victoryPointTotal;
-    int visionWardsBought;
-    int wardKilled;
-    int wardPlaced;
+    private int summonSpell1Cast;
+    private int summonSpell2Cast;
 
-    boolean win; // Flag specifying whether or not this game was won.
+    private int superMonsterKilled;
+    private int team;
+    private int teamObjective;
+    private int timePlayed;
+    private int totalDamageDealt;
+    private int totalDamageDealtToChampions;
+    private int totalDamageTaken;
+    private int totalHeal;
+    private int totalPlayerScore;
+    private int totalScoreRank;
+    private int totalTimeCrowdControlDealt;
+    private int totalUnitsHealed;
+    private int tripleKills;
+    private int trueDamageDealtPlayer;
+    private int trueDamageDealtToChampions;
+    private int trueDamageTaken;
+    private int turretsKilled;
+    private int unrealKills;
+    private int victoryPointTotal;
+    private int visionWardsBought;
+    private int wardKilled;
+    private int wardPlaced;
+
+    private boolean win; // Flag specifying whether or not this game was won.
+
+    public RawStatsDto() {}
 
     public int getAssists() {
         return assists;

@@ -13,6 +13,7 @@ public interface RiotApiService {
     String BASE_GLOBAL_PVP_NET = "/global.api.pvp.net";
 
     String STATIC_DATA_V = "v1.2";
+    String GAME_DATA_V = "v1.3";
 
     /**
      * CURRENT_GAME *********************************************************************************************
@@ -41,4 +42,14 @@ public interface RiotApiService {
 
     @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/realm")
     Observable<RealmDto> getRealmData_STATIC_DATA(@Path("region") String region);
+
+    /**
+     * GAME
+     */
+
+    @GET(BASE_REGION_PVP_NET + "/api/lol/static-data/{region}/" + GAME_DATA_V + "game/by-summoner/{summonerId}/recent")
+    Observable<ChampionListDto> getRecentGamesBySummoner_GAME(
+            @Path("region") String region,
+            @Path("summonerId") String summonerId
+    );
 }

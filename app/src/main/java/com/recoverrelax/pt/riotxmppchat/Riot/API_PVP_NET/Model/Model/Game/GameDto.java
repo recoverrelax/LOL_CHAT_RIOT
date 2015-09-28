@@ -2,6 +2,8 @@ package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game;
 
 import org.parceler.Parcel;
 
+import java.util.List;
+
 /**
  * This object contains game information.
  */
@@ -11,80 +13,80 @@ public class GameDto {
     /**
      * Champion ID associated with game.
      */
-    int championId;
+    private int championId;
 
     /**
      * Date that end game data was recorded, specified as epoch milliseconds.
      */
-    long createDate;
+    private long createDate;
 
     /**
      * Other players associated with the game.
      */
-    PlayerDto[] fellowPlayers;
+    private List<PlayerDto> fellowPlayers;
 
     /**
      * Game ID.
      */
-    long gameId;
+    private long gameId;
 
     /**
      * Game mode. (Legal values: CLASSIC, ODIN, ARAM, TUTORIAL,
      * ONEFORALL, ASCENSION, FIRSTBLOOD, KINGPORO)
      */
-    String gameMode;
+    private String gameMode;
 
     /**
      * Game type. (Legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME)
      */
-    String gameType;
+    private String gameType;
 
     /**
      * Invalid flag - ????
      */
-    boolean invalid;
+    private boolean invalid;
 
     /**
      * ipEarned
      */
-    int ipEarned;
+    private int ipEarned;
 
     /**
      * level
      */
-    int level;
+    private int level;
 
     /**
      * mapId
      */
-    int mapId;
+    private int mapId;
 
     /**
      * ID of first summoner spell.
      */
-    int spell1;
+    private int spell1;
 
     /**
      * ID of second summoner spell.
      */
-    int spell2;
+    private int spell2;
 
     /**
      * Statistics associated with the game for this summoner.
      */
-    RawStatsDto stats;
+    private RawStatsDto stats;
 
     /**
      * Game sub-type. (Legal values: NONE, NORMAL, BOT, RANKED_SOLO_5x5, RANKED_PREMADE_3x3, RANKED_PREMADE_5x5, ODIN_UNRANKED,
      * RANKED_TEAM_3x3, RANKED_TEAM_5x5, NORMAL_3x3, BOT_3x3, CAP_5x5, ARAM_UNRANKED_5x5, ONEFORALL_5x5, FIRSTBLOOD_1x1, FIRSTBLOOD_2x2,
      * SR_6x6, URF, URF_BOT, NIGHTMARE_BOT, ASCENSION, HEXAKILL, KING_PORO, COUNTER_PICK, BILGEWATER)
      */
-    String subType;
+    private String subType;
 
     /**
      * Team ID associated with game. Team ID 100 is blue team. Team ID 200 is purple team.
      */
-    int teamId;
+    private int teamId;
 
     public GameDto(){
 
@@ -98,7 +100,7 @@ public class GameDto {
         return createDate;
     }
 
-    public PlayerDto[] getFellowPlayers() {
+    public List<PlayerDto> getFellowPlayers() {
         return fellowPlayers;
     }
 

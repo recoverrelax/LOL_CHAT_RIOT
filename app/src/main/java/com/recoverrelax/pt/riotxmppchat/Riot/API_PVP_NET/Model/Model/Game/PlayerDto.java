@@ -11,17 +11,17 @@ public class PlayerDto {
     /**
      * Champion id associated with player.
      */
-    int championId;
+    private int championId;
 
     /**
      * Summoner id associated with player.
      */
-    long summonerId;
+    private long summonerId;
 
     /**
      * Team id associated with player.
      */
-    int teamId;
+    private int teamId;
 
     public PlayerDto() {}
 

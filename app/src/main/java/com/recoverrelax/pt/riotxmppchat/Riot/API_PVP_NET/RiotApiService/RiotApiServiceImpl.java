@@ -73,6 +73,17 @@ public class RiotApiServiceImpl {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<ChampionListDto> getRecentGamesBySummoner(String summonerId){
+        String region = getRegion();
+
+        if(region == null)
+            return Observable.error(new Throwable("For some reason, region is invalid"));
+
+        return riotApiService.getRecentGamesBySummoner_GAME(region, summonerId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
     public Observable<RealmDto> getRealmData(){
         String region = getRegion();
 
