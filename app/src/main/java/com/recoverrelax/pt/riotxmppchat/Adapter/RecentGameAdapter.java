@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,10 @@ import android.view.ViewGroup;
 
 import com.recoverrelax.pt.riotxmppchat.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import LolChatRiotDb.InAppLogDb;
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.ViewHolder> {
@@ -48,6 +49,9 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.recentGameCardView)
+        CardView recentGameCardView;
 
         public ViewHolder(View itemView) {
             super(itemView);

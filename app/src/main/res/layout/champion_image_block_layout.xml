@@ -1,32 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="right|center_vertical"
+    android:orientation="horizontal">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_gravity="right"
+        android:gravity="right"
+        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/championImage"
-            android:adjustViewBounds="true"
-            android:src="@drawable/champion_example"
+            android:id="@+id/championSummoner1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|center_vertical" />
-    </FrameLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example"/>
+        <ImageView
+            android:id="@+id/championSummoner2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example"/>
+        <ImageView
+            android:id="@+id/championSummoner3"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example"/>
+        <ImageView
+            android:id="@+id/championSummoner4"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example"/>
+        <ImageView
+            android:id="@+id/championSummoner5"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example"/>
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/championSummoner6"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example"/>
 
-    <TextView
-        android:id="@+id/summonerName"
-     style="@style/recent_games_kda_textview"
-     android:padding="5dp"
-     android:text="MyanmarKing"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/summonerName"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"            
+            android:singleLine="true"
+            android:text="MyanmarKing" />
+        <TextView
+            android:id="@+id/summonerName2"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="MyanmarKing" />
+        <TextView
+            android:id="@+id/summonerName3"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="MyanmarKing" />
+        <TextView
+            android:id="@+id/summonerName4"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="MyanmarKing" />
+        <TextView
+            android:id="@+id/summonerName5"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="MyanmarKing" />
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/summonerName6"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="MyanmarKing" />
+    </LinearLayout>
 
 
 </LinearLayout>

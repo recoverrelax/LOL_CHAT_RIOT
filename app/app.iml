@@ -126,8 +126,8 @@
     <orderEntry type="library" exported="" name="parceler-api-1.0.3" level="project" />
     <orderEntry type="library" exported="" name="rxandroid-0.25.0" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-23.0.1" level="project" />
-    <orderEntry type="library" exported="" name="smack-im-4.1.0" level="project" />
     <orderEntry type="library" exported="" name="smack-android-4.1.0" level="project" />
+    <orderEntry type="library" exported="" name="smack-im-4.1.0" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
     <orderEntry type="library" exported="" name="design-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="crashlytics-2.3.2" level="project" />

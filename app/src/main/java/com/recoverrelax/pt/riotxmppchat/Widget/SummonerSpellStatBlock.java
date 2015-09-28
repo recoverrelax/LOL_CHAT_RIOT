@@ -9,23 +9,23 @@ import com.recoverrelax.pt.riotxmppchat.R;
 
 import butterknife.ButterKnife;
 
-public class ChampionImageBlock extends LinearLayout {
+public class SummonerSpellStatBlock extends LinearLayout {
 
     private Context context;
 
-    public ChampionImageBlock(Context context) {
+    public SummonerSpellStatBlock(Context context) {
         super(context);
         this.context = context;
         inflateLayout();
     }
 
-    public ChampionImageBlock(Context context, AttributeSet attrs) {
+    public SummonerSpellStatBlock(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         inflateLayout();
     }
 
-    public ChampionImageBlock(Context context, AttributeSet attrs, int defStyle) {
+    public SummonerSpellStatBlock(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.context = context;
         inflateLayout();
@@ -33,7 +33,7 @@ public class ChampionImageBlock extends LinearLayout {
 
     public void inflateLayout(){
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.champion_image_block_layout, this);
+        inflater.inflate(R.layout.summoner_spell_stat_block_layout, this);
         ButterKnife.bind(this);
     }
 }

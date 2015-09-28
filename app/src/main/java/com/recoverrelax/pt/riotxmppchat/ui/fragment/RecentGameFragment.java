@@ -2,54 +2,26 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.Adapter.RecentGameAdapter;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.BannedChampion;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameParticipant;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
-import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
-import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameBanList;
-import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo;
-import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantBase;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
 
 import LolChatRiotDb.InAppLogDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,9 +40,6 @@ public class RecentGameFragment extends BaseFragment {
 
     @Bind(R.id.myRecyclerView)
     RecyclerView myRecyclerView;
-
-    @Bind(R.id.progressBar)
-    AppProgressBar progressBar;
 
     /**
      * Adapter

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools">
 
-        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageView
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
             android:id="@+id/championPlaying"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"

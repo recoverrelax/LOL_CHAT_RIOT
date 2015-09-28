@@ -1,8 +1,8 @@
 <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/recentGameParentLayout"
+    android:background="@color/transparent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -16,10 +16,10 @@
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <!--<com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar-->
+        <!--android:id="@+id/progressBar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
 
 </FrameLayout>
 
