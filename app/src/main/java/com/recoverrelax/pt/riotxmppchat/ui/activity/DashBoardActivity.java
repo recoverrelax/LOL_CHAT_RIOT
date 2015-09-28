@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.widget.RelativeLayout;
@@ -22,7 +21,7 @@ public class DashBoardActivity extends BaseActivity {
 
     @Override
     public int getLayoutResources() {
-        return R.layout.activity_dashboard;
+        return R.layout.dashboard_activity;
     }
 
     @Override

@@ -30,14 +30,22 @@
 
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity"
-            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/message_list_title" >
         </activity>
 
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity"
             android:windowSoftInputMode="adjustPan"
+            android:noHistory="true"
             android:label="@string/current_game_activity_title" >
+        </activity>
+
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.ShardActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:noHistory="true"
+            android:label="@string/shard_activity_title" >
         </activity>
 
         <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"
@@ -46,7 +54,7 @@
         </activity>
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity"
-            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_sub" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

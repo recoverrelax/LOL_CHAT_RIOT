@@ -15,7 +15,7 @@
 
         <include
             android:id="@+id/app_bar"
-            layout="@layout/app_bar_t" />
+            layout="@layout/app_bar_t_layout" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -24,6 +24,6 @@
             android:id="@+id/container"/>
     </RelativeLayout>
 
-    <include layout="@layout/navigation_view"/>
+    <include layout="@layout/navigation_view_layout"/>
 
 </android.support.v4.widget.DrawerLayout>

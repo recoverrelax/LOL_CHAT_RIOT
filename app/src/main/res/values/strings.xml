@@ -14,7 +14,7 @@
     <string name="navdrawer_item1">Frieds List</string>
     <string name="navdrawer_item2">Message List</string>
     <string name="navdrawer_item3">Settings</string>
-    <string name="navdrawer_item4">Live Match</string>
+    <string name="navdrawer_item4">Server Status</string>
 
     <string name="youtube_title">Youtube</string>
     <string name="youtube_text">Lastest videos just now!</string>
@@ -31,6 +31,7 @@
     <string name="lol_title">League of Legends</string>
     <string name="lol_text">Caption Teemo on Duty!</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_shard">Server Status</string>
     <string name="title_activity_dashboard">DashBoardActivity</string>
 
     <string name="hello_world">Hello world!</string>
@@ -62,6 +63,7 @@
 
     <string name="message_list_title">Last Friend\'s Messages</string>
     <string name="current_game_activity_title">Currently Spectating</string>
+    <string name="shard_activity_title">Server Status</string>
     <string name="message_notification_title">New  Message From:</string>
     <string name="new_message">New Message</string>
     <string name="add_friend">Add Friend</string>
@@ -92,11 +94,20 @@
     <string name="current_game_game_start">Game Start</string>
     <string name="current_game_general_info">General Info</string>
     <string name="current_game_ban_info">Ban Info</string>
-    <string name="current_game_participants">Participants</string>
+    <string name="current_game_summoners">Summoners</string>
     <string name="current_game_your_team">Team 1</string>
     <string name="current_game_enemy_team">Team 2</string>
     <string name="current_game_summoner_not_in_game">Live Match not available. The game is no longer available.</string>
     <string name="current_game__fragment_title">Live: </string>
+    <string name="current_game_banned_c_error">I\'m sorry. We could not retrieve the banned champion list</string>
+    <string name="current_game_general_error">I\'m sorry. We could not retrieve the General Info.</string>
+    <string name="shard_region_error">I\'m sorry. We could not retrieve the Status Info for</string>
+    <string name="current_game_participants_error">I\'m sorry. We could not retrieve the summoners information</string>
+    <string name="shard_game">Game</string>
+    <string name="shard_store">Store</string>
+    <string name="shard_website">Website</string>
+    <string name="shard_forum">Forum</string>
+    <string name="shard_chose_region">Chose Region:</string>
 
 
 </resources>

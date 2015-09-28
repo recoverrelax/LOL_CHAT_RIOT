@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,7 +37,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         else
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        setContentView(R.layout.activity_splashscreen);
+        setContentView(R.layout.splashscreen_activity);
 
         ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 0.1f, 1f, 0.1f);
         logo.setAnimation(scaleAnimation);

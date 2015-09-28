@@ -37,6 +37,12 @@
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     tools:src="@drawable/profile_icon_example" />
+                <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
+                    android:id="@+id/progressBarProfileIcon"
+                    android:visibility="visible"
+                    tools:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
             </FrameLayout>
 
             <LinearLayout
@@ -189,7 +195,7 @@
 
 
                     <TextView
-                        android:id="@+id/gameStatus"
+                        android:id="@+id/shardStatus1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minLines="2"
@@ -209,8 +215,8 @@
                             android:adjustViewBounds="true"
                             android:scaleType="centerInside"
                             android:layout_alignParentRight="true"
-                            android:layout_alignTop="@id/gameStatus"
-                            android:layout_alignBottom="@id/gameStatus"/>
+                            android:layout_alignTop="@id/shardStatus1"
+                            android:layout_alignBottom="@id/shardStatus1"/>
 
 
                 </RelativeLayout>

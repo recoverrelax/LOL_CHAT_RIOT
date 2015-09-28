@@ -2,9 +2,8 @@ package com.recoverrelax.pt.riotxmppchat.Riot.Model;
 
 import android.support.annotation.NonNull;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
-import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RankedLeagueTierDivision;
@@ -46,7 +45,7 @@ public class Friend implements Comparable<Friend>{
     private static final String TIME_STAMP = "timeStamp";
     private static final String GAME_STATUS = "gameStatus";
     private static final String GAME_STATUS_NO_VIEW = "-1";
-    private static final String PERSONAL_MESSAGE_NO_VIEW = "-1";
+    public static final String PERSONAL_MESSAGE_NO_VIEW = "-1";
 
     private static final String NO_DATA = "-";
 

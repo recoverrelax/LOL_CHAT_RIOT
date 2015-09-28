@@ -1,27 +1,33 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.ShardFragment;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FriendMessageListActivity extends BaseActivity {
+public class ShardActivity extends RiotXmppNewMessageActivity {
+
+    @Nullable
+    @Bind(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
 
     @Override
     public int getLayoutResources() {
-        return R.layout.friend_message_list_activity;
+        return R.layout.shard_activity;
     }
 
     @Override
     public int getNavigationViewPosition() {
-        return R.id.navigation_item_2;
+        return R.id.navigation_item_3;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +36,14 @@ public class FriendMessageListActivity extends BaseActivity {
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = FriendMessageListFragment.newInstance();
+            Fragment fragment = ShardFragment.newInstance();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
         }
-        toolbar.getBackground().setAlpha(0);
+
+        if(appBarLayout != null)
+            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColorDark));
     }
 
     @Override
@@ -48,5 +56,10 @@ public class FriendMessageListActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
+    }
+
+    @Override
+    protected boolean hasNewMessageIcon() {
+        return true;
     }
 }

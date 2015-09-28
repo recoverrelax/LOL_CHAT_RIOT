@@ -20,8 +20,9 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
-import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -38,7 +39,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -67,11 +67,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     
     @LayoutRes
     private final
-    int layout_online = R.layout.friends_list_recyclerview_child_online;
+    int layout_online = R.layout.friends_list_child_online_layout;
     
     @LayoutRes
     private final
-    int layout_offline = R.layout.friends_list_recyclerview_child_offline;
+    int layout_offline = R.layout.friends_list_child_offline_layout;
 
     private final int VIEW_HOLDER_ONLINE_ID = 0;
     private final int VIEW_HOLDER_OFFLINE_ID = 1;
@@ -141,7 +141,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     holderOnline.startRepeatingTask();
                 } else {
-                    holderOnline.gameStatus.setText("");
+                    String statusMsg = holderOnline.current.getStatusMsg();
+                    if(statusMsg != null && !statusMsg.equals(Friend.PERSONAL_MESSAGE_NO_VIEW)) {
+                        holderOnline.gameStatus.setText(statusMsg);
+                     }
                     holderOnline.stopRepeatingTask();
                 }
 
@@ -163,7 +166,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holderOnline.division_league.setSelected(true);
 
                 /**
-                 * Load Image from LolKing Server
+                 * Load Image from DD Server
                  */
 
                 if (holderOnline.current.getProfileIconId().equals("")) {
@@ -187,9 +190,22 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             .subscribe(profileUrl -> {
                                 Picasso.with(context)
                                         .load(profileUrl + holderOnline.current.getProfileIconId() + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION)
-                                        .placeholder(R.drawable.profile_icon_example)
                                         .error(R.drawable.profile_icon_example)
-                                        .into(holderOnline.profileIcon);
+                                        .into(holderOnline.profileIcon, new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+                                                hideProgressBar();
+                                            }
+
+                                            @Override
+                                            public void onError() {
+                                                hideProgressBar();
+                                            }
+
+                                            public void hideProgressBar(){
+                                                holderOnline.progressBarProfileIcon.setVisibility(View.GONE);
+                                            }
+                                        });
                             });
                 }
 
@@ -305,7 +321,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     class MyViewHolderOnline extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.gameStatus)
+        @Bind(R.id.shardStatus1)
         TextView gameStatus;
 
         @Bind(R.id.friendPresenceMode)
@@ -325,6 +341,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         @Bind(R.id.profileIcon)
         ImageView profileIcon;
+
+        @Bind(R.id.progressBarProfileIcon)
+        AppProgressBar progressBarProfileIcon;
 
         @Bind(R.id.card_more)
         ImageView card_more;
@@ -359,7 +378,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @OnClick(R.id.card_more_layout)
         public void onCardOptionsClick(View view) {
             if (onAdapterChildClickCallback != null)
-                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName());
+                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName(), current.isPlaying());
         }
 
 
@@ -424,13 +443,13 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @OnClick(R.id.card_more_layout)
         public void onCardOptionsClick(View view) {
             if (onAdapterChildClickCallback != null)
-                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName());
+                onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName(), false);
         }
     }
 
     public interface OnAdapterChildClick {
         void onAdapterFriendClick(String friendUsername, String friendXmppAddress);
-        void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername);
+        void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername, boolean isPlaying);
     }
 
     public enum SortMethod {

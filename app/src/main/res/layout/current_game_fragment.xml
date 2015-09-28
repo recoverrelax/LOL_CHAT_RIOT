@@ -80,7 +80,7 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     android:background="@color/white"
-                    android:text="@string/current_game_participants"
+                    android:text="@string/current_game_summoners"
                     android:textColor="@color/black" />
 
                 <FrameLayout
@@ -104,8 +104,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/primaryColorDark"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
@@ -130,6 +134,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@color/primaryColorDark"
                     android:orientation="horizontal">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
@@ -154,6 +162,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@color/primaryColorDark"
                     android:orientation="horizontal">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
@@ -178,6 +190,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@color/primaryColorDark"
                     android:orientation="horizontal">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
@@ -202,6 +218,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@color/primaryColorDark"
                     android:orientation="horizontal">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight

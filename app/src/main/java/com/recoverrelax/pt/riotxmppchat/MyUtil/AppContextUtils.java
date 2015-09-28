@@ -3,6 +3,8 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -80,5 +82,17 @@ public class AppContextUtils {
 
     public interface ReturnCallback{
         void onReturnCallback();
+    }
+
+    public static void showSnackbar(Activity activity, @StringRes int messageString, int duration){
+        Snackbar.make(activity.getWindow().getDecorView().getRootView(),
+                messageString,
+                duration).show();
+    }
+
+    public static void showSnackbar(Activity activity, String messageString, int duration){
+        Snackbar.make(activity.getWindow().getDecorView().getRootView(),
+                messageString,
+                duration).show();
     }
 }

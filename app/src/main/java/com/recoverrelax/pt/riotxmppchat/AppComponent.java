@@ -13,6 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.RiotXmppCommunicationFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.ShardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.SettingsGeneralFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
 
@@ -63,6 +64,8 @@ public interface AppComponent {
     void inject(RiotApiRealmDataVersion riotApiRealmDataVersion);
 
     void inject(FriendsListAdapter friendsListAdapter);
+
+    void inject(ShardFragment shardFragment);
 
 
     /**

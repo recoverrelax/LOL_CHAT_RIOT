@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.Enum;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public enum RiotServer {
 
@@ -14,9 +15,9 @@ public enum RiotServer {
     NA(6, "North America", "chat.na1.lol.riotgames.com", "NA1", true, "na"),
     OCE(7, "Oceania", "chat.oc1.lol.riotgames.com", "OC1", true, "oce"),
 //    PH(8, "Phillipines", "chatph.lol.garenanow.com", null, false, null),
-    RU(9, "Russia", "chat.ru.lol.riotgames.com", "RU1", true, "ru"),
+    RU(8, "Russia", "chat.ru.lol.riotgames.com", "RU1", true, "ru"),
 //    TH(10, "Thailand", "chatth.lol.garenanow.com", null, false, null),
-    TR(11, "Turkey", "chat.tr.lol.riotgames.com", "TR1", true, "tr");
+    TR(9, "Turkey", "chat.tr.lol.riotgames.com", "TR1", true, "tr");
 //    TW(12, "Taiwan", "chattw.lol.garenanow.com", null, false, null),
 //    VN(13, "Vietnam", "chatvn.lol.garenanow.com", null, false, null);
 
@@ -76,13 +77,22 @@ public enum RiotServer {
         return platformId;
     }
 
-    public static String [] getServerList(){
+    public static List<String> getServerList(){
         ArrayList<String> serverList = new ArrayList<>();
 
         for(RiotServer server: RiotServer.values()){
             serverList.add(server.getServerName());
         }
-        return serverList.toArray(new String[serverList.size()]);
+        return serverList;
+    }
+
+    public static List<String> getRegionList(){
+        ArrayList<String> serverList = new ArrayList<>();
+
+        for(RiotServer server: RiotServer.values()){
+            serverList.add(server.getServerRegion());
+        }
+        return serverList;
     }
 
     public static int getServerPositionByName(String serverName)
@@ -93,6 +103,15 @@ public enum RiotServer {
                 return server.getPosition();
         }
         return 0;
+    }
+
+    public static RiotServer getByServerPosition(int position){
+        for(RiotServer server: RiotServer.values())
+        {
+            if(server.position == position)
+                return server;
+        }
+        return RiotServer.EUW;
     }
 
 }
