@@ -10,11 +10,12 @@ import android.support.v7.app.ActionBar;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CurrentGameActivity extends RiotXmppNewMessageActivity {
+public class RecentGameActivity extends RiotXmppNewMessageActivity {
 
     @Nullable
     @Bind(R.id.appBarLayout)
@@ -25,13 +26,13 @@ public class CurrentGameActivity extends RiotXmppNewMessageActivity {
 
     private static final String friendXmppAddressDefault = null;
     private static final String friendXmppUsernameDefault = null;
+
     private String friendXmppAddress;
     private String friendXmppUsername;
 
     @Override
     public int getLayoutResources() {
-
-        return R.layout.current_game_activity;
+        return R.layout.recent_game_activity;
     }
 
     @Override
@@ -57,14 +58,14 @@ public class CurrentGameActivity extends RiotXmppNewMessageActivity {
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = CurrentGameFragment.newInstance(friendXmppAddress, friendXmppUsername);
+            Fragment fragment = RecentGameFragment.newInstance(friendXmppAddress, friendXmppUsername);
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
         }
 
         if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor120));
 
         ActionBar supportActionBar = getSupportActionBar();
         if(supportActionBar != null) {

@@ -38,6 +38,7 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivity;
 import com.squareup.otto.Subscribe;
 
 import org.jivesoftware.smack.packet.Presence;
@@ -89,8 +90,7 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
 
 
     @Inject RiotXmppRosterImpl riotXmppRosterImpl;
-    @Inject
-    RiotApiServiceImpl riotApiServiceImpl;
+    @Inject RiotApiServiceImpl riotApiServiceImpl;
 
     public FriendListFragment() {
         // Required empty public constructor
@@ -191,6 +191,17 @@ public class FriendListFragment extends RiotXmppCommunicationFragment implements
                     intent.putExtra(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
                     intent.putExtra(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
                     startActivity(intent);
+                    AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
+
+                    break;
+
+                case R.id.recent_game:
+
+                    Intent intent2 = new Intent(this.getActivity(), RecentGameActivity.class);
+                    intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    intent2.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                    intent2.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+                    startActivity(intent2);
                     AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
 
                     break;

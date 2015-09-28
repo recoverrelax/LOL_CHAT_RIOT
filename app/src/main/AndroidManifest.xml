@@ -42,6 +42,14 @@
         </activity>
 
         <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:noHistory="true"
+            android:label="@string/recent_game_activity_title" >
+        </activity>
+
+
+        <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.ShardActivity"
             android:windowSoftInputMode="adjustPan"
             android:noHistory="true"

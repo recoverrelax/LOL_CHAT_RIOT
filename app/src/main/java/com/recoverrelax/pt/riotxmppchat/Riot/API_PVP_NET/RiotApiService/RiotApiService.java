@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
 
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.RealmDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellListDto;
@@ -16,6 +17,7 @@ public interface RiotApiService {
     String BASE_STATUS_LOL = "/status.leagueoflegends.com";
 
     String STATIC_DATA_V = "v1.2";
+    String GAME_DATA_V = "v1.3";
 
     /**
      * CURRENT_GAME *********************************************************************************************
@@ -62,5 +64,15 @@ public interface RiotApiService {
     @GET(BASE_STATUS_LOL + "/shards/{region}")
     Observable<ShardStatus> getShardStatus_STATUS(
             @Path("region") String region
+    );
+
+    /**
+     * GAME
+     */
+
+    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + GAME_DATA_V + "/game/by-summoner/{summonerId}")
+    Observable<RecentGamesDto> getRecentMatchList_GAME(
+            @Path("region") String region,
+            @Path("summonerId") String summonerId
     );
 }

@@ -168,6 +168,7 @@ public class CurrentGameFragment extends BaseFragment {
 
         obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
                 .doOnSubscribe(() -> banList.enableProgressBar(true))
+                .doOnUnsubscribe(() -> banList.enableProgressBar(false))
                 .map(CurrentGameInfo::getBannedChampions) // for each bannedChampion Object
                 .take(banList.getSize())
                 .flatMap(bannedChampionList ->
@@ -193,6 +194,7 @@ public class CurrentGameFragment extends BaseFragment {
 
         obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
                 .doOnSubscribe(() -> enableProgressBarParticipantContent(true))
+                .doOnUnsubscribe(() -> enableProgressBarParticipantContent(false))
                 .map(CurrentGameInfo::getParticipants) // for each bannedChampion Object
                 .take((team100.size() + team200.size()))
                         // for Champion Images
@@ -314,8 +316,6 @@ public class CurrentGameFragment extends BaseFragment {
                         playerName.setText(liveGameParticipant.getSummonerName());
                         cgp.setVisibility(View.VISIBLE);
                     }
-
-                    enableProgressBarParticipantContent(false);
                 });
     }
 
@@ -363,7 +363,7 @@ public class CurrentGameFragment extends BaseFragment {
                                 .into(imageView);
                     }
 
-                    banList.enableProgressBar(false);
+
                 });
     }
 }

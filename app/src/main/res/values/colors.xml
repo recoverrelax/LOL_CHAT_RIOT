@@ -60,5 +60,7 @@
     <color name="newMessageColor">#8BC34A</color>
     <color name="presence_mode_dnd">#FF6F00</color>
     <color name="presence_mode_xa">#BF360C</color>
+
     <color name="presence_mode_unavailable">#DD2C00</color>
+    <color name="transparent">#00000000</color>
 </resources>

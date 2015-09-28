@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_gravity="right"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/championImage"
+            android:adjustViewBounds="true"
+            android:src="@drawable/champion_example"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|center_vertical" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/summonerName"
+     style="@style/recent_games_kda_textview"
+     android:padding="5dp"
+     android:text="MyanmarKing"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content" />
+
+
+</LinearLayout>
