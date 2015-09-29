@@ -20,10 +20,12 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.GameDt
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.PlayerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +34,9 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -137,16 +138,14 @@ public class RecentGameFragment extends BaseFragment {
 
     public void getRecentGamesInformation() {
 
-        if(subscription!= null && !subscription.isUnsubscribed())
+        if (subscription != null && !subscription.isUnsubscribed())
             subscription.unsubscribe();
 
         Observable<Map<Integer, String>> obsChampionsImage = riotApiOperation.getChampionsImage()
-                .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
         Observable<Map<Integer, String>> obsSummonerSpellImage = riotApiOperation.getSummonerSpellImage()
-                .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
@@ -154,67 +153,122 @@ public class RecentGameFragment extends BaseFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        Observable<String> obsRea = realmData.getChampionDDBaseUrl()
+        Observable<String> obsRealmDataChampion = realmData.getChampionDDBaseUrl()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        Observable<List<GameDto>> recentGamesListObs = riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
-                .cache()
+        Observable<String> obsRealmDataSummonerSpell = realmData.getSummonerSpellDDBaseUrl()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+
+        Observable<String> obsRealmDataItem = realmData.getItemDDBaseUrl()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        /**
+         * The DataSet to return at the end
+         */
 
         /**
          *  GET THE SUMMONER SPELL DATA (2 SUMMONER SPELLS)
          */
 
-//        recentGamesListObs
-//            .flatMap(gameList -> obsSummonerSpellImage  // get the Summoner Spell Image Url from RIOT API
-//                                    .flatMap(ssMap ->
-//                                                    Observable.from(gameList)
-//                                                            .doOnNext(gameDto -> {
-//                                                                String s1 = ssMap.get(gameDto.getSpell1());
-//                                                                if (s1 != null)
-//                                                                    gameDto.setSpell1Image(s1);
-//                                                                String s2 = ssMap.get(gameDto.getSpell2());
-//                                                                if (s2 != null)
-//                                                                    gameDto.setSpell2Image(s2);
-//                                                            })
-//                                                            .toList()
-//                                    )
-//            )
+        List<GameDto> gameList = new ArrayList<>();
 
-        recentGamesListObs
-                .flatMap(gameList -> obsSummonerSpellImage
-                                    .flatMap(ssMap -> realmData.getSummonerSpellDDBaseUrl()
-                                                      .flatMap(ddSummonerSpellUrl -> Observable.from(gameList)
+        Map<Integer, String> ssImages = new HashMap<>();
+        Map<Integer, String> itemImage = new HashMap<>();
+        Map<Integer, String> championImage = new HashMap<>();
 
-                                    )
+        final String[] ssUrl = new String[1];
+        final String[] itemUrl = new String[1];
+        final String[] championUrl = new String[1];
 
 
-                        .flatMap(Observable::from)
-                        .flatMap(gameDto -> obsSummonerSpellImage
-                                        .map(ssMap -> {
-                                            gameDto.setSpell1Image(ssMap.get(gameDto.getSpell1()));
-                                            gameDto.setSpell2Image(ssMap.get(gameDto.getSpell2()));
-                                            return gameDto;
-                                        })
-                        )
-                        .toList()
-                        .subscribeOn(Schedulers.computation())
-                        .subscribe(adapter::setItems);
+        riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
+                .doOnNext(gameDtos -> {
+                    gameList.addAll(gameDtos);
+                    Log.i("1234", gameDtos.size() + "");
+                })
 
+                .flatMap(ignoreThis -> obsSummonerSpellImage
+                                .doOnNext(ssImages::putAll)
+                )
 
+                .flatMap(ignoreThis -> obsSummonerSpellImage
+                                .doOnNext(ssImages::putAll)
+                )
+
+                .flatMap(ignoreThis -> obsRealmDataSummonerSpell
+                                .doOnNext(s -> ssUrl[0] = s)
+                )
+
+                .flatMap(ignoreThis -> obsSummonerItemImage
+                                .doOnNext(itemImage::putAll)
+                )
+
+                .flatMap(ignoreThis -> obsRealmDataItem
+                                .doOnNext(s -> itemUrl[0] = s)
+                )
+
+                .flatMap(ignoreThis -> obsChampionsImage
+                                .doOnNext(championImage::putAll)
+                )
+
+                .flatMap(ignoreThis -> obsRealmDataChampion
+                                .doOnNext(s -> championUrl[0] = s)
+                )
+
+                .flatMap(whatever -> Observable.from(gameList)
+                                .doOnNext(game -> {
+                                    game.setSpell1Image(ssUrl[0] + ssImages.get(game.getSpell1()));
+                                    game.setSpell2Image(ssUrl[0] + ssImages.get(game.getSpell2()));
+
+                                    String s0 = itemImage.get(game.getStats().getItem0());
+                                    String s1 = itemImage.get(game.getStats().getItem1());
+                                    String s2 = itemImage.get(game.getStats().getItem2());
+                                    String s3 = itemImage.get(game.getStats().getItem3());
+                                    String s4 = itemImage.get(game.getStats().getItem4());
+                                    String s5 = itemImage.get(game.getStats().getItem5());
+
+                                    game.getStats().setItemsImage(itemUrl[0] + s0, itemUrl[0] + s1, itemUrl[0] + s2, itemUrl[0] + s3, itemUrl[0] + s4, itemUrl[0] + s5);
+
+                                    game.setChampionImage(championUrl[0] + championImage.get(game.getChampionId()));
+                                }).toList()
+                                .flatMap(gameDto -> Observable.from(gameList)
+                                                .flatMap(gameDto1 ->
+                                                                Observable.from(gameDto1.getFellowPlayers())
+                                                                        .doOnNext(playerDto -> playerDto.setChampionImage(championUrl[0] + championImage.get(playerDto.getChampionId())))
+                                                                        .toList()
+                                                )
+                                                .flatMap(playerDtos -> Observable.just(gameDto))
+
+                                )
+                )
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<GameDto>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(List<GameDto> gameDtos) {
+                        adapter.setItems(gameDtos);
+                    }
+                });
 
 
 //        subscription =riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi)) //List<GameDto>
 //                .flatMap(gameDtoList -> obsChampionsImage // Map<Integer, String>
 //                                .flatMap(championImageMap ->
 //                                                Observable.from(gameDtoList)
-//                                                        .doOnNext(gameDto -> {
-//                                                            String s = championImageMap.get(gameDto.getChampionId());
-//                                                            if (s != null)
-//                                                                gameDto.setChampionImage(s);
-//                                                        })
+
 //                                                        .flatMap(gameDto ->
 //                                                                Observable.from(gameDto.getFellowPlayers())
 //                                                                    .doOnNext(playerDto -> {
@@ -229,39 +283,6 @@ public class RecentGameFragment extends BaseFragment {
 //
 //                                )
 //                )
-//                .flatMap(gameDtoList -> obsSummonerSpellImage // Map<Integer, String>
-//                                .flatMap(summonerSpellImageMap ->
-//                                                Observable.from(gameDtoList)
-//                                                        .doOnNext(gameDto -> {
-//                                                            String s1 = summonerSpellImageMap.get(gameDto.getSpell1());
-//                                                            if (s1 != null)
-//                                                                gameDto.setSpell1Image(s1);
-//                                                            String s2 = summonerSpellImageMap.get(gameDto.getSpell2());
-//                                                            if (s2 != null)
-//                                                                gameDto.setSpell2Image(s2);
-//                                                        })
-//                                                .toList()
-//                                )
-//                )
-//                .flatMap(gameDtoList ->
-//                                obsSummonerItemImage // Map<Integer, String>
-//                                .flatMap(itemImageMap ->
-//                                                Observable.from(gameDtoList)
-//                                                        .doOnNext(gameDto -> {
-//                                                                    String s0 = itemImageMap.get(gameDto.getStats().getItem0());
-//                                                                    String s1 = itemImageMap.get(gameDto.getStats().getItem1());
-//                                                                    String s2 = itemImageMap.get(gameDto.getStats().getItem2());
-//                                                                    String s3 = itemImageMap.get(gameDto.getStats().getItem3());
-//                                                                    String s4 = itemImageMap.get(gameDto.getStats().getItem4());
-//                                                                    String s5 = itemImageMap.get(gameDto.getStats().getItem5());
-//
-//                                                                    gameDto.getStats().setItemsImage(s0, s1, s2, s3, s4, s5);
-//                                                            })
-//                                                        .toList()
-//                                )
-//                )
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(adapter::setItems);
+
     }
 }

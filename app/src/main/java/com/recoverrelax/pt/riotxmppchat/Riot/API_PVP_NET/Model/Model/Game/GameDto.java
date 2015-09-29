@@ -5,13 +5,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
-import rx.Observable;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * This object contains game information.
@@ -120,7 +114,7 @@ public class GameDto {
     public List<PlayerDto> getFellowPlayersTeam100() {
         List<PlayerDto> fellowPlayersTeam100 = new ArrayList<>();
 
-        for(PlayerDto p: this.fellowPlayers)
+        for(PlayerDto p: fellowPlayers)
             if(p.getTeamId() == TeamCode.TEAM1.id)
                 fellowPlayersTeam100.add(p);
         return fellowPlayersTeam100;
@@ -129,7 +123,7 @@ public class GameDto {
     public List<PlayerDto> getFellowPlayersTeam200() {
         List<PlayerDto> fellowPlayersTeam200 = new ArrayList<>();
 
-        for(PlayerDto p: this.fellowPlayers)
+        for(PlayerDto p: fellowPlayers)
             if(p.getTeamId() == TeamCode.TEAM2.id)
                 fellowPlayersTeam200.add(p);
         return fellowPlayersTeam200;

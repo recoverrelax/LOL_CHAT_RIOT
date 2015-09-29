@@ -3,9 +3,11 @@ package com.recoverrelax.pt.riotxmppchat.Adapter;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.KamehameUtils;
@@ -47,73 +49,66 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(RecentGameAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecentGameAdapter.ViewHolder holder, final int position) {
         holder.game = recentGameList.get(position);
+//        holder.resetVisibility();
 
-//        realmData.getChampionDDBaseUrl()
-//                .subscribe(ddChampionSquareUrl -> {
-//                    Picasso.with(context)
-//                            .load(ddChampionSquareUrl + holder.game.getChampionImage())
-//                            .into(holder.summonerSpellStatBlock1.getChampionImageView());
-//
-//                    for(int i = 0; i < holder.game.getFellowPlayersTeam100().size(); i++){
-//                        Picasso.with(context)
-//                                .load(ddChampionSquareUrl + holder.game.getFellowPlayersTeam100().get(i).getChampionImage())
-//                                .into(holder.team1ChampionInfo.getChampionTeam().get(i));
-//                        holder.team1ChampionInfo.getChampionTeam().get(i).setVisibility(View.VISIBLE);
-//                    }
-//
-//                    for(int i = 0; i < holder.game.getFellowPlayersTeam200().size(); i++){
-//                        Picasso.with(context)
-//                                .load(ddChampionSquareUrl + holder.game.getFellowPlayersTeam200().get(i).getChampionImage())
-//                                .into(holder.team2ChampionInfo.getChampionTeam().get(i));
-//                        holder.team2ChampionInfo.getChampionTeam().get(i).setVisibility(View.VISIBLE);
-//                    }
-//                });
+        Picasso.with(context)
+                .load(holder.game.getChampionImage())
+                .into(holder.summonerSpellStatBlock1.getChampionImageView());
 
-        realmData.getSummonerSpellDDBaseUrl()
-                .subscribe(ddSummonerSpellUrl -> {
-                    Picasso.with(context)
-                            .load(ddSummonerSpellUrl + holder.game.getSpell1Image())
-                            .into(holder.summonerSpellStatBlock1.getChampionSS1ImageView());
+        for (int i = 0; i < holder.game.getFellowPlayersTeam100().size(); i++) {
+            Picasso.with(context)
+                    .load(holder.game.getFellowPlayersTeam100().get(i).getChampionImage())
+                    .into(holder.team1ChampionInfo.getChampionTeam().get(i));
+        }
 
-                    Picasso.with(context)
-                            .load(ddSummonerSpellUrl + holder.game.getSpell2Image())
-                            .into(holder.summonerSpellStatBlock1.getChampionSS2ImageView());
-                });
-
-//        holder.summonerSpellStatBlock2.getKda().setText(
-//                KamehameUtils.transformKillDeathAssistIntoKda(
-//                        holder.game.getStats().getChampionsKilled(),
-//                        holder.game.getStats().getNumDeaths(),
-//                        holder.game.getStats().getAssists()
-//                )
-//        );
-//
-//        holder.summonerSpellStatBlock2.getGold().setText(
-//                KamehameUtils.transformGoldIntoKMode(
-//                        holder.game.getStats().getGoldEarned()
-//                )
-//        );
-//
-//        holder.summonerSpellStatBlock2.getCs().setText(String.valueOf(holder.game.getStats().getMinionsKilled()));
-//
-//        realmData.getItemDDBaseUrl()
-//                .subscribe(ddItemSquareUrl -> {
-//                    for(int i= 0; i < holder.game.getStats().getItemsImage().size(); i++){
-//                        Picasso.with(context)
-//                                .load(ddItemSquareUrl + holder.game.getStats().getItemsImage().get(i))
-//                                .into(holder.summonerSpellStatBlock2.getSummonerItems().get(i));
-//                    }
-//                });
-//
+        for (int i = 0; i < holder.game.getFellowPlayersTeam200().size(); i++) {
+            Picasso.with(context)
+                    .load(holder.game.getFellowPlayersTeam200().get(i).getChampionImage())
+                    .into(holder.team2ChampionInfo.getChampionTeam().get(i));
+        }
 
 
+        Picasso.with(context)
+                .load(holder.game.getSpell1Image())
+                .into(holder.summonerSpellStatBlock1.getChampionSS1ImageView());
+
+
+        Picasso.with(context)
+                .load(holder.game.getSpell2Image())
+                .into(holder.summonerSpellStatBlock1.getChampionSS2ImageView());
+
+
+        holder.summonerSpellStatBlock2.getKda().setText(
+                KamehameUtils.transformKillDeathAssistIntoKda(
+                        holder.game.getStats().getChampionsKilled(),
+                        holder.game.getStats().getNumDeaths(),
+                        holder.game.getStats().getAssists()
+                )
+        );
+
+        holder.summonerSpellStatBlock2.getGold().setText(
+                KamehameUtils.transformGoldIntoKMode(
+                        holder.game.getStats().getGoldEarned()
+                )
+        );
+
+        holder.cs.setText(String.valueOf(holder.game.getStats().getMinionsKilled()));
+
+
+        for (int i = 0; i < holder.game.getStats().getItemsImage().size(); i++) {
+            Picasso.with(context)
+                    .load(holder.game.getStats().getItemsImage().get(i))
+                    .into(holder.summonerSpellStatBlock2.getSummonerItems().get(i));
+        }
     }
 
     public void setItems(List<GameDto> recentGamesList) {
-        recentGameList = recentGamesList;
+        this.recentGameList.clear();
+        this.recentGameList.addAll(recentGamesList);
         notifyDataSetChanged();
+        Log.i("123", recentGamesList.size() + "");
     }
 
     @Override
@@ -140,9 +135,19 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
 
         GameDto game;
 
+        final TextView cs;
+
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            cs = summonerSpellStatBlock2.getCs();
+        }
+
+        public void resetVisibility() {
+            team1ChampionInfo.resetVisibility();
+            team2ChampionInfo.resetVisibility();
         }
     }
 }

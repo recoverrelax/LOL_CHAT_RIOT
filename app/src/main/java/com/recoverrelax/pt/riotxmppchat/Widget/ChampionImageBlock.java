@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.Widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,5 +55,14 @@ public class ChampionImageBlock extends LinearLayout {
 
     public List<TextView> getSummonerNameTeam() {
         return summonerNameTeam;
+    }
+
+    public void resetVisibility() {
+        ButterKnife.apply(summonerNameTeam, new ButterKnife.Action<TextView>() {
+            @Override
+            public void apply(TextView view, int index) {
+                view.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 }
