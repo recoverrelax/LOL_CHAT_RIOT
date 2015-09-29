@@ -37,6 +37,9 @@ public class AppGlobals {
         public static final String CHAMPION_SQUARE =
                 "http://ddragon.leagueoflegends.com/cdn/" + DD_VERSION + "/img/" + CHAMPION_JSON_ID + "/";
 
+        public static final String ITEM_SQUARE =
+                "http://ddragon.leagueoflegends.com/cdn/" + DD_VERSION + "/img/" + ITEM_JSON_ID + "/";
+
         public static final String PROFILE_SQUARE =
                 "http://ddragon.leagueoflegends.com/cdn/" + DD_VERSION + "/img/" + PROFILEICON_JSON_ID + "/";
 

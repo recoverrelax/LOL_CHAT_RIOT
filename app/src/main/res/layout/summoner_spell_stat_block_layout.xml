@@ -12,6 +12,7 @@
                 android:layout_weight="1">
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                    android:id="@+id/championImage"
                     android:layout_gravity="left"
                     android:src="@drawable/champion_example"
                     android:layout_width="match_parent"
@@ -24,6 +25,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="0.5">
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                    android:id="@+id/championSS1"
                     android:layout_gravity="left"
                     android:src="@drawable/champion_example"
                     android:layout_width="match_parent"
@@ -35,6 +37,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.5">
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+            android:id="@+id/championSS2"
             android:layout_gravity="left"
             android:src="@drawable/champion_example"
             android:layout_width="match_parent"

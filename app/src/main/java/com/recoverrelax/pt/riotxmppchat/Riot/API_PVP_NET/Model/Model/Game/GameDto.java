@@ -1,8 +1,17 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game;
 
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
+
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import rx.Observable;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * This object contains game information.
@@ -14,6 +23,10 @@ public class GameDto {
      * Champion ID associated with game.
      */
     private int championId;
+
+    private String championImage; //THIS ATTR IS NOT ORIGINAL FROM THE JSON
+    private String spell1Image; //THIS ATTR IS NOT ORIGINAL FROM THE JSON
+    private String spell2Image; //THIS ATTR IS NOT ORIGINAL FROM THE JSON
 
     /**
      * Date that end game data was recorded, specified as epoch milliseconds.
@@ -104,6 +117,24 @@ public class GameDto {
         return fellowPlayers;
     }
 
+    public List<PlayerDto> getFellowPlayersTeam100() {
+        List<PlayerDto> fellowPlayersTeam100 = new ArrayList<>();
+
+        for(PlayerDto p: this.fellowPlayers)
+            if(p.getTeamId() == TeamCode.TEAM1.id)
+                fellowPlayersTeam100.add(p);
+        return fellowPlayersTeam100;
+    }
+
+    public List<PlayerDto> getFellowPlayersTeam200() {
+        List<PlayerDto> fellowPlayersTeam200 = new ArrayList<>();
+
+        for(PlayerDto p: this.fellowPlayers)
+            if(p.getTeamId() == TeamCode.TEAM2.id)
+                fellowPlayersTeam200.add(p);
+        return fellowPlayersTeam200;
+    }
+
     public long getGameId() {
         return gameId;
     }
@@ -150,5 +181,28 @@ public class GameDto {
 
     public int getTeamId() {
         return teamId;
+    }
+
+    public String getChampionImage() {
+        return championImage;
+    }
+
+    public void setChampionImage(String championImageSquareUrl) {
+        this.championImage = championImageSquareUrl;    }
+
+    public String getSpell1Image() {
+        return spell1Image;
+    }
+
+    public void setSpell1Image(String spell1Image) {
+        this.spell1Image = spell1Image;
+    }
+
+    public String getSpell2Image() {
+        return spell2Image;
+    }
+
+    public void setSpell2Image(String spell2Image) {
+        this.spell2Image = spell2Image;
     }
 }

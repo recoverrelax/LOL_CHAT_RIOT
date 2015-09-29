@@ -35,6 +35,14 @@ public class RiotApiRealmDataVersion {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<String> getItemDDBaseUrl(){
+        return realmData
+                .map(realmDto -> realmDto.getN().get(AppGlobals.DD_VERSION.ITEM_JSON_ID))
+                .map(ddVersion -> AppGlobals.DD_VERSION.ITEM_SQUARE.replace(AppGlobals.DD_VERSION.DD_VERSION, ddVersion))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<String> getSummonerSpellDDBaseUrl(){
         return realmData
                 .map(realmDto -> realmDto.getN().get(AppGlobals.DD_VERSION.SUMMONER_SPELL_JSON_ID_JSON))

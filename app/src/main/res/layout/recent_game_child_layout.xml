@@ -20,11 +20,13 @@
             android:orientation="horizontal">
 
             <com.recoverrelax.pt.riotxmppchat.Widget.SummonerSpellStatBlock
+                android:id="@+id/summonerSpellStatBlock1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
             <com.recoverrelax.pt.riotxmppchat.Widget.SummonerSpellStatBlock2
+                android:id="@+id/summonerSpellStatBlock2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1.5" />
@@ -42,6 +44,7 @@
                     app:layout_widthPercent="50%">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.ChampionImageBlock
+                        android:id="@+id/team100ChampionInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -55,6 +58,7 @@
                     android:orientation="vertical">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.ChampionImageBlock
+                        android:id="@+id/team200ChampionInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent" />
 

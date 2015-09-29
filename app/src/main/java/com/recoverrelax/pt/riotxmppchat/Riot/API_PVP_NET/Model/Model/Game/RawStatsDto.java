@@ -1,7 +1,13 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game;
 
 
+import android.support.annotation.Size;
+
 import org.parceler.Parcel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This object contains raw stat information.
@@ -27,12 +33,18 @@ public class RawStatsDto {
     private int goldSpent;
 
     private int item0;
-    private int item01;
-    private int item02;
-    private int item03;
-    private int item04;
-    private int item05;
-    private int item06;
+    private int item1;
+    private int item2;
+    private int item3;
+    private int item4;
+    private int item5;
+    private int item6;
+
+    /**
+     * NOT PART OF THE JSON OBJECT
+     */
+
+    private List<String> itemImageList;
 
     private int itemsPurchased;
     private int killingSprees;
@@ -184,28 +196,28 @@ public class RawStatsDto {
         return item0;
     }
 
-    public int getItem01() {
-        return item01;
+    public int getItem1() {
+        return item1;
     }
 
-    public int getItem02() {
-        return item02;
+    public int getItem2() {
+        return item2;
     }
 
-    public int getItem03() {
-        return item03;
+    public int getItem3() {
+        return item3;
     }
 
-    public int getItem04() {
-        return item04;
+    public int getItem4() {
+        return item4;
     }
 
-    public int getItem05() {
-        return item05;
+    public int getItem5() {
+        return item5;
     }
 
-    public int getItem06() {
-        return item06;
+    public int getItem6() {
+        return item6;
     }
 
     public int getItemsPurchased() {
@@ -442,5 +454,14 @@ public class RawStatsDto {
 
     public boolean isWin() {
         return win;
+    }
+
+    public void setItemsImage(String ... strings) {
+        this.itemImageList = new ArrayList<>();
+        this.itemImageList.addAll(Arrays.asList(strings));
+     }
+
+    public List<String> getItemsImage(){
+        return this.itemImageList;
     }
 }

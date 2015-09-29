@@ -3,13 +3,24 @@ package com.recoverrelax.pt.riotxmppchat.Widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
 
+import java.util.List;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ChampionImageBlock extends LinearLayout {
+
+    @Bind({R.id.championSummoner1, R.id.championSummoner2, R.id.championSummoner3, R.id.championSummoner4, R.id.championSummoner5, R.id.championSummoner6})
+    List<ImageView> championTeam;
+
+    @Bind({R.id.summonerName, R.id.summonerName2, R.id.summonerName3, R.id.summonerName4, R.id.summonerName5, R.id.summonerName6})
+    List<TextView> summonerNameTeam;
 
     private Context context;
 
@@ -35,5 +46,13 @@ public class ChampionImageBlock extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.champion_image_block_layout, this);
         ButterKnife.bind(this);
+    }
+
+    public List<ImageView> getChampionTeam() {
+        return championTeam;
+    }
+
+    public List<TextView> getSummonerNameTeam() {
+        return summonerNameTeam;
     }
 }

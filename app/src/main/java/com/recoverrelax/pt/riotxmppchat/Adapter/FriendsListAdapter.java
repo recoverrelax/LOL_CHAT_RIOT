@@ -49,7 +49,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final String TAG = FriendsListAdapter.class.getSimpleName();
 
     @Inject
-    RiotApiRealmDataVersion riotApiDdVersion;
+    RiotApiRealmDataVersion realmData;
 
     private List<Friend> friendsList;
     private final LayoutInflater inflater;
@@ -186,7 +186,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //                            .error(R.drawable.profile_icon_example)
 //                            .into(holderOnline.profileIcon);
 
-                    riotApiDdVersion.getProfileIconBaseUrl()
+                    realmData.getProfileIconBaseUrl()
                             .subscribe(profileUrl -> {
                                 Picasso.with(context)
                                         .load(profileUrl + holderOnline.current.getProfileIconId() + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION)
@@ -213,7 +213,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //                    Picasso.with(context).load(holderOnline.current.getChampionDragonUrl())
 //                            .into(holderOnline.championSquare);
 
-                    riotApiDdVersion.getChampionDDBaseUrl()
+                    realmData.getChampionDDBaseUrl()
                             .subscribe(championUrl -> {
                                 Picasso.with(context)
                                         .load(championUrl + holderOnline.current.getChampionNameFormatted()

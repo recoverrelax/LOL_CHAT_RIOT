@@ -240,6 +240,7 @@ public class CurrentGameFragment extends BaseFragment {
                                         .map(summonerSpellBaseUrl ->
                                                 new Pair<>(championSquareBaseUrl, summonerSpellBaseUrl))
                 )
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(urlPair -> {
 

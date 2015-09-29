@@ -17,4 +17,16 @@ public class KamehameUtils {
         snackbar.show();
         return snackbar;
     }
+
+    public static String transformGoldIntoKMode(int goldEarned){
+        if(goldEarned > 999){
+            return String.valueOf((goldEarned/1000)) + "K";
+        }else{
+            return String.valueOf(goldEarned);
+        }
+    }
+
+    public static String transformKillDeathAssistIntoKda(int kill, int death, int assists) {
+        return String.valueOf(kill) + "/" + String.valueOf(death) + "/" + String.valueOf(assists);
+    }
 }

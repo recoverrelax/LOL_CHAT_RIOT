@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
+import com.recoverrelax.pt.riotxmppchat.Adapter.RecentGameAdapter;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
@@ -12,6 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.RiotXmppCommunicationFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.ShardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.SettingsGeneralFragment;
@@ -66,6 +68,10 @@ public interface AppComponent {
     void inject(FriendsListAdapter friendsListAdapter);
 
     void inject(ShardFragment shardFragment);
+
+    void inject(RecentGameFragment recentGameFragment);
+
+    void inject(RecentGameAdapter recentGameAdapter);
 
 
     /**

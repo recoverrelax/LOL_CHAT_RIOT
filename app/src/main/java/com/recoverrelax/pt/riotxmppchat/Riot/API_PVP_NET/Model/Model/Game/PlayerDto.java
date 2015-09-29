@@ -14,6 +14,12 @@ public class PlayerDto {
     private int championId;
 
     /**
+     * NOT PART OF THE JSON
+     */
+
+    private String championImage;
+
+    /**
      * Summoner id associated with player.
      */
     private long summonerId;
@@ -35,5 +41,13 @@ public class PlayerDto {
 
     public int getTeamId() {
         return teamId;
+    }
+
+    public String getChampionImage() {
+        return championImage;
+    }
+
+    public void setChampionImage(String championImage) {
+        this.championImage = championImage;
     }
 }

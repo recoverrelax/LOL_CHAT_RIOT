@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/kda"
                     android:gravity="right"
                     style="@style/recent_games_kda_textview"
                     android:text="11/12/13"
@@ -33,6 +34,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:id="@+id/gold"
                     android:gravity="right"
                     style="@style/recent_games_kda_textview"
                     android:text="11K"
@@ -40,6 +42,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:id="@+id/cs"
                     android:gravity="right"
                     style="@style/recent_games_kda_textview"
                     android:text="450"
@@ -104,6 +107,7 @@
                 android:layout_height="wrap_content">
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                    android:id="@+id/summonerItem1"
                     android:src="@drawable/champion_example"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -115,6 +119,7 @@
                 android:layout_height="wrap_content">
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                    android:id="@+id/summonerItem2"
                     android:src="@drawable/champion_example"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -126,11 +131,13 @@
                 android:layout_height="wrap_content">
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                    android:id="@+id/summonerItem3"
                     android:src="@drawable/champion_example"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="left|center_vertical" />
             </FrameLayout>
+
         </LinearLayout>
 
             <LinearLayout
@@ -146,6 +153,7 @@
                     android:layout_height="wrap_content">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                        android:id="@+id/summonerItem4"
                         android:src="@drawable/champion_example"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -157,6 +165,7 @@
                     android:layout_height="wrap_content">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                        android:id="@+id/summonerItem5"
                         android:src="@drawable/champion_example"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -168,6 +177,7 @@
                     android:layout_height="wrap_content">
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                        android:id="@+id/summonerItem6"
                         android:src="@drawable/champion_example"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

@@ -7,6 +7,7 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ItemListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.RealmDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.ShardStatus;
@@ -85,6 +86,17 @@ public class RiotApiServiceImpl {
             return Observable.error(new Throwable("For some reason, region is invalid"));
 
         return apiProvider.getRiotApiServiceSecure().getSummonerSpellListFiltered_STATIC_DATA(region)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<ItemListDto> getItemListBasicInfoFiltered() {
+        String region = getRegion();
+
+        if (region == null)
+            return Observable.error(new Throwable("For some reason, region is invalid"));
+
+        return apiProvider.getRiotApiServiceSecure().getItemListFiltered_STATIC_DATA(region)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
