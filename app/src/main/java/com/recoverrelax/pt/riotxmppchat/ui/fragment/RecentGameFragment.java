@@ -16,6 +16,7 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.PlayerDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.RecentGameWrapper;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.TeamInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
@@ -173,7 +174,13 @@ public class RecentGameFragment extends BaseFragment {
             String itemUrl = (String) args[4];
             String championUrl = (String) args[5];
 
+            final long[] mySummonerId = new long[1];
+
             return riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
+                    .map((RecentGamesDto recentGamesDto) -> {
+                        mySummonerId[0] = recentGamesDto.getSummonerId();
+                        return recentGamesDto.getGames();
+                    })
                     .flatMap(Observable::from)
                     .doOnNext(game -> {
                         RecentGameWrapper recentGameWrapper = new RecentGameWrapper();
@@ -207,47 +214,58 @@ public class RecentGameFragment extends BaseFragment {
                                         playerDto.getTeamId());
                             }
                         }
+                        recentGameWrapper.addPlayer(
+                                mySummonerId[0],
+                                championUrl + championImage.get(game.getChampionId()),
+                                game.getTeamId()
+                        );
+
                         finalGameList.add(recentGameWrapper);
                     })
                     .toList()
                     .map(whatever -> finalGameList)
+                    .flatMap(this::updateWithSummonerNames)
+                    .doOnError(Throwable::printStackTrace)
                     .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(() -> enableProgressBar(true))
-                            .doOnUnsubscribe(() -> enableProgressBar(false))
-                            .subscribe(adapter::setItems);
-
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(() -> enableProgressBar(true))
+                    .doOnUnsubscribe(() -> enableProgressBar(false))
+                    .subscribe(adapter::setItems);
         })
-          .ignoreElements().subscribe();
+                .ignoreElements().subscribe();
     }
 
 
-    public List<RecentGameWrapper> updateWithSummonerNames(List<RecentGameWrapper> gameList){
-        Observable.from(gameList)
+    public Observable<List<RecentGameWrapper>> updateWithSummonerNames(List<RecentGameWrapper> gameList) {
+
+        List<String> summonerIdList = new ArrayList<>();
+
+        return Observable.from(gameList)
                 .flatMap(recentGameWrapper -> {
                     List<TeamInfo> sumList = new ArrayList<>();
                     sumList.addAll(recentGameWrapper.getTeam100());
                     sumList.addAll(recentGameWrapper.getTeam200());
-                    return Observable.from(sumList);
+                    return Observable.from(sumList)
+                            .map(TeamInfo::getPlayerId)
+                            .map(String::valueOf)
+                            .toList()
+                            .doOnNext(summonerIdList::addAll)
+                            .map(whatever -> recentGameWrapper);
                 })
-                .map(TeamInfo::getPlayerId)
-                .map(String::valueOf)
                 .toList()
-                .flatMap(riotApiOperation::getSummonerListByIds)
-                .map(summonerNameMap -> {
-                    for(RecentGameWrapper gw: finalGameList){
-                        for (List<TeamInfo> entry : gw.getTeamUrlMap().values()) {
-                            for(TeamInfo ti: entry){
-                                String sName = summonerNameMap.get((int) ti.getPlayerId());
-                                ti.setPlayerName(sName);
-                            }
-                        }
-                    }
-                    return finalGameList;
-                });
+                .flatMap(recentGameWrappers -> riotApiOperation.getSummonerListByIds(summonerIdList)
+                        .map(map -> {
+                            for (RecentGameWrapper game : recentGameWrappers)
+                                for (List<TeamInfo> lti : game.getTeamUrlMap().values())
+                                    for (TeamInfo ti : lti)
+                                        ti.setPlayerName(map.get((int) ti.getPlayerId()));
+                            return recentGameWrappers;
+                        }));
+
+
     }
 
-    public void enableProgressBar(boolean state){
+    public void enableProgressBar(boolean state) {
         progressBar.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
     }
 }

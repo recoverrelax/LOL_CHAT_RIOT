@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.Widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,9 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.PlayerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.TeamInfo;
-import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -55,20 +52,13 @@ public class ChampionImageBlock extends LinearLayout {
         ButterKnife.bind(this);
     }
 
-    public void setChampionImagesAndNames(List<TeamInfo> teamUrlList3, String myChampionUrl, String myName) {
+    public void setChampionImagesAndNames(List<TeamInfo> teamUrlList3) {
 
         List<TeamInfo> teamUrlList = new ArrayList<>();
         teamUrlList.addAll(teamUrlList3);
 
         if(teamUrlList.size() == 0)
             return;
-
-        if (myChampionUrl != null) {
-            TeamInfo ti = new TeamInfo();
-            ti.setPlayerImage(myChampionUrl);
-            ti.setPlayerName(myName);
-            teamUrlList.add(ti);
-        }
 
         int dataSize = teamUrlList.size();
         int viewSize = championTeam.size();

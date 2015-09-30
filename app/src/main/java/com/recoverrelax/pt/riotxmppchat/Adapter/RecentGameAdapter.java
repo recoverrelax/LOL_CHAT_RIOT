@@ -13,7 +13,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.KamehameUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.RecentGameWrapper;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
-import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
 import com.recoverrelax.pt.riotxmppchat.Widget.ChampionImageBlock;
 import com.recoverrelax.pt.riotxmppchat.Widget.SummonerSpellStatBlock;
 import com.recoverrelax.pt.riotxmppchat.Widget.SummonerSpellStatBlock2;
@@ -59,15 +58,11 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
                 .into(holder.summonerSpellStatBlock.getChampionImageView());
 
         holder.team1ChampionInfo.setChampionImagesAndNames(
-                holder.game.getTeam100(),
-                holder.game.getMyTeamId() == TeamCode.TEAM1.id ? holder.game.getMyChampionUrl() : null,
-                friendUsername
+                holder.game.getTeam100()
         );
 
-        holder.team1ChampionInfo.setChampionImagesAndNames(
-                holder.game.getTeam100(),
-                holder.game.getMyTeamId() == TeamCode.TEAM1.id ? holder.game.getMyChampionUrl() : null,
-                friendUsername
+        holder.team2ChampionInfo.setChampionImagesAndNames(
+                holder.game.getTeam200()
         );
 
         Picasso.with(context)

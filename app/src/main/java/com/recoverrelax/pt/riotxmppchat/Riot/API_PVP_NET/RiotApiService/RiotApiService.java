@@ -91,7 +91,7 @@ public interface RiotApiService {
      * SUMMONER
      */
 
-    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + SUMMONER_DATA_V + "/summoner/{summonerIdList}/recent")
+    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + SUMMONER_DATA_V + "/summoner/{summonerIdList}")
     Observable<Map<String, SummonerDto>> getSummonerListByIds_SUMMONER(
             @Path("region") String region,
             @Path("summonerIdList") String summonerIdList

@@ -4,16 +4,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.GameDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ItemDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ItemListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.Service;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,6 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 @Singleton
@@ -98,25 +96,76 @@ public class RiotApiOperations {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<GameDto>> getRecentGamesList(@Nullable String summonerId){
+    public Observable<RecentGamesDto> getRecentGamesList(@Nullable String summonerId){
         return riotApiServiceImpl.getRecentMatchList(summonerId)
-                    .map(RecentGamesDto::getGames)
                     .subscribeOn(Schedulers.computation());
     }
 
     public Observable<Map<Integer, String>> getSummonerListByIds(List<String> summonerIdList){
-        return riotApiServiceImpl.getSummonerListByIds(summonerIdList)
-                .map(mapStringSummonerList -> {
-                    Map<Integer, String> newMap = new HashMap<>();
+        int size = summonerIdList.size();
+        int division = size / 39;
+        int finalSize = size % 39 == 0 ? division : division+1;
 
-                    for (Map.Entry<String, SummonerDto> entry : mapStringSummonerList.entrySet()) {
-                        newMap.put((int)entry.getValue().getId(), entry.getValue().getName());
-                    }
+        List<List<String>> split = split(summonerIdList, finalSize);
+        List<Observable<?>> observableList = new ArrayList<>();
 
-                    return newMap;
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
+        for(List<String> listStr: split){
+            observableList.add(riotApiServiceImpl.getSummonerListByIds(listStr));
+        }
+
+        return Observable.zip(observableList, RiotApiOperations::mergeMaps);
+//
+//
+//
+//        return riotApiServiceImpl.getSummonerListByIds(summonerIdList)
+//                .map(mapStringSummonerList -> {
+//                    Map<Integer, String> newMap = new HashMap<>();
+//
+//                    for (Map.Entry<String, SummonerDto> entry : mapStringSummonerList.entrySet()) {
+//                        newMap.put((int)entry.getValue().getId(), entry.getValue().getName());
+//                    }
+//
+//                    return newMap;
+//                })
+//                .subscribeOn(Schedulers.computation())
+//                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static List<List<String>> split(List<String> list, int size)
+            throws NullPointerException, IllegalArgumentException {
+        if (list == null) {
+            throw new NullPointerException("The list parameter is null.");
+        }
+
+        if (size <= 0) {
+            throw new IllegalArgumentException(
+                    "The size parameter must be more than 0.");
+        }
+
+        List<List<String>> result = new ArrayList<>(size);
+
+        for (int i = 0; i < size; i++) {
+            result.add(new ArrayList<>());
+        }
+
+        int index = 0;
+
+        for (String t : list) {
+            result.get(index).add(t);
+            index = (index + 1) % size;
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> mergeMaps(Object... maps) {
+        final Map<K, V> result = new HashMap<K, V>();
+        for (Object map: maps) {
+            // unchecked <K,V> require @SuppressWarnings
+            result.putAll((Map<K,V>)map);
+        }
+        return result;
     }
 
 
