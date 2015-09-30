@@ -8,8 +8,10 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.GameDt
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ItemDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ItemListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.Service;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 
 import java.util.HashMap;
@@ -21,6 +23,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 @Singleton
@@ -67,15 +70,15 @@ public class RiotApiOperations {
 
     public Observable<Map<Integer, String>> getItemImage(){
         return riotApiServiceImpl.getItemListBasicInfoFiltered()
-                .flatMap(itemListDto -> Observable.just(itemListDto.getData()))
-                .flatMap(mapStringItemList -> {
+                .map(ItemListDto::getData)
+                .map(mapStringItemList -> {
                     Map<Integer, String> newMap = new HashMap<>();
 
                     for (Map.Entry<String, ItemDto> entry : mapStringItemList.entrySet()) {
                         newMap.put(entry.getValue().getId(), entry.getValue().getImage().getFull());
                     }
 
-                    return Observable.just(newMap);
+                    return newMap;
                 })
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -98,8 +101,23 @@ public class RiotApiOperations {
     public Observable<List<GameDto>> getRecentGamesList(@Nullable String summonerId){
         return riotApiServiceImpl.getRecentMatchList(summonerId)
                     .map(RecentGamesDto::getGames)
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread());
+                    .subscribeOn(Schedulers.computation());
     }
+
+    public Observable<Map<Integer, String>> getSummonerListByIds(List<String> summonerIdList){
+        return riotApiServiceImpl.getSummonerListByIds(summonerIdList)
+                .map(mapStringSummonerList -> {
+                    Map<Integer, String> newMap = new HashMap<>();
+
+                    for (Map.Entry<String, SummonerDto> entry : mapStringSummonerList.entrySet()) {
+                        newMap.put((int)entry.getValue().getId(), entry.getValue().getName());
+                    }
+
+                    return newMap;
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 
 }

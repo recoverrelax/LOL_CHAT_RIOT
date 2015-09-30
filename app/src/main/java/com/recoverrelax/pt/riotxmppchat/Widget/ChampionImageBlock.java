@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,7 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.PlayerDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.TeamInfo;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -43,26 +49,45 @@ public class ChampionImageBlock extends LinearLayout {
         inflateLayout();
     }
 
-    public void inflateLayout(){
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public void inflateLayout() {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.champion_image_block_layout, this);
         ButterKnife.bind(this);
     }
 
-    public List<ImageView> getChampionTeam() {
-        return championTeam;
-    }
+    public void setChampionImagesAndNames(List<TeamInfo> teamUrlList3, String myChampionUrl, String myName) {
 
-    public List<TextView> getSummonerNameTeam() {
-        return summonerNameTeam;
-    }
+        List<TeamInfo> teamUrlList = new ArrayList<>();
+        teamUrlList.addAll(teamUrlList3);
 
-    public void resetVisibility() {
-        ButterKnife.apply(summonerNameTeam, new ButterKnife.Action<TextView>() {
-            @Override
-            public void apply(TextView view, int index) {
-                view.setVisibility(View.INVISIBLE);
-            }
-        });
+        if(teamUrlList.size() == 0)
+            return;
+
+        if (myChampionUrl != null) {
+            TeamInfo ti = new TeamInfo();
+            ti.setPlayerImage(myChampionUrl);
+            ti.setPlayerName(myName);
+            teamUrlList.add(ti);
+        }
+
+        int dataSize = teamUrlList.size();
+        int viewSize = championTeam.size();
+
+        for (int i = 0; i < viewSize; i++) {
+            final ImageView target = this.championTeam.get(i);
+            final TextView target2 = this.summonerNameTeam.get(i);
+
+            if(i < dataSize) {
+                Picasso.with(context)
+                        .load(teamUrlList.get(i).getPlayerImage())
+                        .into(target);
+                target2.setText(teamUrlList.get(i).getPlayerName());
+
+                target.setVisibility(View.VISIBLE);
+                target2.setVisibility(View.VISIBLE);
+            }else
+                target.setVisibility(View.INVISIBLE);
+                target2.setVisibility(View.INVISIBLE);
+        }
     }
 }

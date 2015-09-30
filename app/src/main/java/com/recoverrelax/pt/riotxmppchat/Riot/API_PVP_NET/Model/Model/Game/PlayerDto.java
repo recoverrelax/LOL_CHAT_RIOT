@@ -13,16 +13,16 @@ public class PlayerDto {
      */
     private int championId;
 
+     /**
+     * Summoner id associated with player.
+     */
+    private long summonerId;
+
     /**
      * NOT PART OF THE JSON
      */
 
-    private String championImage;
-
-    /**
-     * Summoner id associated with player.
-     */
-    private long summonerId;
+    private String summonerName;
 
     /**
      * Team id associated with player.
@@ -43,11 +43,21 @@ public class PlayerDto {
         return teamId;
     }
 
-    public String getChampionImage() {
-        return championImage;
+    public String getSummonerName() {
+        return summonerName;
     }
 
-    public void setChampionImage(String championImage) {
-        this.championImage = championImage;
+    public void setSummonerName(String summonerName) {
+        this.summonerName = summonerName;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerDto{" +
+                "championId=" + championId +
+                ", summonerId=" + summonerId +
+                ", summonerName='" + summonerName + '\'' +
+                ", teamId=" + teamId +
+                '}';
     }
 }

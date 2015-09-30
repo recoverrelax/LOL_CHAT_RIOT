@@ -16,10 +16,11 @@
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <!--<com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar-->
-        <!--android:id="@+id/progressBar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"/>-->
+    <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
+        android:id="@+id/progressBar"
+        android:background="@color/whiteT"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
 

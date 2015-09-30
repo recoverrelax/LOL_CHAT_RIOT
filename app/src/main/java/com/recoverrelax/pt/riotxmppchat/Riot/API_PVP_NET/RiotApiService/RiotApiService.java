@@ -7,6 +7,9 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.Item
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.RealmDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.ShardStatus;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
+
+import java.util.Map;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -19,6 +22,7 @@ public interface RiotApiService {
 
     String STATIC_DATA_V = "v1.2";
     String GAME_DATA_V = "v1.3";
+    String SUMMONER_DATA_V = "v1.4";
 
     /**
      * CURRENT_GAME *********************************************************************************************
@@ -81,5 +85,15 @@ public interface RiotApiService {
     Observable<RecentGamesDto> getRecentMatchList_GAME(
             @Path("region") String region,
             @Path("summonerId") String summonerId
+    );
+
+    /**
+     * SUMMONER
+     */
+
+    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + SUMMONER_DATA_V + "/summoner/{summonerIdList}/recent")
+    Observable<Map<String, SummonerDto>> getSummonerListByIds_SUMMONER(
+            @Path("region") String region,
+            @Path("summonerIdList") String summonerIdList
     );
 }

@@ -26,7 +26,7 @@ public class KamehameUtils {
         }
     }
 
-    public static String transformKillDeathAssistIntoKda(int kill, int death, int assists) {
-        return String.valueOf(kill) + "/" + String.valueOf(death) + "/" + String.valueOf(assists);
+    public static String transformKillDeathAssistIntoKda(String kill, String death, String assists) {
+        return kill + "/" + death + "/" + assists;
     }
 }

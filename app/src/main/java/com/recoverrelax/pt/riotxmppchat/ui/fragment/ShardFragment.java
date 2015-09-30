@@ -157,7 +157,6 @@ public class ShardFragment extends BaseFragment {
 
     private @Nullable RiotServer getRegion() {
         String server = dataStorage.getServer();
-        RiotServer riotServerByName = RiotServer.getRiotServerByName(server);
-        return riotServerByName;
+        return RiotServer.getRiotServerByName(server);
     }
 }

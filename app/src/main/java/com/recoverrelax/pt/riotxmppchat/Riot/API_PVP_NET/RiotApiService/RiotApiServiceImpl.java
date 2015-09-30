@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
@@ -11,8 +12,13 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.Item
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.RealmDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.ShardStatus;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -108,6 +114,19 @@ public class RiotApiServiceImpl {
             return Observable.error(new Throwable("For some reason, region is invalid"));
 
         return apiProvider.getRiotApiServiceSecure().getRecentMatchList_GAME(region, summonerId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Map<String, SummonerDto>> getSummonerListByIds(List<String> summonerIdList) {
+        String region = getRegion();
+
+        if (region == null)
+            return Observable.error(new Throwable("For some reason, region is invalid"));
+
+        String join = TextUtils.join(",", summonerIdList);
+
+        return apiProvider.getRiotApiServiceSecure().getSummonerListByIds_SUMMONER(region, join)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
