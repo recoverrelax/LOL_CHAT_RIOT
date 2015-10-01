@@ -37,6 +37,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -159,81 +160,54 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
         adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), recyclerView);
         recyclerView.setAdapter(adapter);
 
-        getUnreadedMessageCount();
-        getFriendStatusInfo();
-        getLogLast20();
-        getFullFriendsList();
+        getWsInfo();
+//        getFullFriendsList();
     }
 
-    private void getFullFriendsList() {
-        rosterImpl.getFullFriendsList(true);
+    private void getWsInfo() {
+        subscriptions.add(
+        Observable.merge(
+                getUnreadedMessageCount(),
+                getFriendStatusInfo(),
+                getLogLast20()
+        ).subscribe()
+        );
     }
 
-    private void getFriendStatusInfo() {
-        Subscription subscribe = dashboardImpl.getFriendStatusInfo()
-                .subscribe(new Subscriber<RiotXmppDashboardImpl.FriendStatusInfo>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+//    private void getFullFriendsList() {
+//        rosterImpl.getFullFriendsList(true);
+//    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        playing_number.setText("?");
-                        offline_number.setText("?");
-                        online_number.setText("?");
-                    }
-
-                    @Override
-                    public void onNext(RiotXmppDashboardImpl.FriendStatusInfo friendStatusInfo) {
-                        playing_number.setText(String.valueOf(friendStatusInfo.getFriendsPlaying()));
-                        offline_number.setText(String.valueOf(friendStatusInfo.getFriendsOffline()));
-                        online_number.setText(String.valueOf(friendStatusInfo.getFriendsOnline()));
-                    }
+    private Observable<RiotXmppDashboardImpl.FriendStatusInfo> getFriendStatusInfo() {
+        return dashboardImpl.getFriendStatusInfo()
+                .doOnError(throwable -> {
+                    playing_number.setText("?");
+                    offline_number.setText("?");
+                    online_number.setText("?");
+                })
+                .doOnNext(friendStatusInfo -> {
+                    playing_number.setText(String.valueOf(friendStatusInfo.getFriendsPlaying()));
+                    offline_number.setText(String.valueOf(friendStatusInfo.getFriendsOffline()));
+                    online_number.setText(String.valueOf(friendStatusInfo.getFriendsOnline()));
                 });
-
-        subscriptions.add(subscribe);
     }
-    private void getUnreadedMessageCount() {
-        Subscription subscribe = dashboardImpl.getUnreadedMessagesCount()
-                .subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        message_number.setText("?");
-                    }
+    private Observable<String> getUnreadedMessageCount() {
+        return dashboardImpl.getUnreadedMessagesCount()
+                .doOnError(throwable -> message_number.setText("?"))
+                .doOnNext(message_number::setText);
+    }
 
-                    @Override
-                    public void onNext(String messageCount) {
-                        message_number.setText(messageCount);
+    private Observable<List<InAppLogDb>> getLogLast20() {
+        return dashboardImpl.getLogLast20List()
+                .doOnNext(inAppLogDbs -> {
+                    if (adapter != null && inAppLogDbs != null) {
+                        getActivity().runOnUiThread(() -> adapter.setItems(inAppLogDbs));
                     }
+                    showProgressBar(false);
                 });
-
-        subscriptions.add(subscribe);
     }
-    private void getLogLast20() {
-        Subscription subscribe = dashboardImpl.getLogLast20List()
-                .subscribe(new Subscriber<List<InAppLogDb>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(List<InAppLogDb> inAppLogDbs) {
-                        if (adapter != null && inAppLogDbs != null) {
-                            getActivity().runOnUiThread(() -> adapter.setItems(inAppLogDbs));
-                        }
-                        showProgressBar(false);
-                    }
-                });
-        subscriptions.add(subscribe);
-    }
     private void getLogSingleItem() {
         Subscription subscribe = dashboardImpl.getLogSingleItem()
                 .subscribe(new Subscriber<InAppLogDb>() {
@@ -259,9 +233,7 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
     public void onResume() {
         super.onResume();
         if (!firstTimeOnCreate) {
-            getUnreadedMessageCount();
-            getFriendStatusInfo();
-            getLogLast20();
+            getWsInfo();
         }
         showProgressBar(false);
         firstTimeOnCreate = false;

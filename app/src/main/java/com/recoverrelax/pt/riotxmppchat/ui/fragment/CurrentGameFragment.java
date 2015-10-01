@@ -4,7 +4,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,6 +42,7 @@ import butterknife.ButterKnife;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,6 +86,8 @@ public class CurrentGameFragment extends BaseFragment {
     @Bind({R.id.team200_player1, R.id.team200_player2, R.id.team200_player3, R.id.team200_player4, R.id.team200_player5})
     List<CurrentGameSingleParticipantBase> team200;
 
+    private CompositeSubscription subscriptions;
+
     public CurrentGameFragment() {
         // Required empty public constructor
     }
@@ -117,7 +119,7 @@ public class CurrentGameFragment extends BaseFragment {
             friendUsername = (String) savedInstanceState.getSerializable(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT);
         }
         ((BaseActivity) getActivity()).setTitle(getActivity().getResources().getString(R.string.current_game__fragment_title) + " " + friendUsername);
-
+        subscriptions = new CompositeSubscription();
     }
 
     @Override
@@ -134,15 +136,30 @@ public class CurrentGameFragment extends BaseFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        long userId_riotApi = AppXmppUtils.getSummonerIdByXmppAddress(friendXmppAddress);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+         subscriptions = new CompositeSubscription();
+         getDataFromWs();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        subscriptions.clear();
+        subscriptions = null;
+    }
+
+    private void getDataFromWs() {
+        long userId_riotApi = AppXmppUtils.getSummonerIdByXmppAddress(friendXmppAddress);
         Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId = riotApiServiceImpl.getCurrentGameInfoBySummonerId(userId_riotApi)
                 .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
         Observable<Map<Integer, String>> obsChampionsImage = riotApiOperations.getChampionsImage()
-                .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
@@ -151,48 +168,26 @@ public class CurrentGameFragment extends BaseFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        /**
-         * Get the General Live Game Data and Update the View
-         */
+        Observable<String> championDDBaseUrl = realmData.getChampionDDBaseUrl();
+        Observable<String> summonerSpellDDBaseUrl = realmData.getSummonerSpellDDBaseUrl();
 
-        obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
-                .doOnSubscribe(() -> currentGameGlobalInfo.enableProgressBar(true))
-                .doOnUnsubscribe(() -> currentGameGlobalInfo.enableProgressBar(false))
-                .doOnNext(this::fetchGameData)
-                .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_general_error, Snackbar.LENGTH_LONG))
-                .subscribe();
-
-        /**
-         * Get the Banned Champions Information and Update the View
-         */
-
-        obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
-                .doOnSubscribe(() -> banList.enableProgressBar(true))
-                .doOnUnsubscribe(() -> banList.enableProgressBar(false))
-                .map(CurrentGameInfo::getBannedChampions) // for each bannedChampion Object
-                .take(banList.getSize())
-                .flatMap(bannedChampionList ->
-                                obsChampionsImage
-                                        .flatMap(championImagesMap ->
-                                                        Observable.from(bannedChampionList)
-                                                                .doOnNext(bannedChampion -> {
-                                                                    String s = championImagesMap.get((int) bannedChampion.getChampionId());
-                                                                    if (s != null)
-                                                                        bannedChampion.setChampionImage(s);
-                                                                })
-                                                                .toList()
-                                        )
+        subscriptions.add(
+                Observable.zip(championDDBaseUrl, summonerSpellDDBaseUrl, (championDDBaseUrl1, summonerSpellDDBaseUrl1) ->
+                        Observable.merge(
+                                getGeneralLiveData(obsCurrentGameInfoBySummonerId),
+                                getBannedChampionInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, championDDBaseUrl1),
+                                getPickedChampionAndSSInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, obsSummonerSpellImage, championDDBaseUrl1, summonerSpellDDBaseUrl1)
+                        )
                 )
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(this::fetchBannedChampions)
-                .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_banned_c_error, Snackbar.LENGTH_LONG))
-                .subscribe();
+                 .ignoreElements()
+                 .subscribe()
+        );
+    }
 
-        /**
-         * Get the Picked Champions and Summoner Spell used Information and Update the View
-         */
+    private Observable<List<CurrentGameParticipant>> getPickedChampionAndSSInfo(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId, Observable<Map<Integer, String>> obsChampionsImage,
+                                                                                Observable<Map<Integer, String>> obsSummonerSpellImage, String championSquareBaseUrl, String summonerSpellBaseUrl) {
 
-        obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
+        return obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
                 .doOnSubscribe(() -> enableProgressBarParticipantContent(true))
                 .doOnUnsubscribe(() -> enableProgressBarParticipantContent(false))
                 .map(CurrentGameInfo::getParticipants) // for each bannedChampion Object
@@ -228,24 +223,42 @@ public class CurrentGameFragment extends BaseFragment {
                 )
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_participants_error, Snackbar.LENGTH_LONG))
-                .doOnNext(this::fetchParticipants)
-                .subscribe();
+                .doOnNext(currentGameParticipants -> fetchParticipants(currentGameParticipants, championSquareBaseUrl, summonerSpellBaseUrl));
     }
 
-    private void fetchParticipants(List<CurrentGameParticipant> participants) {
-
-        realmData.getChampionDDBaseUrl()
-                .flatMap(championSquareBaseUrl ->
-                                realmData.getSummonerSpellDDBaseUrl()
-                                        .map(summonerSpellBaseUrl ->
-                                                new Pair<>(championSquareBaseUrl, summonerSpellBaseUrl))
+    private Observable<List<BannedChampion>> getBannedChampionInfo(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId, Observable<Map<Integer, String>> obsChampionsImage, String ddChampionSquareUrl) {
+        return obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
+                .doOnSubscribe(() -> banList.enableProgressBar(true))
+                .doOnUnsubscribe(() -> banList.enableProgressBar(false))
+                .map(CurrentGameInfo::getBannedChampions) // for each bannedChampion Object
+                .take(banList.getSize())
+                .flatMap(bannedChampionList ->
+                                obsChampionsImage
+                                        .flatMap(championImagesMap ->
+                                                        Observable.from(bannedChampionList)
+                                                                .doOnNext(bannedChampion -> {
+                                                                    String s = championImagesMap.get((int) bannedChampion.getChampionId());
+                                                                    if (s != null)
+                                                                        bannedChampion.setChampionImage(s);
+                                                                })
+                                                                .toList()
+                                        )
                 )
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(urlPair -> {
+                .doOnNext(bannedChampions -> fetchBannedChampions(bannedChampions, ddChampionSquareUrl))
+                .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_banned_c_error, Snackbar.LENGTH_LONG));
+    }
 
-                    String championSquareBaseUrl = urlPair.first;
-                    String summonerSpellBaseUrl = urlPair.second;
+    private Observable<CurrentGameInfo> getGeneralLiveData(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId) {
+        return obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
+                .doOnSubscribe(() -> currentGameGlobalInfo.enableProgressBar(true))
+                .doOnUnsubscribe(() -> currentGameGlobalInfo.enableProgressBar(false))
+                .doOnNext(this::fetchGameData)
+                .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_general_error, Snackbar.LENGTH_LONG));
+    }
+
+    private void fetchParticipants(List<CurrentGameParticipant> participants, String championSquareBaseUrl, String summonerSpellBaseUrl) {
+
                     List<CurrentGameParticipant> team1001 = new ArrayList<>();
                     List<CurrentGameParticipant> team2001 = new ArrayList<>();
 
@@ -317,7 +330,6 @@ public class CurrentGameFragment extends BaseFragment {
                         playerName.setText(liveGameParticipant.getSummonerName());
                         cgp.setVisibility(View.VISIBLE);
                     }
-                });
     }
 
     private void enableProgressBarParticipantContent(boolean state) {
@@ -332,9 +344,8 @@ public class CurrentGameFragment extends BaseFragment {
         currentGameGlobalInfo.setGameDuration(currentGameInfo.getGameStartTimeFormatted());
     }
 
-    private void fetchBannedChampions(List<BannedChampion> bannedChampions) {
-        realmData.getChampionDDBaseUrl()
-                .subscribe(ddChampionSquareUrl -> {
+    private void fetchBannedChampions(List<BannedChampion> bannedChampions, String ddChampionSquareUrl) {
+
                     List<BannedChampion> team1001 = new ArrayList<>();
                     List<BannedChampion> team2001 = new ArrayList<>();
 
@@ -363,8 +374,5 @@ public class CurrentGameFragment extends BaseFragment {
                                 .load(ddChampionSquareUrl + team2001.get(i).getChampionImage())
                                 .into(imageView);
                     }
-
-
-                });
     }
 }
