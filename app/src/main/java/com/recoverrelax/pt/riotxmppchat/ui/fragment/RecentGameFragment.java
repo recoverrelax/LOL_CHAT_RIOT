@@ -177,76 +177,74 @@ public class RecentGameFragment extends BaseFragment {
          * Make every call, build the Adapter dataStructure and update the Adapter
          */
 
-        subscriptions.add(
-                Observable.zip(observableList, args -> {
-                    Map<Integer, String> ssImages = (Map<Integer, String>) args[0];
-                    Map<Integer, String> championImage = (Map<Integer, String>) args[1];
-                    Map<Integer, String> itemImage = (Map<Integer, String>) args[2];
-                    String ssUrl = (String) args[3];
-                    String itemUrl = (String) args[4];
-                    String championUrl = (String) args[5];
 
-                    final long[] mySummonerId = new long[1];
+        Observable.zip(observableList, args -> {
+            Map<Integer, String> ssImages = (Map<Integer, String>) args[0];
+            Map<Integer, String> championImage = (Map<Integer, String>) args[1];
+            Map<Integer, String> itemImage = (Map<Integer, String>) args[2];
+            String ssUrl = (String) args[3];
+            String itemUrl = (String) args[4];
+            String championUrl = (String) args[5];
 
-                    return riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
-                            .map((RecentGamesDto recentGamesDto) -> {
-                                mySummonerId[0] = recentGamesDto.getSummonerId();
-                                return recentGamesDto.getGames();
-                            })
-                            .flatMap(Observable::from)
-                            .doOnNext(game -> {
-                                RecentGameWrapper recentGameWrapper = new RecentGameWrapper();
+            final long[] mySummonerId = new long[1];
 
-                                recentGameWrapper.setSummonerSpellUrl1(ssUrl + ssImages.get(game.getSpell1()));
-                                recentGameWrapper.setSummonerSpellUrl2(ssUrl + ssImages.get(game.getSpell2()));
+            return riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
+                    .map((RecentGamesDto recentGamesDto) -> {
+                        mySummonerId[0] = recentGamesDto.getSummonerId();
+                        return recentGamesDto.getGames();
+                    })
+                    .flatMap(Observable::from)
+                    .doOnNext(game -> {
+                        RecentGameWrapper recentGameWrapper = new RecentGameWrapper();
 
-                                List<String> newItemUrl = new ArrayList<>();
-                                newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem0()));
-                                newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem1()));
-                                newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem2()));
-                                newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem3()));
-                                newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem4()));
-                                newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem5()));
+                        recentGameWrapper.setSummonerSpellUrl1(ssUrl + ssImages.get(game.getSpell1()));
+                        recentGameWrapper.setSummonerSpellUrl2(ssUrl + ssImages.get(game.getSpell2()));
 
-                                recentGameWrapper.setItemList(newItemUrl);
+                        List<String> newItemUrl = new ArrayList<>();
+                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem0()));
+                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem1()));
+                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem2()));
+                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem3()));
+                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem4()));
+                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem5()));
 
-                                recentGameWrapper.setMyChampionUrl(championUrl + championImage.get(game.getChampionId()));
-                                recentGameWrapper.setMyTeamId(game.getTeamId());
-                                recentGameWrapper.setKill(String.valueOf(game.getStats().getChampionsKilled()));
-                                recentGameWrapper.setDead(String.valueOf(game.getStats().getNumDeaths()));
-                                recentGameWrapper.setAssists(String.valueOf(game.getStats().getAssists()));
-                                recentGameWrapper.setGold(game.getStats().getGoldEarned());
-                                recentGameWrapper.setCs(String.valueOf(game.getStats().getMinionsKilled()));
+                        recentGameWrapper.setItemList(newItemUrl);
 
-                                List<PlayerDto> fellowPlayers = game.getFellowPlayers();
-                                if (fellowPlayers != null) {
-                                    for (PlayerDto playerDto : fellowPlayers) {
-                                        recentGameWrapper.addPlayer(playerDto.getSummonerId(),
-                                                championUrl + championImage.get(playerDto.getChampionId()),
-                                                playerDto.getTeamId());
-                                    }
-                                }
-                                recentGameWrapper.addPlayer(
-                                        mySummonerId[0],
-                                        championUrl + championImage.get(game.getChampionId()),
-                                        game.getTeamId()
-                                );
+                        recentGameWrapper.setMyChampionUrl(championUrl + championImage.get(game.getChampionId()));
+                        recentGameWrapper.setMyTeamId(game.getTeamId());
+                        recentGameWrapper.setKill(String.valueOf(game.getStats().getChampionsKilled()));
+                        recentGameWrapper.setDead(String.valueOf(game.getStats().getNumDeaths()));
+                        recentGameWrapper.setAssists(String.valueOf(game.getStats().getAssists()));
+                        recentGameWrapper.setGold(game.getStats().getGoldEarned());
+                        recentGameWrapper.setCs(String.valueOf(game.getStats().getMinionsKilled()));
 
-                                finalGameList.add(recentGameWrapper);
-                            })
-                            .toList()
-                            .map(whatever -> finalGameList)
-                            .flatMap(this::updateWithSummonerNames)
-                            .doOnError(Throwable::printStackTrace)
-                            .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .doOnSubscribe(() -> enableProgressBar(true))
-                            .doOnUnsubscribe(() -> enableProgressBar(false))
-//                    .subscribe(adapter::setItems);
-                            .flatMap(whatever -> Observable.just(finalGameList));
-                })
-                        .ignoreElements().subscribe()
-        );
+                        List<PlayerDto> fellowPlayers = game.getFellowPlayers();
+                        if (fellowPlayers != null) {
+                            for (PlayerDto playerDto : fellowPlayers) {
+                                recentGameWrapper.addPlayer(playerDto.getSummonerId(),
+                                        championUrl + championImage.get(playerDto.getChampionId()),
+                                        playerDto.getTeamId());
+                            }
+                        }
+                        recentGameWrapper.addPlayer(
+                                mySummonerId[0],
+                                championUrl + championImage.get(game.getChampionId()),
+                                game.getTeamId()
+                        );
+
+                        finalGameList.add(recentGameWrapper);
+                    })
+                    .toList()
+                    .map(whatever -> finalGameList)
+                    .flatMap(this::updateWithSummonerNames)
+                    .doOnError(Throwable::printStackTrace)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(() -> enableProgressBar(true))
+                    .doOnUnsubscribe(() -> enableProgressBar(false))
+                    .subscribe(adapter::setItems);
+        })
+                .ignoreElements().subscribe();
     }
 
 

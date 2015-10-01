@@ -160,6 +160,7 @@ public class CurrentGameFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread());
 
         Observable<Map<Integer, String>> obsChampionsImage = riotApiOperations.getChampionsImage()
+                .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
@@ -172,15 +173,10 @@ public class CurrentGameFragment extends BaseFragment {
         Observable<String> summonerSpellDDBaseUrl = realmData.getSummonerSpellDDBaseUrl();
 
         subscriptions.add(
-                Observable.zip(championDDBaseUrl, summonerSpellDDBaseUrl, (championDDBaseUrl1, summonerSpellDDBaseUrl1) ->
-                        Observable.merge(
-                                getGeneralLiveData(obsCurrentGameInfoBySummonerId),
-                                getBannedChampionInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, championDDBaseUrl1),
-                                getPickedChampionAndSSInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, obsSummonerSpellImage, championDDBaseUrl1, summonerSpellDDBaseUrl1)
-                        )
-                )
-                 .ignoreElements()
-                 .subscribe()
+                Observable.zip(championDDBaseUrl, summonerSpellDDBaseUrl, (championDDBaseUrl1, summonerSpellDDBaseUrl1) -> Observable.merge(getGeneralLiveData(obsCurrentGameInfoBySummonerId),
+                        getBannedChampionInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, championDDBaseUrl1),
+                        getPickedChampionAndSSInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, obsSummonerSpellImage, championDDBaseUrl1, summonerSpellDDBaseUrl1)
+                ).subscribe()).ignoreElements().subscribe()
         );
     }
 
