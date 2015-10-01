@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/currentGameParticipantMainContent"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardCornerRadius="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
+            android:id="@+id/team100_player1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
+            android:id="@+id/team200_player1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal">
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
+            android:id="@+id/team100_player2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
+            android:id="@+id/team200_player2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal">
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
+            android:id="@+id/team100_player3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
+            android:id="@+id/team200_player3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal">
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
+            android:id="@+id/team100_player4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
+            android:id="@+id/team200_player4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardCornerRadius="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:orientation="horizontal">
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantRight
+            android:id="@+id/team100_player5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantLeft
+            android:id="@+id/team200_player5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            tools:visibility="invisible" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

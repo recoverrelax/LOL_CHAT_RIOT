@@ -71,6 +71,9 @@ public class CurrentGameFragment extends BaseFragment {
     @Bind(R.id.currentGameParticipantMainContent)
     LinearLayout currentGameParticipantMainContent;
 
+    @Bind(R.id.progressBarPicks)
+    AppProgressBar progressBarPicksAndBans;
+
     @Inject
     RiotApiServiceImpl riotApiServiceImpl;
 
@@ -218,7 +221,10 @@ public class CurrentGameFragment extends BaseFragment {
                                         )
                 )
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_participants_error, Snackbar.LENGTH_LONG))
+                .doOnError(throwable -> {
+                    AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_participants_error, Snackbar.LENGTH_LONG);
+                    throwable.printStackTrace();
+                })
                 .doOnNext(currentGameParticipants -> fetchParticipants(currentGameParticipants, championSquareBaseUrl, summonerSpellBaseUrl));
     }
 
@@ -329,7 +335,7 @@ public class CurrentGameFragment extends BaseFragment {
     }
 
     private void enableProgressBarParticipantContent(boolean state) {
-        progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
+        progressBarPicksAndBans.setVisibility(state ? View.VISIBLE : View.GONE);
         currentGameParticipantMainContent.setVisibility(state ? View.INVISIBLE : View.VISIBLE);
     }
 

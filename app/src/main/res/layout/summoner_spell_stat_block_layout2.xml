@@ -22,7 +22,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/ic_kda" />
+                android:src="@mipmap/ic_score2" />
 
             <TextView
                 android:id="@+id/kda"
@@ -38,7 +38,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/ic_kda" />
+                android:src="@mipmap/ic_gold2" />
 
             <TextView
                 android:id="@+id/gold"
@@ -54,7 +54,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/ic_kda" />
+                android:src="@mipmap/ic_minion2" />
 
             <TextView
                 android:id="@+id/cs"
