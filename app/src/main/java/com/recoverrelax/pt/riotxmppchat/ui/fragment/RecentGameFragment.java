@@ -19,6 +19,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.Player
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.RecentGameWrapper;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.TeamInfo;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
@@ -257,8 +258,11 @@ public class RecentGameFragment extends BaseFragment {
                         .map(map -> {
                             for (RecentGameWrapper game : recentGameWrappers)
                                 for (List<TeamInfo> lti : game.getTeamUrlMap().values())
-                                    for (TeamInfo ti : lti)
-                                        ti.setPlayerName(map.get((int) ti.getPlayerId()));
+                                    for (TeamInfo ti : lti) {
+                                        String playerIdString = String.valueOf(ti.getPlayerId());
+                                        SummonerDto summonerDto = map.get(playerIdString);
+                                        ti.setPlayerName(summonerDto.getName());
+                                    }
                             return recentGameWrappers;
                         }));
 

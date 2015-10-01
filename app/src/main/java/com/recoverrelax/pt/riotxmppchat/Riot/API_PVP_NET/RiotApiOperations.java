@@ -10,6 +10,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.Item
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ItemListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.SummonerSpellDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.Service;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public class RiotApiOperations {
                     .subscribeOn(Schedulers.computation());
     }
 
-    public Observable<Map<Integer, String>> getSummonerListByIds(List<String> summonerIdList){
+    public Observable<Map<String, SummonerDto>> getSummonerListByIds(List<String> summonerIdList){
         int size = summonerIdList.size();
         int division = size / 39;
         int finalSize = size % 39 == 0 ? division : division+1;

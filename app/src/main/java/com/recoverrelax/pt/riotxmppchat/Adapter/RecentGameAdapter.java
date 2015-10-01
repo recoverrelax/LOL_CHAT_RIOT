@@ -102,6 +102,7 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
     public void setItems(List<RecentGameWrapper> recentGamesList) {
         this.recentGameList.clear();
         this.recentGameList.addAll(recentGamesList);
+
         notifyDataSetChanged();
     }
 

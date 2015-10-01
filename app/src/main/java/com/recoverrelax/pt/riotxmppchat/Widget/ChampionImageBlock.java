@@ -71,7 +71,7 @@ public class ChampionImageBlock extends LinearLayout {
                 Picasso.with(context)
                         .load(teamUrlList.get(i).getPlayerImage())
                         .into(target);
-                target2.setText(teamUrlList.get(i).getPlayerName());
+                target2.setText("123");
 
                 target.setVisibility(View.VISIBLE);
                 target2.setVisibility(View.VISIBLE);

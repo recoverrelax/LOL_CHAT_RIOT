@@ -68,7 +68,7 @@
             android:id="@+id/summonerName"
             style="@style/recent_games_kda_textview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"            
+            android:layout_height="wrap_content"
             android:singleLine="true"
             android:text="MyanmarKing" />
         <TextView
