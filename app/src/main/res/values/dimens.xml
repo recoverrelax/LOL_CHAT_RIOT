@@ -43,5 +43,7 @@
 
     <dimen name="login_textview_padding_top_bottom">10dp</dimen>
     <dimen name="def_spacing_double">16dp</dimen>
-    <dimen name="def_spacing_default">8dp</dimen>
+
+
+    <dimen name="recent_games_child_height">150dp</dimen>
 </resources>

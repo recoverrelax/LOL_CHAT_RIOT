@@ -116,8 +116,16 @@
     </style>
 
     <style name="recent_games_kda_textview" parent="TextViewStyle">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="recent_games_champion_names_textview" parent="TextViewStyle">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:visibility">invisible</item>
+        <item name="android:singleLine">true</item>
     </style>
 </resources>

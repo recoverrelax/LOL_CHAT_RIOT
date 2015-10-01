@@ -27,7 +27,7 @@ public class SummonerSpellStatBlock2 extends LinearLayout {
 
     @Bind({R.id.summonerItem1, R.id.summonerItem2, R.id.summonerItem3, R.id.summonerItem4,
            R.id.summonerItem5, R.id.summonerItem6})
-    List<SquareImageViewHeight> summonerItems;
+    List<ImageView> summonerItems;
 
     private Context context;
 
@@ -67,7 +67,7 @@ public class SummonerSpellStatBlock2 extends LinearLayout {
         return cs;
     }
 
-    public List<SquareImageViewHeight> getSummonerItems() {
+    public List<ImageView> getSummonerItems() {
         return summonerItems;
     }
 }

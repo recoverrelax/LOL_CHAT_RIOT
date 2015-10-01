@@ -1,191 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="center"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="right|center_vertical"
-    android:orientation="horizontal">
+    android:layout_gravity="start|center_vertical"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_gravity="right"
-        android:gravity="right"
-        android:orientation="vertical"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
         android:layout_weight="1"
-        android:layout_height="wrap_content">
+        android:layout_marginBottom="5dp"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/kda"
-                    android:gravity="right"
-                    style="@style/recent_games_kda_textview"
-                    android:text="11/12/13"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/gold"
-                    android:gravity="right"
-                    style="@style/recent_games_kda_textview"
-                    android:text="11K"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/cs"
-                    android:gravity="right"
-                    style="@style/recent_games_kda_textview"
-                    android:text="450"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_gravity="left"
-                android:gravity="left"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="0dp">
-                    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                        android:layout_gravity="left"
-                        android:layout_width="wrap_content"
-                        android:src="@drawable/ic_kda"
-                        android:layout_height="match_parent" />
-                    </FrameLayout>
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="0dp">
-                    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                        android:layout_gravity="left"
-                        android:layout_width="wrap_content"
-                        android:src="@drawable/ic_kda"
-                        android:layout_height="match_parent" />
-                </FrameLayout>
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="0dp">
-                    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                        android:layout_gravity="left"
-                        android:layout_width="wrap_content"
-                        android:src="@drawable/ic_kda"
-                        android:layout_height="match_parent" />
-                </FrameLayout>
-
-            </LinearLayout>
-
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_gravity="top|right"
-            android:gravity="top|right"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-                <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                    android:id="@+id/summonerItem1"
-                    android:src="@drawable/champion_example"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right|center_vertical" />
-            </FrameLayout>
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-                <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                    android:id="@+id/summonerItem2"
-                    android:src="@drawable/champion_example"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center" />
-            </FrameLayout>
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
-
-                <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                    android:id="@+id/summonerItem3"
-                    android:src="@drawable/champion_example"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="left|center_vertical" />
-            </FrameLayout>
-
-        </LinearLayout>
-
-            <LinearLayout
-                android:layout_gravity="top|right"
-                android:gravity="top|right"
+            <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ic_kda" />
 
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/kda"
+                style="@style/recent_games_kda_textview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:text="11/12/13" />
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                        android:id="@+id/summonerItem4"
-                        android:src="@drawable/champion_example"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right|center_vertical" />
-                </FrameLayout>
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+            <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ic_kda" />
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                        android:id="@+id/summonerItem5"
-                        android:src="@drawable/champion_example"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center" />
-                </FrameLayout>
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/gold"
+                style="@style/recent_games_kda_textview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:text="11K" />
 
-                    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                        android:id="@+id/summonerItem6"
-                        android:src="@drawable/champion_example"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="left|center_vertical" />
-                </FrameLayout>
-            </LinearLayout>
+            <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ic_kda" />
 
+            <TextView
+                android:id="@+id/cs"
+                style="@style/recent_games_kda_textview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:text="450" />
+    </LinearLayout>
 
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/summonerItem1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/summonerItem2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/summonerItem3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/summonerItem4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/summonerItem5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/summonerItem6"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/champion_example" />
+
+    </LinearLayout>
+</LinearLayout>

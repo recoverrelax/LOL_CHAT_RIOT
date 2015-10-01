@@ -30,16 +30,14 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
     private List<RecentGameWrapper> recentGameList;
     private final LayoutInflater inflater;
     private final Context context;
-    private String friendUsername;
 
     @Inject
     RiotApiRealmDataVersion realmData;
 
-    public RecentGameAdapter(Context context, List<RecentGameWrapper> recentGameList, String friendUsername) {
+    public RecentGameAdapter(Context context, List<RecentGameWrapper> recentGameList) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.recentGameList = recentGameList;
-        this.friendUsername = friendUsername;
         MainApplication.getInstance().getAppComponent().inject(this);
     }
 
