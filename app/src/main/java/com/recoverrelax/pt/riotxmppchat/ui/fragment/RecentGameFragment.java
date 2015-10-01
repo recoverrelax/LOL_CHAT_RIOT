@@ -129,7 +129,7 @@ public class RecentGameFragment extends BaseFragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
         myRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new RecentGameAdapter(this.getActivity(), new ArrayList<>(), friendUsername);
+        adapter = new RecentGameAdapter(this.getActivity(), new ArrayList<>());
         myRecyclerView.setAdapter(adapter);
 
         userId_riotApi = AppXmppUtils.getSummonerIdByXmppAddress(friendXmppAddress);
@@ -244,8 +244,13 @@ public class RecentGameFragment extends BaseFragment {
         return Observable.from(gameList)
                 .flatMap(recentGameWrapper -> {
                     List<TeamInfo> sumList = new ArrayList<>();
-                    sumList.addAll(recentGameWrapper.getTeam100());
-                    sumList.addAll(recentGameWrapper.getTeam200());
+                    List<TeamInfo> team100 = recentGameWrapper.getTeam100();
+                    if(team100 != null)
+                    sumList.addAll(team100);
+
+                    List<TeamInfo> team200 = recentGameWrapper.getTeam200();
+                    if(team200 != null)
+                    sumList.addAll(team200);
                     return Observable.from(sumList)
                             .map(TeamInfo::getPlayerId)
                             .map(String::valueOf)

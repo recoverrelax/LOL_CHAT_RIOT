@@ -1,6 +1,7 @@
 <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recentGameParentLayout"
     android:background="@color/transparent"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -18,6 +19,7 @@
 
     <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
         android:id="@+id/progressBar"
+        tools:visibility="invisible"
         android:background="@color/whiteT"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
