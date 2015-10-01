@@ -76,8 +76,8 @@ public class ChampionImageBlock extends LinearLayout {
                 target.setVisibility(View.VISIBLE);
                 target2.setVisibility(View.VISIBLE);
             }else {
-                target.setVisibility(View.GONE);
-                target2.setVisibility(View.GONE);
+                target.setVisibility(View.INVISIBLE);
+                target2.setVisibility(View.INVISIBLE);
             }
         }
     }
