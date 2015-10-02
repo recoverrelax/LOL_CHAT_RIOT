@@ -235,13 +235,13 @@ public class RecentGameFragment extends BaseFragment {
                         if (fellowPlayers != null) {
                             for (PlayerDto playerDto : fellowPlayers) {
                                 recentGameWrapper.addPlayer(playerDto.getSummonerId(),
-                                        championUrl + championImage.get(playerDto.getChampionId()),
+                                        championUrl + championImage.get(playerDto.getChampionId()).getChampionImage(),
                                         playerDto.getTeamId());
                             }
                         }
                         recentGameWrapper.addPlayer(
                                 mySummonerId[0],
-                                championUrl + championImage.get(game.getChampionId()),
+                                championUrl + championImage.get(game.getChampionId()).getChampionImage(),
                                 game.getTeamId()
                         );
 

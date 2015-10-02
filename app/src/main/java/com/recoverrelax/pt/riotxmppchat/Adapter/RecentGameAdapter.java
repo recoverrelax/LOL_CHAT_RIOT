@@ -57,8 +57,7 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
 
         String ramdomSkin = holder.game.getRamdomSkin(random);
 //        holder.recentGameCardView.setCardBackgroundColor(context.getResources().getColor(holder.game.isWin() ? R.color.win_color : R.color.loss_color));
-
-        Glide.get(context).setMemoryCategory(MemoryCategory.HIGH);
+       Glide.get(context).setMemoryCategory(MemoryCategory.HIGH);
 
         Glide.with(context)
                 .load(ramdomSkin)
