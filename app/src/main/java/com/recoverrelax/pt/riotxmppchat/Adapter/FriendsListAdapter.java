@@ -14,6 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -22,8 +26,6 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -170,7 +172,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                  */
 
                 if (holderOnline.current.getProfileIconId().equals("")) {
-                    Picasso.with(context)
+                    Glide.with(context)
                             .load(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
                 } else {
@@ -188,21 +190,13 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     realmData.getProfileIconBaseUrl()
                             .subscribe(profileUrl -> {
-                                Picasso.with(context)
+                                Glide.with(context)
                                         .load(profileUrl + holderOnline.current.getProfileIconId() + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION)
                                         .error(R.drawable.profile_icon_example)
-                                        .into(holderOnline.profileIcon, new Callback() {
+                                        .into(new GlideDrawableImageViewTarget(holderOnline.profileIcon) {
                                             @Override
-                                            public void onSuccess() {
-                                                hideProgressBar();
-                                            }
-
-                                            @Override
-                                            public void onError() {
-                                                hideProgressBar();
-                                            }
-
-                                            public void hideProgressBar(){
+                                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                                                super.onResourceReady(resource, animation);
                                                 holderOnline.progressBarProfileIcon.setVisibility(View.GONE);
                                             }
                                         });
@@ -215,7 +209,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     realmData.getChampionDDBaseUrl()
                             .subscribe(championUrl -> {
-                                Picasso.with(context)
+                                Glide.with(context)
                                         .load(championUrl + holderOnline.current.getChampionNameFormatted()
                                                 + AppGlobals.DD_VERSION.CHAMPION_EXTENSION)
                                         .into(holderOnline.championSquare);
@@ -233,7 +227,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holderOffline.current = friend;
                 holderOffline.friendName.setText(friend.getName());
 
-                Picasso.with(context)
+                Glide.with(context)
                             .load(R.drawable.profile_icon_example)
                             .into(holderOffline.profileIcon);
 

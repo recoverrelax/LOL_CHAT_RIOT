@@ -38,8 +38,8 @@
     <color name="online_alpha50">#3200ff00</color>
     <color name="offline_alpha50">#32ff0000</color>
 
-    <color name="win_color">#1B5E20</color>
-    <color name="loss_color">#ffff0000</color>
+    <color name="win_color">#321b5e20</color>
+    <color name="loss_color">#32ff0000</color>
 
 
 

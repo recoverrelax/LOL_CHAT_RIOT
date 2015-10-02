@@ -6,8 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.MemoryCategory;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.KamehameUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -16,9 +19,9 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion
 import com.recoverrelax.pt.riotxmppchat.Widget.ChampionImageBlock;
 import com.recoverrelax.pt.riotxmppchat.Widget.SummonerSpellStatBlock;
 import com.recoverrelax.pt.riotxmppchat.Widget.SummonerSpellStatBlock2;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -30,6 +33,7 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
     private List<RecentGameWrapper> recentGameList;
     private final LayoutInflater inflater;
     private final Context context;
+    private Random random = new Random();
 
     @Inject
     RiotApiRealmDataVersion realmData;
@@ -51,7 +55,16 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
     public void onBindViewHolder(RecentGameAdapter.ViewHolder holder, final int position) {
         holder.game = recentGameList.get(position);
 
-        Picasso.with(context)
+        String ramdomSkin = holder.game.getRamdomSkin(random);
+//        holder.recentGameCardView.setCardBackgroundColor(context.getResources().getColor(holder.game.isWin() ? R.color.win_color : R.color.loss_color));
+
+        Glide.get(context).setMemoryCategory(MemoryCategory.HIGH);
+
+        Glide.with(context)
+                .load(ramdomSkin)
+                .into(holder.frameLayout);
+
+        Glide.with(context)
                 .load(holder.game.getMyChampionUrl())
                 .into(holder.summonerSpellStatBlock.getChampionImageView());
 
@@ -63,12 +76,12 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
                 holder.game.getTeam200()
         );
 
-        Picasso.with(context)
+        Glide.with(context)
                 .load(holder.game.getSummonerSpellUrl1())
                 .into(holder.summonerSpellStatBlock.getChampionSS1ImageView());
 
 
-        Picasso.with(context)
+        Glide.with(context)
                 .load(holder.game.getSummonerSpellUrl2())
                 .into(holder.summonerSpellStatBlock.getChampionSS2ImageView());
 
@@ -91,7 +104,7 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
 
 
         for (int i = 0; i < holder.game.getItemList().size(); i++) {
-            Picasso.with(context)
+            Glide.with(context)
                     .load(holder.game.getItemList().get(i))
                     .into(holder.summonerSpellStatBlock2.getSummonerItems().get(i));
         }
@@ -116,6 +129,9 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
 
         @Bind(R.id.summonerSpellStatBlock1)
         SummonerSpellStatBlock summonerSpellStatBlock;
+
+        @Bind(R.id.championBackgroundSkin)
+        ImageView frameLayout;
 
         @Bind(R.id.summonerSpellStatBlock2)
         SummonerSpellStatBlock2 summonerSpellStatBlock2;

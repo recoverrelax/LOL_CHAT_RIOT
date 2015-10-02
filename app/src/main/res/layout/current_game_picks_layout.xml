@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardBackgroundColor="@color/black"
         card_view:cardCornerRadius="6dp">
 
     <LinearLayout
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardBackgroundColor="@color/black"
         card_view:cardCornerRadius="4dp">
 
         <LinearLayout
@@ -82,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardBackgroundColor="@color/black"
         card_view:cardCornerRadius="4dp">
 
         <LinearLayout
@@ -115,7 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardBackgroundColor="@color/black"
         card_view:cardCornerRadius="4dp">
 
         <LinearLayout
@@ -148,7 +148,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
-        card_view:cardBackgroundColor="@color/loginBackgroundBlack"
+        card_view:cardBackgroundColor="@color/black"
         card_view:cardCornerRadius="4dp">
 
         <LinearLayout

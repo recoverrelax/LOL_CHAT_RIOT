@@ -5,6 +5,7 @@ import android.support.v4.util.Pair;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.ChampionInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ItemDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ItemListDto;
@@ -37,15 +38,21 @@ public class RiotApiOperations {
         MainApplication.getInstance().getAppComponent().inject(this);
     }
 
-    public Observable<Map<Integer, String>> getChampionsImage(){
-        return riotApiServiceImpl.getAllChampionBasicInfoFiltered()
+    public Observable<Map<Integer, ChampionInfo>> getChampionsImage(){
+       return riotApiServiceImpl.getAllChampionBasicInfoFiltered()
                 .flatMap(championListDto -> Observable.just(championListDto.getChampionList()))
                 .flatMap(mapStringChamp -> {
-                    Map<Integer, String> newMap = new HashMap<>();
+                    Map<Integer, ChampionInfo> newMap = new HashMap<>();
 
-                    for (Map.Entry<String, ChampionDto> entry : mapStringChamp.entrySet())
-                        newMap.put(entry.getValue().getId(), entry.getValue().getImage().getFull());
+                    for (Map.Entry<String, ChampionDto> entry : mapStringChamp.entrySet()) {
 
+                        int mapKey = entry.getValue().getId();
+                        ChampionInfo mapValue = new ChampionInfo();
+                        mapValue.setChampionImage(entry.getValue().getImage().getFull());
+                        mapValue.addChampionSkinsImage(entry.getValue().getSkinnImageList(entry.getKey()));
+                        newMap.put(mapKey, mapValue);
+
+                    }
                     return Observable.just(newMap);
                 })
                 .subscribeOn(Schedulers.computation())

@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBar;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
 
 import butterknife.Bind;
@@ -65,7 +64,7 @@ public class RecentGameActivity extends RiotXmppNewMessageActivity {
         }
 
         if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor120));
+            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor));
 
         ActionBar supportActionBar = getSupportActionBar();
         if(supportActionBar != null) {

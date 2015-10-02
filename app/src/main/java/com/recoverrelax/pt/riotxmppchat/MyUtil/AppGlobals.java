@@ -27,6 +27,9 @@ public class AppGlobals {
 
         public static final String SUMMONER_SPELL_EXTENSION = ".png";
 
+        public static final String SKIN_BASE_URL = "http://ddragon.leagueoflegends.com/cdn/img/champion/splash/";
+        public static final String SKIN_FILE_EXTENSION = ".jpg";
+
 
         public static final String PROFILEICON_EXTENSION = ".png";
         public static final String CHAMPION_EXTENSION = ".png";

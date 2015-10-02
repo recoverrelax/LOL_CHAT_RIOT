@@ -13,10 +13,12 @@ import android.widget.FrameLayout;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.RecentGameAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.PlayerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.ChampionInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.RecentGameWrapper;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.TeamInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
@@ -170,7 +172,8 @@ public class RecentGameFragment extends BaseFragment {
                 riotApiOperation.getItemImage(), // 2
                 realmData.getSummonerSpellDDBaseUrl(), // 3
                 realmData.getItemDDBaseUrl(), // 4
-                realmData.getChampionDDBaseUrl() // 5
+                realmData.getChampionDDBaseUrl(), // 5
+                realmData.getSkinDDBaseUrl() //6
         );
 
         /**
@@ -180,11 +183,12 @@ public class RecentGameFragment extends BaseFragment {
 
         Observable.zip(observableList, args -> {
             Map<Integer, String> ssImages = (Map<Integer, String>) args[0];
-            Map<Integer, String> championImage = (Map<Integer, String>) args[1];
+            Map<Integer, ChampionInfo> championImage = (Map<Integer, ChampionInfo>) args[1];
             Map<Integer, String> itemImage = (Map<Integer, String>) args[2];
             String ssUrl = (String) args[3];
             String itemUrl = (String) args[4];
             String championUrl = (String) args[5];
+            String skinUrl = (String) args[6];
 
             final long[] mySummonerId = new long[1];
 
@@ -210,7 +214,16 @@ public class RecentGameFragment extends BaseFragment {
 
                         recentGameWrapper.setItemList(newItemUrl);
 
-                        recentGameWrapper.setMyChampionUrl(championUrl + championImage.get(game.getChampionId()));
+                        List<String> fullNameSkinUrl = new ArrayList<>();
+                        ChampionInfo championInfo = championImage.get(game.getChampionId());
+
+                        for(String skin: championInfo.getChampionSkinImage())
+                            fullNameSkinUrl.add(skinUrl + skin + AppGlobals.DD_VERSION.SKIN_FILE_EXTENSION);
+
+                        recentGameWrapper.setSkinList(fullNameSkinUrl);
+                        recentGameWrapper.setIsWin(game.getStats().isWin());
+
+                        recentGameWrapper.setMyChampionUrl(championUrl + championImage.get(game.getChampionId()).getChampionImage());
                         recentGameWrapper.setMyTeamId(game.getTeamId());
                         recentGameWrapper.setKill(String.valueOf(game.getStats().getChampionsKilled()));
                         recentGameWrapper.setDead(String.valueOf(game.getStats().getNumDeaths()));

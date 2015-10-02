@@ -44,7 +44,7 @@ public interface RiotApiService {
             @Path("region") String region
     );
 
-    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/champion?champData=image")
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/champion?champData=image,skins")
     Observable<ChampionListDto> getChampionListFiltered_STATIC_DATA(
             @Path("region") String region
     );

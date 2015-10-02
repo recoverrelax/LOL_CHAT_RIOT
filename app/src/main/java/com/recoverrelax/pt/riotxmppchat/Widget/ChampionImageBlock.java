@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.TeamInfo;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +54,11 @@ public class ChampionImageBlock extends LinearLayout {
 
     public void setChampionImagesAndNames(List<TeamInfo> teamUrlList3) {
 
+        if(teamUrlList3 == null || teamUrlList3.size() == 0)
+            return;
+
         List<TeamInfo> teamUrlList = new ArrayList<>();
         teamUrlList.addAll(teamUrlList3);
-
-        if(teamUrlList.size() == 0)
-            return;
 
         int dataSize = teamUrlList.size();
         int viewSize = championTeam.size();
@@ -68,7 +68,7 @@ public class ChampionImageBlock extends LinearLayout {
             final TextView target2 = this.summonerNameTeam.get(i);
 
             if(i < dataSize) {
-                Picasso.with(context)
+                Glide.with(context)
                         .load(teamUrlList.get(i).getPlayerImage())
                         .into(target);
 

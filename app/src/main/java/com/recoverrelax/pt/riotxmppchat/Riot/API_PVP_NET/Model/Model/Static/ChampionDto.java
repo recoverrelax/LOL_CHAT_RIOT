@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Parcel
@@ -52,6 +53,25 @@ public class ChampionDto {
 
     public ImageDto getImage() {
         return image;
+    }
+
+    public List<String> getSkinnImageList(String championName){
+        List<String> finalSkinList = new ArrayList<>();
+        List<SkinDto> skins = getSkins();
+
+        for(SkinDto skin: skins){
+            finalSkinList.add(championName + "_" + skin.num);
+        }
+        return finalSkinList;
+    }
+
+
+    public List<SkinDto> getSkins() {
+        return skins;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getId() {

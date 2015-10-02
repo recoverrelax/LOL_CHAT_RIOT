@@ -5,6 +5,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class RecentGameWrapper {
 
@@ -17,6 +18,10 @@ public class RecentGameWrapper {
     private String kill;
     private String dead;
     private String assists;
+
+    private List<String> skinList;
+
+    private boolean isWin;
 
     private int gold;
     private String cs;
@@ -134,5 +139,26 @@ public class RecentGameWrapper {
 
     public void setAssists(String assists) {
         this.assists = assists;
+    }
+
+    public List<String> getSkinList() {
+        return skinList;
+    }
+
+    public void setSkinList(List<String> skinList) {
+        this.skinList = new ArrayList<>();
+        this.skinList.addAll(skinList);
+    }
+
+    public String getRamdomSkin(Random r){
+        return this.skinList.get(r.nextInt(this.skinList.size()));
+    }
+
+    public boolean isWin() {
+        return isWin;
+    }
+
+    public void setIsWin(boolean isWin) {
+        this.isWin = isWin;
     }
 }

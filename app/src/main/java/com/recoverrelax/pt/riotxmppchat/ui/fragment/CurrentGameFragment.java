@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
@@ -20,6 +21,7 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.BannedChampion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameParticipant;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.ChampionInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
@@ -29,7 +31,6 @@ import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantBase;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,7 +163,7 @@ public class CurrentGameFragment extends BaseFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        Observable<Map<Integer, String>> obsChampionsImage = riotApiOperations.getChampionsImage()
+        Observable<Map<Integer, ChampionInfo>> obsChampionsImage = riotApiOperations.getChampionsImage()
                 .cache()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -183,7 +184,7 @@ public class CurrentGameFragment extends BaseFragment {
         );
     }
 
-    private Observable<List<CurrentGameParticipant>> getPickedChampionAndSSInfo(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId, Observable<Map<Integer, String>> obsChampionsImage,
+    private Observable<List<CurrentGameParticipant>> getPickedChampionAndSSInfo(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId, Observable<Map<Integer, ChampionInfo>> obsChampionsImage,
                                                                                 Observable<Map<Integer, String>> obsSummonerSpellImage, String championSquareBaseUrl, String summonerSpellBaseUrl) {
 
         return obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
@@ -197,7 +198,7 @@ public class CurrentGameFragment extends BaseFragment {
                                         .flatMap(championImagesMap ->
                                                         Observable.from(participantList)
                                                                 .doOnNext(participant -> {
-                                                                    String s = championImagesMap.get((int) participant.getChampionId());
+                                                                    String s = championImagesMap.get((int) participant.getChampionId()).getChampionImage();
                                                                     if (s != null)
                                                                         participant.setChampionImage(s);
                                                                 })
@@ -228,7 +229,7 @@ public class CurrentGameFragment extends BaseFragment {
                 .doOnNext(currentGameParticipants -> fetchParticipants(currentGameParticipants, championSquareBaseUrl, summonerSpellBaseUrl));
     }
 
-    private Observable<List<BannedChampion>> getBannedChampionInfo(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId, Observable<Map<Integer, String>> obsChampionsImage, String ddChampionSquareUrl) {
+    private Observable<List<BannedChampion>> getBannedChampionInfo(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId, Observable<Map<Integer, ChampionInfo>> obsChampionsImage, String ddChampionSquareUrl) {
         return obsCurrentGameInfoBySummonerId // get Observable<CurrentGameInfo>
                 .doOnSubscribe(() -> banList.enableProgressBar(true))
                 .doOnUnsubscribe(() -> banList.enableProgressBar(false))
@@ -239,7 +240,7 @@ public class CurrentGameFragment extends BaseFragment {
                                         .flatMap(championImagesMap ->
                                                         Observable.from(bannedChampionList)
                                                                 .doOnNext(bannedChampion -> {
-                                                                    String s = championImagesMap.get((int) bannedChampion.getChampionId());
+                                                                    String s = championImagesMap.get((int) bannedChampion.getChampionId()).getChampionImage();
                                                                     if (s != null)
                                                                         bannedChampion.setChampionImage(s);
                                                                 })
@@ -287,15 +288,15 @@ public class CurrentGameFragment extends BaseFragment {
                         String pathSS2 = summonerSpellBaseUrl + liveGameParticipant.getSpell2Image();
                         Log.i(TAG, pathSS1);
 
-                        Picasso.with(CurrentGameFragment.this.getActivity())
+                        Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(pathChampion)
                                 .into(champion);
 
-                        Picasso.with(CurrentGameFragment.this.getActivity())
+                        Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(pathSS1)
                                 .into(summonerS1);
 
-                        Picasso.with(CurrentGameFragment.this.getActivity())
+                        Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(pathSS2)
                                 .into(summonerS2);
 
@@ -317,15 +318,15 @@ public class CurrentGameFragment extends BaseFragment {
                         String pathSS1 = summonerSpellBaseUrl + liveGameParticipant.getSpell1Image();
                         String pathSS2 = summonerSpellBaseUrl + liveGameParticipant.getSpell2Image();
 
-                        Picasso.with(CurrentGameFragment.this.getActivity())
+                        Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(pathChampion)
                                 .into(champion);
 
-                        Picasso.with(CurrentGameFragment.this.getActivity())
+                        Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(pathSS1)
                                 .into(summonerS1);
 
-                        Picasso.with(CurrentGameFragment.this.getActivity())
+                        Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(pathSS2)
                                 .into(summonerS2);
 
@@ -363,7 +364,7 @@ public class CurrentGameFragment extends BaseFragment {
                         ImageView imageView = banList.getTeam100Bans().get(i);
                         imageView.setVisibility(View.VISIBLE);
 
-                        Picasso.with(CurrentGameFragment.this.getActivity())
+                        Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(ddChampionSquareUrl + team1001.get(i).getChampionImage())
                                 .into(imageView);
                     }
@@ -372,7 +373,7 @@ public class CurrentGameFragment extends BaseFragment {
                         ImageView imageView = banList.getTeam200Bans().get(i);
                         imageView.setVisibility(View.VISIBLE);
 
-                        Picasso.with(CurrentGameFragment.this.getActivity())
+                        Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(ddChampionSquareUrl + team2001.get(i).getChampionImage())
                                 .into(imageView);
                     }

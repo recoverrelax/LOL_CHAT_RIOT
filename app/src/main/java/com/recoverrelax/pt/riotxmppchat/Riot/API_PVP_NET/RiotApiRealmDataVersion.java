@@ -35,6 +35,12 @@ public class RiotApiRealmDataVersion {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    public Observable<String> getSkinDDBaseUrl(){
+        return Observable.just(AppGlobals.DD_VERSION.SKIN_BASE_URL)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public Observable<String> getItemDDBaseUrl(){
         return realmData
                 .map(realmDto -> realmDto.getN().get(AppGlobals.DD_VERSION.ITEM_JSON_ID))
