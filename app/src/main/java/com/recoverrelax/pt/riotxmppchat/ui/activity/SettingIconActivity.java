@@ -17,7 +17,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notificati
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SettingActivity extends BaseActivity {
+public class SettingIconActivity extends MessageIconActivity {
 
     @Bind(R.id.settings_pager)
     ViewPager settings_pager;
@@ -57,6 +57,11 @@ public class SettingActivity extends BaseActivity {
         return R.id.navigation_item_4;
     }
 
+    @Override
+    protected boolean hasNewMessageIcon() {
+        return false;
+    }
+
     private class SettingsPagerAdapter extends FragmentStatePagerAdapter {
 
         private final String [] TITLES = {"Notification", "General", "Alert"};
@@ -93,4 +98,10 @@ public class SettingActivity extends BaseActivity {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
     }
+
+//    @Subscribe
+//    @Override
+//    public void sendSnackbarMessage(OnSnackBarNotificationEvent notif) {
+//        super.sendSnackbarMessage(notif);
+//    }
 }

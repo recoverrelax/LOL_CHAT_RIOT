@@ -1,7 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnConnectionLostListenerEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnReconnectSuccessListenerEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnReconnectPublish;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
@@ -58,9 +57,18 @@ public class RiotConnectionManager implements ConnectionListener {
         return Observable.just(connection);
     }
 
+    public AbstractXMPPConnection getConnectionNO() {
+        checkConnectionInit();
+        return connection;
+    }
+
     public Observable<String> getConnectedUser() {
         return getConnection()
                 .map(connection -> AppXmppUtils.parseXmppAddress(connection.getUser()));
+    }
+
+    public String getConnectedUserNO() {
+        return AppXmppUtils.parseXmppAddress(getConnectionNO().getUser());
     }
 
 
@@ -71,19 +79,19 @@ public class RiotConnectionManager implements ConnectionListener {
     @Override public void connected(XMPPConnection connection) { }
     @Override public void authenticated(XMPPConnection connection, boolean resumed) { }
     @Override public void connectionClosed() {
-        bus.post(new OnConnectionLostListenerEvent());
+//        bus.post(new OnConnectionLostListenerEvent());
         riotRosterManager.setEnabled(false);
         riotRosterManager.disableNotifications();
     }
     @Override public void connectionClosedOnError(Exception e) {
-        bus.post(new OnConnectionLostListenerEvent());
+//        bus.post(new OnConnectionLostListenerEvent());
         riotRosterManager.setEnabled(false);
         riotRosterManager.disableNotifications();
     }
 
     @Override
     public void reconnectionSuccessful() {
-        bus.post(new OnReconnectSuccessListenerEvent());
+        bus.post(new OnReconnectPublish());
 
         this.riotRosterManager.clearFriendList();
         /**

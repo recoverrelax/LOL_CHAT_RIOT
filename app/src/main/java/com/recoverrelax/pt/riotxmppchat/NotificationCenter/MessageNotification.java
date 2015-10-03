@@ -1,19 +1,11 @@
 package com.recoverrelax.pt.riotxmppchat.NotificationCenter;
 
-import android.app.Activity;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.NewMessageReceivedPublish;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.RiotXmppNewMessageActivity;
 
 import org.jivesoftware.smack.packet.Message;
 
@@ -65,7 +57,7 @@ public class MessageNotification extends NotificationHelper{
 
         riotXmppDBRepository.getNotificationByUser(userXmppAddress)
                 .doOnNext(notification ->
-                        this.notificationDb = notification
+                                this.notificationDb = notification
                 )
                 .flatMap(notification -> riotRosterManager.getFriendNameFromXmppAddress(userXmppAddress))
                 .doOnNext(targetUserName -> {
@@ -78,44 +70,31 @@ public class MessageNotification extends NotificationHelper{
                         return sendSystemNotification(targetUserName + " says:", message, MESSAGE_NOTIFICATION_DRAWABLE, MESSAGE_NOTIFICATION_ID,
                                 getMessageBackgroundPermission());
                     } else {
-                        bus.post(new OnNewMessageEventEvent(userXmppAddress));
+                        checkInit();
+                        boolean permission = getMessageForegroundPermission();
+                        String buttonLabel = "CHAT";
+                        String messageFinal = username + " said: " + messageContent.getBody();
 
-                        /**
-                         * {@link RiotXmppNewMessageActivity#OnMessageSnackBarReady(MessageNotification)}
-                         */
-                            sendSnackbarNotification(MainApplication.getInstance().getCurrentBaseActivity());
-
+                        if (permission)
+                        bus.post(new NewMessageReceivedPublish(userXmppAddress, username, messageFinal, buttonLabel));
                         return Observable.just(true);
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Boolean>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
-                    @Override public void onNext(Boolean aBoolean) { }
-                });
-    }
-
-    public void sendSnackbarNotification(@Nullable Activity activity) {
-        checkInit();
-        boolean permission = getMessageForegroundPermission();
-        String buttonLabel = "CHAT";
-        String message = username + " said: " + messageContent.getBody();
-
-                if(!permission || activity == null || activity instanceof PersonalMessageActivity)
-                    return;
-
-                    Snackbar snackbar = Snackbar
-                            .make(activity.getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG);
-
-                    if (userXmppAddress != null && username != null) {
-                        snackbar.setAction(buttonLabel, view -> {
-                            if (activity instanceof BaseActivity)
-                                ((BaseActivity) activity).goToMessageActivity(username, userXmppAddress);
-                        });
+                    @Override
+                    public void onCompleted() {
                     }
-                    snackbar.show();
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                    }
+                });
     }
 
     private boolean getMessageSpeechPermission() {

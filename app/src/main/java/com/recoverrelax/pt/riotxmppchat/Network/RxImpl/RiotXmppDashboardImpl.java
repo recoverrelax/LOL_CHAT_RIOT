@@ -41,7 +41,7 @@ public class RiotXmppDashboardImpl {
         final FriendStatusInfo friendStatusInfo = new FriendStatusInfo();
 
             return riotRosterManager.getRosterEntries()
-                    .flatMap(riotRosterManager::getFriendFromRosterEntry)
+                   .flatMap(riotRosterManager::getFriendFromRosterEntry)
                    .doOnNext(friend -> {
                        if (friend.isPlaying())
                            friendStatusInfo.addFriendPlaying();

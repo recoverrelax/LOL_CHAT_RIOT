@@ -56,7 +56,6 @@ public class RiotXmppDBRepository {
         return MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
                 .map(connectedUser -> new InAppLogDb(null, logId, new Date(), logMessage, connectedUser, targetXmppUser))
                 .flatMap(this::insertOrReplaceInappLog)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
 
@@ -97,19 +96,19 @@ public class RiotXmppDBRepository {
      * @return list of logs
      */
     public Observable<List<InAppLogDb>> getLast20List(String connectedUser){
-        return Observable.defer( () ->
-                Observable.just(getInAppLogDbDao().queryBuilder())
-                .map(qb -> {
-                    qb.where(InAppLogDbDao.Properties.UserXmppId.eq(connectedUser))
-                            .orderDesc(InAppLogDbDao.Properties.Id)
-                            .limit(20).build();
-                    List<InAppLogDb> logList = qb.list();
+        return Observable.defer(() ->
+                        Observable.just(getInAppLogDbDao().queryBuilder())
+                                .map(qb -> {
+                                    qb.where(InAppLogDbDao.Properties.UserXmppId.eq(connectedUser))
+                                            .orderDesc(InAppLogDbDao.Properties.Id)
+                                            .limit(20).build();
+                                    List<InAppLogDb> logList = qb.list();
 
-                    if (logList.size() == 0)
-                        return null;
-                    else
-                        return logList;
-                })
+                                    if (logList.size() == 0)
+                                        return null;
+                                    else
+                                        return logList;
+                                })
         );
     }
 
@@ -165,7 +164,6 @@ public class RiotXmppDBRepository {
                 .observeOn(AndroidSchedulers.mainThread());
 
     }
-
     /**
      * Updates the notification
      * @param notif notification to update

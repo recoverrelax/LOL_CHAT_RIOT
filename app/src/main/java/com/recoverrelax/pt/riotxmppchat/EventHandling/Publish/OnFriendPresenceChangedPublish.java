@@ -1,12 +1,12 @@
-package com.recoverrelax.pt.riotxmppchat.EventHandling;
+package com.recoverrelax.pt.riotxmppchat.EventHandling.Publish;
 
 import org.jivesoftware.smack.packet.Presence;
 
-public class OnFriendPresenceChangedEvent {
+public class OnFriendPresenceChangedPublish {
 
     private Presence presence;
 
-    public OnFriendPresenceChangedEvent(Presence presence) {
+    public OnFriendPresenceChangedPublish(Presence presence) {
         this.presence = presence;
     }
 

@@ -1,9 +1,11 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
-import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageNotification;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
+import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
+
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.chat.Chat;
@@ -25,8 +27,6 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
-
 @Singleton
 public class RiotChatManager implements ChatManagerListener, ChatMessageListener {
 
@@ -36,6 +36,9 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
 
     @Inject RiotXmppDBRepository riotXmppDBRepository;
     @Inject MessageNotification messageNotification;
+    @Inject RiotRosterManager riotRosterManager;
+    @Inject
+    MessageSpeechNotification messageSpeechNotification;
 
     @Singleton
     @Inject
@@ -65,7 +68,6 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     @Override
     public void processMessage(Chat chat, Message message) {
         String messageFrom = AppXmppUtils.parseXmppAddress(message.getFrom());
-        LOGI("1212", "processMessage");
         addChat(chat, messageFrom);
 
         if (messageFrom != null && message.getBody() != null) {
@@ -73,19 +75,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
                 MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
                 riotXmppDBRepository.insertMessage(message1)
-                        .subscribe(new Subscriber<Long>() {
-                            @Override
-                            public void onCompleted() {
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                            }
-
-                            @Override
-                            public void onNext(Long aLong) {
-                            }
-                        });
+                        .subscribe();
             }
             notifyNewMessage(message, messageFrom);
         }
@@ -117,7 +107,36 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     public void notifyNewMessage(Message message, String userXmppAddress) {
         messageNotification.init(userXmppAddress, message);
         messageNotification.sendMessageNotification();
+
+//        Observable.zip(
+//                riotXmppDBRepository.getNotificationByUser(userXmppAddress),
+//                riotRosterManager.getFriendNameFromXmppAddress(userXmppAddress),
+//                new Func2<NotificationDb, String, Boolean>() {
+//                    @Override
+//                    public Boolean call(NotificationDb notificationDb, String targetUserName) {
+//
+//                        // save message in the log
+//                        riotXmppDBRepository.insertOrReplaceInappLog(InAppLogIds.FRIEND_PM.getOperationId(),
+//                                targetUserName + " says: " + message,
+//                                userXmppAddress).subscribe();
+//
+//                        // send messageSpeechNotification
+//                         messageSpeechNotification.sendMessageSpeechNotification(message.getBody(), targetUserName);
+//
+//                        return true;
+//                    }
+//                }
+//
+//        ).subscribe(new Action1<Boolean>() {
+//            @Override
+//            public void call(Boolean aBoolean) {
+//
+//            }
+//        });
+
+//        messageSpeechNotification.sendMessageSpeechNotification(message.getBody(), userXmppAddress);
     }
+
 
     public Observable<Boolean> sendMessage(String message, String userXmppName) {
         return Observable.create(new Observable.OnSubscribe<Boolean>() {

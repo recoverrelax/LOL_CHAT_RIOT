@@ -1,60 +1,55 @@
 package com.recoverrelax.pt.riotxmppchat.NotificationCenter;
 
-import android.app.Activity;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewFriendPlayingEvent;
-import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.NewMessageReceivedPublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnNewFriendPlayingPublish;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 
 import javax.inject.Inject;
 
 import LolChatRiotDb.NotificationDb;
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 import static junit.framework.Assert.assertTrue;
 
-public class StatusNotification extends NotificationHelper{
+public class StatusNotification extends NotificationHelper {
 
     private String userXmppAddress;
     private String username;
     private Status status;
     private NotificationDb notificationDb;
 
-    private static final int STATUS_NOTIFICATION_ID  = 2222222;
+    private static final int STATUS_NOTIFICATION_ID = 2222222;
 
     private static final int ONLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int OFFLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
     private static final int START_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
 
-    @Inject DataStorage dataStorageInstance;
+    @Inject
+    DataStorage dataStorageInstance;
 
     @Inject
-    public StatusNotification(){
+    public StatusNotification() {
 
     }
 
-    public void init(String xmppAddress, String friendName, Status statusNotificationStatus){
+    public void init(String xmppAddress, String friendName, Status statusNotificationStatus) {
         this.userXmppAddress = xmppAddress;
         this.status = statusNotificationStatus;
         this.username = friendName;
     }
 
-    private void checkInit(){
-        assertTrue("must first call init", userXmppAddress != null && username != null && status !=null);
+    private void checkInit() {
+        assertTrue("must first call init", userXmppAddress != null && username != null && status != null);
     }
 
-    public void sendStatusNotification(){
+    public void sendStatusNotification() {
         LOGI("1212", "enter sendStatusNotification");
         checkInit();
 
@@ -62,8 +57,8 @@ public class StatusNotification extends NotificationHelper{
                 .doOnNext(notification -> {
                     this.notificationDb = notification;
                     LOGI("1212", "enter doOnNext");
-                    if(status.isStartedGame() || status.isLeftGame())
-                        bus.post(new OnNewFriendPlayingEvent());
+                    if (status.isStartedGame() || status.isLeftGame())
+                        bus.post(new OnNewFriendPlayingPublish());
 
                     int logId = getLogIdFromStatus(status);
                     String logMessage = getLogMessageFromStatus(status, username);
@@ -84,47 +79,26 @@ public class StatusNotification extends NotificationHelper{
                         return sendSystemNotification(username, systemNotificationMessage, notificationDrawable, STATUS_NOTIFICATION_ID,
                                 statusPermission);
                     } else {
-                            sendSnackbarNotification(MainApplication.getInstance().getCurrentBaseActivity());
+
+                        checkInit();
+                        boolean permission = getStatusPermissionFromStatus(status);
+
+                        if (permission) {
+                            String buttonLabel = "CHAT";
+                            String message = username + " " + getMessageFromStatus(status);
+                            bus.post(new NewMessageReceivedPublish(userXmppAddress, username, message, buttonLabel));
+                        }
                         return Observable.just(true);
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Boolean>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
-                    @Override public void onNext(Boolean aBoolean) {
-                        LOGI("1212", "called onNext");
-                    }
-                });
+                .subscribe();
     }
 
-    private void sendSnackbarNotification(@Nullable Activity activity) {
-        checkInit();
-        boolean permission = getStatusPermissionFromStatus(status);
 
-        if(!permission || activity == null)
-            return;
-
-        String buttonLabel = "CHAT";
-        String message = username + " " + getMessageFromStatus(status);
-
-
-
-                    Snackbar snackbar = Snackbar
-                            .make(activity.getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG);
-
-                    if (userXmppAddress != null && username != null) {
-                        snackbar.setAction(buttonLabel, view -> {
-                            if (activity instanceof BaseActivity)
-                                ((BaseActivity) activity).goToMessageActivity(username, userXmppAddress);
-                        });
-                    }
-                    snackbar.show();
-    }
-
-    private int getLogIdFromStatus(Status status){
-        switch (status){
+    private int getLogIdFromStatus(Status status) {
+        switch (status) {
             case ONLINE:
                 return InAppLogIds.FRIEND_ONLINE.getOperationId();
             case OFFLINE:
@@ -138,12 +112,12 @@ public class StatusNotification extends NotificationHelper{
         }
     }
 
-    private String getLogMessageFromStatus(Status status, String username){
+    private String getLogMessageFromStatus(Status status, String username) {
         return username + " " + getMessageFromStatus(status);
     }
 
-    private String getMessageFromStatus(Status status){
-        switch (status){
+    private String getMessageFromStatus(Status status) {
+        switch (status) {
             case ONLINE:
                 return "is now Online";
             case OFFLINE:
@@ -157,12 +131,12 @@ public class StatusNotification extends NotificationHelper{
         }
     }
 
-    private boolean getSpeechPermissionFromStatus(Status status){
+    private boolean getSpeechPermissionFromStatus(Status status) {
 
-        if(notificationDb == null)
+        if (notificationDb == null)
             return false;
 
-        switch (status){
+        switch (status) {
             case ONLINE:
                 return (isPausedOrClosed() ? dataStorageInstance.getGlobalNotifBackgroundSpeech() : dataStorageInstance.getGlobalNotifForegroundSpeech())
                         && notificationDb.getIsOnline()
@@ -189,8 +163,8 @@ public class StatusNotification extends NotificationHelper{
         }
     }
 
-    private int getNotificationDrawableFromStatus(Status status){
-        switch (status){
+    private int getNotificationDrawableFromStatus(Status status) {
+        switch (status) {
             case ONLINE:
                 return ONLINE_NOTIFICATION_DRAWABLE;
             case OFFLINE:
@@ -204,8 +178,8 @@ public class StatusNotification extends NotificationHelper{
         }
     }
 
-    private boolean getStatusPermissionFromStatus(Status status){
-        switch (status){
+    private boolean getStatusPermissionFromStatus(Status status) {
+        switch (status) {
             case ONLINE:
             case OFFLINE:
                 return (isPausedOrClosed() ? dataStorageInstance.getGlobalNotifBackgroundText() : dataStorageInstance.getGlobalNotifForegroundText()) &&
@@ -235,18 +209,19 @@ public class StatusNotification extends NotificationHelper{
         STARTED_GAME,
         LEFT_GAME;
 
-        public boolean isOnline(){
+        public boolean isOnline() {
             return this.equals(Status.ONLINE);
         }
-        public boolean isOffline(){
+
+        public boolean isOffline() {
             return this.equals(Status.OFFLINE);
         }
 
-        public boolean isStartedGame(){
+        public boolean isStartedGame() {
             return this.equals(Status.STARTED_GAME);
         }
 
-        public boolean isLeftGame(){
+        public boolean isLeftGame() {
             return this.equals(Status.LEFT_GAME);
         }
     }

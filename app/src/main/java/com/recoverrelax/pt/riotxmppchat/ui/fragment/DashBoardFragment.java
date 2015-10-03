@@ -14,17 +14,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.DashBoardLogAdapter;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewFriendPlayingEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewLogEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
-import com.squareup.otto.Subscribe;
+
+import org.jivesoftware.smack.packet.Presence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DashBoardFragment extends RiotXmppCommunicationFragment {
+public class DashBoardFragment extends BaseFragment implements NewMessageReceivedEvent, OnNewFriendPlayingEvent, OnFriendPresenceChangedEvent {
 
     @Bind(R.id.dashboard_1)
     LinearLayout dashboard_1;
@@ -83,6 +83,8 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
 
     @Inject RiotXmppRosterImpl rosterImpl;
     @Inject RiotXmppDashboardImpl dashboardImpl;
+    @Inject
+    EventHandler eventHandler;
 
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
@@ -132,14 +134,12 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
 
     @OnClick(R.id.dashboard_1)
     public void OnMessageClick(View view){
-        if(getActivity() instanceof BaseActivity)
-            ((BaseActivity)getActivity()).goToMessageListActivity();
+        getBaseActivity().goToMessageListActivity();
     }
 
     @OnClick({R.id.dashboard_2, R.id.dashboard_3, R.id.dashboard_4})
     public void OnPlayingOnlineOrOfflineClick(View view){
-        if(getActivity() instanceof BaseActivity)
-            ((BaseActivity)getActivity()).goToFriendListActivity();
+        getBaseActivity().goToFriendListActivity();
     }
 
     @Override
@@ -161,7 +161,6 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
         recyclerView.setAdapter(adapter);
 
         getWsInfo();
-//        getFullFriendsList();
     }
 
     private void getWsInfo() {
@@ -173,10 +172,6 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
         ).subscribe()
         );
     }
-
-//    private void getFullFriendsList() {
-//        rosterImpl.getFullFriendsList(true);
-//    }
 
     private Observable<RiotXmppDashboardImpl.FriendStatusInfo> getFriendStatusInfo() {
         return dashboardImpl.getFriendStatusInfo()
@@ -237,36 +232,37 @@ public class DashBoardFragment extends RiotXmppCommunicationFragment {
         }
         showProgressBar(false);
         firstTimeOnCreate = false;
+        eventHandler.registerForNewMessageEvent(this);
+        eventHandler.registerForFriendPlayingEvent(this);
+        eventHandler.registerForFriendPresenceChangedEvent(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         subscriptions.clear();
-    }
-
-    @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageEventEvent messageReceived) {
-        getUnreadedMessageCount();
-    }
-
-    @Subscribe
-    public void onNewFriendPlaying(final OnNewFriendPlayingEvent event) {
-        getFriendStatusInfo();
+        eventHandler.unregisterForNewMessageEvent(this);
+        eventHandler.unregisterForFriendPlayingEvent(this);
+        eventHandler.unregisterForFriendPresenceChangedEvent(this);
     }
 
     private void showProgressBar(boolean state){
         progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
     }
 
-    @Subscribe
-    public void OnFriendPresenceChanged(final OnFriendPresenceChangedEvent friendPresence) {
-        getFriendStatusInfo();
-    }
-
-    @Subscribe
-    public void OnNewEventUpdate(OnNewLogEvent event){
+    @Override
+    public void onNewMessageReceived(String userXmppAddress, String username, String message, String buttonLabel) {
         getLogSingleItem();
+        getUnreadedMessageCount().subscribe();
     }
 
+    @Override
+    public void onNewFriendPlaying() {
+        getFriendStatusInfo().subscribe();
+    }
+
+    @Override
+    public void onFriendPresenceChanged(Presence presence) {
+        getFriendStatusInfo().subscribe();
+    }
 }

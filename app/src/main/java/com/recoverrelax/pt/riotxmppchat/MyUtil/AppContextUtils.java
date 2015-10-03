@@ -10,7 +10,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity;
 
 public class AppContextUtils {
     /**
@@ -57,22 +57,22 @@ public class AppContextUtils {
     }
 
     public static void startPersonalMessageActivity(Context context, String friendName, String friendXmppAddress){
-        Intent intent = new Intent(context, PersonalMessageActivity.class);
+        Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.putExtra(PersonalMessageActivity.INTENT_FRIEND_NAME, friendName);
-        intent.putExtra(PersonalMessageActivity.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
+        intent.putExtra(ChatActivity.INTENT_FRIEND_NAME, friendName);
+        intent.putExtra(ChatActivity.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
         context.startActivity(intent);
         AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
     }
 
     public static void startPersonalMessageActivityBgColor(Context context, String friendName, String friendXmppAddress, int bgColor, ReturnCallback cb){
-        Intent intent = new Intent(context, PersonalMessageActivity.class);
+        Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.putExtra(PersonalMessageActivity.INTENT_FRIEND_NAME, friendName);
-        intent.putExtra(PersonalMessageActivity.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
-        intent.putExtra(PersonalMessageActivity.INTENT_BGCOLOR, bgColor);
+        intent.putExtra(ChatActivity.INTENT_FRIEND_NAME, friendName);
+        intent.putExtra(ChatActivity.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
+        intent.putExtra(ChatActivity.INTENT_BGCOLOR, bgColor);
         context.startActivity(intent);
         AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
 

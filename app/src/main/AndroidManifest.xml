@@ -15,34 +15,34 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity"
+            android:name=".ui.activity.FriendListIconActivity"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/friends_online" >
         </activity>
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.DashBoardActivity"
+            android:name=".ui.activity.DashBoardIconActivity"
             android:label="@string/dashboard" >
         </activity>
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendMessageListActivity"
+            android:name=".ui.activity.FriendMessageListIconActivity"
             android:label="@string/message_list_title" >
         </activity>
 
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity"
+            android:name=".ui.activity.ChatActivity"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/message_list_title" >
         </activity>
 
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity"
+            android:name=".ui.activity.CurrentGameIconActivity"
             android:windowSoftInputMode="adjustPan"
             android:noHistory="true"
             android:label="@string/current_game_activity_title" >
         </activity>
 
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivity"
+            android:name=".ui.activity.RecentGameIconActivity"
             android:windowSoftInputMode="adjustPan"
             android:noHistory="true"
             android:label="@string/recent_game_activity_title" >
@@ -50,7 +50,7 @@
 
 
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.ShardActivity"
+            android:name=".ui.activity.ShardIconActivity"
             android:windowSoftInputMode="adjustPan"
             android:noHistory="true"
             android:label="@string/shard_activity_title" >
@@ -61,12 +61,12 @@
 
         </activity>
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SettingActivity"
+            android:name=".ui.activity.SettingIconActivity"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_sub" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.recoverrelax.pt.riotxmppchat.ui.activity.FriendListActivity" />
+                android:value=".ui.activity.FriendListIconActivity" />
         </activity>
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity"

@@ -2,19 +2,23 @@ package com.recoverrelax.pt.riotxmppchat;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.Adapter.RecentGameAdapter;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.MessageIconActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.BaseFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.ChatFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.RiotXmppCommunicationFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.ShardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.SettingsGeneralFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
@@ -40,7 +44,7 @@ public interface AppComponent {
     /**
      * Activities
      */
-    void inject(BaseActivity baseActivity);
+    void inject(LoginActivity loginActivity);
 
     /**
      * Fragments
@@ -49,10 +53,9 @@ public interface AppComponent {
     void inject(DashBoardFragment frag);
     void inject(FriendListFragment frag);
     void inject(FriendMessageListFragment frag);
-    void inject(PersonalMessageFragment fragment);
+    void inject(ChatFragment fragment);
     void inject(SettingsGeneralFragment settings_generalFragment);
     void inject(Settings_Notification settings_notification);
-    void inject(RiotXmppCommunicationFragment riotXmppCommunicationFragment);
     void inject(NotificationCustomDialogFragment notificationCustomDialogFragment);
 
     void inject(MainApplication mainApplication);
@@ -72,6 +75,15 @@ public interface AppComponent {
     void inject(RecentGameFragment recentGameFragment);
 
     void inject(RecentGameAdapter recentGameAdapter);
+
+    void inject(MessageIconActivity messageIconActivity);
+    void inject(BaseActivity baseActivity);
+
+    void inject(BaseFragment baseFragment);
+
+    void inject(EventHandler eventHandler);
+
+    void inject(MessageSpeechNotification messageSpeechNotification);
 
 
     /**

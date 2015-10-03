@@ -65,7 +65,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     @Inject DataStorage mDataStorage;
     @Inject RiotXmppDBRepository riotRepository;
-    @Inject Bus bus;
+
+    @Inject
+    Bus bus;
 
     private Handler mHandler;
     // delay to launch nav drawer item, to allow close animation to play
@@ -231,9 +233,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if (id == R.id.newMessage){
-            goToMessageListActivity();
-            return true;
         }else if(id == android.R.id.home){
             onBackPressed();
         }
@@ -263,25 +262,25 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
                 switch(itemId){
                     case R.id.navigation_item_0:
-                        intent = new Intent(BaseActivity.this, DashBoardActivity.class);
+                        intent = new Intent(BaseActivity.this, DashBoardIconActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         break;
                     case R.id.navigation_item_1:
-                        intent = new Intent(BaseActivity.this, FriendListActivity.class);
+                        intent = new Intent(BaseActivity.this, FriendListIconActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
                     case R.id.navigation_item_2:
-                        intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
+                        intent = new Intent(BaseActivity.this, FriendMessageListIconActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
                     case R.id.navigation_item_3:
-                        intent = new Intent(BaseActivity.this, ShardActivity.class);
+                        intent = new Intent(BaseActivity.this, ShardIconActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
 
                     case R.id.navigation_item_4:
-                        intent = new Intent(BaseActivity.this, SettingActivity.class);
+                        intent = new Intent(BaseActivity.this, SettingIconActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
@@ -310,7 +309,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
             }
         else {
-            Intent intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
+            Intent intent = new Intent(BaseActivity.this, FriendMessageListIconActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
@@ -324,7 +323,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_1));
             }
         else {
-            Intent intent = new Intent(BaseActivity.this, FriendListActivity.class);
+            Intent intent = new Intent(BaseActivity.this, FriendListIconActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
@@ -335,15 +334,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onResume() {
         super.onResume();
-        bus.register(this);
         MainApplication.getInstance().setCurrentBaseActivity(this);
         setNavigationViewPosition(getNavigationViewPosition());
+        bus.register(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        bus.unregister(this);
         MainApplication.getInstance().setCurrentBaseActivity(null);
+        bus.unregister(this);
     }
 }

@@ -13,7 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class DashBoardActivity extends BaseActivity {
+public class DashBoardIconActivity extends MessageIconActivity {
 
     @Nullable
     @Bind(R.id.parent_view_group)
@@ -44,6 +44,7 @@ public class DashBoardActivity extends BaseActivity {
         setTitle(getResources().getString(R.string.dashboard));
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -55,5 +56,10 @@ public class DashBoardActivity extends BaseActivity {
             Intent i = new Intent(Intent.ACTION_MAIN);
             i.addCategory(Intent.CATEGORY_HOME);
             startActivity(i);
+    }
+
+    @Override
+    protected boolean hasNewMessageIcon() {
+        return true;
     }
 }

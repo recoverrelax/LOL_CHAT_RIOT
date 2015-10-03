@@ -14,7 +14,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class RecentGameActivity extends RiotXmppNewMessageActivity {
+public class RecentGameIconActivity extends MessageIconActivity {
 
     @Nullable
     @Bind(R.id.appBarLayout)
@@ -89,4 +89,10 @@ public class RecentGameActivity extends RiotXmppNewMessageActivity {
     protected boolean hasNewMessageIcon() {
         return true;
     }
+
+//    @Subscribe
+//    @Override
+//    public void sendSnackbarMessage(OnSnackBarNotificationEvent notif) {
+//        super.sendSnackbarMessage(notif);
+//    }
 }

@@ -27,7 +27,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameIconActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -89,8 +89,8 @@ public class RecentGameFragment extends BaseFragment {
         RecentGameFragment frag = new RecentGameFragment();
 
         Bundle args = new Bundle();
-        args.putString(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-        args.putString(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+        args.putString(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+        args.putString(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
         frag.setArguments(args);
 
         return frag;
@@ -104,12 +104,12 @@ public class RecentGameFragment extends BaseFragment {
         if (savedInstanceState == null) {
             Bundle args = getArguments();
             if (args != null) {
-                friendXmppAddress = args.getString(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT);
-                friendUsername = args.getString(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT);
+                friendXmppAddress = args.getString(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT);
+                friendUsername = args.getString(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT);
             }
         } else {
-            friendXmppAddress = (String) savedInstanceState.getSerializable(CurrentGameActivity.FRIEND_XMPP_ADDRESS_INTENT);
-            friendUsername = (String) savedInstanceState.getSerializable(CurrentGameActivity.FRIEND_XMPP_USERNAME_INTENT);
+            friendXmppAddress = (String) savedInstanceState.getSerializable(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT);
+            friendUsername = (String) savedInstanceState.getSerializable(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT);
         }
         ((BaseActivity) getActivity()).setTitle(getActivity().getResources().getString(R.string.recent_game__fragment_title) + " " + friendUsername);
 

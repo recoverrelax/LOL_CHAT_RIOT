@@ -10,7 +10,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 
 import butterknife.ButterKnife;
 
-public class FriendMessageListActivity extends BaseActivity {
+public class FriendMessageListIconActivity extends MessageIconActivity {
 
     @Override
     public int getLayoutResources() {
@@ -49,4 +49,15 @@ public class FriendMessageListActivity extends BaseActivity {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
     }
+
+    @Override
+    protected boolean hasNewMessageIcon() {
+        return false;
+    }
+
+//    @Subscribe
+//    @Override
+//    public void sendSnackbarMessage(OnSnackBarNotificationEvent notif) {
+//        super.sendSnackbarMessage(notif);
+//    }
 }

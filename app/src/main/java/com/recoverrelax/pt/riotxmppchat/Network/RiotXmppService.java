@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnConnectionFailureEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnLoginFailureEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnSuccessLoginEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnConnectionFailurePublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnLoginFailurePublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnSuccessLoginPublish;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotChatManager;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotConnectionManager;
@@ -195,7 +195,7 @@ public class RiotXmppService extends Service {
     }
 
     private void connect() {
-        assertTrue("To start a connection to the server, you must first call init() method!",
+        assertTrue("To start a connection to the server, you must first call prepareConnectionConfig() method!",
                 this.connectionConfig != null);
 
         connectionHelper.connectWithRetry(connection)
@@ -210,20 +210,16 @@ public class RiotXmppService extends Service {
                     public void onError(Throwable e) {
                         LOGI(TAG, "ConnectionHelper Connection onError\n");
 
-                        /**{@link LoginActivity#onConnectionFailure(OnConnectionFailureEvent)} */
-                        bus.post(new OnConnectionFailureEvent());
+                        /**{@link LoginActivity#onConnectionFailure(OnConnectionFailurePublish)} */
+                        bus.post(new OnConnectionFailurePublish());
                     }
 
                     @Override
                     public void onNext(AbstractXMPPConnection connection) {
                         LOGI(TAG, "ConnectionHelper Connection onNext");
-                        onConnected();
+                        login();
                     }
                 });
-    }
-
-    private void onConnected() {
-        login();
     }
 
     private void login() {
@@ -244,8 +240,8 @@ public class RiotXmppService extends Service {
                         LOGI(TAG, "ConnectionHelper Login onError\n");
                         LOGI(TAG, e.toString());
 
-                        /**{@link LoginActivity#onLoginFailure(OnLoginFailureEvent)} */
-                        bus.post(new OnLoginFailureEvent());
+                        /**{@link LoginActivity#onLoginFailure(OnLoginFailurePublish)} */
+                        bus.post(new OnLoginFailurePublish());
                     }
 
                     @Override
@@ -279,8 +275,8 @@ public class RiotXmppService extends Service {
                     public void onNext(Boolean aBoolean) {
                         LOGI(TAG, "onLoggedIn onNext\n");
                         if (aBoolean)
-                        /**{@link LoginActivity#onSuccessLogin(OnSuccessLoginEvent)} */
-                            bus.post(new OnSuccessLoginEvent());
+                        /**{@link LoginActivity#onSuccessLogin(OnSuccessLoginPublish)} */
+                            bus.post(new OnSuccessLoginPublish());
                     }
                 });
     }

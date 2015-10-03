@@ -8,14 +8,14 @@ import android.widget.RelativeLayout;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.ChatFragment;
 
 import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PersonalMessageActivity extends BaseActivity {
+public class ChatActivity extends MessageIconActivity {
 
     public static final String INTENT_FRIEND_NAME = "intent_friend_name";
     public static final String INTENT_FRIEND_XMPPNAME = "intent_friend_xmppname";
@@ -54,7 +54,7 @@ public class PersonalMessageActivity extends BaseActivity {
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = PersonalMessageFragment.newInstance();
+            Fragment fragment = ChatFragment.newInstance();
             Bundle args = new Bundle();
             args.putString(INTENT_FRIEND_NAME, friendUsername);
             args.putString(INTENT_FRIEND_XMPPNAME, friendXmppName);
@@ -79,5 +79,10 @@ public class PersonalMessageActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
+    }
+
+    @Override
+    protected boolean hasNewMessageIcon() {
+        return false;
     }
 }

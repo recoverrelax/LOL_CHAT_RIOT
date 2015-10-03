@@ -6,16 +6,14 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
-import com.squareup.otto.Subscribe;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.ShardFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FriendListActivity extends RiotXmppNewMessageActivity {
+public class ShardIconActivity extends MessageIconActivity {
 
     @Nullable
     @Bind(R.id.appBarLayout)
@@ -23,32 +21,15 @@ public class FriendListActivity extends RiotXmppNewMessageActivity {
 
     @Override
     public int getLayoutResources() {
-
-        return R.layout.friends_list_activity;
+        return R.layout.shard_activity;
     }
 
     @Override
     public int getNavigationViewPosition() {
-        return R.id.navigation_item_1;
+        return R.id.navigation_item_3;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        if(hasNewMessageIcon())
-            resetMessageIcon();
-    }
-
-    @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageEventEvent messageReceived) {
-        super.OnNewMessageReceived(messageReceived);
-    }
-
-    @Override
-    public boolean hasNewMessageIcon() {
-        return true;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +38,14 @@ public class FriendListActivity extends RiotXmppNewMessageActivity {
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = FriendListFragment.newInstance();
+            Fragment fragment = ShardFragment.newInstance();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
         }
-        setTitle(getResources().getString(R.string.friends_online));
-
-//        appBarLayout.getBackground().setAlpha(120);
-//        appBarLayout.setTranslationY(0);
 
         if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor120));
+            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColorDark));
     }
 
     @Override
@@ -82,4 +59,15 @@ public class FriendListActivity extends RiotXmppNewMessageActivity {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
     }
+
+    @Override
+    protected boolean hasNewMessageIcon() {
+        return true;
+    }
+
+//    @Subscribe
+//    @Override
+//    public void sendSnackbarMessage(OnSnackBarNotificationEvent notif) {
+//        super.sendSnackbarMessage(notif);
+//    }
 }

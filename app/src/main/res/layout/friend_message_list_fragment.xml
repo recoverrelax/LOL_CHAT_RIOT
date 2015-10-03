@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.recoverrelax.pt.riotxmppchat.ui.fragment.PersonalMessageFragment">
+    tools:context="com.recoverrelax.pt.riotxmppchat.ui.fragment.ChatFragment">
 
     <ProgressBar
         android:id="@+id/progressBarCircularIndeterminate"

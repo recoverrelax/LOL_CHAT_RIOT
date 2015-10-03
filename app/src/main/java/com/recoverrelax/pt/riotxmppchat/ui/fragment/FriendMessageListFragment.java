@@ -14,13 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.FriendMessageListImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +38,16 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
+public class FriendMessageListFragment extends BaseFragment implements NewMessageReceivedEvent{
 
     @Bind(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
 
     @Bind(R.id.progressBarCircularIndeterminate)
     ProgressBar progressBarCircularIndeterminate;
+
+    @Inject
+    EventHandler handler;
 
     private final String TAG = FriendMessageListFragment.this.getClass().getSimpleName();
 
@@ -115,6 +118,7 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
     public void onResume() {
         super.onResume();
         getPersonalMessageList();
+        handler.registerForNewMessageEvent(this);
     }
 
     private void getPersonalMessageList() {
@@ -139,15 +143,8 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
 
         if(adapter != null)
             adapter.removeSubscriptions();
-    }
 
-    @Subscribe
-    public void OnNewMessageReceived(final OnNewMessageEventEvent event) {
-            if (adapter.contains(event.getUserXmppAddress())) {
-                getPersonalMessageSingleItem(event.getUserXmppAddress());
-            } else {
-                getPersonalMessageList();
-            }
+        handler.unregisterForNewMessageEvent(this);
     }
 
     private void getPersonalMessageSingleItem(String userXmppAddress) {
@@ -173,5 +170,14 @@ public class FriendMessageListFragment extends RiotXmppCommunicationFragment {
 
     public void onGeneralThrowableEvent(Throwable e){
         LOGE(TAG, "", e);
+    }
+
+    @Override
+    public void onNewMessageReceived(String userXmppAddress, String username, String message, String buttonLabel) {
+        if (adapter.contains(userXmppAddress)) {
+            getPersonalMessageSingleItem(userXmppAddress);
+        } else {
+            getPersonalMessageList();
+        }
     }
 }

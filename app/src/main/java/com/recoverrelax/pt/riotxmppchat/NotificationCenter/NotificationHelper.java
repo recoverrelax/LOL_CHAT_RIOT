@@ -2,14 +2,12 @@ package com.recoverrelax.pt.riotxmppchat.NotificationCenter;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.support.annotation.CallSuper;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewLogEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -65,20 +63,7 @@ public class NotificationHelper {
         riotXmppDBRepository.insertOrReplaceInappLog(logId, logMessage, targetXmppUser)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<Long>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(Long aLong) {
-                        bus.post(new OnNewLogEvent());
-                    }
-                });
+                .subscribe();
     }
 
     protected void hSendMessageSpeechNotification(String user, String message, boolean combinedPermission){

@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 
 import com.crashlytics.android.Crashlytics;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnServiceBindedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnServiceBindedPublish;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
@@ -64,8 +64,6 @@ public class MainApplication extends Application {
 
         if(!file.exists())
             file.mkdir();
-
-
     }
 
     private void initAppComponents() {
@@ -104,8 +102,8 @@ public class MainApplication extends Application {
             mService = binder.getService();
             mBound = true;
 
-            /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
-            bus.post(new OnServiceBindedEvent());
+            /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedPublish)}  **/
+            bus.post(new OnServiceBindedPublish());
         }
 
         @Override
@@ -116,9 +114,9 @@ public class MainApplication extends Application {
 
 
 
-    public void startRiotXmppService(String selectedItem, String username, String password){
+    public void startRiotXmppService(String server, String username, String password){
         intentService = new Intent(this, RiotXmppService.class);
-        intentService.putExtra(RiotXmppService.INTENT_SERVER_HOST_CONST, selectedItem);
+        intentService.putExtra(RiotXmppService.INTENT_SERVER_HOST_CONST, server);
         intentService.putExtra(RiotXmppService.INTENT_SERVER_USERNAME, username);
         intentService.putExtra(RiotXmppService.INTENT_SERVER_PASSWORD, password);
 
@@ -133,9 +131,8 @@ public class MainApplication extends Application {
         if(!mBound)
             bindService(intentService, mConnection, BIND_AUTO_CREATE);
         else {
-            /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedEvent)}  **/
-            bus.post(new OnServiceBindedEvent());
-
+            /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedPublish)}  **/
+            bus.post(new OnServiceBindedPublish());
         }
     }
 

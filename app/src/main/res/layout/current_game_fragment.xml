@@ -14,7 +14,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical"
-            tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameActivity">
+            tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameIconActivity">
 
             <TextView
                 android:gravity="center"

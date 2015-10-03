@@ -1,13 +1,13 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
-import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnFriendPresenceChangedEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnFriendPresenceChangedPublish;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.StatusNotification;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.squareup.otto.Bus;
+
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
@@ -29,7 +29,6 @@ import de.greenrobot.dao.query.QueryBuilder;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
@@ -185,10 +184,7 @@ public class RiotRosterManager implements RosterListener {
     public void presenceChanged(Presence presence) {
         if(connection != null && connection.isConnected() && notificationsEnabled)
             checkForFriendNotificationToSend(presence);
-
-        LOGI("123", "HERE3");
-        /** {@link FriendListFragment#OnFriendPresenceChanged(OnFriendPresenceChangedEvent)} */
-        busInstance.post(new OnFriendPresenceChangedEvent(presence));
+        busInstance.post(new OnFriendPresenceChangedPublish(presence));
     }
 
     public void updateFriend(Presence presence){

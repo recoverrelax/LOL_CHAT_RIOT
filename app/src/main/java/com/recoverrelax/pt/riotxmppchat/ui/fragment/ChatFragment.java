@@ -17,19 +17,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewLogEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnNewMessageEventEvent;
-import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
-import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
-import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.PersonalMessageImpl;
+import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
+import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,12 +49,14 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGE;
-import static com.recoverrelax.pt.riotxmppchat.ui.activity.PersonalMessageActivity.*;
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_BGCOLOR;
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_FRIEND_NAME;
+import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_FRIEND_XMPPNAME;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
+public class ChatFragment extends BaseFragment implements NewMessageReceivedEvent {
 
     @Bind(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
@@ -75,7 +76,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
     @Bind(R.id.uselessShape)
     FrameLayout uselessShape;
 
-    private static final String TAG = PersonalMessageFragment.class.getSimpleName();
+    private static final String TAG = ChatFragment.class.getSimpleName();
 
     /**
      * Adapter
@@ -85,6 +86,8 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
     @Inject RiotRosterManager riotRosterManager;
 
     @Inject Bus bus;
+    @Inject
+    EventHandler handler;
 
     private String friendXmppName;
     private String friendUsername;
@@ -96,12 +99,12 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
 
-    public PersonalMessageFragment() {
+    public ChatFragment() {
         // Required empty public constructor
     }
 
-    public static PersonalMessageFragment newInstance() {
-        return new PersonalMessageFragment();
+    public static ChatFragment newInstance() {
+        return new ChatFragment();
     }
 
 
@@ -185,6 +188,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
 
         if(adapter != null)
             adapter.removeSubscriptions();
+        handler.unregisterForNewMessageEvent(this);
     }
 
     public static int convertDIPToPixels(Context context, int dip) {
@@ -227,10 +231,6 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
                                 new Date(),
                                 message,
                                 false))
-                        .doOnNext(aLong -> {
-                            if (aLong != null)
-                                OnNewMessageReceived(null);
-                        })
                         .map(aLong -> connectedUser)
                 )
                 .flatMap(connectedUser -> riotXmppDBRepository.insertOrReplaceInappLog(new InAppLogDb(null,
@@ -247,7 +247,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
                     @Override
                     public void onNext(Long aLong) {
                         if (aLong != null)
-                            bus.post(new OnNewLogEvent());
+                            onNewMessageReceived(null, null, null, null);
                         // clearFriendList text
                         chatEditText.setText("");
                     }
@@ -260,9 +260,17 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
             message.setWasRead(true);
         riotXmppDBRepository.updateMessages(allMessages)
                 .subscribe(new Subscriber<Boolean>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
-                    @Override public void onNext(Boolean aBoolean) { }
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                    }
                 });
     }
 
@@ -271,23 +279,7 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
         super.onResume();
 //        MainApplication.getInstance().getBusInstance().register(this);
         getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
-    }
-
-    @Subscribe
-    public void OnNewMessageReceived(OnNewMessageEventEvent messageReceived) {
-        if (this.friendXmppName != null) {
-            getActivity().runOnUiThread(() -> {
-
-                // this means that i have sent a message
-                if (messageReceived == null) {
-                    getLastPersonalMessage(friendXmppName);
-                } else {
-                    // if its not for me, don't update
-                    if (this.friendXmppName.equals(messageReceived.getUserXmppAddress()))
-                        getLastPersonalMessage(friendXmppName);
-                }
-            });
-        }
+        handler.registerForNewMessageEvent(this);
     }
 
     public void getLastPersonalMessage(String friendXmppName){
@@ -316,5 +308,22 @@ public class PersonalMessageFragment extends RiotXmppCommunicationFragment {
 
     public void onGeneralThrowableEvent(Throwable e) {
         LOGE(TAG, "", e);
+    }
+
+    @Override
+    public void onNewMessageReceived(String userXmppAddress, String username, String message, String buttonLabel) {
+        if (this.friendXmppName != null) {
+            getActivity().runOnUiThread(() -> {
+
+                // this means that i have sent a message
+                if (userXmppAddress == null && username == null && message == null && buttonLabel == null) {
+                    getLastPersonalMessage(friendXmppName);
+                } else {
+                    // if its not for me, don't update
+                    if (this.friendXmppName.equals(userXmppAddress))
+                        getLastPersonalMessage(friendXmppName);
+                }
+            });
+        }
     }
 }

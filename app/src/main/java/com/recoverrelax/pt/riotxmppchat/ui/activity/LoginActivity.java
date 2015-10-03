@@ -18,15 +18,18 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnConnectionFailureEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnLoginFailureEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnServiceBindedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.OnSuccessLoginEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnConnectionFailurePublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnLoginFailurePublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnServiceBindedPublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnSuccessLoginPublish;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
+import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,15 +64,35 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.login_main_layout)
     LinearLayout login_main_layout;
 
+    @Inject
+    MainApplication mainApplication;
+
+    @Inject
+    Bus bus;
+
     private boolean usernameLengthControl = false;
     private boolean passwordLengthControl = false;
-    private MainApplication mainApplication;
     private MaterialDialog materialDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainApplication = MainApplication.getInstance();
+        MainApplication.getInstance().getAppComponent().inject(this);
 
+        doLoginAnimations();
+
+        checkBox.setChecked(mDataStorage.getSaveLoginCredentials());
+
+        serverSpinner.setAdapter(new ArrayAdapter<>(LoginActivity.this, R.layout.spinner_layout, R.id.server_textview, RiotServer.getServerList()));
+
+        if (mDataStorage.getSaveLoginCredentials()) {
+            username.setText(mDataStorage.getUsername());
+            password.setText(mDataStorage.getPassword());
+            serverSpinner.setSelection(RiotServer.getServerPositionByName(mDataStorage.getServer()));
+        } else
+            connectbutton.setEnabled(false);
+    }
+
+    private void doLoginAnimations() {
         /**
          * Set initial Title Scalling to 0.7f
          */
@@ -106,18 +129,7 @@ public class LoginActivity extends BaseActivity {
         titleSlideUp.start();
         fadingBackground.start();
 
-        new Handler().postDelayed(animatorSetSecondPart::start,2000);
-
-        checkBox.setChecked(mDataStorage.getSaveLoginCredentials());
-
-        serverSpinner.setAdapter(new ArrayAdapter<>(LoginActivity.this, R.layout.spinner_layout, R.id.server_textview, RiotServer.getServerList()));
-
-        if (mDataStorage.getSaveLoginCredentials()) {
-            username.setText(mDataStorage.getUsername());
-            password.setText(mDataStorage.getPassword());
-            serverSpinner.setSelection(RiotServer.getServerPositionByName(mDataStorage.getServer()));
-        } else
-            connectbutton.setEnabled(false);
+        new Handler().postDelayed(animatorSetSecondPart::start, 2000);
     }
 
     @OnTextChanged(R.id.username)
@@ -142,6 +154,11 @@ public class LoginActivity extends BaseActivity {
         return -1;
     }
 
+//    @Override
+//    public void sendSnackbarMessage(OnSnackBarNotificationEvent notif) {
+//        // do nothing
+//    }
+
 
     @OnClick(R.id.connect)
     public void onConnectClick(View v) {
@@ -156,7 +173,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onSuccessLogin(OnSuccessLoginEvent event) {
+    public void onSuccessLogin(OnSuccessLoginPublish event) {
 
         if (checkBox.isChecked())
             mDataStorage.setSaveLoginCredentials(true);
@@ -171,7 +188,17 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onConnectionFailure(OnConnectionFailureEvent event) {
+    public void onServiceBinded(OnServiceBindedPublish event) {
+        Intent intent = new Intent(LoginActivity.this, DashBoardIconActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        AppContextUtils.overridePendingTransitionBackAppDefault(this);
+        materialDialog.dismiss();
+        this.finish();
+    }
+
+    @Subscribe
+    public void onConnectionFailure(OnConnectionFailurePublish event) {
         materialDialog.dismiss();
         Snackbar
                 .make(getWindow().getDecorView().getRootView(),
@@ -179,22 +206,13 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void onLoginFailure(OnLoginFailureEvent event) {
+    public void onLoginFailure(OnLoginFailurePublish event) {
         materialDialog.dismiss();
         Snackbar
                 .make(getWindow().getDecorView().getRootView(),
                         R.string.activity_login_failed, Snackbar.LENGTH_LONG).show();
     }
 
-    @Subscribe
-    public void onServiceBinded(OnServiceBindedEvent event) {
-        Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        AppContextUtils.overridePendingTransitionBackAppDefault(this);
-        materialDialog.dismiss();
-        this.finish();
-    }
 
     public String getUsername() {
         return this.username.getText().toString();
@@ -215,15 +233,5 @@ public class LoginActivity extends BaseActivity {
         if(materialDialog != null)
             materialDialog.dismiss();
         ButterKnife.unbind(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 }
