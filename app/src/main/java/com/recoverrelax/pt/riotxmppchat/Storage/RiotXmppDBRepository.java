@@ -162,7 +162,6 @@ public class RiotXmppDBRepository {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-
     }
     /**
      * Updates the notification

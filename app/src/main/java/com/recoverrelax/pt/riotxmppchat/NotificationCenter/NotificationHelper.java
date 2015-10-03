@@ -14,20 +14,18 @@ import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class NotificationHelper {
 
-    private final Context applicationContext = MainApplication.getInstance().getApplicationContext();
+    private final static Context applicationContext = MainApplication.getInstance().getApplicationContext();
 
     @Inject RiotXmppDBRepository riotXmppDBRepository;
-    @Inject MessageSpeechNotification messageSpeechNotification;
     @Inject Bus bus;
 
-    protected Observable<Boolean> sendSystemNotification(@NonNull String title, @NonNull String message, @DrawableRes int systemNotifId, int notificationId,
+    public static Observable<Boolean> sendSystemNotification(@NonNull String title, @NonNull String message, @DrawableRes int systemNotifId, int notificationId,
                                                          boolean hasPermissions){
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
@@ -51,33 +49,9 @@ public class NotificationHelper {
                 subscriber.onCompleted();
             }
         })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .subscribeOn(Schedulers.io());
     }
 
-    protected boolean isPausedOrClosed(){
-        return MainApplication.getInstance().isApplicationPausedOrClosed();
-    }
 
-    protected void saveToLog(Integer logId, String logMessage, String targetXmppUser) {
-        riotXmppDBRepository.insertOrReplaceInappLog(logId, logMessage, targetXmppUser)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-    }
-
-    protected void hSendMessageSpeechNotification(String user, String message, boolean combinedPermission){
-
-        if(!combinedPermission)
-            return;
-        messageSpeechNotification.sendMessageSpeechNotification(message, user);
-    }
-
-    protected void hSendStatusSpeechNotification(String message, boolean combinedPermission){
-
-        if(!combinedPermission)
-            return;
-        messageSpeechNotification.sendStatusSpeechNotification(message);
-    }
 
 }

@@ -1,10 +1,17 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.NewMessageReceivedPublish;
+import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
-import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageNotification;
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotification;
+import com.recoverrelax.pt.riotxmppchat.NotificationCenter.NotificationHelper;
+import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
+import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
@@ -22,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import LolChatRiotDb.MessageDb;
+import LolChatRiotDb.NotificationDb;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,15 +42,23 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     private String connectedXmppUser = null;
     private Map<String, Chat> chatList;
 
-    @Inject RiotXmppDBRepository riotXmppDBRepository;
-    @Inject MessageNotification messageNotification;
-    @Inject RiotRosterManager riotRosterManager;
+    private static final int MESSAGE_NOTIFICATION_DRAWABLE = R.drawable.ic_action_question_answer_green;
+    private static final int MESSAGE_NOTIFICATION_ID = 1111111;
+
+    @Inject
+    RiotXmppDBRepository riotXmppDBRepository;
+    @Inject
+    RiotRosterManager riotRosterManager;
     @Inject
     MessageSpeechNotification messageSpeechNotification;
+    @Inject
+    DataStorage dataStorageInstance;
+    @Inject
+    Bus bus;
 
     @Singleton
     @Inject
-    public RiotChatManager(){
+    public RiotChatManager() {
 
     }
 
@@ -71,7 +87,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         addChat(chat, messageFrom);
 
         if (messageFrom != null && message.getBody() != null) {
-            if(connectedXmppUser != null) {
+            if (connectedXmppUser != null) {
                 MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
                 riotXmppDBRepository.insertMessage(message1)
@@ -105,36 +121,30 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
      * Notify all Observers of new messages
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
-        messageNotification.init(userXmppAddress, message);
-        messageNotification.sendMessageNotification();
+        NotificationDb notification = riotXmppDBRepository.getNotificationByUser(userXmppAddress).toBlocking().single();
+        String targetUserName = riotRosterManager.getFriendNameFromXmppAddress(userXmppAddress).toBlocking().single();
 
-//        Observable.zip(
-//                riotXmppDBRepository.getNotificationByUser(userXmppAddress),
-//                riotRosterManager.getFriendNameFromXmppAddress(userXmppAddress),
-//                new Func2<NotificationDb, String, Boolean>() {
-//                    @Override
-//                    public Boolean call(NotificationDb notificationDb, String targetUserName) {
-//
-//                        // save message in the log
-//                        riotXmppDBRepository.insertOrReplaceInappLog(InAppLogIds.FRIEND_PM.getOperationId(),
-//                                targetUserName + " says: " + message,
-//                                userXmppAddress).subscribe();
-//
-//                        // send messageSpeechNotification
-//                         messageSpeechNotification.sendMessageSpeechNotification(message.getBody(), targetUserName);
-//
-//                        return true;
-//                    }
-//                }
-//
-//        ).subscribe(new Action1<Boolean>() {
-//            @Override
-//            public void call(Boolean aBoolean) {
-//
-//            }
-//        });
+        riotXmppDBRepository.insertOrReplaceInappLog(
+                InAppLogIds.FRIEND_PM.getOperationId(),
+                targetUserName + " says: " + message.getBody(),
+                userXmppAddress
+        ).subscribe();
 
-//        messageSpeechNotification.sendMessageSpeechNotification(message.getBody(), userXmppAddress);
+        if (getMessageSpeechPermission(notification))
+            messageSpeechNotification.sendMessageSpeechNotification(message.getBody(), targetUserName);
+
+        if (isPausedOrClosed()) {
+            NotificationHelper.sendSystemNotification(targetUserName + " says:", message.getBody(), MESSAGE_NOTIFICATION_DRAWABLE, MESSAGE_NOTIFICATION_ID,
+                    getMessageBackgroundPermission(notification)).subscribe();
+        } else {
+
+            boolean permission = getMessageForegroundPermission(notification);
+            String buttonLabel = "CHAT";
+            String messageFinal = targetUserName + " said: " + message.getBody();
+
+            if (permission)
+                bus.post(new NewMessageReceivedPublish(userXmppAddress, targetUserName, messageFinal, buttonLabel));
+        }
     }
 
 
@@ -156,5 +166,30 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private boolean getMessageSpeechPermission(NotificationDb notification) {
+        return notification != null &&
+                (isPausedOrClosed()
+                        ? dataStorageInstance.getGlobalNotifBackgroundSpeech()
+                        : dataStorageInstance.getGlobalNotifForegroundSpeech()
+                )
+                && notification.getHasSentMePm() && !AppMiscUtils.isPhoneSilenced();
+    }
+
+    private boolean getMessageForegroundPermission(NotificationDb notification) {
+        return notification != null &&
+                !isPausedOrClosed() && dataStorageInstance.getGlobalNotifForegroundText() && notification.getHasSentMePm();
+    }
+
+    private boolean getMessageBackgroundPermission(NotificationDb notification) {
+        return notification != null &&
+                isPausedOrClosed() &&
+                dataStorageInstance.getGlobalNotifBackgroundText() &&
+                notification.getHasSentMePm();
+    }
+
+    protected boolean isPausedOrClosed() {
+        return MainApplication.getInstance().isApplicationPausedOrClosed();
     }
 }
