@@ -203,6 +203,8 @@ public class Friend implements Comparable<Friend>{
                 return GAME_STATUS_NO_VIEW;
             case CHAMPION_SELECT:
                return formatChampionSelectText();
+            case IN_QUEUE:
+                return formatQeueSelectText();
             case INGAME:
                 return formatInGameText();
             default:
@@ -224,12 +226,27 @@ public class Friend implements Comparable<Friend>{
         return message.toString();
     }
 
+    private String formatQeueSelectText(){
+        String timeStamp = getTimeStampDifference();
+        boolean noTimeStamp = timeStamp.equals(NO_DATA);
+        String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
+
+        StringBuilder message = new StringBuilder();
+
+        if(noTimeStamp)
+            message.append(MainApplication.getInstance().getResources().getString(R.string.in_queue_select));
+        else
+            message.append(MainApplication.getInstance().getResources().getString(R.string.in_queue_select_for)).append(" ").append(timeStamp).append(" ").append(minutes);
+        return message.toString();
+    }
+
+
     private String getTimeStampDifference(){
         try {
             long serverTimeStamp = Long.parseLong(getTimeStamp());
             long nowTimeStamp = System.currentTimeMillis();
 
-            long difference = Math.abs((nowTimeStamp - (serverTimeStamp + (2L * 1000L * 60L))) / 1000L / 60L);
+            long difference = Math.abs((nowTimeStamp - serverTimeStamp)) / 1000L / 60L;
             return String.valueOf(difference);
         }catch(NumberFormatException e){
             return "";

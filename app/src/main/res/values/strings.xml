@@ -51,6 +51,8 @@
     <string name="in_champion_select_for">In champion select for </string>
     <string name="in_champion_select">In champion select</string>
 
+    <string name="in_queue_select_for">In queue for </string>
+    <string name="in_queue_select">In queue</string>
     <string name="ingame_playing_as">Playing as</string>
     <string name="ingame_playing_as_for">for</string>
     <string name="minutes">minutes</string>

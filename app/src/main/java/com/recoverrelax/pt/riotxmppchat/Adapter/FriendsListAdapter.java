@@ -38,13 +38,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -58,8 +54,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final Context context;
     private OnAdapterChildClick onAdapterChildClickCallback;
     private final RecyclerView recyclerView;
-    private StringBuilder stringBuilder = new StringBuilder();
     private final CompositeSubscription subscriptions = new CompositeSubscription();
+
+
+    private final int updateInterval = 30000;
 
     /**
      * Adapter RecyclerGradient Object
@@ -136,18 +134,29 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 final MyViewHolderOnline holderOnline = (MyViewHolderOnline) holder;
 
                 holderOnline.current = friend;
-                holderOnline.friendName.setText(holderOnline.current.getName());
+                holderOnline.friendName.setText(friend.getName());
 
-                if (holderOnline.current.getGameStatus().equals(GameStatus.IN_QUEUE)
-                        || holderOnline.current.getGameStatus().equals(GameStatus.INGAME)) {
+                final TextView gameStatus = holderOnline.gameStatus;
 
-                    holderOnline.startRepeatingTask();
+                if (friend.getGameStatus().equals(GameStatus.IN_QUEUE)
+                        || friend.getGameStatus().equals(GameStatus.INGAME) || friend.getGameStatus().equals(GameStatus.CHAMPION_SELECT)) {
+
+                    subscriptions.add(
+                        Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
+                                .map(aLong -> friend.getGameStatusToPrint())
+                                .subscribeOn(Schedulers.io())
+                                .doOnSubscribe(() -> holderOnline.gameStatus.setText(friend.getGameStatusToPrint()))
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(holderOnline.gameStatus::setText)
+                     );
+
                 } else {
-                    String statusMsg = holderOnline.current.getStatusMsg();
+                    String statusMsg = friend.getStatusMsg();
                     if(statusMsg != null && !statusMsg.equals(Friend.PERSONAL_MESSAGE_NO_VIEW)) {
-                        holderOnline.gameStatus.setText(statusMsg);
+                        gameStatus.setText(statusMsg);
                      }
-                    holderOnline.stopRepeatingTask();
+                    else
+                        gameStatus.setText("");
                 }
 
                 /**
@@ -162,36 +171,25 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 gradientDrawable.setColor(context.getResources().getColor(friendMode.getStatusColor()));
 
 
-                holderOnline.wins.setText(holderOnline.current.getWins());
-                holderOnline.ranked_icon.setImageDrawable(context.getResources().getDrawable(holderOnline.current.getProfileIconResId()));
-                holderOnline.division_league.setText(holderOnline.current.getLeagueDivisionAndTier().getDescriptiveName());
+                holderOnline.wins.setText(friend.getWins());
+                holderOnline.ranked_icon.setImageDrawable(context.getResources().getDrawable(friend.getProfileIconResId()));
+                holderOnline.division_league.setText(friend.getLeagueDivisionAndTier().getDescriptiveName());
                 holderOnline.division_league.setSelected(true);
 
                 /**
                  * Load Image from DD Server
                  */
 
-                if (holderOnline.current.getProfileIconId().equals("")) {
+                if (friend.getProfileIconId().equals("")) {
                     Glide.with(context)
                             .load(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
                 } else {
-//                    Picasso pic = Picasso.with(context);
-//
-//                    stringBuilder.delete(0, stringBuilder.length());
-//                    stringBuilder.append(RiotGlobals.LOLKING_PROFILE_ICON_URL)
-//                                 .append(holderOnline.current.getProfileIconId())
-//                                 .append(RiotGlobals.LOLKING_PROFILE_ICON_EXTENSION);
-//
-//                    pic.load(stringBuilder.toString())
-//                            .placeholder(R.drawable.profile_icon_example)
-//                            .error(R.drawable.profile_icon_example)
-//                            .into(holderOnline.profileIcon);
 
                     realmData.getProfileIconBaseUrl()
                             .subscribe(profileUrl -> {
                                 Glide.with(context)
-                                        .load(profileUrl + holderOnline.current.getProfileIconId() + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION)
+                                        .load(profileUrl + friend.getProfileIconId() + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION)
                                         .error(R.drawable.profile_icon_example)
                                         .into(new GlideDrawableImageViewTarget(holderOnline.profileIcon) {
                                             @Override
@@ -203,14 +201,14 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             });
                 }
 
-                if(holderOnline.current.isPlaying()) {
+                if(friend.isPlaying()) {
 //                    Picasso.with(context).load(holderOnline.current.getChampionDragonUrl())
 //                            .into(holderOnline.championSquare);
 
                     realmData.getChampionDDBaseUrl()
                             .subscribe(championUrl -> {
                                 Glide.with(context)
-                                        .load(championUrl + holderOnline.current.getChampionNameFormatted()
+                                        .load(championUrl + friend.getChampionNameFormatted()
                                                 + AppGlobals.DD_VERSION.CHAMPION_EXTENSION)
                                         .into(holderOnline.championSquare);
                             });
@@ -236,7 +234,9 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void setItems(List<Friend> items) {
-        friendsList = items;
+        friendsList.clear();
+        friendsList.addAll(items);
+        removeSubscriptions();
         notifyDataSetChanged();
     }
 
@@ -347,9 +347,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         private Friend current;
 
-        private final int updateInterval = 30000;
-        private Subscription subscription;
-
         public MyViewHolderOnline(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -373,31 +370,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public void onCardOptionsClick(View view) {
             if (onAdapterChildClickCallback != null)
                 onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName(), current.isPlaying());
-        }
-
-
-        public void startRepeatingTask() {
-            gameStatus.setText(current.getGameStatusToPrint());
-
-            subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
-                    .map(aLong -> current.getGameStatusToPrint())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<String>() {
-                        @Override public void onCompleted() { }
-                        @Override public void onError(Throwable e) { }
-
-                        @Override
-                        public void onNext(String gameStatusToPrint) {
-                            LOGI(TAG, "UI Adapter Updated: " + gameStatusToPrint);
-                            gameStatus.setText(gameStatusToPrint);
-                        }
-                    });
-            subscriptions.add(subscription);
-        }
-
-        void stopRepeatingTask() {
-            subscriptions.remove(subscription);
         }
     }
 
