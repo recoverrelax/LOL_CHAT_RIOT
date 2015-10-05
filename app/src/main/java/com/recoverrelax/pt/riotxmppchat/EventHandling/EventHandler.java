@@ -2,12 +2,14 @@ package com.recoverrelax.pt.riotxmppchat.EventHandling;
 
 
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.NewMessageReceivedPublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnFriendPresenceChangedPublish;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnNewFriendPlayingEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnNewFriendPlayingPublish;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnReconnectEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.NewMessageReceivedNotifyPublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.NewMessageReceivedPublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnFriendPresenceChangedPublish;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnNewFriendPlayingPublish;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnReconnectPublish;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.squareup.otto.Bus;
@@ -26,6 +28,7 @@ public class EventHandler {
     Bus bus;
 
     private List<NewMessageReceivedEvent> newMessageEventList = new ArrayList<>();
+    private List<NewMessageReceivedNotifyEvent> newMessageNotifyEventList = new ArrayList<>();
     private List<OnReconnectEvent> reconnectEventList = new ArrayList<>();
     private List<OnNewFriendPlayingEvent> onFriendPlayingEventList = new ArrayList<>();
     private List<OnFriendPresenceChangedEvent> onFriendPresenceChangedEventList = new ArrayList<>();
@@ -40,6 +43,16 @@ public class EventHandler {
     public void registerForNewMessageEvent(NewMessageReceivedEvent event){
         if(!newMessageEventList.contains(event))
             newMessageEventList.add(event);
+    }
+
+    public void unregisterForNewMessageNotifyEvent(NewMessageReceivedNotifyEvent event){
+        if(newMessageNotifyEventList.contains(event))
+            newMessageNotifyEventList.remove(event);
+    }
+
+    public void registerForNewMessageNotifyEvent(NewMessageReceivedNotifyEvent event){
+        if(!newMessageNotifyEventList.contains(event))
+            newMessageNotifyEventList.add(event);
     }
 
     public void unregisterForNewMessageEvent(NewMessageReceivedEvent event){
@@ -81,6 +94,16 @@ public class EventHandler {
     public void publishNewMessages(NewMessageReceivedPublish publishEvent){
         for(NewMessageReceivedEvent event: newMessageEventList){
             event.onNewMessageReceived(publishEvent.getUserXmppAddress(),
+                    publishEvent.getUsername(),
+                    publishEvent.getMessage(),
+                    publishEvent.getButtonLabel());
+        }
+    }
+
+    @Subscribe
+    public void notifyNewMessages(NewMessageReceivedNotifyPublish publishEvent){
+        for(NewMessageReceivedNotifyEvent event: newMessageNotifyEventList){
+            event.onNewMessageNotifyReceived(publishEvent.getUserXmppAddress(),
                     publishEvent.getUsername(),
                     publishEvent.getMessage(),
                     publishEvent.getButtonLabel());

@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.NewMessageReceivedNotifyPublish;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.NewMessageReceivedPublish;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
@@ -144,6 +145,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
 
             if (permission)
                 bus.post(new NewMessageReceivedPublish(userXmppAddress, targetUserName, messageFinal, buttonLabel));
+            bus.post(new NewMessageReceivedNotifyPublish(userXmppAddress, targetUserName, messageFinal, buttonLabel));
         }
     }
 

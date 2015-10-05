@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -275,8 +276,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
                     case R.id.navigation_item_3:
-                        intent = new Intent(BaseActivity.this, ShardIconActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                        intent = new Intent(BaseActivity.this, ShardIconActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        AppContextUtils.showSnackbar(this, "Feature Coming in the next release", Snackbar.LENGTH_LONG);
                         break;
 
                     case R.id.navigation_item_4:

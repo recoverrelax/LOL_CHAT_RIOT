@@ -18,8 +18,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
@@ -56,7 +56,7 @@ import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_F
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatFragment extends BaseFragment implements NewMessageReceivedEvent {
+public class ChatFragment extends BaseFragment implements NewMessageReceivedNotifyEvent {
 
     @Bind(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
@@ -182,13 +182,21 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedEven
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+//        MainApplication.getInstance().getBusInstance().register(this);
+        getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
+        handler.registerForNewMessageNotifyEvent(this);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         subscriptions.clear();
 
         if(adapter != null)
             adapter.removeSubscriptions();
-        handler.unregisterForNewMessageEvent(this);
+        handler.unregisterForNewMessageNotifyEvent(this);
     }
 
     public static int convertDIPToPixels(Context context, int dip) {
@@ -247,7 +255,7 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedEven
                     @Override
                     public void onNext(Long aLong) {
                         if (aLong != null)
-                            onNewMessageReceived(null, null, null, null);
+                            onNewMessageNotifyReceived(null, null, null, null);
                         // clearFriendList text
                         chatEditText.setText("");
                     }
@@ -274,13 +282,7 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedEven
                 });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        MainApplication.getInstance().getBusInstance().register(this);
-        getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
-        handler.registerForNewMessageEvent(this);
-    }
+
 
     public void getLastPersonalMessage(String friendXmppName){
         Subscription subscribe = personalMessageImpl.getLastPersonalMessage(friendXmppName)
@@ -311,7 +313,7 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedEven
     }
 
     @Override
-    public void onNewMessageReceived(String userXmppAddress, String username, String message, String buttonLabel) {
+    public void onNewMessageNotifyReceived(String userXmppAddress, String username, String message, String buttonLabel) {
         if (this.friendXmppName != null) {
             getActivity().runOnUiThread(() -> {
 

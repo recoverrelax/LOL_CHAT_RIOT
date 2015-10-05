@@ -27,7 +27,7 @@
         android:layout_weight="1"
         android:layout_margin="20dp"
         android:id="@+id/lol_logo"
-        android:src="@drawable/lol_logo"
+        android:src="@drawable/chat_logo"
         android:layout_marginBottom="30dp"/>
 
         <LinearLayout

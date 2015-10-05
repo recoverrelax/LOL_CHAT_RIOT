@@ -133,7 +133,7 @@ public class DataStorage {
     }
 
     public synchronized boolean getGlobalNotifForegroundText(){
-        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_TEXT, false);
+        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_TEXT, true);
     }
 
     public synchronized boolean setGlobalNotifForegroundText(boolean state){
@@ -143,7 +143,7 @@ public class DataStorage {
     }
 
     public synchronized boolean getGlobalNotifForegroundSpeech(){
-        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_SPEECH, false);
+        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_SPEECH, true);
     }
 
     public synchronized boolean setGlobalNotifForegroundSpeech(boolean state){
@@ -157,7 +157,7 @@ public class DataStorage {
      */
 
     public synchronized boolean getGlobalNotifBackgroundText(){
-        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT, false);
+        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT, true);
     }
 
     public synchronized boolean setGlobalNotifBackgroundText(boolean state){
@@ -167,7 +167,7 @@ public class DataStorage {
     }
 
     public synchronized boolean getGlobalNotifBackgroundSpeech(){
-        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH, false);
+        return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH, true);
     }
 
     public synchronized boolean setGlobalNotifBackgroundSpeech(boolean state){

@@ -14,8 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.FriendMessageListImpl;
@@ -38,7 +38,7 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendMessageListFragment extends BaseFragment implements NewMessageReceivedEvent{
+public class FriendMessageListFragment extends BaseFragment implements NewMessageReceivedNotifyEvent{
 
     @Bind(R.id.friendMessageListRecycler)
     RecyclerView messageRecyclerView;
@@ -118,7 +118,7 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
     public void onResume() {
         super.onResume();
         getPersonalMessageList();
-        handler.registerForNewMessageEvent(this);
+        handler.registerForNewMessageNotifyEvent(this);
     }
 
     private void getPersonalMessageList() {
@@ -144,7 +144,7 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
         if(adapter != null)
             adapter.removeSubscriptions();
 
-        handler.unregisterForNewMessageEvent(this);
+        handler.unregisterForNewMessageNotifyEvent(this);
     }
 
     private void getPersonalMessageSingleItem(String userXmppAddress) {
@@ -173,7 +173,7 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
     }
 
     @Override
-    public void onNewMessageReceived(String userXmppAddress, String username, String message, String buttonLabel) {
+    public void onNewMessageNotifyReceived(String userXmppAddress, String username, String message, String buttonLabel) {
         if (adapter.contains(userXmppAddress)) {
             getPersonalMessageSingleItem(userXmppAddress);
         } else {

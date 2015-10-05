@@ -137,8 +137,8 @@ public class RiotXmppService extends Service {
         NotificationCompat.Builder mNotificationBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.profile_icon_example)
-                        .setContentTitle("Lol Friend's Alerter")
-                        .setContentText("LOL Friend Alerter is now running.");
+                        .setContentTitle("Chat & Play for Lol")
+                        .setContentText("Chat & Play for Lol is now running.");
 
 
         Notification notification = mNotificationBuilder.build();
