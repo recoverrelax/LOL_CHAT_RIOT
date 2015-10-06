@@ -7,6 +7,7 @@ import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -40,7 +41,7 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
     }
 
     public void sendMessageSpeechNotification(String message, String from){
-        Log.i("111", "Enters here");
+        LogUtils.LOGI(TAG, "Enters here");
             if (isReady) {
                 speak(from, message);
             } else {

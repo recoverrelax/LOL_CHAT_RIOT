@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
@@ -58,7 +59,7 @@ public class RiotApiServiceImpl {
             return Observable.error(new Throwable("For some reason, region or platform is invalid"));
 
         return apiProvider.getRiotApiServiceSecure().getCurrentGameInfoBySummonerId_CURRENT_GAME(region, platformId, summonerId)
-                .doOnError(throwable -> Log.i(TAG, throwable.toString(), throwable))
+                .doOnError(throwable -> LogUtils.LOGI(TAG, throwable.toString(), throwable))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
@@ -114,6 +115,7 @@ public class RiotApiServiceImpl {
             return Observable.error(new Throwable("For some reason, region is invalid"));
 
         return apiProvider.getRiotApiServiceSecure().getRecentMatchList_GAME(region, summonerId)
+                .doOnError(Throwable::printStackTrace)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }
@@ -147,7 +149,7 @@ public class RiotApiServiceImpl {
             return Observable.error(new Throwable("For some reason, region is invalid"));
 
         return apiProvider.getRiotApiService().getShardStatus_STATUS(region)
-                .doOnError(throwable -> Log.i(TAG, throwable.toString(), throwable))
+                .doOnError(throwable -> LogUtils.LOGI(TAG, throwable.toString(), throwable))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
     }

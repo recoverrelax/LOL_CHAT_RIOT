@@ -26,7 +26,7 @@ public class ShardIconActivity extends MessageIconActivity {
 
     @Override
     public int getNavigationViewPosition() {
-        return R.id.navigation_item_3;
+        return R.id.navigation_item_4;
     }
 
 

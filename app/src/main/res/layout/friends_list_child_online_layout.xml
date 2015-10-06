@@ -186,7 +186,7 @@
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:text="Away" />
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal"
@@ -196,30 +196,24 @@
 
                     <TextView
                         android:id="@+id/shardStatus1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="5"
                         android:layout_height="wrap_content"
-                        android:minLines="2"
+                        android:layout_marginRight="5dp"
+                        android:lines="2"
                         android:gravity="left"
-                        android:layout_alignParentTop="true"
                         android:textSize="@dimen/text_size_micro"
-                        tools:text="Playing as Ashe for 45 minutes"
-                        android:layout_toLeftOf="@+id/champion_square"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        tools:text="Playing as Ashe for 45 minutes"/>
 
-                    <ImageView
+                    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
                             tools:src="@drawable/profile_icon_example"
                             android:id="@+id/champion_square"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:adjustViewBounds="true"
-                            android:scaleType="centerInside"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignTop="@id/shardStatus1"
-                            android:layout_alignBottom="@id/shardStatus1"/>
+                            android:adjustViewBounds="true"/>
 
 
-                </RelativeLayout>
+                </LinearLayout>
 
             </LinearLayout>
 

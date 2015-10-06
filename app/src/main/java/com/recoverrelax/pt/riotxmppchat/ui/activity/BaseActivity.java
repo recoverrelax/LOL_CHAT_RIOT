@@ -24,10 +24,13 @@ import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.squareup.otto.Bus;
+
+import org.jivesoftware.smack.AbstractXMPPConnection;
 
 import javax.inject.Inject;
 
@@ -275,7 +278,21 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         intent = new Intent(BaseActivity.this, FriendMessageListIconActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
+
                     case R.id.navigation_item_3:
+
+                        AbstractXMPPConnection conn = MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnection().toBlocking().single();
+                        String friendXmppAddress = AppXmppUtils.parseXmppAddress(conn.getUser());
+
+                        intent = new Intent(this, RecentGameIconActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.putExtra(RecentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent.putExtra(RecentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, CurrentGameIconActivity.FRIEND_XMPP_USERNAME_ME);
+
+                        break;
+
+
+                    case R.id.navigation_item_4:
                         if(MainApplication.getInstance().isRealScoutEnabled) {
                             intent = new Intent(BaseActivity.this, ShardIconActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -283,7 +300,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         AppContextUtils.showSnackbar(this, "Feature Coming in the next release", Snackbar.LENGTH_LONG);
                         break;
 
-                    case R.id.navigation_item_4:
+                    case R.id.navigation_item_5:
                         intent = new Intent(BaseActivity.this, SettingIconActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

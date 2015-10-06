@@ -13,8 +13,9 @@
     <string name="navdrawer_item0">Dashboard</string>
     <string name="navdrawer_item1">Frieds List</string>
     <string name="navdrawer_item2">Message List</string>
-    <string name="navdrawer_item3">Settings</string>
+    <string name="navdrawer_item3">My Recent Games</string>
     <string name="navdrawer_item4">Server Status</string>
+    <string name="navdrawer_item5">Settings</string>
 
     <string name="youtube_title">Youtube</string>
     <string name="youtube_text">Lastest videos just now!</string>
@@ -103,6 +104,7 @@
     <string name="current_game_summoner_not_in_game">Live Match not available. The game is no longer available.</string>
     <string name="current_game__fragment_title">Live: </string>
     <string name="recent_game__fragment_title">Recent Games for: </string>
+    <string name="recent_game_me_fragment_title">My Recent Games</string>
     <string name="current_game_banned_c_error">I\'m sorry. We could not retrieve the banned champion list</string>
     <string name="current_game_general_error">I\'m sorry. We could not retrieve the General Info.</string>
     <string name="shard_region_error">I\'m sorry. We could not retrieve the Status Info for</string>

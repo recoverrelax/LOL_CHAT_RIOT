@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.BannedChampion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
@@ -286,7 +287,7 @@ public class CurrentGameFragment extends BaseFragment {
                         String pathChampion = championSquareBaseUrl + liveGameParticipant.getChampionImage();
                         String pathSS1 = summonerSpellBaseUrl + liveGameParticipant.getSpell1Image();
                         String pathSS2 = summonerSpellBaseUrl + liveGameParticipant.getSpell2Image();
-                        Log.i(TAG, pathSS1);
+                        LogUtils.LOGI(TAG, pathSS1);
 
                         Glide.with(CurrentGameFragment.this.getActivity())
                                 .load(pathChampion)

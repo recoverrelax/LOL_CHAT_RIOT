@@ -111,7 +111,10 @@ public class RecentGameFragment extends BaseFragment {
             friendXmppAddress = (String) savedInstanceState.getSerializable(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT);
             friendUsername = (String) savedInstanceState.getSerializable(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT);
         }
-        ((BaseActivity) getActivity()).setTitle(getActivity().getResources().getString(R.string.recent_game__fragment_title) + " " + friendUsername);
+        if( friendUsername != null && friendUsername.equals(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_ME))
+            getActivity().setTitle(getActivity().getResources().getString(R.string.recent_game_me_fragment_title));
+        else
+            getActivity().setTitle(getActivity().getResources().getString(R.string.recent_game__fragment_title) + " " + friendUsername);
 
     }
 

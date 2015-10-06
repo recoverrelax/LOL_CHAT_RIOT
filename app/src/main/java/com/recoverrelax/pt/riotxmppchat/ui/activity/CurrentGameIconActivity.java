@@ -23,6 +23,8 @@ public class CurrentGameIconActivity extends MessageIconActivity {
     public static final String FRIEND_XMPP_ADDRESS_INTENT = "friend_xmpp_address_intent";
     public static final String FRIEND_XMPP_USERNAME_INTENT = "friend_xmpp_username";
 
+    public static final String FRIEND_XMPP_USERNAME_ME = "me";
+
     private static final String friendXmppAddressDefault = null;
     private static final String friendXmppUsernameDefault = null;
     private String friendXmppAddress;
