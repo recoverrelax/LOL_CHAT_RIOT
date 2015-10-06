@@ -233,7 +233,6 @@ public class RiotRosterManager implements RosterListener {
 
     public void checkForFriendNotificationToSend(Presence newPresence) {
         String xmppAddress = AppXmppUtils.parseXmppAddress(newPresence.getFrom());
-
         String friendName = getFriendNameFromXmppAddress(xmppAddress).toBlocking().single();
 
         Presence oldPresence = friendList.containsKey(xmppAddress) ? friendList.get(xmppAddress) : null;
@@ -261,7 +260,6 @@ public class RiotRosterManager implements RosterListener {
 
         if (status.isStartedGame() || status.isLeftGame())
             bus.post(new OnNewFriendPlayingPublish());
-
 
         int logId = getLogIdFromStatus(status);
         String logMessage = getLogMessageFromStatus(status, username);

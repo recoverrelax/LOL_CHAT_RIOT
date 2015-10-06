@@ -39,8 +39,8 @@
     <color name="offline_alpha50">#32ff0000</color>
 
 
-    <color name="win_color">#fa1b5e20</color>
-    <color name="win_color_t">#321b5e20</color>
+    <color name="win_color">#12208f29</color>
+    <color name="win_color_t">#501b5e20</color>
     <color name="loss_color">#32ff0000</color>
 
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -56,8 +57,14 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
         holder.game = recentGameList.get(position);
 
         String ramdomSkin = holder.game.getRamdomSkin(random);
-//        holder.recentGameCardView.setCardBackgroundColor(context.getResources().getColor(holder.game.isWin() ? R.color.win_color : R.color.loss_color));
-       Glide.get(context).setMemoryCategory(MemoryCategory.HIGH);
+
+        holder.statusWLColor.setBackgroundColor(context.getResources().getColor(holder.game.isWin() ? R.color.win_color_t : R.color.loss_color));
+
+        holder.gameMode.setText(holder.game.getGameType());
+        holder.gameWhen.setText(holder.game.getGameWhen());
+        holder.playerPosition.setText(holder.game.getPlayerPosition());
+
+        Glide.get(context).setMemoryCategory(MemoryCategory.HIGH);
 
         Glide.with(context)
                 .load(ramdomSkin)
@@ -125,6 +132,18 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
 
         @Bind(R.id.recentGameCardView)
         CardView recentGameCardView;
+
+        @Bind(R.id.statusWLColor)
+        LinearLayout statusWLColor;
+
+        @Bind(R.id.gameMode)
+        TextView gameMode;
+
+        @Bind(R.id.playerPosition)
+        TextView playerPosition;
+
+        @Bind(R.id.gameWhen)
+        TextView gameWhen;
 
         @Bind(R.id.summonerSpellStatBlock1)
         SummonerSpellStatBlock summonerSpellStatBlock;

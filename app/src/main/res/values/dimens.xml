@@ -45,5 +45,5 @@
     <dimen name="def_spacing_double">16dp</dimen>
 
 
-    <dimen name="recent_games_child_height">150dp</dimen>
+    <dimen name="recent_games_child_height">200dp</dimen>
 </resources>

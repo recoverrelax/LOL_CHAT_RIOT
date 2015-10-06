@@ -191,6 +191,7 @@ public class RecentGameFragment extends BaseFragment {
             String skinUrl = (String) args[6];
 
             final long[] mySummonerId = new long[1];
+            final long[] gameType = new long[1];
 
             return riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
                     .map((RecentGamesDto recentGamesDto) -> {
@@ -200,6 +201,10 @@ public class RecentGameFragment extends BaseFragment {
                     .flatMap(Observable::from)
                     .doOnNext(game -> {
                         RecentGameWrapper recentGameWrapper = new RecentGameWrapper();
+
+                        recentGameWrapper.setGameType(game.getSubType());
+                        recentGameWrapper.setGameWhen(game.getCreateDate());
+                        recentGameWrapper.setPlayerPosition(game.getStats().getPlayerPosition());
 
                         recentGameWrapper.setSummonerSpellUrl1(ssUrl + ssImages.get(game.getSpell1()));
                         recentGameWrapper.setSummonerSpellUrl2(ssUrl + ssImages.get(game.getSpell2()));

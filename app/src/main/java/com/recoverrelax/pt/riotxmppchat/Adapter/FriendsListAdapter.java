@@ -184,6 +184,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Glide.with(context)
                             .load(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
+                    holderOnline.progressBarProfileIcon.setVisibility(View.GONE);
                 } else {
 
                     realmData.getProfileIconBaseUrl()
@@ -197,6 +198,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                                 super.onResourceReady(resource, animation);
                                                 holderOnline.progressBarProfileIcon.setVisibility(View.GONE);
                                             }
+
+
                                         });
                             });
                 }

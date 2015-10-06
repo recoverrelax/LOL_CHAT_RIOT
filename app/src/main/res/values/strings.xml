@@ -113,5 +113,12 @@
     <string name="shard_forum">Forum</string>
     <string name="shard_chose_region">Chose Region:</string>
 
+    <!--For recent game header-->
+    <string name="game_win">WIN</string>
+    <string name="game_loss">LOSS</string>
+    <string name="recent_game_header_mode">Mode</string>
+    <string name="recent_game_header_when">When</string>
+    <string name="recent_game_header_position">Position</string>
+
 
 </resources>

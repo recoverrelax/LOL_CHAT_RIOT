@@ -48,8 +48,13 @@ public class MainApplication extends Application {
 
     private static AppComponent appComponent;
 
+    /**
+     * Temporary Control Variables
+     */
 
-
+    public boolean isRealScoutEnabled = true;
+    public boolean isLiveGameEnabled = true;
+    public boolean isRecentGameEnabled = true;
 
     @Override
     public void onCreate() {

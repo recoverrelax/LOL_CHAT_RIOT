@@ -4,6 +4,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -37,6 +38,8 @@ import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameIconActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameIconActivity;
 
 import org.jivesoftware.smack.packet.Presence;
 
@@ -198,25 +201,29 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
                 case R.id.current_game:
 
-//                    Intent intent = new Intent(this.getActivity(), CurrentGameIconActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                    intent.putExtra(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-//                    intent.putExtra(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
-//                    startActivity(intent);
-//                    AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
-                    AppContextUtils.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
+                    if(MainApplication.getInstance().isRecentGameEnabled){
+                        Intent intent = new Intent(this.getActivity(), CurrentGameIconActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.putExtra(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent.putExtra(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+                        startActivity(intent);
+                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
+                    }else
+                        AppContextUtils.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
 
                     break;
 
                 case R.id.recent_game:
 
-//                    Intent intent2 = new Intent(this.getActivity(), RecentGameIconActivity.class);
-//                    intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                    intent2.putExtra(RecentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-//                    intent2.putExtra(RecentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
-//                    startActivity(intent2);
-//                    AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
-                    AppContextUtils.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
+                    if(MainApplication.getInstance().isLiveGameEnabled){
+                        Intent intent2 = new Intent(this.getActivity(), RecentGameIconActivity.class);
+                        intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent2.putExtra(RecentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent2.putExtra(RecentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+                        startActivity(intent2);
+                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
+                    }else
+                        AppContextUtils.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
                     break;
                 default:
                     break;

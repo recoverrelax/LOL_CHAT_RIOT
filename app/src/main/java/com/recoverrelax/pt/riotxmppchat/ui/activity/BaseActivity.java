@@ -276,8 +276,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
                     case R.id.navigation_item_3:
-//                        intent = new Intent(BaseActivity.this, ShardIconActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        if(MainApplication.getInstance().isRealScoutEnabled) {
+                            intent = new Intent(BaseActivity.this, ShardIconActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        } else
                         AppContextUtils.showSnackbar(this, "Feature Coming in the next release", Snackbar.LENGTH_LONG);
                         break;
 

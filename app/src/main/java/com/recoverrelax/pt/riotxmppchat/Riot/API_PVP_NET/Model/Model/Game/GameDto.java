@@ -48,6 +48,7 @@ public class GameDto {
      */
     private String gameType;
 
+
     /**
      * Invalid flag - ????
      */
@@ -198,5 +199,9 @@ public class GameDto {
 
     public void setSpell2Image(String spell2Image) {
         this.spell2Image = spell2Image;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 }

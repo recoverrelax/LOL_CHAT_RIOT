@@ -1,8 +1,11 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel;
 
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.GameConstants.PlayerPosition;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -29,6 +32,10 @@ public class RecentGameWrapper {
     private List<String> itemList;
 
     private HashMap<Integer, List<TeamInfo>> teamUrlMap = new HashMap<>();
+
+    private String gameType;
+    private String playerPosition;
+    private String gameWhen;
 
     public RecentGameWrapper(){}
 
@@ -160,5 +167,34 @@ public class RecentGameWrapper {
 
     public void setIsWin(boolean isWin) {
         this.isWin = isWin;
+    }
+
+    public String getGameType() {
+        return gameType;
+    }
+
+    public void setGameType(String gameType) {
+        this.gameType = gameType;
+    }
+
+    public String getGameWhen() {
+        return gameWhen;
+    }
+
+
+    public void setGameWhen(long createdDate) {
+        Date date = new Date(createdDate);
+        this.gameWhen = AppDateUtils.getFormatedDate(date);
+    }
+
+    public String getPlayerPosition() {
+        return playerPosition;
+    }
+
+    public void setPlayerPosition(int playerPosition) {
+        PlayerPosition byId = PlayerPosition.getById(playerPosition);
+
+        if(byId != null)
+            this.playerPosition = byId.getName().toUpperCase();
     }
 }
