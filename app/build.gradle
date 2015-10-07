@@ -3,11 +3,23 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
+def Properties props = new Properties()
+props.load(new FileInputStream("../KEYSTORE_CHATIFY/keystore_properties"))
+
 android {
+    signingConfigs {
+        release {
+            keyAlias = props['KEY_ALIAS']
+            keyPassword props['STORE_PASSWORD']
+            storeFile file('D:/AndroidProjects/KEYSTORE_CHATIFY/lol_chatify.jks')
+            storePassword props['STORE_PASSWORD']
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
+
     def versionMajor = 1
-    def versionMinor = 4
+    def versionMinor = 5
     def versionPatch = 0
     def versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
@@ -15,13 +27,15 @@ android {
         applicationId "com.recoverrelax.pt.riotxmppchat"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
+        versionCode 5
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -71,7 +85,6 @@ dependencies {
     compile 'com.android.support:palette-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:percent:23.0.1'
-
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.android.support:support-v4:23.0.1'
     /**
@@ -87,7 +100,6 @@ dependencies {
     compile 'com.google.dagger:dagger:2.1-SNAPSHOT'
     apt 'com.google.dagger:dagger-compiler:2.1-SNAPSHOT'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-
     /**
      * Database ORM
      */
@@ -95,13 +107,8 @@ dependencies {
     /**
      * Networking
      */
-    compile('org.igniterealtime.smack:smack-android:4.1.0') {
-        exclude(group: 'xpp3', module: 'xpp3')
-    }
-    compile('org.igniterealtime.smack:smack-tcp:4.1.0') {
-        exclude(group: 'xpp3', module: 'xpp3')
-    }
-
+    compile 'org.igniterealtime.smack:smack-android:4.1.0'
+    compile 'org.igniterealtime.smack:smack-tcp:4.1.0'
     /**
      * EventBus
      */
@@ -120,13 +127,11 @@ dependencies {
     /**
      * Crash Reporting
      */
-
-    compile "org.parceler:parceler-api:1.0.3"
-
+    compile 'org.parceler:parceler-api:1.0.3'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.google.code.gson:gson:2.3.1'
-
     compile('com.crashlytics.sdk.android:crashlytics:2.3.2@aar') {
         transitive = true;
     }
+//    compile 'xpp3:xpp3:1.1.4c'
 }

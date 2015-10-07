@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
+import com.recoverrelax.pt.riotxmppchat.BuildConfig;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity;
 
@@ -79,6 +80,11 @@ public class AppContextUtils {
 
         if(cb!=null)
             cb.onReturnCallback();
+    }
+
+    public static void printStackTrace(Throwable e) {
+        if(BuildConfig.DEBUG)
+            e.printStackTrace();
     }
 
     public interface ReturnCallback{

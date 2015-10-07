@@ -10,6 +10,7 @@ import android.os.IBinder;
 import com.crashlytics.android.Crashlytics;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnServiceBindedPublish;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
@@ -52,9 +53,9 @@ public class MainApplication extends Application {
      * Temporary Control Variables
      */
 
-    public boolean isRealScoutEnabled = true;
-    public boolean isLiveGameEnabled = true;
-    public boolean isRecentGameEnabled = true;
+    public boolean isRealScoutEnabled = false;
+    public boolean isLiveGameEnabled = false;
+    public boolean isRecentGameEnabled = false;
 
     @Override
     public void onCreate() {
@@ -133,6 +134,7 @@ public class MainApplication extends Application {
     }
 
     public void bindService() {
+        LogUtils.LOGI(TAG, "Enters bindService");
         if(!mBound)
             bindService(intentService, mConnection, BIND_AUTO_CREATE);
         else {

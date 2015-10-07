@@ -19,6 +19,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
@@ -39,6 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -201,6 +203,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
                                         });
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable e) {
+                                    AppContextUtils.printStackTrace(e);
+                                }
                             });
                 }
 
@@ -214,6 +221,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                         .load(championUrl + friend.getChampionNameFormatted()
                                                 + AppGlobals.DD_VERSION.CHAMPION_EXTENSION)
                                         .into(holderOnline.championSquare);
+                            }, new Action1<Throwable>() {
+                                @Override
+                                public void call(Throwable e) {
+                                    AppContextUtils.printStackTrace(e);
+                                }
                             });
 
                 }

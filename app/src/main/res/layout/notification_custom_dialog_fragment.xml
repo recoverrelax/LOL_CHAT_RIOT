@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="15dp"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
                 android:id="@+id/isOnline" />
@@ -63,7 +63,7 @@
             <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
                 android:layout_marginRight="15dp"
@@ -87,7 +87,7 @@
             <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
                 android:layout_marginRight="15dp"
@@ -111,7 +111,7 @@
             <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
                 android:layout_marginRight="15dp"
@@ -135,7 +135,7 @@
             <android.support.v7.widget.SwitchCompat
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"
                 android:layout_marginRight="15dp"

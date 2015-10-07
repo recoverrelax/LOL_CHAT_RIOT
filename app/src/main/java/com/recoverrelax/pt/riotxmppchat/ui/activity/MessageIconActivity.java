@@ -5,8 +5,8 @@ import android.support.design.widget.Snackbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.R;
 
@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import rx.Subscriber;
 
-public abstract class MessageIconActivity extends BaseActivity implements NewMessageReceivedEvent {
+public abstract class MessageIconActivity extends BaseActivity implements NewMessageReceivedNotifyEvent {
 
     @Inject
     EventHandler eventHandler;
@@ -28,7 +28,7 @@ public abstract class MessageIconActivity extends BaseActivity implements NewMes
     @Override
     protected void onResume() {
         super.onResume();
-        eventHandler.registerForNewMessageEvent(this);
+        eventHandler.registerForNewMessageNotifyEvent(this);
         if(hasNewMessageIcon())
             invalidateOptionsMenu();
     }
@@ -36,24 +36,7 @@ public abstract class MessageIconActivity extends BaseActivity implements NewMes
     @Override
     protected void onPause() {
         super.onPause();
-        eventHandler.unregisterForNewMessageEvent(this);
-    }
-
-    @Override
-    public void onNewMessageReceived(String userXmppAddress, String username, String message, String buttonLabel) {
-        if (!(this instanceof ChatActivity) || !((ChatActivity) this).friendXmppName.equals(userXmppAddress)) {
-            Snackbar snackbar = Snackbar
-                    .make(this.getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG);
-
-            if (userXmppAddress != null && username != null) {
-                snackbar.setAction(buttonLabel, view -> {
-                    goToMessageActivity(username, userXmppAddress);
-                });
-            }
-            snackbar.show();
-        }
-        if(hasNewMessageIcon())
-            invalidateOptionsMenu();
+        eventHandler.unregisterForNewMessageNotifyEvent(this);
     }
 
     @Override
@@ -95,4 +78,21 @@ public abstract class MessageIconActivity extends BaseActivity implements NewMes
     }
 
     protected abstract boolean hasNewMessageIcon();
+
+    @Override
+    public void onNewMessageNotifyReceived(String userXmppAddress, String username, String message, String buttonLabel) {
+        if (!(this instanceof ChatActivity) || !((ChatActivity) this).friendXmppName.equals(userXmppAddress)) {
+            Snackbar snackbar = Snackbar
+                    .make(this.getWindow().getDecorView().getRootView(), message, Snackbar.LENGTH_LONG);
+
+            if (userXmppAddress != null && username != null) {
+                snackbar.setAction(buttonLabel, view -> {
+                    goToMessageActivity(username, userXmppAddress);
+                });
+            }
+            snackbar.show();
+        }
+        if(hasNewMessageIcon())
+            invalidateOptionsMenu();
+    }
 }

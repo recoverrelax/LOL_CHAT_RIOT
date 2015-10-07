@@ -58,7 +58,7 @@
                 android:id="@+id/notificationAlwaysOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"/>
 
@@ -128,7 +128,7 @@
                 android:id="@+id/visible_sound"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"/>
 
@@ -176,7 +176,7 @@
                 android:id="@+id/visible_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"/>
         </LinearLayout>
@@ -237,7 +237,7 @@
                 android:id="@+id/background_sound"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"/>
 
@@ -276,7 +276,7 @@
                 android:id="@+id/background_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:theme="@style/AppTheme.Base.Settings"
+                android:theme="@style/AppTheme.Base.Settings"
                 android:textOn="YES"
                 android:textOff="NO"/>
 

@@ -340,6 +340,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
                     @Override
                     public void onError(Throwable e) {
+                        AppContextUtils.printStackTrace(e);
                     }
 
                     @Override
@@ -365,7 +366,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
                     @Override
                     public void onError(Throwable e) {
-
+                        AppContextUtils.printStackTrace(e);
                     }
 
                     @Override
@@ -420,7 +421,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
                     @Override
                     public void onError(Throwable e) {
-
+                        AppContextUtils.printStackTrace(e);
                     }
 
                     @Override

@@ -7,5 +7,5 @@ public class RiotGlobals {
     public static final String LOLKING_PROFILE_ICON_URL = "http://lkimg.zamimg.com/shared/riot/images/profile_icons/profileIcon";
     public static final String LOLKING_PROFILE_ICON_EXTENSION = ".jpg";
 
-    public static final String API_KEY = "ff2a4da8-1e40-4d6f-aadf-285750ff1ff6";
+    public static final String API_KEY = "3b04be4c-ff07-445e-8aa6-a5c99ea2aa64";
 }

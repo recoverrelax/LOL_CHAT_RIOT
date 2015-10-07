@@ -273,7 +273,7 @@ public class RiotXmppService extends Service {
 
                     @Override
                     public void onNext(Boolean aBoolean) {
-                        LOGI(TAG, "onLoggedIn onNext\n");
+                        LOGI(TAG, "onLoggedIn onNext\n" + aBoolean);
                         if (aBoolean)
                         /**{@link LoginActivity#onSuccessLogin(OnSuccessLoginPublish)} */
                             bus.post(new OnSuccessLoginPublish());
@@ -301,6 +301,7 @@ public class RiotXmppService extends Service {
                     subscriber.onCompleted();
                 }catch(Exception e){
                     LOGI(TAG, "Enters createListeners catch \n");
+                    e.printStackTrace();
                     subscriber.onError(e);
                 }
             }
