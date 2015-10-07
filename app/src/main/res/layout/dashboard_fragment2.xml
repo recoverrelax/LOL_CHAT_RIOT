@@ -1,31 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?><!--<ScrollView--><!--xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:fillViewport="true">-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/blackCheat"
-    android:orientation="vertical"
-    tools:context=".DashBoardFragment">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:gravity="center"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/textColorYellowT"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Free Champion Rotation"
-        android:layout_gravity="center_horizontal" />
+    <!--FirstHalf-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/dashboard_last_news">
 
-    <com.recoverrelax.pt.riotxmppchat.Widget.FreeChampionRotation
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <com.recoverrelax.pt.riotxmppchat.Widget.FreeChampionRotation
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/dashboard_main"
@@ -33,13 +29,7 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/dashboard_last_news"
-            style="@style/dashboardTitles"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Latest Activity" />
-
+        <!--FirstRow-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -156,4 +146,15 @@
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/dashboard_last_news"
+        style="@style/dashboardTitles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dashboard_main"
+        android:text="Latest Activity" />
+
+    <!--SecondHalf-->
+
+    <!--EndButton-->
+</RelativeLayout><!--</ScrollView>-->

@@ -20,8 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
@@ -39,6 +41,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    //http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kalista_2.jpg
 
     @Nullable
     @Bind(R.id.app_bar)

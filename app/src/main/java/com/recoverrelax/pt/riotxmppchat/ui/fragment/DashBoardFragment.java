@@ -70,11 +70,11 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
     @Bind(R.id.offline_number)
     TextView offline_number;
 
-    @Bind(R.id.recyclerView)
-    RecyclerView recyclerView;
-
-    @Bind(R.id.progressBar)
-    ProgressBar progressBar;
+//    @Bind(R.id.recyclerView)
+//    RecyclerView recyclerView;
+//
+//    @Bind(R.id.progressBar)
+//    ProgressBar progressBar;
 
 
     private boolean firstTimeOnCreate = true;
@@ -114,7 +114,7 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
         MainApplication.getInstance().getAppComponent().inject(this);
 
         setHasOptionsMenu(true);
-        showProgressBar(true);
+//        showProgressBar(true);
         return view;
     }
 
@@ -154,11 +154,11 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
         dashboard_3.setBackgroundColor(colorList.get(2));
         dashboard_4.setBackgroundColor(colorList.get(3));
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-
-        adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), recyclerView);
-        recyclerView.setAdapter(adapter);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//        recyclerView.setLayoutManager(layoutManager);
+//
+//        adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), recyclerView);
+//        recyclerView.setAdapter(adapter);
 
         getWsInfo();
     }
@@ -167,8 +167,8 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
         subscriptions.add(
         Observable.merge(
                 getUnreadedMessageCount(),
-                getFriendStatusInfo(),
-                getLogLast20()
+                getFriendStatusInfo()
+//                getLogLast20()
         ).subscribe()
         );
     }
@@ -193,15 +193,15 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
                 .doOnNext(message_number::setText);
     }
 
-    private Observable<List<InAppLogDb>> getLogLast20() {
-        return dashboardImpl.getLogLast20List()
-                .doOnNext(inAppLogDbs -> {
-                    if (adapter != null && inAppLogDbs != null) {
-                        getActivity().runOnUiThread(() -> adapter.setItems(inAppLogDbs));
-                    }
-                    showProgressBar(false);
-                });
-    }
+//    private Observable<List<InAppLogDb>> getLogLast20() {
+//        return dashboardImpl.getLogLast20List()
+//                .doOnNext(inAppLogDbs -> {
+//                    if (adapter != null && inAppLogDbs != null) {
+//                        getActivity().runOnUiThread(() -> adapter.setItems(inAppLogDbs));
+//                    }
+//                    showProgressBar(false);
+//                });
+//    }
 
     private void getLogSingleItem() {
         Subscription subscribe = dashboardImpl.getLogSingleItem()
@@ -230,7 +230,7 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
         if (!firstTimeOnCreate) {
             getWsInfo();
         }
-        showProgressBar(false);
+//        showProgressBar(false);
         firstTimeOnCreate = false;
         eventHandler.registerForNewMessageNotifyEvent(this);
         eventHandler.registerForFriendPlayingEvent(this);
@@ -246,9 +246,9 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
         eventHandler.unregisterForFriendPresenceChangedEvent(this);
     }
 
-    private void showProgressBar(boolean state){
-        progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
-    }
+//    private void showProgressBar(boolean state){
+//        progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
+//    }
 
     @Override
     public void onNewFriendPlaying() {

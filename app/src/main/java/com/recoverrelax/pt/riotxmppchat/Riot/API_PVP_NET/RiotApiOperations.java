@@ -106,7 +106,7 @@ public class RiotApiOperations {
 
     public Observable<RecentGamesDto> getRecentGamesList(@Nullable String summonerId){
         return riotApiServiceImpl.getRecentMatchList(summonerId)
-                    .subscribeOn(Schedulers.computation());
+               .subscribeOn(Schedulers.computation());
     }
 
     public Observable<Map<String, SummonerDto>> getSummonerListByIds(List<String> summonerIdList){

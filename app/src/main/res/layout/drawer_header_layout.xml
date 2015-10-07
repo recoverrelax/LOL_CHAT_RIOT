@@ -5,7 +5,7 @@
     android:id="@+id/containerDrawerImage"
     android:layout_width="match_parent"
     android:layout_height="192dp"
-    android:background="?attr/colorPrimaryDark"
+    android:background="@drawable/latest_skin"
     android:paddingTop="5dp"
     android:paddingBottom="16dp"
     android:paddingRight="16dp"
@@ -21,10 +21,9 @@
             android:layout_weight="2"
             tools:ignore="NestedWeights">
 
-            <ImageView
+            <View
                 android:layout_width="@dimen/drawer_image_width"
                 android:layout_height="match_parent"
-                android:src="@drawable/chat_logo"
                 tools:ignore="ContentDescription" />
 
         </FrameLayout>

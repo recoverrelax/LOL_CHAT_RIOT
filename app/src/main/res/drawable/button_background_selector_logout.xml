@@ -11,5 +11,5 @@
     <item android:state_enabled="false"
         android:drawable="@color/accentColor" /> <!-- hovered -->
 
-    <item android:drawable="@color/primaryColor" /> <!-- default -->
+    <item android:drawable="@color/colorDark" /> <!-- default -->
 </selector>

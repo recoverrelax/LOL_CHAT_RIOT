@@ -2,6 +2,8 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +15,11 @@ import android.widget.FrameLayout;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.RecentGameAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppRiotHttpUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.PlayerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
@@ -22,11 +27,12 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.RecentGameWrapper;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.TeamInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiError;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiErrorEnum;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameIconActivity;
 
 import java.util.ArrayList;
@@ -39,6 +45,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -79,7 +86,7 @@ public class RecentGameFragment extends BaseFragment {
      * Adapter
      */
     private RecentGameAdapter adapter;
-    private CompositeSubscription subscriptions;
+    private CompositeSubscription subscriptions = new CompositeSubscription();
 
     public RecentGameFragment() {
         // Required empty public constructor
@@ -147,7 +154,6 @@ public class RecentGameFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        subscriptions = new CompositeSubscription();
         getRecentGamesInformation();
     }
 
@@ -156,7 +162,6 @@ public class RecentGameFragment extends BaseFragment {
         super.onPause();
 
         subscriptions.clear();
-        subscriptions = null;
     }
 
     public void getRecentGamesInformation() {
@@ -183,89 +188,106 @@ public class RecentGameFragment extends BaseFragment {
          * Make every call, build the Adapter dataStructure and update the Adapter
          */
 
+    subscriptions.add(
+            Observable.zip(observableList, args -> {
+                Map<Integer, String> ssImages = (Map<Integer, String>) args[0];
+                Map<Integer, ChampionInfo> championImage = (Map<Integer, ChampionInfo>) args[1];
+                Map<Integer, String> itemImage = (Map<Integer, String>) args[2];
+                String ssUrl = (String) args[3];
+                String itemUrl = (String) args[4];
+                String championUrl = (String) args[5];
+                String skinUrl = (String) args[6];
 
-        Observable.zip(observableList, args -> {
-            Map<Integer, String> ssImages = (Map<Integer, String>) args[0];
-            Map<Integer, ChampionInfo> championImage = (Map<Integer, ChampionInfo>) args[1];
-            Map<Integer, String> itemImage = (Map<Integer, String>) args[2];
-            String ssUrl = (String) args[3];
-            String itemUrl = (String) args[4];
-            String championUrl = (String) args[5];
-            String skinUrl = (String) args[6];
+                final long[] mySummonerId = new long[1];
+                final long[] gameType = new long[1];
 
-            final long[] mySummonerId = new long[1];
-            final long[] gameType = new long[1];
+                return riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
+                        .map((RecentGamesDto recentGamesDto) -> {
+                            mySummonerId[0] = recentGamesDto.getSummonerId();
+                            return recentGamesDto.getGames();
+                        })
+                        .flatMap(Observable::from)
+                        .observeOn(Schedulers.computation())
+                        .doOnNext(game -> {
+                            RecentGameWrapper recentGameWrapper = new RecentGameWrapper();
 
-            return riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
-                    .map((RecentGamesDto recentGamesDto) -> {
-                        mySummonerId[0] = recentGamesDto.getSummonerId();
-                        return recentGamesDto.getGames();
-                    })
-                    .flatMap(Observable::from)
-                    .doOnNext(game -> {
-                        RecentGameWrapper recentGameWrapper = new RecentGameWrapper();
+                            recentGameWrapper.setGameType(game.getSubType());
+                            recentGameWrapper.setGameWhen(game.getCreateDate());
+                            recentGameWrapper.setPlayerPosition(game.getStats().getPlayerPosition());
 
-                        recentGameWrapper.setGameType(game.getSubType());
-                        recentGameWrapper.setGameWhen(game.getCreateDate());
-                        recentGameWrapper.setPlayerPosition(game.getStats().getPlayerPosition());
+                            recentGameWrapper.setSummonerSpellUrl1(ssUrl + ssImages.get(game.getSpell1()));
+                            recentGameWrapper.setSummonerSpellUrl2(ssUrl + ssImages.get(game.getSpell2()));
 
-                        recentGameWrapper.setSummonerSpellUrl1(ssUrl + ssImages.get(game.getSpell1()));
-                        recentGameWrapper.setSummonerSpellUrl2(ssUrl + ssImages.get(game.getSpell2()));
+                            List<String> newItemUrl = new ArrayList<>();
+                            newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem0()));
+                            newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem1()));
+                            newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem2()));
+                            newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem3()));
+                            newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem4()));
+                            newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem5()));
 
-                        List<String> newItemUrl = new ArrayList<>();
-                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem0()));
-                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem1()));
-                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem2()));
-                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem3()));
-                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem4()));
-                        newItemUrl.add(itemUrl + itemImage.get(game.getStats().getItem5()));
+                            recentGameWrapper.setItemList(newItemUrl);
 
-                        recentGameWrapper.setItemList(newItemUrl);
+                            List<String> fullNameSkinUrl = new ArrayList<>();
+                            ChampionInfo championInfo = championImage.get(game.getChampionId());
 
-                        List<String> fullNameSkinUrl = new ArrayList<>();
-                        ChampionInfo championInfo = championImage.get(game.getChampionId());
+                            for (String skin : championInfo.getChampionSkinImage())
+                                fullNameSkinUrl.add(skinUrl + skin + AppGlobals.DD_VERSION.SKIN_FILE_EXTENSION);
 
-                        for(String skin: championInfo.getChampionSkinImage())
-                            fullNameSkinUrl.add(skinUrl + skin + AppGlobals.DD_VERSION.SKIN_FILE_EXTENSION);
+                            recentGameWrapper.setSkinList(fullNameSkinUrl);
+                            recentGameWrapper.setIsWin(game.getStats().isWin());
 
-                        recentGameWrapper.setSkinList(fullNameSkinUrl);
-                        recentGameWrapper.setIsWin(game.getStats().isWin());
+                            recentGameWrapper.setMyChampionUrl(championUrl + championImage.get(game.getChampionId()).getChampionImage());
+                            recentGameWrapper.setMyTeamId(game.getTeamId());
+                            recentGameWrapper.setKill(String.valueOf(game.getStats().getChampionsKilled()));
+                            recentGameWrapper.setDead(String.valueOf(game.getStats().getNumDeaths()));
+                            recentGameWrapper.setAssists(String.valueOf(game.getStats().getAssists()));
+                            recentGameWrapper.setGold(game.getStats().getGoldEarned());
+                            recentGameWrapper.setCs(String.valueOf(game.getStats().getMinionsKilled()));
 
-                        recentGameWrapper.setMyChampionUrl(championUrl + championImage.get(game.getChampionId()).getChampionImage());
-                        recentGameWrapper.setMyTeamId(game.getTeamId());
-                        recentGameWrapper.setKill(String.valueOf(game.getStats().getChampionsKilled()));
-                        recentGameWrapper.setDead(String.valueOf(game.getStats().getNumDeaths()));
-                        recentGameWrapper.setAssists(String.valueOf(game.getStats().getAssists()));
-                        recentGameWrapper.setGold(game.getStats().getGoldEarned());
-                        recentGameWrapper.setCs(String.valueOf(game.getStats().getMinionsKilled()));
-
-                        List<PlayerDto> fellowPlayers = game.getFellowPlayers();
-                        if (fellowPlayers != null) {
-                            for (PlayerDto playerDto : fellowPlayers) {
-                                recentGameWrapper.addPlayer(playerDto.getSummonerId(),
-                                        championUrl + championImage.get(playerDto.getChampionId()).getChampionImage(),
-                                        playerDto.getTeamId());
+                            List<PlayerDto> fellowPlayers = game.getFellowPlayers();
+                            if (fellowPlayers != null) {
+                                for (PlayerDto playerDto : fellowPlayers) {
+                                    recentGameWrapper.addPlayer(playerDto.getSummonerId(),
+                                            championUrl + championImage.get(playerDto.getChampionId()).getChampionImage(),
+                                            playerDto.getTeamId());
+                                }
                             }
-                        }
-                        recentGameWrapper.addPlayer(
-                                mySummonerId[0],
-                                championUrl + championImage.get(game.getChampionId()).getChampionImage(),
-                                game.getTeamId()
-                        );
+                            recentGameWrapper.addPlayer(
+                                    mySummonerId[0],
+                                    championUrl + championImage.get(game.getChampionId()).getChampionImage(),
+                                    game.getTeamId()
+                            );
 
-                        finalGameList.add(recentGameWrapper);
-                    })
-                    .toList()
-                    .map(whatever -> finalGameList)
-                    .flatMap(this::updateWithSummonerNames)
-                    .doOnError(Throwable::printStackTrace)
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(() -> enableProgressBar(true))
-                    .doOnUnsubscribe(() -> enableProgressBar(false))
-                    .subscribe(adapter::setItems);
-        })
-                .ignoreElements().subscribe();
+                            finalGameList.add(recentGameWrapper);
+                        })
+                        .toList()
+                        .map(whatever -> finalGameList)
+                        .flatMap(this::updateWithSummonerNames)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(() -> enableProgressBar(true))
+                        .doOnUnsubscribe(() -> enableProgressBar(false))
+                        .subscribe(new Subscriber<List<RecentGameWrapper>>() {
+                            @Override
+                            public void onCompleted() {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                LogUtils.LOGE(TAG, e.getMessage());
+                                new AppRiotHttpUtils().handleErrors(RecentGameFragment.this, e, AppRiotHttpUtils.ERROR_RECENT_GAME);
+                                new Handler().postDelayed(() -> RecentGameFragment.this.getActivity().finish(), 2000);
+                            }
+
+                            @Override
+                            public void onNext(List<RecentGameWrapper> recentGameWrappers) {
+                                adapter.setItems(recentGameWrappers);
+                            }
+                        });
+            })
+                    .ignoreElements().subscribe()
+    );
     }
 
 

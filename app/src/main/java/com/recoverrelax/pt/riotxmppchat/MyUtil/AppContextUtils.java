@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -94,5 +95,15 @@ public class AppContextUtils {
         Snackbar.make(activity.getWindow().getDecorView().getRootView(),
                 messageString,
                 duration).show();
+    }
+
+    public static void showSnackbar(Fragment frag, @StringRes int messageString, int duration){
+        showSnackbar(frag.getActivity(), messageString, duration);
+    }
+
+
+
+    public static void showSnackbar(Fragment frag, String messageString, int duration){
+        showSnackbar(frag.getActivity(), messageString, duration);
     }
 }

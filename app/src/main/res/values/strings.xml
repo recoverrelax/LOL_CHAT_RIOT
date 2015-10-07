@@ -106,7 +106,7 @@
     <string name="recent_game__fragment_title">Recent Games for: </string>
     <string name="recent_game_me_fragment_title">My Recent Games</string>
     <string name="current_game_banned_c_error">I\'m sorry. We could not retrieve the banned champion list</string>
-    <string name="current_game_general_error">I\'m sorry. We could not retrieve the General Info.</string>
+
     <string name="shard_region_error">I\'m sorry. We could not retrieve the Status Info for</string>
     <string name="current_game_participants_error">I\'m sorry. We could not retrieve the summoners information</string>
     <string name="shard_game">Game</string>
@@ -122,5 +122,10 @@
     <string name="recent_game_header_when">When</string>
     <string name="recent_game_header_position">Position</string>
 
+    <!--ERRORS-->
+    <string name="recent_game_not_found">Recent Games not available for this summoner!</string>
+    <string name="recent_game_try_later">We couldn\'t retrieve the match information for this Summoner. Please try again later.</string>
 
+    <string name="current_game_not_found">Recent Games not available for this summoner!</string>
+    <string name="free_champion_rotation">Free Champion Rotation</string>
 </resources>
