@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
 
@@ -19,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import LolChatRiotDb.MessageDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyDate;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -158,10 +158,10 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
 
         public void startUpdatingTimeStamp(){
-            date.setText(AppDateUtils.getFormatedDate(messageDb.getDate()));
+            date.setText(MyDate.getFormatedDate(messageDb.getDate()));
 
             subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
-                    .map(aLong -> AppDateUtils.getFormatedDate(messageDb.getDate()))
+                    .map(aLong -> MyDate.getFormatedDate(messageDb.getDate()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<String>() {
@@ -195,10 +195,10 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
 
         public void startUpdatingTimeStamp(){
-            date.setText(AppDateUtils.getFormatedDate(messageDb.getDate()));
+            date.setText(MyDate.getFormatedDate(messageDb.getDate()));
 
             subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
-                    .map(aLong -> AppDateUtils.getFormatedDate(messageDb.getDate()))
+                    .map(aLong -> MyDate.getFormatedDate(messageDb.getDate()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<String>() {

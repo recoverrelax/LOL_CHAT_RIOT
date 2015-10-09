@@ -12,6 +12,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
 public class FriendListIconActivity extends MessageIconActivity {
 
@@ -57,7 +58,7 @@ public class FriendListIconActivity extends MessageIconActivity {
 //        appBarLayout.setTranslationY(0);
 
         if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor120));
+            appBarLayout.setBackgroundColor(MyContext.getColor(this, R.color.primaryColor120));
     }
 
     @Override

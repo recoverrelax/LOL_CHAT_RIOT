@@ -13,6 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
 public class RecentGameIconActivity extends MessageIconActivity {
 
@@ -64,7 +65,7 @@ public class RecentGameIconActivity extends MessageIconActivity {
         }
 
         if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+            appBarLayout.setBackgroundColor(MyContext.getColor(this, R.color.primaryColor));
 
         ActionBar supportActionBar = getSupportActionBar();
         if(supportActionBar != null) {

@@ -50,6 +50,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
@@ -215,7 +216,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
                         startActivity(intent);
                         AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
                     } else
-                        AppContextUtils.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
+                        MyContext.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
 
                     break;
 
@@ -229,7 +230,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
                         startActivity(intent2);
                         AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
                     } else
-                        AppContextUtils.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
+                        MyContext.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
                     break;
                 default:
                     break;

@@ -1,12 +1,12 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.app.DialogFragment;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +15,11 @@ import android.view.Window;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 
 import org.jivesoftware.smack.roster.RosterEntry;
 
@@ -31,6 +31,7 @@ import LolChatRiotDb.NotificationDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pt.reco.myutil.MyContext;
 import rx.Subscriber;
 
 public class NotificationCustomDialogFragment extends DialogFragment {
@@ -91,7 +92,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
         ButterKnife.bind(this, view);
         scroller.addView(view);
 
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.materialBlueGrey200)));
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(MyContext.getColor(this.getActivity(), R.color.materialBlueGrey200)));
         return scroller;
     }
 
@@ -141,7 +142,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         Random random = new Random();
         int backgroundColor = AppMiscUtils.getRandomMaterialColor(random);
-        title.setBackgroundColor(getResources().getColor(backgroundColor));
+        title.setBackgroundColor(MyContext.getColor(this.getActivity(), backgroundColor));
 
         if(savedInstanceState == null){
             Bundle extra = getArguments();

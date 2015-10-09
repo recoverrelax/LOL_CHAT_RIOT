@@ -1,6 +1,5 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.GameConstants.PlayerPosition;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.TeamCode;
 
@@ -9,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
+import pt.reco.myutil.MyDate;
 
 public class RecentGameWrapper {
 
@@ -184,7 +185,7 @@ public class RecentGameWrapper {
 
     public void setGameWhen(long createdDate) {
         Date date = new Date(createdDate);
-        this.gameWhen = AppDateUtils.getFormatedDate(date);
+        this.gameWhen = MyDate.getFormatedDate(date);
     }
 
     public String getPlayerPosition() {

@@ -1,6 +1,5 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame;
 
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.GameConstants.GameQueueConfigId;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.GameConstants.MapName;
 
@@ -9,7 +8,7 @@ import org.parceler.Parcel;
 import java.util.Date;
 import java.util.List;
 
-import rx.Observable;
+import pt.reco.myutil.MyDate;
 
 @Parcel
 public class CurrentGameInfo {
@@ -134,7 +133,7 @@ public class CurrentGameInfo {
         if(gameStartTime == 0)
             return "Now";
         else
-        return AppDateUtils.getFormatedDate(new Date(gameStartTime));
+        return MyDate.getFormatedDate(new Date(gameStartTime));
     }
 
     private Observer getObservers() {

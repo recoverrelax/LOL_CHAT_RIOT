@@ -134,9 +134,7 @@ public class AppMiscUtils {
         return colors;
     }
 
-    public static int changeColorAlpha(int colorRes, int alpha){
-        return Color.argb(alpha, Color.red(colorRes), Color.green(colorRes), Color.blue(colorRes));
-    }
+
 
     public static File getAppSpecificFolder(Context ctx) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {

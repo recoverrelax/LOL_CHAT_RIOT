@@ -1,8 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
+import android.support.annotation.ColorInt;
 import android.support.annotation.LayoutRes;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,9 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
+
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import LolChatRiotDb.InAppLogDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
+import pt.reco.myutil.MyDate;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -67,9 +71,9 @@ public class DashBoardLogAdapter extends RecyclerView.Adapter<DashBoardLogAdapte
         if(holder.inappLogDb.getLogDate()!=null) {
             subscriptions.add(
                     Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
-                            .map(aLong -> AppDateUtils.getFormatedDate(holder.inappLogDb.getLogDate()))
+                            .map(aLong -> MyDate.getFormatedDate(holder.inappLogDb.getLogDate()))
                             .subscribeOn(Schedulers.io())
-                            .doOnSubscribe(() -> holder.logDate.setText(AppDateUtils.getFormatedDate(holder.inappLogDb.getLogDate())))
+                            .doOnSubscribe(() -> holder.logDate.setText(MyDate.getFormatedDate(holder.inappLogDb.getLogDate())))
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(holder.logDate::setText)
             );
@@ -109,7 +113,7 @@ public class DashBoardLogAdapter extends RecyclerView.Adapter<DashBoardLogAdapte
 
         InAppLogDb inappLogDb;
 
-        @ColorRes int cardColor;
+        @ColorInt int cardColor;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -117,9 +121,9 @@ public class DashBoardLogAdapter extends RecyclerView.Adapter<DashBoardLogAdapte
 
             if(itemView instanceof CardView) {
                 int cardColorId = AppMiscUtils.getRandomMaterialColor(random);
-                cardColor = context.getResources().getColor(cardColorId);
-                cardColor = AppMiscUtils.changeColorAlpha(cardColor, 190);
-                logLayout.setBackgroundColor(context.getResources().getColor(cardColor));
+                cardColor = MyContext.getColor(context, cardColorId);
+                cardColor = ColorUtils.setAlphaComponent(cardColor, 190);
+                logLayout.setBackgroundColor(MyContext.getColor(context, cardColor));
             }
         }
     }

@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pt.reco.myutil.MyContext;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -136,9 +137,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             Drawable drawable = statusIcon.getDrawable();
             drawable.mutate();
 
-            drawable.setColorFilter(getResources().getColor(
-                    MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()
-            ), PorterDuff.Mode.SRC_IN);
+            drawable.setColorFilter(MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()), PorterDuff.Mode.SRC_IN);
 
             statusIcon.setImageDrawable(drawable);
 
@@ -146,9 +145,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 if(MainApplication.getInstance().getRiotXmppService().getConnection() != null) {
                     MainApplication.getInstance().getRiotXmppService().swapPresenceMode(false);
 
-                    drawable.setColorFilter(getResources().getColor(
-                            MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()
-                    ), PorterDuff.Mode.SRC_IN);
+                    drawable.setColorFilter(
+                            MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()),
+                            PorterDuff.Mode.SRC_IN);
 
                     statusIcon.setImageDrawable(drawable);
                 }
@@ -187,7 +186,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             drawer_layout.post(drawerToggle::syncState);
         }
 
-        drawer_layout.setScrimColor(getResources().getColor(R.color.blackDrawerScrim));
+        drawer_layout.setScrimColor(MyContext.getColor(this, R.color.blackDrawerScrim));
 
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
@@ -299,7 +298,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             intent = new Intent(BaseActivity.this, ShardIconActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         } else
-                        AppContextUtils.showSnackbar(this, "Feature Coming in the next release", Snackbar.LENGTH_LONG);
+                        MyContext.showSnackbar(this, "Feature Coming in the next release", Snackbar.LENGTH_LONG);
                         break;
 
                     case R.id.navigation_item_5:

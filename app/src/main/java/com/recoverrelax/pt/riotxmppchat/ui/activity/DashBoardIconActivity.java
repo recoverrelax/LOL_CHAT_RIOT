@@ -2,17 +2,14 @@ package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.Toolbar;
-import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
 public class DashBoardIconActivity extends MessageIconActivity {
 
@@ -41,7 +38,7 @@ public class DashBoardIconActivity extends MessageIconActivity {
         setTitle(getResources().getString(R.string.dashboard));
 
         if(toolbar != null)
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+            toolbar.setBackgroundColor(MyContext.getColor(this, R.color.black));
     }
 
 

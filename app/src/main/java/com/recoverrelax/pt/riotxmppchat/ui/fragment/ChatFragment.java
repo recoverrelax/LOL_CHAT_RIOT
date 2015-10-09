@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,6 @@ import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
@@ -45,6 +45,7 @@ import LolChatRiotDb.MessageDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pt.reco.myutil.MyContext;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -151,8 +152,8 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
             uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70 / 2)));
 
             int cardColorId = AppMiscUtils.getRandomMaterialColor(new Random());
-            int color = getActivity().getResources().getColor(cardColorId);
-            color = AppMiscUtils.changeColorAlpha(color, 190);
+            int color = MyContext.getColor(this.getActivity(), cardColorId);
+            color = ColorUtils.setAlphaComponent(color, 190);
             getBaseActivity().getToolbar().setBackgroundColor(color);
 
             swipeRefreshLayout.setBackgroundColor(color);
@@ -230,7 +231,7 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                         if(isAvailable && !message.equals(""))
                             sendMessage(message);
                         else
-                            AppContextUtils.showSnackbar(ChatFragment.this, R.string.your_friend_is_offline, Snackbar.LENGTH_LONG);
+                            MyContext.showSnackbar(ChatFragment.this, R.string.your_friend_is_offline, Snackbar.LENGTH_LONG);
                     }
                 });
     }

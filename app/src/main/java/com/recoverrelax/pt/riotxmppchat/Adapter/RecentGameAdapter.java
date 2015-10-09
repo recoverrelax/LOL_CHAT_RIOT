@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
 public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.ViewHolder> {
 
@@ -58,7 +59,7 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
 
         String ramdomSkin = holder.game.getRamdomSkin(random);
 
-        holder.statusWLColor.setBackgroundColor(context.getResources().getColor(holder.game.isWin() ? R.color.win_color_t : R.color.loss_color));
+        holder.statusWLColor.setBackgroundColor(MyContext.getColor(context, holder.game.isWin() ? R.color.win_color_t : R.color.loss_color));
 
         holder.gameMode.setText(holder.game.getGameType());
         holder.gameWhen.setText(holder.game.getGameWhen());

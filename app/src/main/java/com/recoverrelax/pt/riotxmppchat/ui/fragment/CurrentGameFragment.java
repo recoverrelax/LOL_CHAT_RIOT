@@ -1,13 +1,11 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppRiotHttpUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
@@ -33,7 +30,6 @@ import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameBanList;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantBase;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameIconActivity;
 
 import java.util.ArrayList;
@@ -44,12 +40,9 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 import rx.Observable;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -225,7 +218,7 @@ public class CurrentGameFragment extends BaseFragment {
                         )
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnError(throwable -> AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_banned_c_error, Snackbar.LENGTH_LONG))
+                        .doOnError(throwable -> MyContext.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_banned_c_error, Snackbar.LENGTH_LONG))
                         .subscribe(this::fetchBannedChampions)
         );
 
@@ -265,7 +258,7 @@ public class CurrentGameFragment extends BaseFragment {
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnError(throwable -> {
-                            AppContextUtils.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_participants_error, Snackbar.LENGTH_LONG);
+                            MyContext.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_participants_error, Snackbar.LENGTH_LONG);
                             throwable.printStackTrace();
                         })
                         .subscribe(CurrentGameFragment.this::fetchParticipants)

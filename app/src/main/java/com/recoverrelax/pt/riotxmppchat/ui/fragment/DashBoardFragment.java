@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,7 +21,6 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChan
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -35,7 +33,6 @@ import org.jivesoftware.smack.packet.Presence;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -44,6 +41,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import pt.reco.myutil.MyContext;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -150,9 +148,9 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Drawable drawable = getResources().getDrawable(R.drawable.dashboard_new_message);
+        Drawable drawable = MyContext.getDrawable(this.getActivity(), R.drawable.dashboard_new_message);
         drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable.mutate(), getResources().getColor(R.color.white));
+        DrawableCompat.setTint(drawable.mutate(), MyContext.getColor(this.getActivity(), R.color.white));
         messagesIcon.setBackground(drawable);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

@@ -15,7 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.Service;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
@@ -32,6 +31,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
+import pt.reco.myutil.MyContext;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -124,7 +124,7 @@ public class ShardFragment extends BaseFragment {
                                 @Override
                                 public void onError(Throwable e) {
                                     String error = ShardFragment.this.getActivity().getResources().getString(R.string.shard_region_error) + " " + (String)regionSpinner.getSelectedItem();
-                                    AppContextUtils.showSnackbar(ShardFragment.this.getActivity(), error, Snackbar.LENGTH_LONG);
+                                    MyContext.showSnackbar(ShardFragment.this.getActivity(), error, Snackbar.LENGTH_LONG);
                                     this.unsubscribe();
                                 }
 
@@ -151,7 +151,7 @@ public class ShardFragment extends BaseFragment {
 
             TextView shardTextView = shardBlock.getShardStatusBlock().get(i);
             shardTextView.setText(shardEnum.getDescriptiveNameUpperCase());
-            shardTextView.setTextColor(this.getActivity().getResources().getColor(shardEnum.getStatusColor()));
+            shardTextView.setTextColor(MyContext.getColor(this.getActivity(), shardEnum.getStatusColor()));
         }
     }
 

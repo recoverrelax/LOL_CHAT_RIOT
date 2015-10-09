@@ -1,24 +1,20 @@
 package com.recoverrelax.pt.riotxmppchat.Adapter;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
-import android.support.annotation.LayoutRes;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppDateUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.FriendListChat;
+import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,14 +24,14 @@ import java.util.concurrent.TimeUnit;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pt.reco.myutil.MyContext;
+import pt.reco.myutil.MyDate;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
-
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
 
@@ -165,16 +161,16 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
             ButterKnife.bind(this, itemView);
 
             if(itemView instanceof CardView) {
-                friends_list_cardview.setCardBackgroundColor(context.getResources().getColor(R.color.primaryColor120));
+                friends_list_cardview.setCardBackgroundColor(MyContext.getColor(context, R.color.primaryColor120));
             }
         }
 
         public void startTimestampUpdate(){
             // The initialValue, the Observable delay applies in the firstTime
-            date.setText(AppDateUtils.getFormatedDate(friendListChat.getFriendLastMessageDate()));
+            date.setText(MyDate.getFormatedDate(friendListChat.getFriendLastMessageDate()));
 
             subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
-                    .map(aLong -> AppDateUtils.getFormatedDate(friendListChat.getFriendLastMessageDate()))
+                    .map(aLong -> MyDate.getFormatedDate(friendListChat.getFriendLastMessageDate()))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<String>() {

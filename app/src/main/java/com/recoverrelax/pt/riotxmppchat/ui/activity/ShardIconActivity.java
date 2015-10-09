@@ -12,6 +12,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.ShardFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
 public class ShardIconActivity extends MessageIconActivity {
 
@@ -45,7 +46,7 @@ public class ShardIconActivity extends MessageIconActivity {
         }
 
         if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(getResources().getColor(R.color.primaryColorDark));
+            appBarLayout.setBackgroundColor(MyContext.getColor(this, R.color.primaryColorDark));
     }
 
     @Override

@@ -13,6 +13,8 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiErrorEnum;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import pt.reco.myutil.MyContext;
+
 public class AppRiotHttpUtils {
 
 
@@ -72,7 +74,7 @@ public class AppRiotHttpUtils {
         }
 
         if(errorRes != null){
-            AppContextUtils.showSnackbar(activity, errorRes, SNACKBAR_ERROR_DURATION);
+            MyContext.showSnackbar(activity, errorRes, SNACKBAR_ERROR_DURATION);
         }
     }
 

@@ -38,6 +38,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pt.reco.myutil.MyContext;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -66,11 +67,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     private GradientDrawable gradientDrawable;
     private Drawable drawable;
-    
+
     @LayoutRes
     private final
     int layout_online = R.layout.friends_list_child_online_layout;
-    
+
     @LayoutRes
     private final
     int layout_offline = R.layout.friends_list_child_offline_layout;
@@ -92,8 +93,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.showOfflineUsers = showOfflineUsers;
         this.recyclerView = recyclerView;
 
-        COLOR_BLACK = context.getResources().getColor(R.color.black);
-        COLOR_WHITE = context.getResources().getColor(R.color.white);
+        COLOR_BLACK = MyContext.getColor(context, R.color.black);
+        COLOR_WHITE = MyContext.getColor(context, R.color.white);
 
         MainApplication.getInstance().getAppComponent().inject(this);
     }
@@ -170,11 +171,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 gradientDrawable = null;
                 gradientDrawable = (GradientDrawable) holderOnline.friendPresenceMode.getBackground();
-                gradientDrawable.setColor(context.getResources().getColor(friendMode.getStatusColor()));
+                gradientDrawable.setColor(MyContext.getColor(context, friendMode.getStatusColor()));
 
 
                 holderOnline.wins.setText(friend.getWins());
-                holderOnline.ranked_icon.setImageDrawable(context.getResources().getDrawable(friend.getProfileIconResId()));
+                holderOnline.ranked_icon.setImageDrawable(MyContext.getDrawable(context, friend.getProfileIconResId()));
                 holderOnline.division_league.setText(friend.getLeagueDivisionAndTier().getDescriptiveName());
                 holderOnline.division_league.setSelected(true);
 
