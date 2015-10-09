@@ -17,6 +17,10 @@ import butterknife.ButterKnife;
 
 public class FreeChampionRotation extends LinearLayout {
 
+    @Bind({R.id.champ1, R.id.champ2, R.id.champ3, R.id.champ4, R.id.champ5,
+            R.id.champ6, R.id.champ7, R.id.champ8, R.id.champ9, R.id.champ10})
+    List<SquareImageViewWidth> getFreeChamps;
+
     private Context context;
 
     public FreeChampionRotation(Context context) {
@@ -41,5 +45,9 @@ public class FreeChampionRotation extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.free_champ_rotation_layout, this);
         ButterKnife.bind(this);
+    }
+
+    public List<SquareImageViewWidth> getGetFreeChamps() {
+        return getFreeChamps;
     }
 }

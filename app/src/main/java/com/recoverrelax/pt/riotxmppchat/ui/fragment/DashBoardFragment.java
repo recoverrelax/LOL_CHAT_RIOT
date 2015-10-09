@@ -1,18 +1,21 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.Adapter.DashBoardLogAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChangedEvent;
@@ -23,6 +26,10 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.ChampionInfo;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
+import com.recoverrelax.pt.riotxmppchat.Widget.FreeChampionRotation;
 
 import org.jivesoftware.smack.packet.Presence;
 
@@ -40,24 +47,13 @@ import butterknife.OnTouch;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayingEvent, OnFriendPresenceChangedEvent, NewMessageReceivedNotifyEvent {
-
-    @Bind(R.id.dashboard_1)
-    LinearLayout dashboard_1;
-
-    @Bind(R.id.dashboard_2)
-    LinearLayout dashboard_2;
-
-    @Bind(R.id.dashboard_3)
-    LinearLayout dashboard_3;
-
-    @Bind(R.id.dashboard_4)
-    LinearLayout dashboard_4;
 
     @Bind(R.id.message_number)
     TextView message_number;
@@ -70,8 +66,14 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
     @Bind(R.id.offline_number)
     TextView offline_number;
 
-//    @Bind(R.id.recyclerView)
-//    RecyclerView recyclerView;
+    @Bind(R.id.freeChampRotation1)
+    FreeChampionRotation freeChampRotation1;
+
+    @Bind(R.id.messagesIcon)
+    ImageView messagesIcon;
+
+    @Bind(R.id.recyclerView)
+    RecyclerView recyclerView;
 //
 //    @Bind(R.id.progressBar)
 //    ProgressBar progressBar;
@@ -81,10 +83,16 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
 
     private DashBoardLogAdapter adapter;
 
-    @Inject RiotXmppRosterImpl rosterImpl;
-    @Inject RiotXmppDashboardImpl dashboardImpl;
+    @Inject
+    RiotXmppRosterImpl rosterImpl;
+    @Inject
+    RiotXmppDashboardImpl dashboardImpl;
     @Inject
     EventHandler eventHandler;
+    @Inject
+    RiotApiOperations riotApiOperations;
+    @Inject
+    RiotApiRealmDataVersion riotApiRealm;
 
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
@@ -102,6 +110,7 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
     @Override
@@ -111,34 +120,29 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
         View view = inflater.inflate(R.layout.dashboard_fragment, container, false);
 
         ButterKnife.bind(this, view);
-        MainApplication.getInstance().getAppComponent().inject(this);
-
         setHasOptionsMenu(true);
 //        showProgressBar(true);
         return view;
     }
 
     @OnTouch({R.id.dashboard_1, R.id.dashboard_2, R.id.dashboard_3, R.id.dashboard_4})
-    public boolean onTileTouch(View view, MotionEvent event){
+    public boolean onTileTouch(View view, MotionEvent event) {
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN)
-        {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             view.setVisibility(View.INVISIBLE);
-        }
-        else if (event.getAction() == MotionEvent.ACTION_UP)
-        {
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
             view.setVisibility(View.VISIBLE);
         }
         return false;
     }
 
     @OnClick(R.id.dashboard_1)
-    public void OnMessageClick(View view){
+    public void OnMessageClick(View view) {
         getBaseActivity().goToMessageListActivity();
     }
 
     @OnClick({R.id.dashboard_2, R.id.dashboard_3, R.id.dashboard_4})
-    public void OnPlayingOnlineOrOfflineClick(View view){
+    public void OnPlayingOnlineOrOfflineClick(View view) {
         getBaseActivity().goToFriendListActivity();
     }
 
@@ -146,30 +150,28 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Random random = new Random();
-        List<Integer> colorList = AppMiscUtils.getXRamdomMaterialColorT(random, 4, getActivity(), 225);
+        Drawable drawable = getResources().getDrawable(R.drawable.dashboard_new_message);
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable.mutate(), getResources().getColor(R.color.white));
+        messagesIcon.setBackground(drawable);
 
-        dashboard_1.setBackgroundColor(colorList.get(0));
-        dashboard_2.setBackgroundColor(colorList.get(1));
-        dashboard_3.setBackgroundColor(colorList.get(2));
-        dashboard_4.setBackgroundColor(colorList.get(3));
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
 
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-//        recyclerView.setLayoutManager(layoutManager);
-//
-//        adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), recyclerView);
-//        recyclerView.setAdapter(adapter);
+        adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), recyclerView);
+        recyclerView.setAdapter(adapter);
 
         getWsInfo();
     }
 
     private void getWsInfo() {
         subscriptions.add(
-        Observable.merge(
-                getUnreadedMessageCount(),
-                getFriendStatusInfo()
-//                getLogLast20()
-        ).subscribe()
+                Observable.merge(
+                        getUnreadedMessageCount(),
+                        getFriendStatusInfo(),
+                        getFreeChampRotationList(),
+                getLogLast20()
+                ).subscribe()
         );
     }
 
@@ -193,18 +195,19 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
                 .doOnNext(message_number::setText);
     }
 
-//    private Observable<List<InAppLogDb>> getLogLast20() {
-//        return dashboardImpl.getLogLast20List()
-//                .doOnNext(inAppLogDbs -> {
-//                    if (adapter != null && inAppLogDbs != null) {
-//                        getActivity().runOnUiThread(() -> adapter.setItems(inAppLogDbs));
-//                    }
+    private Observable<List<InAppLogDb>> getLogLast20() {
+        return dashboardImpl.getLogLast20List()
+                .doOnNext(inAppLogDbs -> {
+                    if (adapter != null && inAppLogDbs != null) {
+                        getActivity().runOnUiThread(() -> adapter.setItems(inAppLogDbs));
+                    }
 //                    showProgressBar(false);
-//                });
-//    }
+                });
+    }
 
     private void getLogSingleItem() {
         Subscription subscribe = dashboardImpl.getLogSingleItem()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<InAppLogDb>() {
                     @Override
                     public void onCompleted() {
@@ -217,11 +220,47 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
                     @Override
                     public void onNext(InAppLogDb inAppLogDb) {
                         if (adapter != null && inAppLogDb != null) {
-                            getActivity().runOnUiThread(() -> adapter.setSingleItem(inAppLogDb));
+                            adapter.setSingleItem(inAppLogDb);
                         }
                     }
                 });
         subscriptions.add(subscribe);
+    }
+
+    private Observable<List<ChampionInfo>> getFreeChampRotationList() {
+        return Observable.zip(
+                riotApiOperations.getFreeChampRotation(),
+                riotApiOperations.getChampionsImage(),
+                riotApiRealm.getChampionDDBaseUrl(),
+                (freechampIds, champImages, champBaseUrl) -> {
+
+                    List<ChampionInfo> championInfoList = new ArrayList<>();
+
+                    for (Integer champId : freechampIds) {
+                        ChampionInfo ci = new ChampionInfo();
+                        ci.setChampionId(champId);
+                        ci.setChampionName(champImages.get(champId).getChampionName());
+                        ci.setChampionImage(champBaseUrl + champImages.get(champId).getChampionImage());
+
+                        championInfoList.add(ci);
+                    }
+
+                    return championInfoList;
+                }
+                )
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(champInfo -> {
+
+                    // just to make sure, take at most the ImageView List Size
+                    int size = freeChampRotation1.getGetFreeChamps().size();
+                    List<ChampionInfo> championInfos1 = champInfo.subList(0, size);
+
+                    for (int i = 0; i < size; i++) {
+                        Glide.with(this)
+                                .load(championInfos1.get(i).getChampionImage())
+                                .into(freeChampRotation1.getGetFreeChamps().get(i));
+                    }
+                });
     }
 
     @Override
@@ -244,6 +283,7 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
         eventHandler.unregisterForNewMessageNotifyEvent(this);
         eventHandler.unregisterForFriendPlayingEvent(this);
         eventHandler.unregisterForFriendPresenceChangedEvent(this);
+        adapter.removeSubscriptions();
     }
 
 //    private void showProgressBar(boolean state){

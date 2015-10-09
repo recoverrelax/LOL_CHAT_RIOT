@@ -19,14 +19,12 @@ public class ChatActivity extends MessageIconActivity {
 
     public static final String INTENT_FRIEND_NAME = "intent_friend_name";
     public static final String INTENT_FRIEND_XMPPNAME = "intent_friend_xmppname";
-    public static final String INTENT_BGCOLOR = "intent_bgcolor";
 
     @Bind(R.id.parent_view_group)
     RelativeLayout parent_view_group;
 
     String friendUsername;
     String friendXmppName;
-    int bgColor;
 
     @Override
     public int getLayoutResources() {
@@ -48,25 +46,16 @@ public class ChatActivity extends MessageIconActivity {
             if (extras != null) {
                 friendUsername = extras.getString(INTENT_FRIEND_NAME);
                 friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
-                bgColor = extras.getInt(INTENT_BGCOLOR,
-                        AppMiscUtils.getXRamdomMaterialColorT(new Random(), 1, this, 120) // return a list of colors
-                                        .get(0));
             }
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = ChatFragment.newInstance();
-            Bundle args = new Bundle();
-            args.putString(INTENT_FRIEND_NAME, friendUsername);
-            args.putString(INTENT_FRIEND_XMPPNAME, friendXmppName);
-            args.putInt(INTENT_BGCOLOR, bgColor);
-            fragment.setArguments(args);
+            Fragment fragment = ChatFragment.newInstance(friendUsername, friendXmppName);
 
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
         }
         setTitle(getResources().getString(R.string.chatting_with) + " " + friendUsername);
-        toolbar.setBackgroundColor(bgColor);
     }
 
     @Override

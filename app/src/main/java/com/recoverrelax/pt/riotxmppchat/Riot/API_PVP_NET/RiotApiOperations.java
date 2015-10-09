@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Champion.Champion_ChampionDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Champion.Champion_ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.ChampionInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionDto;
@@ -13,6 +15,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.Summ
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.Service;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.SummonerDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
+import com.recoverrelax.pt.riotxmppchat.Widget.FreeChampionRotation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +27,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 @Singleton
@@ -50,6 +54,7 @@ public class RiotApiOperations {
                         ChampionInfo mapValue = new ChampionInfo();
                         mapValue.setChampionImage(entry.getValue().getImage().getFull());
                         mapValue.addChampionSkinsImage(entry.getValue().getSkinnImageList(entry.getKey()));
+                        mapValue.setChampionName(entry.getValue().getName());
                         newMap.put(mapKey, mapValue);
 
                     }
@@ -107,6 +112,13 @@ public class RiotApiOperations {
     public Observable<RecentGamesDto> getRecentGamesList(@Nullable String summonerId){
         return riotApiServiceImpl.getRecentMatchList(summonerId)
                .subscribeOn(Schedulers.computation());
+    }
+
+    public Observable<List<Integer>> getFreeChampRotation() {
+        return riotApiServiceImpl.getFreeChampRotation()
+                .flatMap(champList -> Observable.from(champList)
+                        .map(Champion_ChampionDto::getId)
+                        .toList());
     }
 
     public Observable<Map<String, SummonerDto>> getSummonerListByIds(List<String> summonerIdList){

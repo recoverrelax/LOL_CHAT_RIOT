@@ -6,10 +6,6 @@ public class AppGlobals {
         public static final int DEFAULT_MESSAGES_RETURNED = 20;
     }
 
-    public static class RiotEndPoint {
-
-    }
-
     public static class DD_VERSION {
         public static final String DD_VERSION = "dd_version";
 

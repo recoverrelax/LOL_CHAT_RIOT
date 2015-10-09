@@ -39,6 +39,9 @@ public class DashBoardIconActivity extends MessageIconActivity {
                     .commit();
         }
         setTitle(getResources().getString(R.string.dashboard));
+
+        if(toolbar != null)
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
     }
 
 

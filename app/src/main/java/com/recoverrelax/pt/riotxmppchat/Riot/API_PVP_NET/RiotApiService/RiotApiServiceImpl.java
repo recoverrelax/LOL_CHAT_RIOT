@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Champion.Champion_ChampionDto;
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Champion.Champion_ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
@@ -27,6 +29,7 @@ import javax.inject.Singleton;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 @Singleton
@@ -95,6 +98,17 @@ public class RiotApiServiceImpl {
         return apiProvider.getRiotApiServiceSecure().getSummonerSpellListFiltered_STATIC_DATA(region)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<List<Champion_ChampionDto>> getFreeChampRotation() {
+        String region = getRegion();
+
+        if (region == null)
+            return Observable.error(new Throwable("For some reason, region is invalid"));
+
+        return apiProvider.getRiotApiServiceSecure().getAllChampion_CHAMPION(region, true)
+                .map(Champion_ChampionListDto::getChampions)
+                .subscribeOn(Schedulers.computation());
     }
 
     public Observable<ItemListDto> getItemListBasicInfoFiltered() {

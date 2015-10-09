@@ -20,10 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
@@ -255,7 +253,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     @Nullable
-    Toolbar getToolbar(){
+    public Toolbar getToolbar(){
         return toolbar;
     }
 
@@ -325,7 +323,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     public void goToMessageActivity(String username, String userXmppName){
-        AppContextUtils.startPersonalMessageActivity(this, username, userXmppName);
+        AppContextUtils.startChatActivity(this, username, userXmppName);
     }
 
     public void goToMessageListActivity(){

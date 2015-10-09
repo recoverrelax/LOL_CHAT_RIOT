@@ -128,4 +128,5 @@
 
     <string name="current_game_not_found">Recent Games not available for this summoner!</string>
     <string name="free_champion_rotation">Free Champion Rotation</string>
+    <string name="your_friend_is_offline">Friend Offline. Can\'t send Message</string>
 </resources>

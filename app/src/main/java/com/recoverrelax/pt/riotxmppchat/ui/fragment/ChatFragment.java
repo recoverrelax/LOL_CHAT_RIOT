@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +22,9 @@ import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.PersonalMessageImpl;
@@ -33,6 +36,7 @@ import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -49,7 +53,6 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGE;
-import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_BGCOLOR;
 import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_FRIEND_NAME;
 import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_FRIEND_XMPPNAME;
 
@@ -86,12 +89,10 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
     @Inject RiotRosterManager riotRosterManager;
 
     @Inject Bus bus;
-    @Inject
-    EventHandler handler;
+    @Inject EventHandler handler;
 
     private String friendXmppName;
     private String friendUsername;
-    private int bgColor;
 
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
 
@@ -103,8 +104,15 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
         // Required empty public constructor
     }
 
-    public static ChatFragment newInstance() {
-        return new ChatFragment();
+    public static ChatFragment newInstance(String friendUsername, String friendXmppName) {
+        ChatFragment chatFragment = new ChatFragment();
+
+        Bundle args = new Bundle();
+        args.putString(INTENT_FRIEND_NAME, friendUsername);
+        args.putString(INTENT_FRIEND_XMPPNAME, friendXmppName);
+        chatFragment.setArguments(args);
+
+        return chatFragment;
     }
 
 
@@ -119,23 +127,15 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         Bundle extras = getArguments();
-        if (extras == null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)
-                || !extras.containsKey(INTENT_BGCOLOR)) {
+        if (extras == null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)) {
             LogUtils.LOGE(TAG, "Something went wrong, we haven't got a xmppName");
         } else {
             friendUsername = extras.getString(INTENT_FRIEND_NAME);
             friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
-            bgColor = extras.getInt(INTENT_BGCOLOR);
 
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, true);
             messageRecyclerView.setLayoutManager(layoutManager);
@@ -148,15 +148,20 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
             swipeRefreshListener = () -> getLastXPersonalMessageList(doubleLoadedItems(), friendXmppName);
 
             swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
-
             uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70 / 2)));
-            swipeRefreshLayout.setBackgroundColor(bgColor);
-//            ((BaseActivity)getActivity()).getToolbar().getBackground().setAlpha(0);
+
+            int cardColorId = AppMiscUtils.getRandomMaterialColor(new Random());
+            int color = getActivity().getResources().getColor(cardColorId);
+            color = AppMiscUtils.changeColorAlpha(color, 190);
+            getBaseActivity().getToolbar().setBackgroundColor(color);
+
+            swipeRefreshLayout.setBackgroundColor(color);
         }
     }
 
     public void getLastXPersonalMessageList(int itemQtt, String friendXmppName){
         Subscription subscribe = personalMessageImpl.getLastXPersonalMessageList(itemQtt, friendXmppName)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<MessageDb>>() {
                     @Override
                     public void onCompleted() {
@@ -184,7 +189,6 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
     @Override
     public void onResume() {
         super.onResume();
-//        MainApplication.getInstance().getBusInstance().register(this);
         getLastXPersonalMessageList(defaultMessageNrReturned, friendXmppName);
         handler.registerForNewMessageNotifyEvent(this);
     }
@@ -225,6 +229,8 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                     public void onNext(Boolean isAvailable) {
                         if(isAvailable && !message.equals(""))
                             sendMessage(message);
+                        else
+                            AppContextUtils.showSnackbar(ChatFragment.this, R.string.your_friend_is_offline, Snackbar.LENGTH_LONG);
                     }
                 });
     }
@@ -281,8 +287,6 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                     }
                 });
     }
-
-
 
     public void getLastPersonalMessage(String friendXmppName){
         Subscription subscribe = personalMessageImpl.getLastPersonalMessage(friendXmppName)

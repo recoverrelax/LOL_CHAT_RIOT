@@ -8,7 +8,7 @@
     android:layout_below="@+id/app_bar">
 
 <android.support.design.widget.CoordinatorLayout
-       android:background="@drawable/login_screen"
+       android:background="@drawable/champ_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

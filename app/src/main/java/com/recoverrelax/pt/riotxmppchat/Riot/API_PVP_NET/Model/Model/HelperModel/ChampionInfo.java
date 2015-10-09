@@ -8,6 +8,8 @@ public class ChampionInfo {
 
     private String championImage;
     private List<String> championSkinImage;
+    private String championName;
+    private long championId;
 
     public ChampionInfo(){}
 
@@ -26,5 +28,35 @@ public class ChampionInfo {
     public void addChampionSkinsImage(List<String> skinList) {
         this.championSkinImage = new ArrayList<>();
         this.championSkinImage.addAll(skinList);
+    }
+
+    public void setChampionSkinImage(List<String> championSkinImage) {
+        this.championSkinImage = championSkinImage;
+    }
+
+    public String getChampionName() {
+        return championName;
+    }
+
+    public void setChampionName(String championName) {
+        this.championName = championName;
+    }
+
+    public long getChampionId() {
+        return championId;
+    }
+
+    public void setChampionId(long championId) {
+        this.championId = championId;
+    }
+
+    @Override
+    public String toString() {
+        return "ChampionInfo{" +
+                "championImage='" + championImage + '\'' +
+                ", championSkinImage=" + championSkinImage +
+                ", championName='" + championName + '\'' +
+                ", championId=" + championId +
+                '}';
     }
 }

@@ -59,6 +59,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class FriendListFragment extends BaseFragment implements FriendsListAdapter.OnAdapterChildClick, OnReconnectEvent, OnFriendPresenceChangedEvent {
 
+    //    private final String TAG = FriendListFragment.this.getClass().getSimpleName();
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
 
     @Bind(R.id.myFriendsListRecyclerView)
@@ -87,12 +88,16 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
 
-    @Inject RiotXmppRosterImpl riotXmppRosterImpl;
-    @Inject RiotApiServiceImpl riotApiServiceImpl;
-    @Inject EventHandler handler;
+    @Inject
+    RiotXmppRosterImpl riotXmppRosterImpl;
+    @Inject
+    RiotApiServiceImpl riotApiServiceImpl;
+    @Inject
+    EventHandler handler;
 
     public FriendListFragment() {
         // Required empty public constructor
+
     }
 
     public static FriendListFragment newInstance() {
@@ -110,11 +115,12 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         super.onPause();
         subscriptions.clear();
 
-        if(adapter != null)
+        if (adapter != null)
             adapter.removeSubscriptions();
 
         handler.unregisterForRecconectEvent(this);
         handler.unregisterForFriendPresenceChangedEvent(this);
+
     }
 
     @Override
@@ -145,7 +151,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false);
         myFriendsListRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new FriendsListAdapter(this.getActivity(), new ArrayList<>(), mDataStorage.showOfflineUsers() , myFriendsListRecyclerView);
+        adapter = new FriendsListAdapter(this.getActivity(), new ArrayList<>(), mDataStorage.showOfflineUsers(), myFriendsListRecyclerView);
         adapter.setAdapterClickListener(this);
 
         myFriendsListRecyclerView.setAdapter(adapter);
@@ -157,7 +163,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
     @Override
     public void onAdapterFriendClick(String friendUsername, String friendXmppAddress) {
-        AppContextUtils.startPersonalMessageActivity(getActivity(), friendUsername, friendXmppAddress);
+        AppContextUtils.startChatActivity(getActivity(), friendUsername, friendXmppAddress);
     }
 
     @Override
@@ -193,7 +199,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
                                 @Override
                                 public void onNext(String friendName) {
-                                    AppContextUtils.startPersonalMessageActivity(FriendListFragment.this.getActivity(), friendName,
+                                    AppContextUtils.startChatActivity(FriendListFragment.this.getActivity(), friendName,
                                             friendXmppAddress);
                                 }
                             });
@@ -201,28 +207,28 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
                 case R.id.current_game:
 
-                    if(MainApplication.getInstance().isRecentGameEnabled){
+                    if (MainApplication.getInstance().isRecentGameEnabled) {
                         Intent intent = new Intent(this.getActivity(), CurrentGameIconActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.putExtra(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
                         intent.putExtra(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
                         startActivity(intent);
                         AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
-                    }else
+                    } else
                         AppContextUtils.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
 
                     break;
 
                 case R.id.recent_game:
 
-                    if(MainApplication.getInstance().isLiveGameEnabled){
+                    if (MainApplication.getInstance().isLiveGameEnabled) {
                         Intent intent2 = new Intent(this.getActivity(), RecentGameIconActivity.class);
                         intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent2.putExtra(RecentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
                         intent2.putExtra(RecentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
                         startActivity(intent2);
                         AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
-                    }else
+                    } else
                         AppContextUtils.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
                     break;
                 default:
@@ -231,7 +237,6 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
             return false;
         });
     }
-
 
 
     public void showProgressBar(boolean state) {
@@ -322,16 +327,16 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
             ButterKnife.findById(searchView, android.support.v7.appcompat.R.id.search_close_btn).setOnClickListener(
                     view -> {
-                            if (modifiedOriginal[0])
-                                getFullFriendList(SHOW_OFFLINE_USERS);
-                            et.setText("");
-                        }
-                    );
+                        if (modifiedOriginal[0])
+                            getFullFriendList(SHOW_OFFLINE_USERS);
+                        et.setText("");
+                    }
+            );
 
         }
     }
 
-    public void getSingleFriend(Presence presence){
+    public void getSingleFriend(Presence presence) {
         Subscription subscribe = riotXmppRosterImpl.getPresenceChanged(presence)
                 .subscribe(new Subscriber<Friend>() {
                     @Override
@@ -385,7 +390,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        switch(itemId){
+        switch (itemId) {
             case R.id.refresh:
                 getFullFriendList(SHOW_OFFLINE_USERS);
                 return true;
@@ -415,7 +420,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
                 .subscribe(new Subscriber<List<Friend>>() {
                     @Override
                     public void onCompleted() {
-                        if(swipeRefreshLayout != null)
+                        if (swipeRefreshLayout != null)
                             swipeRefreshLayout.setRefreshing(false);
                     }
 

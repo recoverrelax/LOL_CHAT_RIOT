@@ -1,36 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
-            android:src="@drawable/champion_example"
+            android:id="@+id/champ1"
+            tools:src="@drawable/champion_example"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content" />
 
-    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
-        android:src="@drawable/champion_example"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content" />
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ2"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
 
-    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
-        android:src="@drawable/champion_example"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content" />
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ3"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
 
-    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
-        android:src="@drawable/champion_example"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content" />
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ4"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
 
-    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
-        android:src="@drawable/champion_example"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content" />
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ5"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ6"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ7"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ8"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ9"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+            android:id="@+id/champ10"
+            tools:src="@drawable/champion_example"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
 </LinearLayout>

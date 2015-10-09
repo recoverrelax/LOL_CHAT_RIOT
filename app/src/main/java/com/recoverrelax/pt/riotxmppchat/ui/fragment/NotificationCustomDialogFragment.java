@@ -140,7 +140,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Random random = new Random();
-        int backgroundColor = AppMiscUtils.getRamdomMaterialColor(random);
+        int backgroundColor = AppMiscUtils.getRandomMaterialColor(random);
         title.setBackgroundColor(getResources().getColor(backgroundColor));
 
         if(savedInstanceState == null){

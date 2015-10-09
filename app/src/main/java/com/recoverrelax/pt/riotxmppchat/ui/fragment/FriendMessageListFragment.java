@@ -97,7 +97,7 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
         adapter = new FriendMessageListAdapter(getActivity(), new ArrayList<>());
         messageRecyclerView.setAdapter(adapter);
         adapter.setRowClickListener(
-                (view, friendName, friendXmppAddress, cardColor) -> {
+                (view, friendName, friendXmppAddress) -> {
 
                     LinearLayout parentRow = ButterKnife.findById(view, R.id.parent_row);
 
@@ -106,7 +106,7 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
                     alphaAnimation.setDuration(200);
                     alphaAnimation.start();
 
-                    AppContextUtils.startPersonalMessageActivityBgColor(getActivity(), friendName, friendXmppAddress, cardColor, null);
+                    AppContextUtils.startPersonalMessageActivity(getActivity(), friendName, friendXmppAddress);
                 });
     }
 

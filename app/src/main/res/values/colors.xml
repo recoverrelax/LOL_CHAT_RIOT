@@ -7,9 +7,11 @@
 
     <color name="primaryColor">#0075A2</color>
     <color name="primaryColor120">#780075a2</color>
+    <color name="primaryColor180">#960075a2</color>
     <color name="primaryColorDark">#004884</color>
     <color name="primaryColorDark120">#78004884</color>
     <color name="accentColor">#FF5722</color>
+    <color name="accentColor120">#78ff5722</color>
 
     <color name="textColorYellowT">#78ffd600</color>
     <color name="colorDark">#212121</color>
@@ -23,6 +25,7 @@
     <color name="black">#fe000000</color>
     <color name="blackCheat">#ff000000</color>
     <color name="blackT">#b4000000</color>
+    <color name="blackT150">#b4000000</color>
     <color name="blackDrawerScrim">#8c000000</color>
     <color name="black_220a">#dc000000</color>
     <color name="toolbarColor">@color/black</color>

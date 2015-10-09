@@ -9,13 +9,13 @@
 
     <RelativeLayout
         android:id="@+id/parent_view_group"
-        android:background="@android:color/white"
+        android:background="@drawable/champ_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <include
             android:id="@+id/app_bar"
-            layout="@layout/app_bar_layout" />
+            layout="@layout/app_bar_t_layout" />
 
         <FrameLayout
             android:layout_width="match_parent"

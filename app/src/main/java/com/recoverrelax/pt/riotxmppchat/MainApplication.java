@@ -53,9 +53,9 @@ public class MainApplication extends Application {
      * Temporary Control Variables
      */
 
-    public boolean isRealScoutEnabled = false;
-    public boolean isLiveGameEnabled = false;
-    public boolean isRecentGameEnabled = false;
+    public boolean isRealScoutEnabled = true;
+    public boolean isLiveGameEnabled = true;
+    public boolean isRecentGameEnabled = true;
 
     @Override
     public void onCreate() {

@@ -3,18 +3,18 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
-def Properties props = new Properties()
-props.load(new FileInputStream("../KEYSTORE_CHATIFY/keystore_properties"))
+//def Properties props = new Properties()
+//props.load(new FileInputStream("../KEYSTORE_CHATIFY/keystore_properties"))
 
 android {
-    signingConfigs {
-        release {
-            keyAlias = props['KEY_ALIAS']
-            keyPassword props['STORE_PASSWORD']
-            storeFile file('D:/AndroidProjects/KEYSTORE_CHATIFY/lol_chatify.jks')
-            storePassword props['STORE_PASSWORD']
-        }
-    }
+//    signingConfigs {
+//        release {
+////            keyAlias = props['KEY_ALIAS']
+////            keyPassword props['STORE_PASSWORD']
+////            storeFile file('D:/AndroidProjects/KEYSTORE_CHATIFY/lol_chatify.jks')
+////            storePassword props['STORE_PASSWORD']
+//        }
+//    }
     compileSdkVersion 23
     buildToolsVersion '23.0.1'
 
@@ -31,12 +31,12 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
     }
     buildTypes {
-        release {
-            minifyEnabled false
-            debuggable true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
+//        release {
+//            minifyEnabled false
+//            debuggable true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+//        }
         debug {
             minifyEnabled false
         }

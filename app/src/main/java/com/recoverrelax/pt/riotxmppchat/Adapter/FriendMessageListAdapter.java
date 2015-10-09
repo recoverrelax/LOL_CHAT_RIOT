@@ -46,10 +46,6 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
     private OnRowClick clickCallback;
     private final CompositeSubscription subscriptions = new CompositeSubscription();
 
-    @LayoutRes
-    private final
-    int layoutRes = R.layout.friend_message_list_child_layout;
-
     public FriendMessageListAdapter(Context context, ArrayList<FriendListChat> friendMessageList) {
         inflater = LayoutInflater.from(context);
         this.context = context;
@@ -59,7 +55,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
     @Override
     public FriendMessageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(layoutRes, parent, false);
+        View view = inflater.inflate(R.layout.friend_message_list_child_layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -161,8 +157,6 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
         FriendListChat friendListChat;
 
-        @ColorRes int cardColor;
-
         private Subscription subscription;
         private final int updateInterval = 10000;
 
@@ -171,10 +165,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
             ButterKnife.bind(this, itemView);
 
             if(itemView instanceof CardView) {
-                int cardColorId = AppMiscUtils.getRamdomMaterialColor(random);
-                cardColor = context.getResources().getColor(cardColorId);
-                cardColor = AppMiscUtils.changeColorAlpha(cardColor, 190);
-                friends_list_cardview.setCardBackgroundColor(cardColor);
+                friends_list_cardview.setCardBackgroundColor(context.getResources().getColor(R.color.primaryColor120));
             }
         }
 
@@ -205,11 +196,11 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         @OnClick(R.id.friends_list_cardview)
         public void onClick(View view) {
             if(clickCallback != null)
-                clickCallback.onRowClick(view, friendListChat.getFriendName(), friendListChat.getUserXmppAddress(), cardColor);
+                clickCallback.onRowClick(view, friendListChat.getFriendName(), friendListChat.getUserXmppAddress());
         }
     }
 
     public interface OnRowClick{
-        void onRowClick(View view, String friendName, String friendXmppAddress, int cardColor);
+        void onRowClick(View view, String friendName, String friendXmppAddress);
     }
 }

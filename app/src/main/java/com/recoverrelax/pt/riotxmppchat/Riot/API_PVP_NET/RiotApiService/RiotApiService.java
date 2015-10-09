@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
 
+import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Champion.Champion_ChampionListDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.CurrentGame.CurrentGameInfo;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.RecentGamesDto;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static.ChampionListDto;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import rx.Observable;
 
 public interface RiotApiService {
@@ -21,6 +23,7 @@ public interface RiotApiService {
     String BASE_STATUS_LOL = "/status.leagueoflegends.com";
 
     String STATIC_DATA_V = "v1.2";
+    String CHAMPION_DATA_V = "v1.2";
     String GAME_DATA_V = "v1.3";
     String SUMMONER_DATA_V = "v1.4";
 
@@ -95,5 +98,15 @@ public interface RiotApiService {
     Observable<Map<String, SummonerDto>> getSummonerListByIds_SUMMONER(
             @Path("region") String region,
             @Path("summonerIdList") String summonerIdList
+    );
+
+    /**
+     * CHAMPION
+     */
+
+    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + CHAMPION_DATA_V + "/champion/")
+    Observable<Champion_ChampionListDto> getAllChampion_CHAMPION(
+            @Path("region") String region,
+            @Query("freeToPlay") boolean freeToPlay
     );
 }
