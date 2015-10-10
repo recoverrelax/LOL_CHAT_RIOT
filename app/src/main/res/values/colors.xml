@@ -12,6 +12,7 @@
     <color name="primaryColorDark120">#78004884</color>
     <color name="accentColor">#FF5722</color>
     <color name="accentColor120">#78ff5722</color>
+    <color name="accentColor60">#3cff5722</color>
 
     <color name="textColorYellowT">#78ffd600</color>
     <color name="colorDark">#212121</color>
@@ -22,6 +23,7 @@
     <color name="whiteT">#d2ffffff</color>
     <color name="red20">#3cff5722</color>
     <color name="whiteT2X">#b4ffffff</color>
+    <color name="white1">#01ffffff</color>
     <color name="black">#fe000000</color>
     <color name="blackCheat">#ff000000</color>
     <color name="blackT">#b4000000</color>

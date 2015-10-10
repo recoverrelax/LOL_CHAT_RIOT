@@ -16,6 +16,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.LogFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.ChatFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
@@ -51,6 +52,7 @@ public interface AppComponent {
      */
 
     void inject(DashBoardFragment frag);
+    void inject(LogFragment frag);
     void inject(FriendListFragment frag);
     void inject(FriendMessageListFragment frag);
     void inject(ChatFragment fragment);

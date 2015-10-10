@@ -130,6 +130,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         handler.registerForRecconectEvent(this);
         handler.registerForFriendPresenceChangedEvent(this);
         getFullFriendList(SHOW_OFFLINE_USERS);
+
     }
 
     @Override

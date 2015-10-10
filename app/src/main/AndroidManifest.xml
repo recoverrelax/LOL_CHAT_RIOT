@@ -21,6 +21,13 @@
         </activity>
         <activity
             android:name=".ui.activity.DashBoardIconActivity"
+            android:label="@string/log_activity" >
+        </activity>
+
+        <activity
+            android:name=".ui.activity.LogActivity"
+            android:theme="@style/LogTheme"
+            android:noHistory="true"
             android:label="@string/dashboard" >
         </activity>
         <activity

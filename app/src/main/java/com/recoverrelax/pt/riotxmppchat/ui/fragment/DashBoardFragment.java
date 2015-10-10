@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Widget.FreeChampionRotation;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.LogActivity;
 
 import org.jivesoftware.smack.packet.Presence;
 
@@ -134,6 +136,12 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
         return false;
     }
 
+    @OnTouch(R.id.recyclerView)
+    public boolean onLogClick(View view, MotionEvent event){
+        startActivity(new Intent(this.getActivity(), LogActivity.class));
+        return false;
+    }
+
     @OnClick(R.id.dashboard_1)
     public void OnMessageClick(View view) {
         getBaseActivity().goToMessageListActivity();
@@ -155,8 +163,12 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setOnTouchListener((view, motionEvent) -> {
+            startActivity(new Intent(DashBoardFragment.this.getActivity(), LogActivity.class));
+            return true;
+        });
 
-        adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), recyclerView);
+        adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), recyclerView, R.layout.dashboard_log_layout_white);
         recyclerView.setAdapter(adapter);
 
         getWsInfo();
@@ -168,7 +180,7 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
                         getUnreadedMessageCount(),
                         getFriendStatusInfo(),
                         getFreeChampRotationList(),
-                getLogLast20()
+                        getLogLast20()
                 ).subscribe()
         );
     }
@@ -195,9 +207,10 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
 
     private Observable<List<InAppLogDb>> getLogLast20() {
         return dashboardImpl.getLogLast20List()
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(inAppLogDbs -> {
                     if (adapter != null && inAppLogDbs != null) {
-                        getActivity().runOnUiThread(() -> adapter.setItems(inAppLogDbs));
+                        adapter.setItems(inAppLogDbs);
                     }
 //                    showProgressBar(false);
                 });
