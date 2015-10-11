@@ -19,8 +19,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.GameStatus;
@@ -41,7 +39,6 @@ import butterknife.OnClick;
 import pt.reco.myutil.MyContext;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -145,20 +142,19 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         || friend.getGameStatus().equals(GameStatus.INGAME) || friend.getGameStatus().equals(GameStatus.CHAMPION_SELECT)) {
 
                     subscriptions.add(
-                        Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
-                                .map(aLong -> friend.getGameStatusToPrint())
-                                .subscribeOn(Schedulers.io())
-                                .doOnSubscribe(() -> holderOnline.gameStatus.setText(friend.getGameStatusToPrint()))
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(holderOnline.gameStatus::setText)
-                     );
+                            Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
+                                    .map(aLong -> friend.getGameStatusToPrint())
+                                    .subscribeOn(Schedulers.io())
+                                    .doOnSubscribe(() -> holderOnline.gameStatus.setText(friend.getGameStatusToPrint()))
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(holderOnline.gameStatus::setText)
+                    );
 
                 } else {
                     String statusMsg = friend.getStatusMsg();
-                    if(statusMsg != null && !statusMsg.equals(Friend.PERSONAL_MESSAGE_NO_VIEW)) {
+                    if (statusMsg != null && !statusMsg.equals(Friend.PERSONAL_MESSAGE_NO_VIEW)) {
                         gameStatus.setText(statusMsg);
-                     }
-                    else
+                    } else
                         gameStatus.setText("");
                 }
 
@@ -190,47 +186,23 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     holderOnline.progressBarProfileIcon.setVisibility(View.GONE);
                 } else {
 
-                    realmData.getProfileIconBaseUrl()
-                            .subscribe(profileUrl -> {
-                                Glide.with(context)
-                                        .load(profileUrl + friend.getProfileIconId() + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION)
-                                        .error(R.drawable.profile_icon_example)
-                                        .into(new GlideDrawableImageViewTarget(holderOnline.profileIcon) {
-                                            @Override
-                                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-                                                super.onResourceReady(resource, animation);
-                                                holderOnline.progressBarProfileIcon.setVisibility(View.GONE);
-                                            }
-
-
-                                        });
-                            }, new Action1<Throwable>() {
+                    Glide.with(context)
+                            .load(friend.getProfileIconWithUrl())
+                            .error(R.drawable.profile_icon_example)
+                            .into(new GlideDrawableImageViewTarget(holderOnline.profileIcon) {
                                 @Override
-                                public void call(Throwable e) {
-                                    AppContextUtils.printStackTrace(e);
+                                public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+                                    super.onResourceReady(resource, animation);
+                                    holderOnline.progressBarProfileIcon.setVisibility(View.GONE);
                                 }
                             });
                 }
 
-                if(friend.isPlaying()) {
-//                    Picasso.with(context).load(holderOnline.current.getChampionDragonUrl())
-//                            .into(holderOnline.championSquare);
-
-                    realmData.getChampionDDBaseUrl()
-                            .subscribe(championUrl -> {
-                                Glide.with(context)
-                                        .load(championUrl + friend.getChampionNameFormatted()
-                                                + AppGlobals.DD_VERSION.CHAMPION_EXTENSION)
-                                        .into(holderOnline.championSquare);
-                            }, new Action1<Throwable>() {
-                                @Override
-                                public void call(Throwable e) {
-                                    AppContextUtils.printStackTrace(e);
-                                }
-                            });
-
-                }
-                else
+                if (friend.isPlaying()) {
+                    Glide.with(context)
+                            .load(friend.getChampionNameFormatted())
+                            .into(holderOnline.championSquare);
+                } else
                     holderOnline.championSquare.setImageDrawable(null);
 
                 break;
@@ -242,8 +214,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holderOffline.friendName.setText(friend.getName());
 
                 Glide.with(context)
-                            .load(R.drawable.profile_icon_example)
-                            .into(holderOffline.profileIcon);
+                        .load(R.drawable.profile_icon_example)
+                        .into(holderOffline.profileIcon);
 
                 break;
         }
@@ -304,7 +276,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if (oldFriend.isOnline()) {
                     // ONLINE - OFFLINE
                     friendsList.remove(positionFriend);
-                    if(showOfflineUsers)
+                    if (showOfflineUsers)
                         friendsList.add(newFriend);
                     notifyItemRemoved(positionFriend);
                 } else {
@@ -312,15 +284,15 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     // do nothing!
                 }
             }
-        }else{
-            if(newFriend.isOnline()) {
+        } else {
+            if (newFriend.isOnline()) {
                 friendsList.add(0, newFriend);
                 notifyItemInserted(0);
             }
         }
     }
 
-    public void removeSubscriptions(){
+    public void removeSubscriptions() {
         subscriptions.clear();
     }
 
@@ -415,10 +387,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         // RowClick
         @OnClick(R.id.friends_list_cardview)
         public void onClick(View view) {
-                    Snackbar
-                            .make(((Activity) context).getWindow().getDecorView().getRootView(),
-                                    current.getName() + " " + context.getResources().getString(R.string.cannot_chat_with),
-                                    Snackbar.LENGTH_LONG).show();
+            Snackbar
+                    .make(((Activity) context).getWindow().getDecorView().getRootView(),
+                            current.getName() + " " + context.getResources().getString(R.string.cannot_chat_with),
+                            Snackbar.LENGTH_LONG).show();
         }
 
         // CardClick
@@ -431,6 +403,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface OnAdapterChildClick {
         void onAdapterFriendClick(String friendUsername, String friendXmppAddress);
+
         void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername, boolean isPlaying);
     }
 
@@ -442,6 +415,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public boolean isSortAlphabetically() {
             return this.equals(SortMethod.ALPHABETICALLY);
         }
+
         public boolean isSortOnlineFirst() {
             return this.equals(SortMethod.ONLINE_FIRST);
         }

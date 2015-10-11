@@ -12,7 +12,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.MessageIconActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.BaseFragment;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.CurrentGameFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.LiveGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
@@ -62,7 +62,7 @@ public interface AppComponent {
 
     void inject(MainApplication mainApplication);
 
-    void inject(CurrentGameFragment currentGameFragment);
+    void inject(LiveGameFragment liveGameFragment);
 
     void inject(RiotApiServiceImpl riotApiService);
 

@@ -38,8 +38,8 @@ import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameIconActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameIconActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.LiveGameActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivity;
 
 import org.jivesoftware.smack.packet.Presence;
 
@@ -50,9 +50,9 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pt.reco.myutil.MyContext;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -210,28 +210,28 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
                 case R.id.current_game:
 
                     if (MainApplication.getInstance().isRecentGameEnabled) {
-                        Intent intent = new Intent(this.getActivity(), CurrentGameIconActivity.class);
+                        Intent intent = new Intent(this.getActivity(), LiveGameActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.putExtra(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-                        intent.putExtra(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+                        intent.putExtra(LiveGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent.putExtra(LiveGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
                         startActivity(intent);
                         AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
                     } else
-                        MyContext.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
+                        AppContextUtils.showSnackbar(this.getBaseActivity(), R.string.feature_coming, Snackbar.LENGTH_LONG, null);
 
                     break;
 
                 case R.id.recent_game:
 
                     if (MainApplication.getInstance().isLiveGameEnabled) {
-                        Intent intent2 = new Intent(this.getActivity(), RecentGameIconActivity.class);
+                        Intent intent2 = new Intent(this.getActivity(), RecentGameActivity.class);
                         intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent2.putExtra(RecentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-                        intent2.putExtra(RecentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
                         startActivity(intent2);
                         AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
                     } else
-                        MyContext.showSnackbar(this.getActivity(), "Feature Coming in the next release", Snackbar.LENGTH_LONG);
+                        AppContextUtils.showSnackbar(this.getBaseActivity(), R.string.feature_coming, Snackbar.LENGTH_LONG, null);
                     break;
                 default:
                     break;
@@ -340,6 +340,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
     public void getSingleFriend(Presence presence) {
         Subscription subscribe = riotXmppRosterImpl.getPresenceChanged(presence)
+                .flatMap(riotXmppRosterImpl::updateFriendWithChampAndProfileUrl)
                 .subscribe(new Subscriber<Friend>() {
                     @Override
                     public void onCompleted() {
@@ -365,6 +366,8 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
     private void getSearchFriendsList(String s) {
         Subscription subscribe = riotXmppRosterImpl.searchFriendsList(s)
+                .flatMap(riotXmppRosterImpl::updateFriendListWithChampAndProfileUrl)
+                .subscribeOn(Schedulers.computation())
                 .subscribe(new Subscriber<List<Friend>>() {
                     @Override
                     public void onCompleted() {
@@ -419,6 +422,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
     private void getFullFriendList(boolean showOffline) {
         Subscription subscribe = riotXmppRosterImpl.getFullFriendsList(showOffline)
+                .flatMap(riotXmppRosterImpl::updateFriendListWithChampAndProfileUrl)
                 .subscribe(new Subscriber<List<Friend>>() {
                     @Override
                     public void onCompleted() {

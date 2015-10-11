@@ -6,14 +6,12 @@ import android.support.v4.app.FragmentManager;
 import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.ChatFragment;
 
-import java.util.Random;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
 public class ChatActivity extends MessageIconActivity {
 
@@ -55,7 +53,21 @@ public class ChatActivity extends MessageIconActivity {
                     .replace(R.id.container, fragment)
                     .commit();
         }
-        setTitle(getResources().getString(R.string.chatting_with) + " " + friendUsername);
+    }
+
+    @Override
+    public CharSequence getToolbarTitle() {
+        return null;
+    }
+
+    @Override
+    public Integer getToolbarColor() {
+        return MyContext.getColor(this, R.color.transparent);
+    }
+
+    @Override
+    public Integer getToolbarTitleColor() {
+        return null;
     }
 
     @Override

@@ -34,11 +34,10 @@
         </LinearLayout>
 
         <android.support.design.widget.AppBarLayout
+            style="@style/toolbarStyleLight"
             android:id="@+id/appBarLayout"
-            style="@style/normalToolbarStyleT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
             android:fitsSystemWindows="true">
 
             <android.support.v7.widget.Toolbar
@@ -48,16 +47,11 @@
                 app:layout_scrollFlags="scroll|enterAlways">
 
                 <TextView
+                    style="@style/toolbarTitleStyle"
                     android:id="@+id/toolbar_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:background="@null"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    tools:text="Toolbar Title" />
+                    android:layout_gravity="start"/>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>

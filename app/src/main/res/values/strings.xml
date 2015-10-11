@@ -61,7 +61,7 @@
     <string name="friends_online">Friends Online:</string>
     <string name="dashboard">Dashboard</string>
     <string name="log_activity">Latest Friend Activity</string>
-    <string name="chatting_with">"Chatting with: "</string>
+    <string name="chatting_with">"Chatting with: %s"</string>
     <string name="cannot_chat_with">is Offline. Canno\'t chat with him/her atm</string>
 
 
@@ -104,7 +104,7 @@
     <string name="current_game_enemy_team">Team 2</string>
     <string name="current_game_summoner_not_in_game">Live Match not available. The game is no longer available.</string>
     <string name="current_game__fragment_title">Live: </string>
-    <string name="recent_game__fragment_title">Recent Games for: </string>
+    <string name="recent_game__fragment_title">Recent Games for: %s</string>
     <string name="recent_game_me_fragment_title">My Recent Games</string>
     <string name="current_game_banned_c_error">I\'m sorry. We could not retrieve the banned champion list</string>
 
@@ -130,4 +130,7 @@
     <string name="current_game_not_found">Recent Games not available for this summoner!</string>
     <string name="free_champion_rotation">Free Champion Rotation</string>
     <string name="your_friend_is_offline">Friend Offline. Can\'t send Message</string>
+    <string name="settings_activity">Settings</string>
+    <string name="service_currently_unavailable">Service currently unavailable. Please try again later</string>
+    <string name="feature_coming">\"Feature Coming in the next release\"</string>
 </resources>

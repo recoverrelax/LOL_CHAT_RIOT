@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/LOL_CHAT_RIOT.iml" filepath="$PROJECT_DIR$/LOL_CHAT_RIOT.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyDaoGenerator/MyDaoGenerator.iml" filepath="$PROJECT_DIR$/MyDaoGenerator/MyDaoGenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/myutil/myutil.iml" filepath="$PROJECT_DIR$/myutil/myutil.iml" />
     </modules>
   </component>
 </project>

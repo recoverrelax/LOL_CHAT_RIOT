@@ -1,43 +1,37 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.LiveGameFragment;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import pt.reco.myutil.MyContext;
 
-public class RecentGameIconActivity extends MessageIconActivity {
-
-    @Nullable
-    @Bind(R.id.appBarLayout)
-    AppBarLayout appBarLayout;
+public class LiveGameActivity extends MessageIconActivity {
 
     public static final String FRIEND_XMPP_ADDRESS_INTENT = "friend_xmpp_address_intent";
     public static final String FRIEND_XMPP_USERNAME_INTENT = "friend_xmpp_username";
 
+    public static final String FRIEND_XMPP_USERNAME_ME = "me";
+
     private static final String friendXmppAddressDefault = null;
     private static final String friendXmppUsernameDefault = null;
-
     private String friendXmppAddress;
     private String friendXmppUsername;
 
     @Override
     public int getLayoutResources() {
-        return R.layout.recent_game_activity;
+
+        return R.layout.live_game_activity;
     }
 
     @Override
     public int getNavigationViewPosition() {
-        return R.id.navigation_item_3;
+        return R.id.navigation_item_1;
     }
 
     @Override
@@ -58,20 +52,26 @@ public class RecentGameIconActivity extends MessageIconActivity {
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = RecentGameFragment.newInstance(friendXmppAddress, friendXmppUsername);
+            Fragment fragment = LiveGameFragment.newInstance(friendXmppAddress, friendXmppUsername);
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
         }
+    }
 
-        if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(MyContext.getColor(this, R.color.primaryColor));
+    @Override
+    public CharSequence getToolbarTitle() {
+        return null;
+    }
 
-        ActionBar supportActionBar = getSupportActionBar();
-        if(supportActionBar != null) {
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setHomeButtonEnabled(true);
-        }
+    @Override
+    public Integer getToolbarColor() {
+        return MyContext.getColor(this, R.color.transparent);
+    }
+
+    @Override
+    public Integer getToolbarTitleColor() {
+        return null;
     }
 
     @Override

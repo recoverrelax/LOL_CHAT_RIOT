@@ -3,11 +3,18 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Handler;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity;
 
 public class AppContextUtils {
@@ -69,6 +76,40 @@ public class AppContextUtils {
         AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
     }
 
+    public static void showSnackbar(Activity activity, @StringRes int messageString, int duration, View.OnClickListener listener){
+        showSnackbar(activity, activity.getResources().getString(messageString), duration, listener);
+    }
+
+    public static void showSnackBarErrorFailedService(Activity activity, View.OnClickListener listener, int duration){
+        AppContextUtils.showSnackbar(activity, R.string.service_currently_unavailable, duration, listener);
+        new Handler().postDelayed(activity::finish, 4000);
+    }
+
+    public static void showSnackbar(Activity activity, String messageString, int duration, View.OnClickListener listener){
+        Snackbar snackbar = Snackbar.make(activity.getWindow().getDecorView().getRootView(),
+                messageString,
+                duration);
+
+        ViewGroup group = (ViewGroup) snackbar.getView();
+        TextView snackbarTextView = (TextView) group.findViewById(android.support.design.R.id.snackbar_text);
+
+        if(activity instanceof BaseActivity){
+            BaseActivity baseActivity = (BaseActivity) activity;
+            group.setBackgroundColor(baseActivity.getToobarColor());
+
+            if(baseActivity.getToolbarColor() == baseActivity.getResources().getColor(R.color.white))
+                snackbarTextView.setTextColor(Color.BLACK);
+            else
+                snackbarTextView.setTextColor(Color.WHITE);
+        }else {
+            group.setBackgroundColor(activity.getResources().getColor(R.color.primaryColor));
+            snackbarTextView.setTextColor(Color.WHITE);
+        }
+        if(listener != null)
+            snackbar.setAction("RETRY", listener);
+
+        snackbar.show();
+}
 
 
     public static void printStackTrace(Throwable e) {

@@ -13,7 +13,7 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiErrorEnum;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class AppRiotHttpUtils {
+public class AppRiotHttpUtils2 {
 
 
     protected int SNACKBAR_ERROR_DURATION = Snackbar.LENGTH_LONG;
@@ -33,7 +33,7 @@ public class AppRiotHttpUtils {
      * Error for each Category
      */
 
-    public AppRiotHttpUtils(){}
+    public AppRiotHttpUtils2(){}
 
     RiotApiError [] recentGameErrors =
             new RiotApiError[]{

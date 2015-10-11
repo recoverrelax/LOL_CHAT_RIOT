@@ -16,8 +16,9 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notificati
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
-public class SettingIconActivity extends MessageIconActivity {
+public class SettingActivity extends MessageIconActivity {
 
     @Bind(R.id.settings_pager)
     ViewPager settings_pager;
@@ -30,8 +31,6 @@ public class SettingIconActivity extends MessageIconActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        setTitle("Settings");
-
         PagerAdapter pagerAdapter = new SettingsPagerAdapter(getSupportFragmentManager());
         settings_pager.setAdapter(pagerAdapter);
         tabs.setupWithViewPager(settings_pager);
@@ -39,6 +38,21 @@ public class SettingIconActivity extends MessageIconActivity {
         /**
          * Configs
          */
+    }
+
+    @Override
+    public CharSequence getToolbarTitle() {
+        return getResources().getString(R.string.settings_activity);
+    }
+
+    @Override
+    public Integer getToolbarColor() {
+        return MyContext.getColor(this, R.color.primaryColor);
+    }
+
+    @Override
+    public Integer getToolbarTitleColor() {
+        return null;
     }
 
     @Override

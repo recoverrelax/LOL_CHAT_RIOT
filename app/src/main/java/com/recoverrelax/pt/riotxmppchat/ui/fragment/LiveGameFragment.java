@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
@@ -15,7 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppRiotHttpUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -30,7 +29,7 @@ import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameBanList;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo;
 import com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameSingleParticipantBase;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.CurrentGameIconActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.LiveGameActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +39,8 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pt.reco.myutil.MyContext;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -49,9 +48,9 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CurrentGameFragment extends BaseFragment {
+public class LiveGameFragment extends BaseFragment {
 
-    private final String TAG = CurrentGameFragment.this.getClass().getSimpleName();
+    private final String TAG = LiveGameFragment.this.getClass().getSimpleName();
     private String friendXmppAddress;
     private String friendUsername;
 
@@ -93,16 +92,16 @@ public class CurrentGameFragment extends BaseFragment {
 
     private CompositeSubscription subscriptions = new CompositeSubscription();
 
-    public CurrentGameFragment() {
+    public LiveGameFragment() {
         // Required empty public constructor
     }
 
-    public static CurrentGameFragment newInstance(String friendXmppAddress, String friendUsername) {
-        CurrentGameFragment frag = new CurrentGameFragment();
+    public static LiveGameFragment newInstance(String friendXmppAddress, String friendUsername) {
+        LiveGameFragment frag = new LiveGameFragment();
 
         Bundle args = new Bundle();
-        args.putString(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-        args.putString(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+        args.putString(LiveGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+        args.putString(LiveGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
         frag.setArguments(args);
 
         return frag;
@@ -116,21 +115,21 @@ public class CurrentGameFragment extends BaseFragment {
         if (savedInstanceState == null) {
             Bundle args = getArguments();
             if (args != null) {
-                friendXmppAddress = args.getString(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT);
-                friendUsername = args.getString(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT);
+                friendXmppAddress = args.getString(LiveGameActivity.FRIEND_XMPP_ADDRESS_INTENT);
+                friendUsername = args.getString(LiveGameActivity.FRIEND_XMPP_USERNAME_INTENT);
             }
         } else {
-            friendXmppAddress = (String) savedInstanceState.getSerializable(CurrentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT);
-            friendUsername = (String) savedInstanceState.getSerializable(CurrentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT);
+            friendXmppAddress = (String) savedInstanceState.getSerializable(LiveGameActivity.FRIEND_XMPP_ADDRESS_INTENT);
+            friendUsername = (String) savedInstanceState.getSerializable(LiveGameActivity.FRIEND_XMPP_USERNAME_INTENT);
         }
-        getActivity().setTitle(getActivity().getResources().getString(R.string.current_game__fragment_title) + " " + friendUsername);
+        setToolbarTitle(getActivity().getResources().getString(R.string.current_game__fragment_title) + " " + friendUsername);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.current_game_fragment, container, false);
+        View view = inflater.inflate(R.layout.live_game_fragment, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
@@ -176,6 +175,13 @@ public class CurrentGameFragment extends BaseFragment {
         Observable<String> championDDBaseUrl = realmData.getChampionDDBaseUrl();
         Observable<String> summonerSpellDDBaseUrl = realmData.getSummonerSpellDDBaseUrl();
 
+        getGeneralLiveData(obsCurrentGameInfoBySummonerId);
+        getBannedChampionInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, championDDBaseUrl);
+        getPickedChampsAndSpells(obsCurrentGameInfoBySummonerId, obsChampionsImage, obsSummonerSpellImage, championDDBaseUrl, summonerSpellDDBaseUrl);
+
+    }
+
+    private void getGeneralLiveData(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId) {
         /**
          * Get General Live Data
          */
@@ -188,14 +194,16 @@ public class CurrentGameFragment extends BaseFragment {
                             currentGameGlobalInfo.setGameQueueType(currentGameInfo.getGameQueueFormatted());
                             currentGameGlobalInfo.setGameMode(currentGameInfo.getGameMode());
                             currentGameGlobalInfo.setGameDuration(currentGameInfo.getGameStartTimeFormatted());
-                        }, throwable -> {
-                            LogUtils.LOGE(TAG, throwable.getMessage());
-                            new AppRiotHttpUtils().handleErrors(CurrentGameFragment.this, throwable, AppRiotHttpUtils.ERROR_CURRENT_GAME);
-                            new Handler().postDelayed(() -> CurrentGameFragment.this.getActivity().finish(), 2000);
-
-                        })
+                        }, throwable -> AppContextUtils.showSnackBarErrorFailedService(LiveGameFragment.this.getBaseActivity(), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                getGeneralLiveData(obsCurrentGameInfoBySummonerId);
+                            }
+                        }, Snackbar.LENGTH_INDEFINITE))
         );
+    }
 
+    private void getBannedChampionInfo(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId, Observable<Map<Integer, ChampionInfo>> obsChampionsImage, Observable<String> championDDBaseUrl) {
         /**
          * Get Banned Champion Info
          */
@@ -218,14 +226,34 @@ public class CurrentGameFragment extends BaseFragment {
                         )
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnError(throwable -> MyContext.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_banned_c_error, Snackbar.LENGTH_LONG))
-                        .subscribe(this::fetchBannedChampions)
-        );
+                        .subscribe(new Subscriber<List<BannedChampion>>() {
+                            @Override
+                            public void onCompleted() {
 
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                AppContextUtils.showSnackBarErrorFailedService(LiveGameFragment.this.getBaseActivity(), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        getBannedChampionInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, championDDBaseUrl);
+                                    }
+                                }, Snackbar.LENGTH_INDEFINITE);
+                            }
+
+                            @Override
+                            public void onNext(List<BannedChampion> bannedChampions) {
+                                fetchBannedChampions(bannedChampions);
+                            }
+                        })
+        );
+    }
+
+    private void getPickedChampsAndSpells(Observable<CurrentGameInfo> obsCurrentGameInfoBySummonerId, Observable<Map<Integer, ChampionInfo>> obsChampionsImage, Observable<Map<Integer, String>> obsSummonerSpellImage, Observable<String> championDDBaseUrl, Observable<String> summonerSpellDDBaseUrl) {
         /**
          * Get Picked Champions and Spells
          */
-
         subscriptions.add(
                 obsCurrentGameInfoBySummonerId
                         .doOnSubscribe(() -> enableProgressBarParticipantContent(true))
@@ -257,13 +285,28 @@ public class CurrentGameFragment extends BaseFragment {
                         )
                         .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnError(throwable -> {
-                            MyContext.showSnackbar(CurrentGameFragment.this.getActivity(), R.string.current_game_participants_error, Snackbar.LENGTH_LONG);
-                            throwable.printStackTrace();
-                        })
-                        .subscribe(CurrentGameFragment.this::fetchParticipants)
-        );
+                        .subscribe(new Subscriber<List<CurrentGameParticipant>>() {
+                            @Override
+                            public void onCompleted() {
 
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                AppContextUtils.showSnackBarErrorFailedService(LiveGameFragment.this.getBaseActivity(), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        getPickedChampsAndSpells(obsCurrentGameInfoBySummonerId, obsChampionsImage, obsSummonerSpellImage, championDDBaseUrl, summonerSpellDDBaseUrl);
+                                    }
+                                }, Snackbar.LENGTH_INDEFINITE);
+                            }
+
+                            @Override
+                            public void onNext(List<CurrentGameParticipant> currentGameParticipants) {
+                                fetchParticipants(currentGameParticipants);
+                            }
+                        })
+        );
     }
 
     private void fetchParticipants(List<CurrentGameParticipant> participants) {
@@ -280,7 +323,7 @@ public class CurrentGameFragment extends BaseFragment {
         }
 
         for (int i = 0; i < team1001.size(); i++) {
-            CurrentGameSingleParticipantBase cgp = CurrentGameFragment.this.team100.get(i);
+            CurrentGameSingleParticipantBase cgp = LiveGameFragment.this.team100.get(i);
 
             ImageView champion = cgp.getChampionPlaying();
             ImageView summonerS1 = cgp.getSummonerSpell1();
@@ -294,15 +337,15 @@ public class CurrentGameFragment extends BaseFragment {
             String pathSS2 = liveGameParticipant.getSpell2Image();
             LogUtils.LOGI(TAG, pathSS1);
 
-            Glide.with(CurrentGameFragment.this.getActivity())
+            Glide.with(LiveGameFragment.this.getActivity())
                     .load(pathChampion)
                     .into(champion);
 
-            Glide.with(CurrentGameFragment.this.getActivity())
+            Glide.with(LiveGameFragment.this.getActivity())
                     .load(pathSS1)
                     .into(summonerS1);
 
-            Glide.with(CurrentGameFragment.this.getActivity())
+            Glide.with(LiveGameFragment.this.getActivity())
                     .load(pathSS2)
                     .into(summonerS2);
 
@@ -311,7 +354,7 @@ public class CurrentGameFragment extends BaseFragment {
         }
 
         for (int i = 0; i < team2001.size(); i++) {
-            CurrentGameSingleParticipantBase cgp = CurrentGameFragment.this.team200.get(i);
+            CurrentGameSingleParticipantBase cgp = LiveGameFragment.this.team200.get(i);
 
             ImageView champion = cgp.getChampionPlaying();
             ImageView summonerS1 = cgp.getSummonerSpell1();
@@ -324,15 +367,15 @@ public class CurrentGameFragment extends BaseFragment {
             String pathSS1 = liveGameParticipant.getSpell1Image();
             String pathSS2 = liveGameParticipant.getSpell2Image();
 
-            Glide.with(CurrentGameFragment.this.getActivity())
+            Glide.with(LiveGameFragment.this.getActivity())
                     .load(pathChampion)
                     .into(champion);
 
-            Glide.with(CurrentGameFragment.this.getActivity())
+            Glide.with(LiveGameFragment.this.getActivity())
                     .load(pathSS1)
                     .into(summonerS1);
 
-            Glide.with(CurrentGameFragment.this.getActivity())
+            Glide.with(LiveGameFragment.this.getActivity())
                     .load(pathSS2)
                     .into(summonerS2);
 
@@ -363,7 +406,7 @@ public class CurrentGameFragment extends BaseFragment {
             ImageView imageView = banList.getTeam100Bans().get(i);
             imageView.setVisibility(View.VISIBLE);
 
-            Glide.with(CurrentGameFragment.this.getActivity())
+            Glide.with(LiveGameFragment.this.getActivity())
                     .load(team1001.get(i).getChampionImage())
                     .into(imageView);
         }
@@ -372,7 +415,7 @@ public class CurrentGameFragment extends BaseFragment {
             ImageView imageView = banList.getTeam200Bans().get(i);
             imageView.setVisibility(View.VISIBLE);
 
-            Glide.with(CurrentGameFragment.this.getActivity())
+            Glide.with(LiveGameFragment.this.getActivity())
                     .load(team2001.get(i).getChampionImage())
                     .into(imageView);
         }

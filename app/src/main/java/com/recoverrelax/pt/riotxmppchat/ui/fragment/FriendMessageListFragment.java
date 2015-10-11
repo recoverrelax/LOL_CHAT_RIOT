@@ -81,7 +81,6 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setToolbarTitle(getResources().getString(R.string.message_list_title));
         showProgressBar(true);
     }
 

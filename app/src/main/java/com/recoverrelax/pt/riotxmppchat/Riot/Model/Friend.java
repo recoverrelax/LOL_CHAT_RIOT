@@ -49,6 +49,9 @@ public class Friend implements Comparable<Friend>{
 
     private static final String NO_DATA = "-";
 
+    private String profileIconWithUrl;
+    private String champIconWithUrl;
+
     public Friend(String name, String userXmppAddress, Presence userRosterPresence) {
         this.name = name;
         this.userXmppAddress = userXmppAddress;
@@ -107,6 +110,14 @@ public class Friend implements Comparable<Friend>{
         return getStringFromXmlTag(PROFILE_ICON, rootElement);
     }
 
+    public String getChampIconWithUrl() {
+        return champIconWithUrl;
+    }
+
+    public void setChampIconWithUrl(String champIconWithUrl) {
+        this.champIconWithUrl = champIconWithUrl;
+    }
+
     public String getLevel() {
         return getStringFromXmlTag(LEVEL, rootElement);
     }
@@ -120,6 +131,14 @@ public class Friend implements Comparable<Friend>{
             return PresenceMode.UNAVAILABLE;
         else
             return PresenceMode.getPresenceModeFromSmack(this.userRosterPresence.getMode());
+    }
+
+    public String getProfileIconWithUrl() {
+        return profileIconWithUrl;
+    }
+
+    public void setProfileIconWithUrl(String profileIconWithUrl) {
+        this.profileIconWithUrl = profileIconWithUrl;
     }
 
     public boolean isOnline() {

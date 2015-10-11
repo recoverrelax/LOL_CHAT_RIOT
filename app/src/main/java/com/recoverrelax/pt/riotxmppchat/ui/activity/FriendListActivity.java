@@ -6,22 +6,32 @@ import android.support.v4.app.FragmentManager;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
 
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
-public class FriendMessageListIconActivity extends MessageIconActivity {
+public class FriendListActivity extends MessageIconActivity {
 
     @Override
     public int getLayoutResources() {
-        return R.layout.friend_message_list_activity;
+        return R.layout.friends_list_activity;
     }
 
     @Override
     public int getNavigationViewPosition() {
-        return R.id.navigation_item_2;
+        return R.id.navigation_item_1;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public boolean hasNewMessageIcon() {
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +40,26 @@ public class FriendMessageListIconActivity extends MessageIconActivity {
 
         if(savedInstanceState == null){
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = FriendMessageListFragment.newInstance();
+            Fragment fragment = FriendListFragment.newInstance();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();
         }
-        toolbar.getBackground().setAlpha(0);
+    }
+
+    @Override
+    public CharSequence getToolbarTitle() {
+        return getResources().getString(R.string.friends_online);
+    }
+
+    @Override
+    public Integer getToolbarColor() {
+        return MyContext.getColor(this, R.color.primaryColor120);
+    }
+
+    @Override
+    public Integer getToolbarTitleColor() {
+        return null;
     }
 
     @Override
@@ -49,15 +73,4 @@ public class FriendMessageListIconActivity extends MessageIconActivity {
         super.onBackPressed();
         AppContextUtils.overridePendingTransitionBackAppDefault(this);
     }
-
-    @Override
-    protected boolean hasNewMessageIcon() {
-        return false;
-    }
-
-//    @Subscribe
-//    @Override
-//    public void sendSnackbarMessage(OnSnackBarNotificationEvent notif) {
-//        super.sendSnackbarMessage(notif);
-//    }
 }

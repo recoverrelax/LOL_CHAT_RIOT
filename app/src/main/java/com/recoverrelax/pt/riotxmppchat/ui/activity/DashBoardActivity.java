@@ -11,7 +11,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import butterknife.ButterKnife;
 import pt.reco.myutil.MyContext;
 
-public class DashBoardIconActivity extends MessageIconActivity {
+public class DashBoardActivity extends MessageIconActivity {
 
     @Override
     public int getLayoutResources() {
@@ -35,10 +35,21 @@ public class DashBoardIconActivity extends MessageIconActivity {
                     .replace(R.id.container, fragment)
                     .commit();
         }
-        setTitle(getResources().getString(R.string.dashboard));
+    }
 
-        if(toolbar != null)
-            toolbar.setBackgroundColor(MyContext.getColor(this, R.color.black));
+    @Override
+    public CharSequence getToolbarTitle() {
+        return getResources().getString(R.string.dashboard);
+    }
+
+    @Override
+    public Integer getToolbarColor() {
+        return MyContext.getColor(this, R.color.black);
+    }
+
+    @Override
+    public Integer getToolbarTitleColor() {
+        return null;
     }
 
 

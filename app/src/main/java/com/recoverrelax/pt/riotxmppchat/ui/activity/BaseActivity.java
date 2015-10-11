@@ -6,8 +6,11 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.ColorInt;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
@@ -48,6 +51,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected Toolbar toolbar;
 
     @Nullable
+    @Bind(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
+
+    @Nullable
     @Bind(R.id.navigationView)
     NavigationView navigationView;
 
@@ -69,6 +76,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     private boolean userLearnedDrawer;
     private boolean fromSavedInstanceState;
+    private @ColorInt Integer toolbarColor;
 
     @Inject DataStorage mDataStorage;
     @Inject RiotXmppDBRepository riotRepository;
@@ -86,6 +94,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         setContentView(getLayoutResources());
         ButterKnife.bind(this);
         MainApplication.getInstance().getAppComponent().inject(this);
+
+        toolbarColor = getResources().getColor(R.color.primaryColor);
 
         if(savedInstanceState != null){
             fromSavedInstanceState = true;
@@ -110,14 +120,71 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
             if(supportActionBar != null)
                 supportActionBar.setDisplayShowTitleEnabled(false);
+
+            setTitle(getToolbarTitle());
+            setToolbarBackgroundColor(getToolbarColor());
+            setToolbarTitleColor(getToolbarTitleColor());
+
         }
 
         if(navigationView != null){
             setupDrawerContent();
+        }else{
+            ActionBar supportActionBar = getSupportActionBar();
+            if(supportActionBar != null) {
+                supportActionBar.setDisplayHomeAsUpEnabled(true);
+                supportActionBar.setHomeButtonEnabled(true);
+            }
         }
     }
 
+    @Override
+    public void setTitle(@Nullable CharSequence title) {
+        if (toolbar_title != null) {
+            toolbar_title.setText(title == null ? "" : title.toString());
+        }
+    }
 
+    public void setToolbarBackgroundColor(@ColorInt Integer toolbarColor) {
+        if (toolbarColor == null) return;
+
+        if (appBarLayout != null) {
+            appBarLayout.setBackgroundColor(toolbarColor);
+            this.toolbarColor = toolbarColor;
+        } else if (toolbar != null) {
+            toolbar.setBackgroundColor(toolbarColor);
+            this.toolbarColor = toolbarColor;
+        }
+    }
+
+    public @ColorInt int getToobarColor(){
+        return this.toolbarColor;
+    }
+
+    public void setToolbarTitleColor(@ColorInt Integer toolbarTitleColor){
+        if(toolbarTitleColor == null) return;
+
+        if(toolbar_title != null)
+            toolbar_title.setTextColor(toolbarTitleColor);
+    }
+
+    /**
+     *
+     * @return NULL FOR NO TITLE
+     */
+    public abstract @StringRes CharSequence getToolbarTitle();
+
+    /**
+     *
+     * @return NULL FOR DEFAULT_COLOR
+     */
+    public abstract @ColorInt Integer getToolbarColor();
+
+    /**
+     *
+     * @return NULL FOR DEFAULT COLOR
+     */
+    public abstract @ColorInt Integer getToolbarTitleColor();
 
     @Override
     protected void onDestroy() {
@@ -245,38 +312,22 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }
 
     @Override
-    public void setTitle(CharSequence title) {
-        if (toolbar_title != null) {
-            toolbar_title.setText(title.toString());
-        }
-    }
-
-    @Nullable
-    public Toolbar getToolbar(){
-        return toolbar;
-    }
-
-    public TextView getToolbarTitleTextView(){
-        return this.toolbar_title;
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
                 Intent intent = null;
                 int itemId = menuItem.getItemId();
 
                 switch(itemId){
                     case R.id.navigation_item_0:
-                        intent = new Intent(BaseActivity.this, DashBoardIconActivity.class);
+                        intent = new Intent(BaseActivity.this, DashBoardActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         break;
                     case R.id.navigation_item_1:
-                        intent = new Intent(BaseActivity.this, FriendListIconActivity.class);
+                        intent = new Intent(BaseActivity.this, FriendListActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
                     case R.id.navigation_item_2:
-                        intent = new Intent(BaseActivity.this, FriendMessageListIconActivity.class);
+                        intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
 
@@ -285,24 +336,24 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         AbstractXMPPConnection conn = MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnection().toBlocking().single();
                         String friendXmppAddress = AppXmppUtils.parseXmppAddress(conn.getUser());
 
-                        intent = new Intent(this, RecentGameIconActivity.class);
+                        intent = new Intent(this, RecentGameActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.putExtra(RecentGameIconActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-                        intent.putExtra(RecentGameIconActivity.FRIEND_XMPP_USERNAME_INTENT, CurrentGameIconActivity.FRIEND_XMPP_USERNAME_ME);
+                        intent.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, LiveGameActivity.FRIEND_XMPP_USERNAME_ME);
 
                         break;
 
 
                     case R.id.navigation_item_4:
                         if(MainApplication.getInstance().isRealScoutEnabled) {
-                            intent = new Intent(BaseActivity.this, ShardIconActivity.class);
+                            intent = new Intent(BaseActivity.this, ShardActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         } else
-                        MyContext.showSnackbar(this, "Feature Coming in the next release", Snackbar.LENGTH_LONG);
+                        AppContextUtils.showSnackbar(this, R.string.feature_coming, Snackbar.LENGTH_LONG, null);
                         break;
 
                     case R.id.navigation_item_5:
-                        intent = new Intent(BaseActivity.this, SettingIconActivity.class);
+                        intent = new Intent(BaseActivity.this, SettingActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
@@ -331,7 +382,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
             }
         else {
-            Intent intent = new Intent(BaseActivity.this, FriendMessageListIconActivity.class);
+            Intent intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
@@ -345,7 +396,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_1));
             }
         else {
-            Intent intent = new Intent(BaseActivity.this, FriendListIconActivity.class);
+            Intent intent = new Intent(BaseActivity.this, FriendListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);

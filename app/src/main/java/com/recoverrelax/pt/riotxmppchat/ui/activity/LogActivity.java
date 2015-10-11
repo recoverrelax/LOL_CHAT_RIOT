@@ -1,24 +1,17 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.LogFragment;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
+import pt.reco.myutil.MyContext;
 
 public class LogActivity extends MessageIconActivity {
-
-    @Nullable
-    @Bind(R.id.appBarLayout)
-    AppBarLayout appBarLayout;
 
     @Override
     public int getLayoutResources() {
@@ -42,14 +35,21 @@ public class LogActivity extends MessageIconActivity {
                     .replace(R.id.container, fragment)
                     .commit();
         }
+    }
 
-        ActionBar supportActionBar = getSupportActionBar();
-        if(supportActionBar != null) {
-            supportActionBar.setDisplayHomeAsUpEnabled(true);
-            supportActionBar.setHomeButtonEnabled(true);
-        }
+    @Override
+    public CharSequence getToolbarTitle() {
+        return getResources().getString(R.string.log_activity);
+    }
 
-        setTitle(getResources().getString(R.string.log_activity));
+    @Override
+    public Integer getToolbarColor() {
+        return MyContext.getColor(this, R.color.white);
+    }
+
+    @Override
+    public Integer getToolbarTitleColor() {
+        return MyContext.getColor(this, R.color.black);
     }
 
     @Override

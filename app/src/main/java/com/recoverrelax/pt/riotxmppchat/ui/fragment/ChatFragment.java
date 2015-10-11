@@ -23,6 +23,7 @@ import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
@@ -151,11 +152,13 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
             swipeRefreshLayout.setOnRefreshListener(swipeRefreshListener);
             uselessShape.setTranslationY(convertDIPToPixels(getActivity(), (70 / 2)));
 
+            setToolbarTitle(getResources().getString(R.string.chatting_with, friendUsername));
+
             int cardColorId = AppMiscUtils.getRandomMaterialColor(new Random());
             int color = MyContext.getColor(this.getActivity(), cardColorId);
             color = ColorUtils.setAlphaComponent(color, 190);
-            getBaseActivity().getToolbar().setBackgroundColor(color);
 
+            getBaseActivity().setToolbarBackgroundColor(color);
             swipeRefreshLayout.setBackgroundColor(color);
         }
     }
@@ -231,7 +234,7 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                         if(isAvailable && !message.equals(""))
                             sendMessage(message);
                         else
-                            MyContext.showSnackbar(ChatFragment.this, R.string.your_friend_is_offline, Snackbar.LENGTH_LONG);
+                            AppContextUtils.showSnackbar(ChatFragment.this.getBaseActivity(), R.string.your_friend_is_offline, Snackbar.LENGTH_LONG, null);
                     }
                 });
     }

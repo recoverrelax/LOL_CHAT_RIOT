@@ -4,6 +4,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChan
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -181,7 +183,25 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
                         getFriendStatusInfo(),
                         getFreeChampRotationList(),
                         getLogLast20()
-                ).subscribe()
+                ).subscribe(new Subscriber<Object>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        AppContextUtils.showSnackbar(DashBoardFragment.this.getBaseActivity(), R.string.service_currently_unavailable, Snackbar.LENGTH_INDEFINITE, view -> {
+                            subscriptions.clear();
+                            getWsInfo();
+                        });
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+                })
         );
     }
 
@@ -258,8 +278,10 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
 
                     return championInfoList;
                 }
-                )
+        )
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(() -> freeChampRotation1.showProgressBar(true))
+                .doOnUnsubscribe(() -> freeChampRotation1.showProgressBar(false))
                 .doOnNext(champInfo -> {
 
                     // just to make sure, take at most the ImageView List Size

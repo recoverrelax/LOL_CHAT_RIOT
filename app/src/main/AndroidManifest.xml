@@ -15,23 +15,22 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ui.activity.FriendListIconActivity"
+            android:name=".ui.activity.FriendListActivity"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/friends_online" >
         </activity>
         <activity
-            android:name=".ui.activity.DashBoardIconActivity"
+            android:name=".ui.activity.DashBoardActivity"
             android:label="@string/log_activity" >
         </activity>
 
         <activity
             android:name=".ui.activity.LogActivity"
-            android:theme="@style/LogTheme"
             android:noHistory="true"
             android:label="@string/dashboard" >
         </activity>
         <activity
-            android:name=".ui.activity.FriendMessageListIconActivity"
+            android:name=".ui.activity.FriendMessageListActivity"
             android:label="@string/message_list_title" >
         </activity>
 
@@ -42,14 +41,14 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.CurrentGameIconActivity"
+            android:name=".ui.activity.LiveGameActivity"
             android:windowSoftInputMode="adjustPan"
             android:noHistory="true"
             android:label="@string/current_game_activity_title" >
         </activity>
 
         <activity
-            android:name=".ui.activity.RecentGameIconActivity"
+            android:name=".ui.activity.RecentGameActivity"
             android:windowSoftInputMode="adjustPan"
             android:noHistory="true"
             android:label="@string/recent_game_activity_title" >
@@ -57,7 +56,7 @@
 
 
         <activity
-            android:name=".ui.activity.ShardIconActivity"
+            android:name=".ui.activity.ShardActivity"
             android:windowSoftInputMode="adjustPan"
             android:noHistory="true"
             android:label="@string/shard_activity_title" >
@@ -68,12 +67,12 @@
 
         </activity>
         <activity
-            android:name=".ui.activity.SettingIconActivity"
+            android:name=".ui.activity.SettingActivity"
             android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_sub" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.FriendListIconActivity" />
+                android:value=".ui.activity.FriendListActivity" />
         </activity>
         <activity
             android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity"

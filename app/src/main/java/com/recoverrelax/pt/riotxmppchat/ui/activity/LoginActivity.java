@@ -92,6 +92,21 @@ public class LoginActivity extends BaseActivity {
             connectbutton.setEnabled(false);
     }
 
+    @Override
+    public CharSequence getToolbarTitle() {
+        return null;
+    }
+
+    @Override
+    public Integer getToolbarColor() {
+        return null;
+    }
+
+    @Override
+    public Integer getToolbarTitleColor() {
+        return null;
+    }
+
     private void doLoginAnimations() {
         /**
          * Set initial Title Scalling to 0.7f
@@ -189,7 +204,7 @@ public class LoginActivity extends BaseActivity {
 
     @Subscribe
     public void onServiceBinded(OnServiceBindedPublish event) {
-        Intent intent = new Intent(LoginActivity.this, DashBoardIconActivity.class);
+        Intent intent = new Intent(LoginActivity.this, DashBoardActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         AppContextUtils.overridePendingTransitionBackAppDefault(this);

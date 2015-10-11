@@ -20,35 +20,4 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorAccent">@color/primaryColor</item>
     </style>
-
-    <!--ToolBar Style-->
-    <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
-    </style>
-
-    <style name="MyCustomToolBarThemeT" parent="Widget.AppCompat.Toolbar">
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:textColorPrimary">@color/white</item> <!-- Toobar color text ColorPrimary-->
-    </style>
-
-
-    <style name="MyCustomToolBarPopupTheme" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:background">@color/white</item>
-        <item name="android:textColorPrimary">@color/black</item> <!-- ToobarPopup color text SecondaryPrimary-->
-    </style>
-
-    <!--Custom Themes-->
-
-    <!-- Base application theme. -->
-    <style name="CurrentGameTheme" parent="AppTheme">
-        <!-- Customize your theme here. -->
-        <item name="android:textViewStyle">@style/TextViewStyleWhite</item>
-    </style>
-
-    <style name="LogTheme" parent="AppTheme.Base">
-        <!-- Customize your theme here. -->
-        <item name="colorControlNormal">@color/black</item>
-    </style>
-
 </resources>

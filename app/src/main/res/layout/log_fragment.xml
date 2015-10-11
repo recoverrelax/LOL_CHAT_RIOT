@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/friendListParentLayout"
-    android:background="@color/accentColor60"
+    android:background="@color/white50"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
@@ -11,7 +11,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:background="@color/white1"/>
+        android:background="@color/white50"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

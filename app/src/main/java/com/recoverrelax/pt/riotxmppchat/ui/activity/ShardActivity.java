@@ -1,8 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -10,15 +8,10 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.ShardFragment;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import pt.reco.myutil.MyContext;
 
-public class ShardIconActivity extends MessageIconActivity {
-
-    @Nullable
-    @Bind(R.id.appBarLayout)
-    AppBarLayout appBarLayout;
+public class ShardActivity extends MessageIconActivity {
 
     @Override
     public int getLayoutResources() {
@@ -45,8 +38,21 @@ public class ShardIconActivity extends MessageIconActivity {
                     .commit();
         }
 
-        if(appBarLayout != null)
-            appBarLayout.setBackgroundColor(MyContext.getColor(this, R.color.primaryColorDark));
+    }
+
+    @Override
+    public CharSequence getToolbarTitle() {
+        return getResources().getString(R.string.title_activity_shard);
+    }
+
+    @Override
+    public Integer getToolbarColor() {
+        return MyContext.getColor(this, R.color.primaryColorDark);
+    }
+
+    @Override
+    public Integer getToolbarTitleColor() {
+        return null;
     }
 
     @Override

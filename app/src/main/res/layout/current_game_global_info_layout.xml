@@ -18,6 +18,7 @@
         android:id="@+id/mapName"
         app:layout_widthPercent="50%"
         tools:text="Summoners Rift"
+        android:textColor="@color/white"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -26,6 +27,7 @@
         android:id="@+id/gameQueueType"
         app:layout_widthPercent="50%"
         tools:text="Normal 5v5 Blind Pick games"
+        android:textColor="@color/white"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mapName"
         android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -35,6 +37,7 @@
         app:layout_widthPercent="50%"
         tools:text="Classic"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:layout_below="@+id/gameQueueType"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -43,6 +46,7 @@
         app:layout_widthPercent="50%"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:textColor="@color/white"
         android:layout_below="@+id/mapName"
         android:gravity="right"
         android:text="@string/current_game_game_start"
@@ -53,6 +57,7 @@
         android:id="@+id/gameDuration"
         app:layout_widthPercent="50%"
         tools:text="15 minutes"
+        android:textColor="@color/white"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/gameDurationLabel"

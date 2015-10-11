@@ -63,20 +63,33 @@
         <item name="android:background">@color/transparent</item>
     </style>
 
-    <style name="normalToolbarStyleT">
+    <style name="toolbarStyleLight">
         <item name="android:background">@color/primaryColor120</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="theme">@style/PopUpToolbarThemeDarkActionbar</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
     </style>
-    <style name="normalToolbarStyle">
-        <item name="android:background">@color/primaryColor</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+
+    <style name="PopUpToolbarThemeDarkActionbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:textColor">@color/black</item>
     </style>
-    <style name="darkToolbarStyle">
-        <item name="android:background">@color/primaryColorDark</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+
+    <style name="PopUpToolbarThemeLightActionbar" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:colorBackground">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="toolbarStyleDark" parent="@style/toolbarStyleLight">
+        <item name="theme">@style/PopUpToolbarThemeLightActionbar</item>
+    </style>
+
+
+    <style name="toolbarTitleStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@null</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="settings_title">
@@ -101,18 +114,18 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:padding">@dimen/def_spacing_double</item>
         <item name="android:background">@color/colorDark</item>
-        <item name="android:textSize">@dimen/abc_text_size_large_material</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
     <style name="dashboardSubTitles">
         <item name="android:textColor">@color/primaryColorDark</item>
         <item name="android:padding">@dimen/def_spacing_double</item>
-        <item name="android:textSize">@dimen/abc_text_size_large_material</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
     <style name="dashboardItem">
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/abc_text_size_display_1_material</item>
+        <item name="android:textSize">34sp</item>
         <item name="android:gravity">center</item>
     </style>
 
