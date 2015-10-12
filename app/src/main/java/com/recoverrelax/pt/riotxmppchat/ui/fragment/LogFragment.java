@@ -40,9 +40,6 @@ public class LogFragment extends BaseFragment implements NewMessageReceivedNotif
     @Bind(R.id.progressBar)
     AppProgressBar progressBar;
 
-    @Bind(R.id.swipeRefreshLayout)
-    SwipeRefreshLayout swipeRefreshLayout;
-
     private final String TAG = LogFragment.this.getClass().getSimpleName();
     private DashBoardLogAdapter adapter;
 
@@ -86,17 +83,12 @@ public class LogFragment extends BaseFragment implements NewMessageReceivedNotif
 
         adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), logRecyclerView, R.layout.dashboard_log_layout_black);
         logRecyclerView.setAdapter(adapter);
-
-        swipeRefreshLayout.setEnabled(false);
-        swipeRefreshLayout.setOnRefreshListener(this::getLogLast20);
-
         getLogLast20();
     }
 
     private void getLogLast20() {
         subscriptions.add(
                  dashboardImpl.getLogLast20List()
-                .doOnSubscribe(() -> swipeRefreshLayout.setEnabled(true))
                 .doOnUnsubscribe(() -> progressBar.setVisibility(View.GONE))
                          .observeOn(AndroidSchedulers.mainThread())
                          .subscribe(inAppLogDbs -> {
@@ -104,7 +96,6 @@ public class LogFragment extends BaseFragment implements NewMessageReceivedNotif
                                  adapter.setItems(inAppLogDbs);
                              }
                              progressBar.setVisibility(View.VISIBLE);
-                             swipeRefreshLayout.setRefreshing(false);
                          })
         );
     }

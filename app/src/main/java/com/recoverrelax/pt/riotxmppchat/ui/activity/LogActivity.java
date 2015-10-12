@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -8,10 +9,14 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.LogFragment;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import pt.reco.myutil.MyContext;
 
 public class LogActivity extends MessageIconActivity {
+
+    @Bind(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsing_toolbar;
 
     @Override
     public int getLayoutResources() {
@@ -35,6 +40,9 @@ public class LogActivity extends MessageIconActivity {
                     .replace(R.id.container, fragment)
                     .commit();
         }
+
+        collapsing_toolbar.setTitle("Latest Friend's activity");
+        collapsing_toolbar.setCollapsedTitleTextColor(MyContext.getColor(this, R.color.white));
     }
 
     @Override
