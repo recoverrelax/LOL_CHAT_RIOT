@@ -58,7 +58,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendListFragment extends BaseFragment implements FriendsListAdapter.OnAdapterChildClick, OnReconnectEvent, OnFriendPresenceChangedEvent {
+public class FriendListFragment extends BaseFragment implements FriendsListAdapter.OnAdapterChildClick,/* OnReconnectEvent,*/ OnFriendPresenceChangedEvent {
 
     //    private final String TAG = FriendListFragment.this.getClass().getSimpleName();
     private final String TAG = FriendListFragment.this.getClass().getSimpleName();
@@ -119,7 +119,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         if (adapter != null)
             adapter.removeSubscriptions();
 
-        handler.unregisterForRecconectEvent(this);
+//        handler.unregisterForRecconectEvent(this);
         handler.unregisterForFriendPresenceChangedEvent(this);
 
     }
@@ -127,7 +127,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     @Override
     public void onResume() {
         super.onResume();
-        handler.registerForRecconectEvent(this);
+//        handler.registerForRecconectEvent(this);
         handler.registerForFriendPresenceChangedEvent(this);
         getFullFriendList(SHOW_OFFLINE_USERS);
 
@@ -448,10 +448,10 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         subscriptions.add(subscribe);
     }
 
-    @Override
-    public void onReconnect() {
-        getFullFriendList(SHOW_OFFLINE_USERS);
-    }
+//    @Override
+//    public void onReconnect() {
+//        getFullFriendList(SHOW_OFFLINE_USERS);
+//    }
 
     @Override
     public void onFriendPresenceChanged(Presence presence) {

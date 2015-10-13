@@ -73,7 +73,7 @@ public class AppRiotHttpUtils {
         }
 
         if(errorRes != null){
-            AppContextUtils.showSnackbar(activity, errorRes, SNACKBAR_ERROR_DURATION, null);
+            AppSnackbarUtils.showSnackBar(activity, errorRes, AppSnackbarUtils.LENGTH_LONG);
         }
     }
 

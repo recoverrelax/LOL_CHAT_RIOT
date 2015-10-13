@@ -25,9 +25,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnDisconnectEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnReconnectEvent;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
@@ -42,7 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pt.reco.myutil.MyContext;
 
-public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnReconnectEvent, OnDisconnectEvent {
 
     //http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kalista_2.jpg
 
@@ -80,9 +85,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     @Inject DataStorage mDataStorage;
     @Inject RiotXmppDBRepository riotRepository;
+    @Inject EventHandler handler;
+    @Inject
+    RiotRosterManager rosterManager;
 
     @Inject
     Bus bus;
+
+    private Snackbar connectionSnackbar;
 
     private Handler mHandler;
     // delay to launch nav drawer item, to allow close animation to play
@@ -349,7 +359,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             intent = new Intent(BaseActivity.this, ShardActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         } else
-                        AppContextUtils.showSnackbar(this, R.string.feature_coming, Snackbar.LENGTH_LONG, null);
+                        AppSnackbarUtils.showSnackBar(this, R.string.feature_coming, AppSnackbarUtils.LENGTH_LONG);
+
                         break;
 
                     case R.id.navigation_item_5:
@@ -410,6 +421,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         MainApplication.getInstance().setCurrentBaseActivity(this);
         setNavigationViewPosition(getNavigationViewPosition());
         bus.register(this);
+        handler.registerForRecconectEvent(this);
+        handler.registerForDisconectEvent(this);
     }
 
     @Override
@@ -417,5 +430,22 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         super.onPause();
         MainApplication.getInstance().setCurrentBaseActivity(null);
         bus.unregister(this);
+        handler.unregisterForRecconectEvent(this);
+        handler.unregisterForDisconectEvent(this);
+    }
+
+    @Override
+    public void onReconnect() {
+        if(connectionSnackbar != null)
+            connectionSnackbar.dismiss();
+    }
+
+    @Override
+    public void onDisconnect() {
+        connectionSnackbar = AppSnackbarUtils.showSnackBar(
+                this,
+                R.string.activity_connection_lost,
+                AppSnackbarUtils.LENGTH_INDEFINITE
+        );
     }
 }

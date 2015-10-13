@@ -16,6 +16,7 @@ import com.recoverrelax.pt.riotxmppchat.Adapter.RecentGameAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game.PlayerDto;
@@ -274,12 +275,18 @@ public class RecentGameFragment extends BaseFragment {
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    AppContextUtils.showSnackbar(RecentGameFragment.this.getActivity(), R.string.service_currently_unavailable, Snackbar.LENGTH_INDEFINITE, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            doWsCall(finalGameList, observableList);
-                                        }
-                                    });
+                                    AppSnackbarUtils.showSnackBar(
+                                            RecentGameFragment.this.getActivity(),
+                                            R.string.service_currently_unavailable,
+                                            AppSnackbarUtils.LENGTH_INDEFINITE,
+                                            R.string.webservice_failed_retry,
+                                            new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    doWsCall(finalGameList, observableList);
+                                                }
+                                            }
+                                    );
                                 }
 
                                 @Override

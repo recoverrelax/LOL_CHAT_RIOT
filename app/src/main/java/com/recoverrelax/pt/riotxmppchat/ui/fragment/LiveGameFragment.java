@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -194,12 +195,18 @@ public class LiveGameFragment extends BaseFragment {
                             currentGameGlobalInfo.setGameQueueType(currentGameInfo.getGameQueueFormatted());
                             currentGameGlobalInfo.setGameMode(currentGameInfo.getGameMode());
                             currentGameGlobalInfo.setGameDuration(currentGameInfo.getGameStartTimeFormatted());
-                        }, throwable -> AppContextUtils.showSnackBarErrorFailedService(LiveGameFragment.this.getBaseActivity(), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                getGeneralLiveData(obsCurrentGameInfoBySummonerId);
-                            }
-                        }, Snackbar.LENGTH_INDEFINITE))
+                        }, throwable -> {
+                                     AppSnackbarUtils.showSnackBar(
+                                            LiveGameFragment.this.getBaseActivity(),
+                                            R.string.service_currently_unavailable,
+                                            AppSnackbarUtils.LENGTH_INDEFINITE,
+                                            R.string.webservice_failed_retry,
+                                             v -> getGeneralLiveData(
+                                                     obsCurrentGameInfoBySummonerId
+                                             )
+                                     );
+                                }
+                        )
         );
     }
 
@@ -234,12 +241,13 @@ public class LiveGameFragment extends BaseFragment {
 
                             @Override
                             public void onError(Throwable e) {
-                                AppContextUtils.showSnackBarErrorFailedService(LiveGameFragment.this.getBaseActivity(), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        getBannedChampionInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, championDDBaseUrl);
-                                    }
-                                }, Snackbar.LENGTH_INDEFINITE);
+                                AppSnackbarUtils.showSnackBar(
+                                        LiveGameFragment.this.getBaseActivity(),
+                                        R.string.service_currently_unavailable,
+                                        AppSnackbarUtils.LENGTH_INDEFINITE,
+                                        R.string.webservice_failed_retry,
+                                        v -> getBannedChampionInfo(obsCurrentGameInfoBySummonerId, obsChampionsImage, championDDBaseUrl)
+                                );
                             }
 
                             @Override
@@ -293,12 +301,13 @@ public class LiveGameFragment extends BaseFragment {
 
                             @Override
                             public void onError(Throwable e) {
-                                AppContextUtils.showSnackBarErrorFailedService(LiveGameFragment.this.getBaseActivity(), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        getPickedChampsAndSpells(obsCurrentGameInfoBySummonerId, obsChampionsImage, obsSummonerSpellImage, championDDBaseUrl, summonerSpellDDBaseUrl);
-                                    }
-                                }, Snackbar.LENGTH_INDEFINITE);
+                                AppSnackbarUtils.showSnackBar(
+                                        LiveGameFragment.this.getBaseActivity(),
+                                        R.string.service_currently_unavailable,
+                                        AppSnackbarUtils.LENGTH_INDEFINITE,
+                                        R.string.webservice_failed_retry,
+                                        v -> getPickedChampsAndSpells(obsCurrentGameInfoBySummonerId, obsChampionsImage, obsSummonerSpellImage, championDDBaseUrl, summonerSpellDDBaseUrl)
+                                );
                             }
 
                             @Override

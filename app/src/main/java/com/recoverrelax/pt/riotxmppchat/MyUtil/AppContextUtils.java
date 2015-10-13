@@ -76,42 +76,6 @@ public class AppContextUtils {
         AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
     }
 
-    public static void showSnackbar(Activity activity, @StringRes int messageString, int duration, View.OnClickListener listener){
-        showSnackbar(activity, activity.getResources().getString(messageString), duration, listener);
-    }
-
-    public static void showSnackBarErrorFailedService(Activity activity, View.OnClickListener listener, int duration){
-        AppContextUtils.showSnackbar(activity, R.string.service_currently_unavailable, duration, listener);
-        new Handler().postDelayed(activity::finish, 4000);
-    }
-
-    public static void showSnackbar(Activity activity, String messageString, int duration, View.OnClickListener listener){
-        Snackbar snackbar = Snackbar.make(activity.getWindow().getDecorView().getRootView(),
-                messageString,
-                duration);
-
-        ViewGroup group = (ViewGroup) snackbar.getView();
-        TextView snackbarTextView = (TextView) group.findViewById(android.support.design.R.id.snackbar_text);
-
-        if(activity instanceof BaseActivity){
-            BaseActivity baseActivity = (BaseActivity) activity;
-            group.setBackgroundColor(baseActivity.getToobarColor());
-
-            if(baseActivity.getToolbarColor() == baseActivity.getResources().getColor(R.color.white))
-                snackbarTextView.setTextColor(Color.BLACK);
-            else
-                snackbarTextView.setTextColor(Color.WHITE);
-        }else {
-            group.setBackgroundColor(activity.getResources().getColor(R.color.primaryColor));
-            snackbarTextView.setTextColor(Color.WHITE);
-        }
-        if(listener != null)
-            snackbar.setAction("RETRY", listener);
-
-        snackbar.show();
-}
-
-
     public static void printStackTrace(Throwable e) {
         LogUtils.LOGE("TRW", e.getMessage(), e);
     }

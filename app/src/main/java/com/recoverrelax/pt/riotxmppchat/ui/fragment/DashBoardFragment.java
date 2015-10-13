@@ -24,6 +24,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnNewFriendPlayingEv
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -191,16 +192,20 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
 
                     @Override
                     public void onError(Throwable e) {
-                        AppContextUtils.showSnackbar(DashBoardFragment.this.getBaseActivity(), R.string.service_currently_unavailable, Snackbar.LENGTH_INDEFINITE, view -> {
-                            subscriptions.clear();
-                            getWsInfo();
-                        });
+                        AppSnackbarUtils.showSnackBar(
+                                DashBoardFragment.this.getActivity(),
+                                R.string.service_currently_unavailable,
+                                AppSnackbarUtils.LENGTH_INDEFINITE,
+                                R.string.webservice_failed_retry,
+                                v -> {
+                                    subscriptions.clear();
+                                    getWsInfo();
+                                }
+                        );
                     }
 
                     @Override
-                    public void onNext(Object o) {
-
-                    }
+                    public void onNext(Object o) {}
                 })
         );
     }

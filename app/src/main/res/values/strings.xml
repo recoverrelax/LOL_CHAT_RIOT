@@ -44,6 +44,7 @@
     <string name="activity_login_label_connect_button">Connect</string>
     <string name="activity_login_checkbox_label">Save Credentials</string>
     <string name="activity_connection_failed">Connection to the server failed. Make sure you have internet connection.</string>
+    <string name="activity_connection_lost">Connection to The Server was Lost!</string>
     <string name="activity_login_failed">Make sure your credentials and server are valid or try again later!</string>
     <string name="activity_login_progress_dialog_title">Attempting to Login</string>
     <string name="activity_login_progress_dialog_message">Please wait …</string>
@@ -108,7 +109,7 @@
     <string name="recent_game_me_fragment_title">My Recent Games</string>
     <string name="current_game_banned_c_error">I\'m sorry. We could not retrieve the banned champion list</string>
 
-    <string name="shard_region_error">I\'m sorry. We could not retrieve the Status Info for</string>
+    <string name="shard_region_error">I\'m sorry. We could not retrieve the Status Info for %s</string>
     <string name="current_game_participants_error">I\'m sorry. We could not retrieve the summoners information</string>
     <string name="shard_game">Game</string>
     <string name="shard_store">Store</string>
@@ -126,6 +127,7 @@
     <!--ERRORS-->
     <string name="recent_game_not_found">Recent Games not available for this summoner!</string>
     <string name="recent_game_try_later">We couldn\'t retrieve the match information for this Summoner. Please try again later.</string>
+    <string name="webservice_failed_retry">RETRY</string>
 
     <string name="current_game_not_found">Recent Games not available for this summoner!</string>
     <string name="free_champion_rotation">Free Champion Rotation</string>

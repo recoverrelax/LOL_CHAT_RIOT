@@ -3,6 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -140,9 +141,8 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Random random = new Random();
-        int backgroundColor = AppMiscUtils.getRandomMaterialColor(random);
-        title.setBackgroundColor(MyContext.getColor(this.getActivity(), backgroundColor));
+        String backgroundColor = AppMiscUtils.getRandomMaterialColor(this.getActivity());
+        title.setBackgroundColor(Color.parseColor(backgroundColor));
 
         if(savedInstanceState == null){
             Bundle extra = getArguments();

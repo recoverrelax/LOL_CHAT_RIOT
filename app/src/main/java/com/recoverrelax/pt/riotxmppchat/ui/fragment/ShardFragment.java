@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.Service;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
@@ -121,8 +122,13 @@ public class ShardFragment extends BaseFragment {
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    String error = ShardFragment.this.getActivity().getResources().getString(R.string.shard_region_error) + " " + (String)regionSpinner.getSelectedItem();
-                                    AppContextUtils.showSnackbar(ShardFragment.this.getBaseActivity(), error, Snackbar.LENGTH_LONG, null);
+                                    String error = ShardFragment.this.getActivity().getResources().getString(R.string.shard_region_error, " " + (String)regionSpinner.getSelectedItem());
+
+                                    AppSnackbarUtils.showSnackBar(
+                                            ShardFragment.this.getActivity(),
+                                            error,
+                                            AppSnackbarUtils.LENGTH_LONG);
+
                                     this.unsubscribe();
                                 }
 

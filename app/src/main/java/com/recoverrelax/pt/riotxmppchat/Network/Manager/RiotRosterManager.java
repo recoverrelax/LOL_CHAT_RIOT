@@ -16,11 +16,14 @@ import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +49,6 @@ public class RiotRosterManager implements RosterListener {
     private Roster roster;
     private AbstractXMPPConnection connection;
     private Map<String, Presence> friendList; // friendXmppAddress, Presence
-    private boolean enabled = false;
     private boolean notificationsEnabled = true;
 
     private static final int ONLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
@@ -203,9 +205,10 @@ public class RiotRosterManager implements RosterListener {
 
     @Override
     public void presenceChanged(Presence presence) {
-        if (connection != null && connection.isConnected() && notificationsEnabled)
+        if (connection != null && connection.isConnected() && notificationsEnabled) {
             checkForFriendNotificationToSend(presence);
-        busInstance.post(new OnFriendPresenceChangedPublish(presence));
+            busInstance.post(new OnFriendPresenceChangedPublish(presence));
+        }
     }
 
     public void updateFriend(Presence presence) {
@@ -240,7 +243,7 @@ public class RiotRosterManager implements RosterListener {
         FriendStates oldState = getFriendState(new Friend(friendName, xmppAddress, oldPresence));
         FriendStates newState = getFriendState(new Friend(friendName, xmppAddress, newPresence));
 
-        if (enabled) {
+
             if (oldState.isOffline() && !newState.isOffline()) {
                 sendStatusNotification(xmppAddress, friendName, Status.ONLINE);
             } else if (!oldState.isOffline() && newState.isOffline()) {
@@ -250,7 +253,7 @@ public class RiotRosterManager implements RosterListener {
             } else if (oldState.isPlaying() && !newState.isPlaying()) {
                 sendStatusNotification(xmppAddress, friendName, Status.LEFT_GAME);
             }
-        }
+
         updateFriend(newPresence);
     }
 
@@ -291,10 +294,20 @@ public class RiotRosterManager implements RosterListener {
         }
     }
 
-    public void setEnabled(boolean state) {
-        this.enabled = state;
+    public void tryRecconect() {
+        if(connection != null)
+            try {
+                connection.connect();
+            } catch (SmackException | IOException | XMPPException e) {
+                e.printStackTrace();
+            }
     }
 
+    public void setEnabled(boolean state) {
+        if(state)
+            enableNotifications();
+        else disableNotifications();
+    }
 
     public enum FriendStates {
         OFFLINE,
@@ -420,6 +433,10 @@ public class RiotRosterManager implements RosterListener {
             default:
                 return ONLINE_NOTIFICATION_DRAWABLE;
         }
+    }
+
+    public boolean isConnected(){
+        return this.connection != null && this.connection.isConnected();
     }
 
     private boolean getStatusPermissionFromStatus(Status status, NotificationDb notificationDb) {

@@ -2,6 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,7 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.PersonalMessageImpl;
@@ -154,12 +156,11 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
 
             setToolbarTitle(getResources().getString(R.string.chatting_with, friendUsername));
 
-            int cardColorId = AppMiscUtils.getRandomMaterialColor(new Random());
-            int color = MyContext.getColor(this.getActivity(), cardColorId);
-            color = ColorUtils.setAlphaComponent(color, 190);
+            String cardColor = AppMiscUtils.getRandomMaterialColor(this.getActivity());
+            int colorInt = ColorUtils.setAlphaComponent(Color.parseColor(cardColor), 190);
 
-            getBaseActivity().setToolbarBackgroundColor(color);
-            swipeRefreshLayout.setBackgroundColor(color);
+            getBaseActivity().setToolbarBackgroundColor(colorInt);
+            swipeRefreshLayout.setBackgroundColor(colorInt);
         }
     }
 
@@ -234,7 +235,11 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                         if(isAvailable && !message.equals(""))
                             sendMessage(message);
                         else
-                            AppContextUtils.showSnackbar(ChatFragment.this.getBaseActivity(), R.string.your_friend_is_offline, Snackbar.LENGTH_LONG, null);
+                        AppSnackbarUtils.showSnackBar(
+                                ChatFragment.this.getActivity(),
+                                R.string.your_friend_is_offline,
+                                AppSnackbarUtils.LENGTH_LONG
+                        );
                     }
                 });
     }

@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Network.Manager;
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnDisconnectPublish;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnReconnectPublish;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
@@ -80,12 +81,12 @@ public class RiotConnectionManager implements ConnectionListener {
     @Override public void authenticated(XMPPConnection connection, boolean resumed) { }
     @Override public void connectionClosed() {
 //        bus.post(new OnConnectionLostListenerEvent());
-        riotRosterManager.setEnabled(false);
+//        riotRosterManager.setEnabled(false);
         riotRosterManager.disableNotifications();
     }
     @Override public void connectionClosedOnError(Exception e) {
-//        bus.post(new OnConnectionLostListenerEvent());
-        riotRosterManager.setEnabled(false);
+        bus.post(new OnDisconnectPublish());
+//        riotRosterManager.setEnabled(false);
         riotRosterManager.disableNotifications();
     }
 
