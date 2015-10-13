@@ -173,7 +173,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         final PopupMenu popupMenu = new PopupMenu(getActivity(), view);
         popupMenu.getMenuInflater().inflate(R.menu.menu_friend_options, popupMenu.getMenu());
 
-        popupMenu.getMenu().findItem(R.id.current_game).setVisible(isPlaying);
+//        popupMenu.getMenu().findItem(R.id.current_game).setVisible(isPlaying);
 
         popupMenu.show();
         popupMenu.setOnMenuItemClickListener(menuItem -> {
@@ -207,32 +207,32 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
                             });
                     break;
 
-                case R.id.current_game:
+//                case R.id.current_game:
+//
+//                    if (MainApplication.getInstance().isRecentGameEnabled) {
+//                        Intent intent = new Intent(this.getActivity(), LiveGameActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                        intent.putExtra(LiveGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+//                        intent.putExtra(LiveGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+//                        startActivity(intent);
+//                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
+//                    } else
+//                        AppContextUtils.showSnackbar(this.getBaseActivity(), R.string.feature_coming, Snackbar.LENGTH_LONG, null);
+//
+//                    break;
 
-                    if (MainApplication.getInstance().isRecentGameEnabled) {
-                        Intent intent = new Intent(this.getActivity(), LiveGameActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.putExtra(LiveGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-                        intent.putExtra(LiveGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
-                        startActivity(intent);
-                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
-                    } else
-                        AppContextUtils.showSnackbar(this.getBaseActivity(), R.string.feature_coming, Snackbar.LENGTH_LONG, null);
-
-                    break;
-
-                case R.id.recent_game:
-
-                    if (MainApplication.getInstance().isLiveGameEnabled) {
-                        Intent intent2 = new Intent(this.getActivity(), RecentGameActivity.class);
-                        intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
-                        startActivity(intent2);
-                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
-                    } else
-                        AppContextUtils.showSnackbar(this.getBaseActivity(), R.string.feature_coming, Snackbar.LENGTH_LONG, null);
-                    break;
+//                case R.id.recent_game:
+//
+//                    if (MainApplication.getInstance().isLiveGameEnabled) {
+//                        Intent intent2 = new Intent(this.getActivity(), RecentGameActivity.class);
+//                        intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+//                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+//                        startActivity(intent2);
+//                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
+//                    } else
+//                        AppContextUtils.showSnackbar(this.getBaseActivity(), R.string.feature_coming, Snackbar.LENGTH_LONG, null);
+//                    break;
                 default:
                     break;
             }

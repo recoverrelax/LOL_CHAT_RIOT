@@ -29,7 +29,8 @@ public class RecentGameActivity extends MessageIconActivity {
 
     @Override
     public int getNavigationViewPosition() {
-        return R.id.navigation_item_3;
+        return 0;
+//        return R.id.navigation_item_3;
     }
 
     @Override

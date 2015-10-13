@@ -10,11 +10,11 @@
         android:id="@+id/other_1"
         android:title="CHAT"/>
 
-    <item
-        android:id="@+id/current_game"
-        android:title="Live Game Scout"/>
+    <!--<item-->
+        <!--android:id="@+id/current_game"-->
+        <!--android:title="Live Game Scout"/>-->
 
-    <item
-        android:id="@+id/recent_game"
-        android:title="Recent Games"/>
+    <!--<item-->
+        <!--android:id="@+id/recent_game"-->
+        <!--android:title="Recent Games"/>-->
 </menu>

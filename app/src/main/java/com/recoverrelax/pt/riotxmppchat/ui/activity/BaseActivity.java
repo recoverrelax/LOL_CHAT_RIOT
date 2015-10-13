@@ -331,17 +331,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         break;
 
-                    case R.id.navigation_item_3:
-
-                        AbstractXMPPConnection conn = MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnection().toBlocking().single();
-                        String friendXmppAddress = AppXmppUtils.parseXmppAddress(conn.getUser());
-
-                        intent = new Intent(this, RecentGameActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-                        intent.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, LiveGameActivity.FRIEND_XMPP_USERNAME_ME);
-
-                        break;
+//                    case R.id.navigation_item_3:
+//
+//                        AbstractXMPPConnection conn = MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnection().toBlocking().single();
+//                        String friendXmppAddress = AppXmppUtils.parseXmppAddress(conn.getUser());
+//
+//                        intent = new Intent(this, RecentGameActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                        intent.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+//                        intent.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, LiveGameActivity.FRIEND_XMPP_USERNAME_ME);
+//
+//                        break;
 
 
                     case R.id.navigation_item_4:
