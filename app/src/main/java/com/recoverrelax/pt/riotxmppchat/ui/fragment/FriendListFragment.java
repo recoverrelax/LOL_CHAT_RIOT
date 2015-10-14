@@ -4,11 +4,8 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.IntDef;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,22 +27,18 @@ import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChangedEvent;
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnReconnectEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService.RiotApiServiceImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.LiveGameActivity;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivity;
 
 import org.jivesoftware.smack.packet.Presence;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -417,9 +410,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
                 getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
                 return true;
             case R.id.addFriend:
-                Snackbar
-                        .make(this.getActivity().getWindow().getDecorView().getRootView(),
-                                getResources().getString(R.string.add_friend_soon), Snackbar.LENGTH_LONG).show();
+                AppSnackbarUtils.showSnackBar(this.getActivity(), R.string.add_friend_soon, AppSnackbarUtils.LENGTH_LONG);
                 return true;
             case R.id.show_hide_offline:
                 SHOW_OFFLINE_USERS = !mDataStorage.showOfflineUsers();
