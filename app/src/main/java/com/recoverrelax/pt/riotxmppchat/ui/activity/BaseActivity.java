@@ -446,4 +446,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 AppSnackbarUtils.LENGTH_INDEFINITE
         );
     }
+
+    public View getToolbar() {
+        return this.toolbar;
+    }
 }

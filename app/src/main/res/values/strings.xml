@@ -135,4 +135,7 @@
     <string name="settings_activity">Settings</string>
     <string name="service_currently_unavailable">Service currently unavailable. Please try again later</string>
     <string name="feature_coming">\"Feature Coming in the next release\"</string>
+
+    <string name="transition_toolbar">ToolbarTransition</string>
+
 </resources>

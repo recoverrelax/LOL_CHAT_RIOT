@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -67,13 +71,18 @@ public class AppContextUtils {
     }
 
     public static void startPersonalMessageActivity(Context context, String friendName, String friendXmppAddress){
+        startPersonalMessageActivityNoTransiction(context, friendName, friendXmppAddress);
+        AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
+    }
+
+    public static void startPersonalMessageActivityNoTransiction(Context context, String friendName, String friendXmppAddress){
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra(ChatActivity.INTENT_FRIEND_NAME, friendName);
         intent.putExtra(ChatActivity.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
         context.startActivity(intent);
-        AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
+
     }
 
     public static void printStackTrace(Throwable e) {
