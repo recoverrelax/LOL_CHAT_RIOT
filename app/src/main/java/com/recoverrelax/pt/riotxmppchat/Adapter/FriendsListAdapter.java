@@ -228,16 +228,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
-    public void sortFriendsList(SortMethod sortedMethod) {
-        if (sortedMethod.isSortOnlineFirst()) {
-            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
-        } else if (sortedMethod.isSortAlphabetically()) {
-            Collections.sort(friendsList, new Friend.AlphabeticComparator());
-        } else { // default
-            Collections.sort(friendsList, new Friend.OnlineOfflineComparator());
-        }
-    }
-
     public int getOnlineFriendsCount() {
         int count = 0;
         for (Friend f : friendsList) {
