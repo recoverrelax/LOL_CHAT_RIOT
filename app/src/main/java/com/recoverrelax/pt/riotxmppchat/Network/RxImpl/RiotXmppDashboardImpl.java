@@ -52,8 +52,8 @@ public class RiotXmppDashboardImpl {
             })
                     .toList()
                     .map(friends -> friendStatusInfo)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread());
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.computation());
 
 
     }

@@ -418,7 +418,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onResume() {
         super.onResume();
-        MainApplication.getInstance().setCurrentBaseActivity(this);
         setNavigationViewPosition(getNavigationViewPosition());
         bus.register(this);
         handler.registerForRecconectEvent(this);
@@ -428,7 +427,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onPause() {
         super.onPause();
-        MainApplication.getInstance().setCurrentBaseActivity(null);
         bus.unregister(this);
         handler.unregisterForRecconectEvent(this);
         handler.unregisterForDisconectEvent(this);

@@ -193,9 +193,6 @@ public class RecentGameWrapper {
     }
 
     public void setPlayerPosition(int playerPosition) {
-        PlayerPosition byId = PlayerPosition.getById(playerPosition);
-
-        if(byId != null)
-            this.playerPosition = byId.getName().toUpperCase();
+        this.playerPosition =  PlayerPosition.getPositionName(playerPosition).toUpperCase();
     }
 }

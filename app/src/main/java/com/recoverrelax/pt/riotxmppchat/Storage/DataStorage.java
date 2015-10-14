@@ -17,6 +17,7 @@ public class DataStorage {
     private static final String PREF_KEY_SAVE_LOGIN_CREDENTIALS = "save_login_credentials";
     private static final String PREF_KEY_SERVER = "server";
     private static final String PREF_KEY_SHOW_OFFLINE_USERS = "showHideOffline";
+    private static final String PREF_KEY_FRIEND_LIST_SORT_MODE = "sortMode";
 
     /**
      * NOTIFICATION SHARED PREFS
@@ -68,6 +69,16 @@ public class DataStorage {
     public synchronized boolean showOfflineUsers(boolean state){
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_SHOW_OFFLINE_USERS, state);
+        return editor.commit();
+    }
+
+    public synchronized int getSortMode(){
+        return mSettings.getInt(PREF_KEY_FRIEND_LIST_SORT_MODE, 1);
+    }
+
+    public synchronized boolean setSortMode(int sortMode){
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putInt(PREF_KEY_FRIEND_LIST_SORT_MODE, sortMode);
         return editor.commit();
     }
 

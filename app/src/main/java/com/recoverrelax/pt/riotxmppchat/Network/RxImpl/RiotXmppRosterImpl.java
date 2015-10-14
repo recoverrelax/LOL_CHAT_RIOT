@@ -1,11 +1,20 @@
 package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 
+import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
+
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
+import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import org.jivesoftware.smack.packet.Presence;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,6 +22,8 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 @Singleton
@@ -21,58 +32,98 @@ public class RiotXmppRosterImpl {
     @Inject RiotRosterManager riotRosterManager;
     @Inject RiotApiRealmDataVersion realmData;
 
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({SORT_MODE_NAME, SORT_MODE_STATUS})
+    public @interface FriendListSortMode {}
+    public static final int SORT_MODE_NAME = 0;
+    public static final int SORT_MODE_STATUS = 1;
+
     @Singleton
     @Inject
-    public RiotXmppRosterImpl() {
+    public RiotXmppRosterImpl() {}
 
-    }
-
-    /**
-     * get roster entries FROM
-     * get Friends for roster entry FROM
-     * filter offline friends
-     * each friend, update friend status
-     * join the list and sort
-     * enable friend tracker
-     * @param getOffline: filter to show or not offline friends
-     * @return
-     */
-    public Observable<List<Friend>> getFullFriendsList(final boolean getOffline) {
+    public Observable<List<Friend>> getFullFriendsList(final boolean getOffline, final int sortMode) {
         return riotRosterManager.getRosterEntries()
                 .flatMap(riotRosterManager::getFriendFromRosterEntry)
-                .filter(friend -> getOffline || friend.isOnline())
+                .filter(friend -> getOffline || friend.isOnline()) // filter onlineOffline
+                .observeOn(Schedulers.computation())
                 .doOnNext(friend -> riotRosterManager.updateFriend(friend.getUserRosterPresence()))
-                .toSortedList((a, b) -> {
-                    if (samePresence(a, b))
-                        return 0;
-                    else if (a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable())
-                        return -1;
+                .toList()
+                .map(friends -> {
+                    if (sortMode == SORT_MODE_STATUS)
+                        return sortByStatus(friends);
                     else
-                        return 1;
+                        return sortByName(friends);
                 })
                 .doOnNext(friendList -> riotRosterManager.setEnabled(true))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    private boolean samePresence(Friend a, Friend b) {
-        if (a.getUserRosterPresence().isAvailable() && b.getUserRosterPresence().isAvailable())
-            return true;
-        else if (!a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable()) {
-            return true;
+    private List<Friend> sortByStatus(List<Friend> friends) {
+        List<Friend> online = new ArrayList<>();
+        List<Friend> offline = new ArrayList<>();
+
+        for (Friend f : friends) {
+            if (f.isOnline())
+                online.add(f);
+            if (f.isOffline())
+                offline.add(f);
         }
-        return false;
+
+        List<Friend> onlinePlaying = new ArrayList<>();
+        List<Friend> onlineChatting = new ArrayList<>();
+        List<Friend> onlineDnd = new ArrayList<>();
+        List<Friend> onlineAway = new ArrayList<>();
+
+        for (Friend f : online) {
+            if (f.isPlaying())
+                onlinePlaying.add(f);
+            else if (f.isChatting())
+                onlineChatting.add(f);
+            else if (f.isAway())
+                onlineAway.add(f);
+            else onlineDnd.add(f);
+        }
+
+        // Sort everything alphabetically
+        Collections.sort(onlinePlaying, (a, b) -> a.getName().compareTo(b.getName()));
+        Collections.sort(onlineChatting, (a, b) -> a.getName().compareTo(b.getName()));
+        Collections.sort(onlineDnd, (a, b) -> a.getName().compareTo(b.getName()));
+        Collections.sort(onlineAway, (a, b) -> a.getName().compareTo(b.getName()));
+        Collections.sort(offline, (a, b) -> a.getName().compareTo(b.getName()));
+
+        List<Friend> friendListSorted = new ArrayList<>();
+        friendListSorted.addAll(onlinePlaying);
+        friendListSorted.addAll(onlineChatting);
+        friendListSorted.addAll(onlineDnd);
+        friendListSorted.addAll(onlineAway);
+        friendListSorted.addAll(offline);
+
+        return friendListSorted;
     }
 
-    /**
-     * get roster entries FROM
-     * get friend for each entry
-     * filter and get each friend for the search query
-     * for each result, update friend status
-     * convert back to a list
-     * @param searchString
-     * @return
-     */
+    public List<Friend> sortByName(List<Friend> friends){
+        List<Friend> online = new ArrayList<>();
+        List<Friend> offline = new ArrayList<>();
+
+        for (Friend f : friends) {
+            if (f.isOnline())
+                online.add(f);
+            if (f.isOffline())
+                offline.add(f);
+        }
+
+        Collections.sort(online, (a, b) -> a.getName().toLowerCase().compareTo(b.getName().toLowerCase()));
+        Collections.sort(offline, (a, b) -> a.getName().toLowerCase().compareTo(b.getName().toLowerCase()));
+
+        List<Friend> friendListSorted = new ArrayList<>();
+        friendListSorted.addAll(online);
+        friendListSorted.addAll(offline);
+
+        return friendListSorted;
+    }
+
     public Observable<List<Friend>> searchFriendsList(final String searchString) {
         return riotRosterManager.getRosterEntries()
                 .flatMap(riotRosterManager::getFriendFromRosterEntry)
@@ -100,7 +151,6 @@ public class RiotXmppRosterImpl {
     public Observable<Friend> updateFriendWithChampAndProfileUrl(Friend f){
         return Observable.zip(realmData.getProfileIconBaseUrl(), realmData.getChampionDDBaseUrl(), (profileUrl, championUrl) -> {
 
-
                 String profileIconId = f.getProfileIconId();
                 f.setProfileIconWithUrl(profileUrl + profileIconId + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION);
 
@@ -111,11 +161,6 @@ public class RiotXmppRosterImpl {
         });
     }
 
-    /**
-     * get a friend from the roster manager
-     * @param presence
-     * @return
-     */
     public Observable<Friend> getPresenceChanged(final Presence presence) {
         return riotRosterManager.getFriendFromXmppAddress(presence.getFrom())
                 .subscribeOn(Schedulers.io())

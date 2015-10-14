@@ -12,13 +12,13 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnConnectionFailur
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnLoginFailurePublish;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnSuccessLoginPublish;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotChatManager;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotConnectionManager;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
-import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
@@ -62,8 +62,8 @@ public class RiotXmppService extends Service {
      */
     private String serverHost;
 
-    private int serverPort = RiotGlobals.RIOT_PORT;
-    private String serverDomain = RiotGlobals.RIOT_DOMAIN;
+    private int serverPort = AppGlobals.XMPP.RIOT_PORT;
+    private String serverDomain = AppGlobals.XMPP.RIOT_DOMAIN;
     private String username;
     private String password;
 

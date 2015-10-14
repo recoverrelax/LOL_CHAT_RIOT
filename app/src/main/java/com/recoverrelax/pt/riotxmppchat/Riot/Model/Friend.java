@@ -133,6 +133,18 @@ public class Friend implements Comparable<Friend>{
             return PresenceMode.getPresenceModeFromSmack(this.userRosterPresence.getMode());
     }
 
+    public boolean isChatting() {
+        return getFriendMode().equals(PresenceMode.CHAT);
+    }
+
+    public boolean isAway() {
+        return getFriendMode().equals(PresenceMode.AWAY) || getFriendMode().equals(PresenceMode.XA);
+    }
+
+    public boolean isDnd() {
+        return getFriendMode().equals(PresenceMode.DND);
+    }
+
     public String getProfileIconWithUrl() {
         return profileIconWithUrl;
     }

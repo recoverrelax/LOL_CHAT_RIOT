@@ -2,8 +2,8 @@ package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.DateTimeTypeAdapter;
-import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotGlobals;
 
 import java.util.Date;
 
@@ -44,7 +44,7 @@ public class ApiProvider {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(baseEndPointSecure)
                 .setRequestInterceptor(request ->
-                        request.addQueryParam("api_key", RiotGlobals.API_KEY)
+                        request.addQueryParam("api_key", AppGlobals.RIOT_API.API_KEY)
                 )
                 .setConverter(new GsonConverter(gson)).build();
 

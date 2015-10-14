@@ -1,39 +1,33 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.GameConstants;
 
-import java.util.IllegalFormatException;
+import android.support.annotation.IntDef;
 
-public enum PlayerPosition {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-    TOP(1, "Top"),
-    MIDDLE(2, "Mid"),
-    JUNGLE(3, "Jungle"),
-    BOT(4, "Bot");
+public class PlayerPosition {
 
-    int positionId;
-    String name;
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({TOP, MIDDLE, JUNGLE, BOT})
+    public @interface PlayerPositionI {}
 
-    PlayerPosition(int positionId, String name){
-        this.positionId = positionId;
-        this.name = name;
-    }
+    public static final int TOP = 1;
+    public static final int MIDDLE = 2;
+    public static final int JUNGLE = 3;
+    public static final int BOT = 4;
 
-    public String getName() {
-        return name;
-    }
-
-    public int getPositionId() {
-        return positionId;
-    }
-
-    public void setPositionId(int positionId) {
-        this.positionId = positionId;
-    }
-
-    public static PlayerPosition getById(int id){
-        for(PlayerPosition pp: PlayerPosition.values()){
-            if(pp.getPositionId() == id)
-                return pp;
+    public static String getPositionName(int pp){
+        switch(pp){
+            case TOP:
+                return "Top";
+            case MIDDLE:
+                return "Mid";
+            case JUNGLE:
+                return "Jungle";
+            case BOT:
+                return "Bot";
+            default:
+                return "";
         }
-        return null;
     }
 }

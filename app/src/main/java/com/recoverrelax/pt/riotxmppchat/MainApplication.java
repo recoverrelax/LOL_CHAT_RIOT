@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 
 import com.crashlytics.android.Crashlytics;
+import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnServiceBindedPublish;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
@@ -34,6 +35,7 @@ public class MainApplication extends Application {
     private DaoSession daoSession;
 
     @Inject Bus bus;
+    @Inject EventHandler handler;
 
     /**
      * This value is stored as a buffer because its accessed many times.
@@ -41,7 +43,6 @@ public class MainApplication extends Application {
      */
 
     private static MainApplication instance;
-    private WeakReference<BaseActivity> currentBaseActivity = null;
 
     /**
      * Dagger Components
@@ -80,18 +81,6 @@ public class MainApplication extends Application {
 
     public AppComponent getAppComponent(){
         return appComponent;
-    }
-
-    public void setCurrentBaseActivity(BaseActivity baseActivity){
-        this.currentBaseActivity = new WeakReference<>(baseActivity);
-    }
-
-    public BaseActivity getCurrentBaseActivity(){
-        return this.currentBaseActivity.get();
-    }
-
-    public boolean isApplicationPausedOrClosed(){
-        return getCurrentBaseActivity() == null;
     }
 
     private void setupDatabase() {
@@ -166,5 +155,9 @@ public class MainApplication extends Application {
 
     public DaoSession getDaoSession() {
         return daoSession;
+    }
+
+    public boolean isApplicationPausedOrClosed() {
+        return handler.isApplicationPaused();
     }
 }

@@ -169,4 +169,8 @@ public class EventHandler {
             event.onFriendPresenceChanged(friendPresence.getPresence());
         }
     }
+
+    public boolean isApplicationPaused(){
+        return reconnectEventList == null || reconnectEventList.size() == 0;
+    }
 }

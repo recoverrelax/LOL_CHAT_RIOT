@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.MessageIconActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,7 +39,7 @@ public final class AppSnackbarUtils {
             @SnackbarDuration int duration,
             Integer backgroundColor,
             Integer textColor,
-            @StringRes Integer actionText,
+            String actionText,
             Integer actionTextColor,
             View.OnClickListener listener ){
 
@@ -77,13 +78,29 @@ public final class AppSnackbarUtils {
             @SnackbarDuration int duration,
             Integer backgroundColor,
             Integer textColor,
-            @StringRes Integer actionText,
+            String actionText,
             Integer actionTextColor,
             View.OnClickListener listener ){
 
         return showSnackBar(activity, activity.getResources().getString(messageStringRes), duration, backgroundColor, textColor, actionText, actionTextColor, listener);
 
     }
+    
+    @SnackbarDuration
+    public static Snackbar showSnackBar(
+            @NonNull Activity activity,
+            @StringRes int messageStringRes,
+            @SnackbarDuration int duration,
+            Integer backgroundColor,
+            Integer textColor,
+            @StringRes Integer actionText,
+            Integer actionTextColor,
+            View.OnClickListener listener ){
+
+        return showSnackBar(activity, activity.getResources().getString(messageStringRes), duration, backgroundColor, textColor, activity.getResources().getString(actionText), actionTextColor, listener);
+
+    }
+
 
     @SnackbarDuration
     public static Snackbar showSnackBar(@NonNull Activity activity,  @StringRes int stringRes, @SnackbarDuration int length) {
@@ -98,5 +115,9 @@ public final class AppSnackbarUtils {
     @SnackbarDuration
     public static Snackbar showSnackBar(@NonNull Activity activity, @StringRes int stringRes, @SnackbarDuration int length, @StringRes int actionText, View.OnClickListener listener) {
         return showSnackBar(activity, stringRes, length, null, null, actionText, null, listener);
+    }
+
+    public static Snackbar showSnackBar(Activity activity, String message, @SnackbarDuration int length, String buttonLabel, View.OnClickListener listener) {
+        return showSnackBar(activity, message, length, null, null, buttonLabel, null, listener);
     }
 }

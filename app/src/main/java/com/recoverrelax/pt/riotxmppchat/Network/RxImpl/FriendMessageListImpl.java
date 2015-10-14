@@ -31,10 +31,10 @@ public class FriendMessageListImpl {
     public Observable<FriendListChat> getPersonalMessage(final String userXmppAddress) {
         return riotRosterManager.getFriendFromXmppAddress(userXmppAddress)
                     .flatMap(friend -> riotRosterManager.getFriendLastMessage(friend.getUserXmppAddress())
-                                        .map(messageDb -> new FriendListChat(friend, messageDb))
+                                    .map(messageDb -> new FriendListChat(friend, messageDb))
                     )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io());
     }
 
     /**
@@ -55,7 +55,7 @@ public class FriendMessageListImpl {
                     Collections.reverse(friendListChatList);
                     return friendListChatList;
                 })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.computation());
     }
 }

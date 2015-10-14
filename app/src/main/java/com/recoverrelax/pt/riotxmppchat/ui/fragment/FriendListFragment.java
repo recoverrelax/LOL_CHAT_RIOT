@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IntDef;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -43,6 +44,8 @@ import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivity;
 
 import org.jivesoftware.smack.packet.Presence;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +78,6 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     @Inject
     RiotRosterManager riotRosterManager;
 
-    private boolean SHOW_OFFLINE_USERS;
     private SearchView searchView;
 
     /**
@@ -95,6 +97,12 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     RiotApiServiceImpl riotApiServiceImpl;
     @Inject
     EventHandler handler;
+    @Inject
+    RiotRosterManager rosterManager;
+
+
+    private boolean SHOW_OFFLINE_USERS;
+    private int SORT_MODE = RiotXmppRosterImpl.SORT_MODE_STATUS;
 
     public FriendListFragment() {
         // Required empty public constructor
@@ -129,7 +137,9 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         super.onResume();
 //        handler.registerForRecconectEvent(this);
         handler.registerForFriendPresenceChangedEvent(this);
-        getFullFriendList(SHOW_OFFLINE_USERS);
+
+        if(rosterManager.isConnected())
+            getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
 
     }
 
@@ -141,6 +151,8 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
         ButterKnife.bind(this, view);
         SHOW_OFFLINE_USERS = mDataStorage.showOfflineUsers();
+        SORT_MODE = mDataStorage.getSortMode();
+
         setHasOptionsMenu(true);
         showProgressBar(true);
         return view;
@@ -158,7 +170,12 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
         myFriendsListRecyclerView.setAdapter(adapter);
 
-        swipeRefreshLayout.setOnRefreshListener(() -> getFullFriendList(SHOW_OFFLINE_USERS));
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (rosterManager.isConnected())
+                getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
+            else
+                swipeRefreshLayout.setRefreshing(false);
+        });
 
 
     }
@@ -300,7 +317,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem item) {
                     if (modifiedOriginal[0])
-                        getFullFriendList(SHOW_OFFLINE_USERS);
+                        getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
                     getActivity().invalidateOptionsMenu();
                     return true;
                 }
@@ -330,7 +347,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
             ButterKnife.findById(searchView, android.support.v7.appcompat.R.id.search_close_btn).setOnClickListener(
                     view -> {
                         if (modifiedOriginal[0])
-                            getFullFriendList(SHOW_OFFLINE_USERS);
+                            getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
                         et.setText("");
                     }
             );
@@ -397,7 +414,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
 
         switch (itemId) {
             case R.id.refresh:
-                getFullFriendList(SHOW_OFFLINE_USERS);
+                getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
                 return true;
             case R.id.addFriend:
                 Snackbar
@@ -407,21 +424,26 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
             case R.id.show_hide_offline:
                 SHOW_OFFLINE_USERS = !mDataStorage.showOfflineUsers();
                 mDataStorage.showOfflineUsers(SHOW_OFFLINE_USERS);
-                getFullFriendList(SHOW_OFFLINE_USERS);
+                getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
                 return true;
 
             case R.id.order_alphabetically:
+                SORT_MODE = RiotXmppRosterImpl.SORT_MODE_NAME;
+                mDataStorage.setSortMode(SORT_MODE);
+                getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
+                return true;
             case R.id.order_status:
-                Snackbar.make(getActivity().getWindow().getDecorView().getRootView(),
-                        "Feature Coming soon!", Snackbar.LENGTH_LONG).show();
+                SORT_MODE = RiotXmppRosterImpl.SORT_MODE_STATUS;
+                mDataStorage.setSortMode(SORT_MODE);
+                getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void getFullFriendList(boolean showOffline) {
-        Subscription subscribe = riotXmppRosterImpl.getFullFriendsList(showOffline)
+    private void getFullFriendList(boolean showOffline, @RiotXmppRosterImpl.FriendListSortMode int sortMode) {
+        Subscription subscribe = riotXmppRosterImpl.getFullFriendsList(showOffline, sortMode)
                 .flatMap(riotXmppRosterImpl::updateFriendListWithChampAndProfileUrl)
                 .subscribe(new Subscriber<List<Friend>>() {
                     @Override

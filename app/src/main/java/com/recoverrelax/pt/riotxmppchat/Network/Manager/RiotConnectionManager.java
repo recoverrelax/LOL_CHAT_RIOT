@@ -5,6 +5,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnReconnectPublish
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -29,6 +30,7 @@ public class RiotConnectionManager implements ConnectionListener {
     @Inject RiotRosterManager riotRosterManager;
     @Inject RiotXmppRosterImpl rosterImpl;
     @Inject Bus bus;
+    @Inject DataStorage dataStorage;
 
     @Singleton
     @Inject
@@ -95,12 +97,11 @@ public class RiotConnectionManager implements ConnectionListener {
         bus.post(new OnReconnectPublish());
 
         this.riotRosterManager.clearFriendList();
-        /**
-         * TODO: Without this, notifications are not being sent because the Presence Collection
-         * is not innitialized
-         */
 
-        rosterImpl.getFullFriendsList(true)
+        int sortMode = dataStorage.getSortMode();
+        boolean showOffline = dataStorage.showOfflineUsers();
+
+        rosterImpl.getFullFriendsList(showOffline, sortMode)
                 .subscribe(new Subscriber<List<Friend>>() {
                     @Override
                     public void onCompleted() {

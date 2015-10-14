@@ -29,32 +29,21 @@ public class RiotXmppConnectionImpl {
     public RiotXmppConnectionImpl() {
     }
 
-    /**
-     * Attempt top connect with the specified connection.
-     * @param connection the connection to connect to
-     * @return the connect if successfully connected
-     */
     private Observable<AbstractXMPPConnection> connect(final AbstractXMPPConnection connection) {
-        return Observable.<AbstractXMPPConnection>create(subscriber -> {
-            try {
-                AbstractXMPPConnection connection2 = connection.connect();
-                if (connection2.isConnected()) {
-                    subscriber.onNext(connection2);
-                    subscriber.onCompleted();
+        return Observable.defer(() -> {
+                    try {
+                        AbstractXMPPConnection connect = connection.connect();
+                        if(connection.isConnected())
+                            return Observable.just(connect);
+                        else
+                            return Observable.error(new Exception("Connected but for some reason disconnected just after that"));
+                    } catch (SmackException | IOException | XMPPException e) {
+                        return Observable.error(e);
+                    }
                 }
-            } catch (SmackException | IOException | XMPPException e) {
-                e.printStackTrace();
-                subscriber.onError(e);
-            }
-        })
-        .doOnError(throwable -> LOGI("111", "Connection OnError called"));
+        );
     }
 
-    /**
-     * Attemps to connect with the input connection and tries at most 4 times with a delay of 1, 2, 3, 4 seconds
-     * @param connection
-     * @return
-     */
     public Observable<AbstractXMPPConnection> connectWithRetry(final AbstractXMPPConnection connection) {
        return connect(connection)
                .retryWhen(attempts -> attempts.zipWith(Observable.range(1, MAX_CONNECTION_TRIES), (throwable, integer) -> new Pair<>(throwable, integer))
@@ -65,35 +54,21 @@ public class RiotXmppConnectionImpl {
                        }));
     }
 
-    /**
-     * Attempts to login with the specified connection
-     * @param connection the connection to login to
-     * @return the connection if successfully logged in
-     */
     public Observable<AbstractXMPPConnection> login(final AbstractXMPPConnection connection) {
-        return Observable.<AbstractXMPPConnection>create(subscriber -> {
-            try {
-                connection.login();
-            } catch (SmackException | IOException | XMPPException e) {
-                e.printStackTrace();
-                subscriber.onError(e);
-            }
-
-            if (connection.isAuthenticated()) {
-                subscriber.onNext(connection);
-                subscriber.onCompleted();
-            }
-        })
-                .doOnError(throwable -> LOGI("111", "Login OnError called"))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io());
+        return Observable.defer(() -> {
+                    try {
+                        connection.login();
+                        if (connection.isAuthenticated()) {
+                            return Observable.just(connection);
+                        }
+                        return Observable.error(new Exception("Logged in but for some reason not authenticated exception"));
+                    } catch (SmackException | IOException | XMPPException e) {
+                        return Observable.error(e);
+                    }
+                }
+        );
     }
 
-    /**
-     * Attepts to login to the server at most 3 times, with a delay of 1, 2, 3 seconds accordingly
-     * @param connection to login to
-     * @return the connection if successfully loggedIn
-     */
     public Observable<AbstractXMPPConnection> loginWithRetry(final AbstractXMPPConnection connection) {
         return login(connection)
                 .retryWhen(attempts -> attempts.zipWith(Observable.range(1, MAX_LOGIN_TRIES), (throwable, integer) -> new Pair<>(throwable, integer))

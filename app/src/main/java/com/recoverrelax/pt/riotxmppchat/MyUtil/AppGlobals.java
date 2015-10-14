@@ -6,6 +6,15 @@ public class AppGlobals {
         public static final int DEFAULT_MESSAGES_RETURNED = 20;
     }
 
+    public static class XMPP {
+        public static final String RIOT_DOMAIN = "pvp.net";
+        public static final int RIOT_PORT = 5223;
+    }
+
+    public static class RIOT_API {
+        public static final String API_KEY = "3b04be4c-ff07-445e-8aa6-a5c99ea2aa64";
+    }
+
     public static class DD_VERSION {
         public static final String DD_VERSION = "dd_version";
 
