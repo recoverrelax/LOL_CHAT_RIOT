@@ -88,4 +88,8 @@ public class AppContextUtils {
     public static void printStackTrace(Throwable e) {
         LogUtils.LOGE("TRW", e.getMessage(), e);
     }
+
+    public interface CallBack {
+        void resetViewState(View view);
+    }
 }

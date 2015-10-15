@@ -70,22 +70,22 @@ public class EventHandler {
             newMessageEventList.remove(event);
     }
 
-    public void registerForRecconectEvent(OnReconnectEvent event){
+    public void registerForReconnectEvent(OnReconnectEvent event){
         if(!reconnectEventList.contains(event))
             reconnectEventList.add(event);
     }
 
-    public void unregisterForRecconectEvent(OnReconnectEvent event){
+    public void unregisterForReconnectEvent(OnReconnectEvent event){
         if(reconnectEventList.contains(event))
             reconnectEventList.remove(event);
     }
 
-    public void registerForDisconectEvent(OnDisconnectEvent event){
+    public void registerForDisconnectEvent(OnDisconnectEvent event){
         if(!disconnectEventList.contains(event))
             disconnectEventList.add(event);
     }
 
-    public void unregisterForDisconectEvent(OnDisconnectEvent event){
+    public void unregisterForDisconnectEvent(OnDisconnectEvent event){
         if(disconnectEventList.contains(event))
             disconnectEventList.remove(event);
     }

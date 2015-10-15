@@ -120,7 +120,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
         if (adapter != null)
             adapter.removeSubscriptions();
 
-//        handler.unregisterForRecconectEvent(this);
+//        handler.unregisterForReconnectEvent(this);
         handler.unregisterForFriendPresenceChangedEvent(this);
 
     }
@@ -128,7 +128,7 @@ public class FriendListFragment extends BaseFragment implements FriendsListAdapt
     @Override
     public void onResume() {
         super.onResume();
-//        handler.registerForRecconectEvent(this);
+//        handler.registerForReconnectEvent(this);
         handler.registerForFriendPresenceChangedEvent(this);
 
         if(rosterManager.isConnected())

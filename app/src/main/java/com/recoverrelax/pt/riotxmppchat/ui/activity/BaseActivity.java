@@ -31,14 +31,11 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.squareup.otto.Bus;
-
-import org.jivesoftware.smack.AbstractXMPPConnection;
 
 import javax.inject.Inject;
 
@@ -420,16 +417,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         super.onResume();
         setNavigationViewPosition(getNavigationViewPosition());
         bus.register(this);
-        handler.registerForRecconectEvent(this);
-        handler.registerForDisconectEvent(this);
+        handler.registerForReconnectEvent(this);
+        handler.registerForDisconnectEvent(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         bus.unregister(this);
-        handler.unregisterForRecconectEvent(this);
-        handler.unregisterForDisconectEvent(this);
+        handler.unregisterForReconnectEvent(this);
+        handler.unregisterForDisconnectEvent(this);
     }
 
     @Override
