@@ -444,6 +444,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         );
     }
 
+    @Nullable
     public View getToolbar() {
         return this.toolbar;
     }

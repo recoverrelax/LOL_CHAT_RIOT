@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.Event;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
@@ -24,8 +23,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public abstract class MessageIconActivity extends BaseActivity //implements NewMessageReceivedNotifyEvent, NewMessageReceivedEvent {
-    implements NewMessageReceivedEvent, NewMessageReceivedNotifyEvent {
+public abstract class MessageIconActivity extends BaseActivity implements NewMessageReceivedNotifyEvent, NewMessageReceivedEvent {
 
     @Inject
     EventHandler eventHandler;
@@ -39,9 +37,8 @@ public abstract class MessageIconActivity extends BaseActivity //implements NewM
     @Override
     protected void onResume() {
         super.onResume();
-        eventHandler.registerForEvent(MessageIconActivity.this);
-//        eventHandler.registerForNewMessageEvent(this);
-//        eventHandler.registerForNewMessageNotifyEvent(this);
+        eventHandler.registerForNewMessageEvent(this);
+        eventHandler.registerForNewMessageNotifyEvent(this);
         if(hasNewMessageIcon())
             invalidateOptionsMenu();
     }
@@ -49,8 +46,8 @@ public abstract class MessageIconActivity extends BaseActivity //implements NewM
     @Override
     protected void onPause() {
         super.onPause();
-//        eventHandler.unregisterForNewMessageEvent(this);
-//        eventHandler.unregisterForNewMessageNotifyEvent(this);
+        eventHandler.unregisterForNewMessageEvent(this);
+        eventHandler.unregisterForNewMessageNotifyEvent(this);
     }
 
     @Override
