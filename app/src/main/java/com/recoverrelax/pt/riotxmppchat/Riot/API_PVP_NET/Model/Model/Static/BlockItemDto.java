@@ -8,5 +8,6 @@ public class BlockItemDto {
     public int count;
     public int id;
 
-    public BlockItemDto() {}
+    public BlockItemDto() {
+    }
 }

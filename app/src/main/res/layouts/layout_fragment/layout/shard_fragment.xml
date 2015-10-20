@@ -1,49 +1,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nestedScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/primaryColorDark"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/shard_chose_region"
-        android:paddingTop="5dp"
-        android:paddingRight="5dp"
-        android:paddingLeft="10dp"
-        android:paddingBottom="5dp"
-        android:textColor="@color/white"
-        android:id="@+id/textView3" />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/shard_chose_region"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white"
+            tools:ignore="RtlHardcoded" />
 
-    <Spinner
-        android:padding="5dp"
-        android:spinnerMode="dialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/regionSpinner" />
+        <Spinner
+            android:id="@+id/regionSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:spinnerMode="dialog" />
     </LinearLayout>
 
     <TextView
-        android:gravity="center"
+        android:id="@+id/serverName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:background="@color/white"
-        android:id="@+id/serverName"
-        android:text="Europe West"
-        android:textColor="@color/black" />
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/black"
+        tools:text="Europe West" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -51,10 +53,10 @@
 
         <com.recoverrelax.pt.riotxmppchat.Widget.ShardBlock
             android:id="@+id/shardBlock"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
     </FrameLayout>
 

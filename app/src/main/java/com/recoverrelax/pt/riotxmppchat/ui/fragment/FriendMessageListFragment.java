@@ -1,21 +1,13 @@
 package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.FriendMessageListAdapter;
@@ -43,26 +35,21 @@ import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendMessageListFragment extends BaseFragment implements NewMessageReceivedNotifyEvent{
-
-    @Bind(R.id.friendMessageListRecycler)
-    RecyclerView messageRecyclerView;
-
-    @Bind(R.id.progressBarCircularIndeterminate)
-    ProgressBar progressBarCircularIndeterminate;
-
-    @Inject
-    EventHandler handler;
+public class FriendMessageListFragment extends BaseFragment implements NewMessageReceivedNotifyEvent {
 
     private final String TAG = FriendMessageListFragment.this.getClass().getSimpleName();
-
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    @Bind(R.id.friendMessageListRecycler)
+    RecyclerView messageRecyclerView;
+    @Bind(R.id.progressBarCircularIndeterminate)
+    ProgressBar progressBarCircularIndeterminate;
+    @Inject
+    EventHandler handler;
+    @Inject FriendMessageListImpl friendMessageListHelper;
     /**
      * Adapter
      */
     private FriendMessageListAdapter adapter;
-
-    @Inject FriendMessageListImpl friendMessageListHelper;
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
 
     public FriendMessageListFragment() {
         // Required empty public constructor
@@ -89,7 +76,6 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
         setToolbarTitle(getResources().getString(R.string.message_list_title));
         showProgressBar(true);
     }
-
 
 
     @Override
@@ -138,7 +124,7 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
 //                });
 
                     AppContextUtils.startPersonalMessageActivity(getActivity(), friendName, friendXmppAddress);
-    });
+                });
     }
 
     public void showProgressBar(boolean state) {
@@ -155,8 +141,11 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
     private void getPersonalMessageList() {
         Subscription subscribe = friendMessageListHelper.getPersonalMessageList()
                 .subscribe(new Subscriber<List<FriendListChat>>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
+                    @Override public void onCompleted() {
+                    }
+
+                    @Override public void onError(Throwable e) {
+                    }
 
                     @Override
                     public void onNext(List<FriendListChat> friendListChats) {
@@ -172,7 +161,7 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
         super.onPause();
         subscriptions.clear();
 
-        if(adapter != null)
+        if (adapter != null)
             adapter.removeSubscriptions();
 
         handler.unregisterForNewMessageNotifyEvent(this);
@@ -199,7 +188,7 @@ public class FriendMessageListFragment extends BaseFragment implements NewMessag
         subscriptions.add(subscribe);
     }
 
-    public void onGeneralThrowableEvent(Throwable e){
+    public void onGeneralThrowableEvent(Throwable e) {
         LOGE(TAG, "", e);
     }
 

@@ -1,4 +1,4 @@
-package com.recoverrelax.pt.riotxmppchat.Adapter;
+package com.recoverrelax.pt.riotxmppchat.ui.mvp.dashboard;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -23,18 +23,19 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class DashBoardLogAdapter extends RecyclerView.Adapter<DashBoardLogAdapter.ViewHolder> {
+@SuppressWarnings("FieldCanBeLocal")
+public class DashBoardAdapter extends RecyclerView.Adapter<DashBoardAdapter.ViewHolder> {
 
-    private List<InAppLogDb> logList;
     private final LayoutInflater inflater;
     private final Context context;
     private final RecyclerView recyclerView;
-    private CompositeSubscription subscriptions = new CompositeSubscription();
     private final int updateInterval = 30000;
+    private List<InAppLogDb> logList;
+    private CompositeSubscription subscriptions = new CompositeSubscription();
+    private
+    @LayoutRes int layout;
 
-    private @LayoutRes int layout;
-
-    public DashBoardLogAdapter(Context context, ArrayList<InAppLogDb> logList, RecyclerView recyclerView, int layout) {
+    public DashBoardAdapter(Context context, ArrayList<InAppLogDb> logList, RecyclerView recyclerView, int layout) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.logList = logList;
@@ -43,22 +44,22 @@ public class DashBoardLogAdapter extends RecyclerView.Adapter<DashBoardLogAdapte
     }
 
     @Override
-    public DashBoardLogAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DashBoardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(layout, parent, false);
         return new ViewHolder(view);
     }
 
-    public void removeSubscriptions(){
+    public void removeSubscriptions() {
         subscriptions.clear();
     }
 
     @Override
-    public void onBindViewHolder(DashBoardLogAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(DashBoardAdapter.ViewHolder holder, int position) {
         holder.inappLogDb = logList.get(position);
 
         holder.logMessage.setText(holder.inappLogDb.getLogMessage());
 
-        if(holder.inappLogDb.getLogDate()!=null) {
+        if (holder.inappLogDb.getLogDate() != null) {
             subscriptions.add(
                     Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
                             .map(aLong -> MyDate.getFormatedDate(holder.inappLogDb.getLogDate()))
@@ -67,7 +68,7 @@ public class DashBoardLogAdapter extends RecyclerView.Adapter<DashBoardLogAdapte
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(holder.logDate::setText)
             );
-        }else {
+        } else {
             holder.logDate.setText("");
         }
     }

@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiService;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
@@ -19,7 +18,6 @@ import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Summoner.Su
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +26,6 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 @Singleton
@@ -169,16 +165,14 @@ public class RiotApiServiceImpl {
     }
 
     private
-    @Nullable
-    String getRegion() {
+    @Nullable String getRegion() {
         String server = dataStorage.getServer();
         RiotServer riotServerByName = RiotServer.getRiotServerByName(server);
         return riotServerByName == null ? null : riotServerByName.getServerRegion();
     }
 
     private
-    @Nullable
-    String getPlatformId() {
+    @Nullable String getPlatformId() {
         String server = dataStorage.getServer();
         RiotServer riotServerByName = RiotServer.getRiotServerByName(server);
 

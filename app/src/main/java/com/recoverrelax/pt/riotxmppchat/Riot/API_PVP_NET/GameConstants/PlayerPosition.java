@@ -7,17 +7,13 @@ import java.lang.annotation.RetentionPolicy;
 
 public class PlayerPosition {
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({TOP, MIDDLE, JUNGLE, BOT})
-    public @interface PlayerPositionI {}
-
     public static final int TOP = 1;
     public static final int MIDDLE = 2;
     public static final int JUNGLE = 3;
     public static final int BOT = 4;
 
-    public static String getPositionName(int pp){
-        switch(pp){
+    public static String getPositionName(int pp) {
+        switch (pp) {
             case TOP:
                 return "Top";
             case MIDDLE:
@@ -29,5 +25,10 @@ public class PlayerPosition {
             default:
                 return "";
         }
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({TOP, MIDDLE, JUNGLE, BOT})
+    public @interface PlayerPositionI {
     }
 }

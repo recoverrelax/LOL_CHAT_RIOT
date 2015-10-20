@@ -24,8 +24,6 @@ import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 
 import org.jivesoftware.smack.roster.RosterEntry;
 
-import java.util.Random;
-
 import javax.inject.Inject;
 
 import LolChatRiotDb.NotificationDb;
@@ -35,33 +33,26 @@ import butterknife.OnClick;
 import pt.reco.myutil.MyContext;
 import rx.Subscriber;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class NotificationCustomDialogFragment extends DialogFragment {
 
+    public static String FRIEND_XMPP_ADDRESS = "friend_xmpp_address";
     @Bind(R.id.title)
     TextView title;
-
     @Bind(R.id.isOnline)
     SwitchCompat isOnline;
-
     @Bind(R.id.isOffline)
     SwitchCompat isOffline;
-
     @Bind(R.id.hasLeftGame)
     SwitchCompat hasLeftGame;
-
     @Bind(R.id.hasStartedGame)
     SwitchCompat hasStartedGame;
-
     @Bind(R.id.hasSentPm)
     SwitchCompat hasSentPm;
-
     @Inject
     RiotXmppDBRepository riotXmppDBRepository;
     @Inject
     RiotRosterManager riotRosterManager;
-
-    public static String FRIEND_XMPP_ADDRESS = "friend_xmpp_address";
-
     private String friendXmppUser;
     private NotificationDb notification;
 
@@ -104,7 +95,7 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     }
 
     @OnClick({R.id.isOnline, R.id.isOffline, R.id.hasSentPm, R.id.hasStartedGame, R.id.hasLeftGame})
-    public void onItemClick(SwitchCompat switchButton){
+    public void onItemClick(SwitchCompat switchButton) {
         int id = switchButton.getId();
 
         switch (id) {
@@ -132,9 +123,14 @@ public class NotificationCustomDialogFragment extends DialogFragment {
 
         riotXmppDBRepository.updateNotification(notification)
                 .subscribe(new Subscriber<Long>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
-                    @Override public void onNext(Long aLong) { }
+                    @Override public void onCompleted() {
+                    }
+
+                    @Override public void onError(Throwable e) {
+                    }
+
+                    @Override public void onNext(Long aLong) {
+                    }
                 });
     }
 
@@ -144,14 +140,17 @@ public class NotificationCustomDialogFragment extends DialogFragment {
         String backgroundColor = AppMiscUtils.getRandomMaterialColor(this.getActivity());
         title.setBackgroundColor(Color.parseColor(backgroundColor));
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             Bundle extra = getArguments();
 
             friendXmppUser = extra.getString(FRIEND_XMPP_ADDRESS);
             riotXmppDBRepository.getNotificationByUser(friendXmppUser)
                     .subscribe(new Subscriber<NotificationDb>() {
-                        @Override public void onCompleted() { }
-                        @Override public void onError(Throwable e) { }
+                        @Override public void onCompleted() {
+                        }
+
+                        @Override public void onError(Throwable e) {
+                        }
 
                         @Override
                         public void onNext(NotificationDb notificationDb) {
@@ -168,12 +167,15 @@ public class NotificationCustomDialogFragment extends DialogFragment {
             riotRosterManager.getRosterEntry(friendXmppUser)
                     .filter(rosterEntry -> rosterEntry != null)
                     .subscribe(new Subscriber<RosterEntry>() {
-                        @Override public void onCompleted() { }
-                        @Override public void onError(Throwable e) { }
+                        @Override public void onCompleted() {
+                        }
+
+                        @Override public void onError(Throwable e) {
+                        }
 
                         @Override
                         public void onNext(RosterEntry rosterEntry) {
-                            title.setText("Notify me when " + rosterEntry.getName() + ":");
+                            title.setText(getActivity().getResources().getString(R.string.notify_me_when, rosterEntry.getName()));
                         }
                     });
         }

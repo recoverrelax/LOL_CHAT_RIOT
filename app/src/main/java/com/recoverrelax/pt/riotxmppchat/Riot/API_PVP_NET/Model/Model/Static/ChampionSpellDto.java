@@ -29,6 +29,7 @@ public class ChampionSpellDto {
     public String tooltip;
     public List<SpellVarsDto> vars;
 
-    public ChampionSpellDto() {}
+    public ChampionSpellDto() {
+    }
 
 }

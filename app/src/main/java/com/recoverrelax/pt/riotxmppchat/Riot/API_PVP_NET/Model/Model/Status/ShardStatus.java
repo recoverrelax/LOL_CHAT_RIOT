@@ -14,7 +14,8 @@ public class ShardStatus {
     private List<Service> services;
     private String slug;
 
-    public ShardStatus(){}
+    public ShardStatus() {
+    }
 
     public String getHostname() {
         return hostname;

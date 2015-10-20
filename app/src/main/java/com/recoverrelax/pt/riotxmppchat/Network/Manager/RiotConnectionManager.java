@@ -25,30 +25,29 @@ import static junit.framework.Assert.assertTrue;
 
 @Singleton
 public class RiotConnectionManager implements ConnectionListener {
-    private AbstractXMPPConnection connection;
-
     @Inject RiotRosterManager riotRosterManager;
     @Inject RiotXmppRosterImpl rosterImpl;
     @Inject Bus bus;
     @Inject DataStorage dataStorage;
+    private AbstractXMPPConnection connection;
 
     @Singleton
     @Inject
     public RiotConnectionManager() {
     }
 
-    public void init(AbstractXMPPConnection connection){
+    public void init(AbstractXMPPConnection connection) {
         this.connection = connection;
         ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(connection);
         reconnectionManager.enableAutomaticReconnection();
         reconnectionManager.setReconnectionPolicy(ReconnectionManager.ReconnectionPolicy.RANDOM_INCREASING_DELAY);
     }
 
-    public void checkConnectionInit(){
+    public void checkConnectionInit() {
         assertTrue("Must first call init", connection != null);
     }
 
-    public void addConnectionListener(){
+    public void addConnectionListener() {
         checkConnectionInit();
         if (connection != null && connection.isConnected() && connection.isAuthenticated()) {
             this.connection.addConnectionListener(this);
@@ -79,13 +78,18 @@ public class RiotConnectionManager implements ConnectionListener {
      * ConnectionListener Interfaces
      */
 
-    @Override public void connected(XMPPConnection connection) { }
-    @Override public void authenticated(XMPPConnection connection, boolean resumed) { }
+    @Override public void connected(XMPPConnection connection) {
+    }
+
+    @Override public void authenticated(XMPPConnection connection, boolean resumed) {
+    }
+
     @Override public void connectionClosed() {
 //        bus.post(new OnConnectionLostListenerEvent());
 //        riotRosterManager.setEnabled(false);
         riotRosterManager.disableNotifications();
     }
+
     @Override public void connectionClosedOnError(Exception e) {
         bus.post(new OnDisconnectPublish());
 //        riotRosterManager.setEnabled(false);
@@ -118,6 +122,9 @@ public class RiotConnectionManager implements ConnectionListener {
                 });
     }
 
-    @Override public void reconnectingIn(int seconds) { }
-    @Override public void reconnectionFailed(Exception e) { }
+    @Override public void reconnectingIn(int seconds) {
+    }
+
+    @Override public void reconnectionFailed(Exception e) {
+    }
 }

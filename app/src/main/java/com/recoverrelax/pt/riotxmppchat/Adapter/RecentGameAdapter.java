@@ -32,13 +32,12 @@ import pt.reco.myutil.MyContext;
 
 public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.ViewHolder> {
 
-    private List<RecentGameWrapper> recentGameList;
     private final LayoutInflater inflater;
     private final Context context;
-    private Random random = new Random();
-
     @Inject
     RiotApiRealmDataVersion realmData;
+    private List<RecentGameWrapper> recentGameList;
+    private Random random = new Random();
 
     public RecentGameAdapter(Context context, List<RecentGameWrapper> recentGameList) {
         inflater = LayoutInflater.from(context);
@@ -131,39 +130,28 @@ public class RecentGameAdapter extends RecyclerView.Adapter<RecentGameAdapter.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        final TextView cs;
         @Bind(R.id.recentGameCardView)
         CardView recentGameCardView;
-
         @Bind(R.id.statusWLColor)
         LinearLayout statusWLColor;
-
         @Bind(R.id.gameMode)
         TextView gameMode;
-
         @Bind(R.id.playerPosition)
         TextView playerPosition;
-
         @Bind(R.id.gameWhen)
         TextView gameWhen;
-
         @Bind(R.id.summonerSpellStatBlock1)
         SummonerSpellStatBlock summonerSpellStatBlock;
-
         @Bind(R.id.championBackgroundSkin)
         ImageView frameLayout;
-
         @Bind(R.id.summonerSpellStatBlock2)
         SummonerSpellStatBlock2 summonerSpellStatBlock2;
-
         @Bind(R.id.team100ChampionInfo)
         ChampionImageBlock team1ChampionInfo;
-
         @Bind(R.id.team200ChampionInfo)
         ChampionImageBlock team2ChampionInfo;
-
         RecentGameWrapper game;
-
-        final TextView cs;
 
         public ViewHolder(View itemView) {
             super(itemView);

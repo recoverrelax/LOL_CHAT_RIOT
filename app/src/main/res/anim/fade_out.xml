@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Document   : fade_out.xml
     Created on : December 5, 2010, 1:02 AM
     Author     : andre
@@ -8,6 +7,7 @@
 -->
 
 <alpha xmlns:android="http://schemas.android.com/apk/res/android"
-       android:interpolator="@android:anim/accelerate_interpolator"
-       android:fromAlpha="1.0" android:toAlpha="0.0"
-       android:duration="500"/>
+    android:duration="500"
+    android:fromAlpha="1.0"
+    android:interpolator="@android:anim/accelerate_interpolator"
+    android:toAlpha="0.0" />

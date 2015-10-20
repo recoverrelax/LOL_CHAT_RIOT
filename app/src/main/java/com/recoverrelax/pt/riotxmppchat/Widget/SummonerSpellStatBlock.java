@@ -42,8 +42,8 @@ public class SummonerSpellStatBlock extends LinearLayout {
         inflateLayout();
     }
 
-    public void inflateLayout(){
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public void inflateLayout() {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.summoner_spell_stat_block_layout, this);
         ButterKnife.bind(this);
     }

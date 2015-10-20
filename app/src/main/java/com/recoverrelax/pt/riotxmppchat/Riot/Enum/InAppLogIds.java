@@ -9,7 +9,7 @@ public enum InAppLogIds {
 
     private final int operationId;
 
-    InAppLogIds(int operationId){
+    InAppLogIds(int operationId) {
         this.operationId = operationId;
     }
 

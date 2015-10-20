@@ -2,33 +2,36 @@
 <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
+    <!--suppress AndroidDomInspection -->
     <TextView
         android:id="@+id/yourTeam"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:textColor="@color/white"
         android:background="@color/primaryColorDark"
         android:gravity="center"
         android:text="@string/current_game_your_team"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        app:layout_widthPercent="50%" />
-
+        android:textColor="@color/white"
+        app:layout_widthPercent="50%"
+        tools:ignore="RtlHardcoded" />
+    <!--suppress AndroidDomInspection -->
     <TextView
         android:id="@+id/enemyTeam"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:textColor="@color/white"
         android:background="@color/primaryColorDark"
         android:gravity="center"
         android:text="@string/current_game_enemy_team"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        app:layout_widthPercent="50%" />
+        android:textColor="@color/white"
+        app:layout_widthPercent="50%"
+        tools:ignore="RtlHardcoded" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -37,11 +40,11 @@
 
         <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
             android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/white"
             android:visibility="visible"
-            tools:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            tools:visibility="invisible" />
 
         <LinearLayout
             android:id="@+id/mainContent"

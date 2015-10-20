@@ -15,5 +15,6 @@ public class Mastery {
      */
     int rank;
 
-    public Mastery() {}
+    public Mastery() {
+    }
 }

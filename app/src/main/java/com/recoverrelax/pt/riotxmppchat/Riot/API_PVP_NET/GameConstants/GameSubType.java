@@ -28,7 +28,7 @@ public enum GameSubType {
 
     private String description;
 
-    GameSubType(String description){
+    GameSubType(String description) {
         this.description = description;
     }
 

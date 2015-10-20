@@ -3,7 +3,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Status.Service;
@@ -98,46 +96,46 @@ public class ShardFragment extends BaseFragment {
     }
 
     @OnItemSelected(R.id.regionSpinner)
-    public void OnSelectRegion(AdapterView<?> adapterView, View view, int i, long l){
-        if(!spinnerFirstTime) {
+    public void OnSelectRegion(AdapterView<?> adapterView, View view, int i, long l) {
+        if (!spinnerFirstTime) {
             RiotServer byServerPosition = RiotServer.getByServerPosition(i);
 
             if (!subscription.isUnsubscribed())
                 subscription.unsubscribe();
             getShardIncident(byServerPosition);
-        }else
+        } else
             spinnerFirstTime = false;
     }
 
-    public Subscription getShardIncident(RiotServer server){
-            return
-                    riotApiOperations.getShardIncidents(server.getServerRegion())
-                            .doOnSubscribe(() -> shardBlock.enableProgressBar(true))
-                            .doOnUnsubscribe(() -> shardBlock.enableProgressBar(false))
-                            .subscribe(new Subscriber<Pair<String, List<Service>>>() {
-                                @Override
-                                public void onCompleted() {
-                                    this.unsubscribe();
-                                }
+    public Subscription getShardIncident(RiotServer server) {
+        return
+                riotApiOperations.getShardIncidents(server.getServerRegion())
+                        .doOnSubscribe(() -> shardBlock.enableProgressBar(true))
+                        .doOnUnsubscribe(() -> shardBlock.enableProgressBar(false))
+                        .subscribe(new Subscriber<Pair<String, List<Service>>>() {
+                            @Override
+                            public void onCompleted() {
+                                this.unsubscribe();
+                            }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    String error = ShardFragment.this.getActivity().getResources().getString(R.string.shard_region_error, " " + (String)regionSpinner.getSelectedItem());
+                            @Override
+                            public void onError(Throwable e) {
+                                String error = ShardFragment.this.getActivity().getResources().getString(R.string.shard_region_error, " " + regionSpinner.getSelectedItem());
 
-                                    AppSnackbarUtils.showSnackBar(
-                                            ShardFragment.this.getActivity(),
-                                            error,
-                                            AppSnackbarUtils.LENGTH_LONG);
+                                AppSnackbarUtils.showSnackBar(
+                                        ShardFragment.this.getActivity(),
+                                        error,
+                                        AppSnackbarUtils.LENGTH_LONG);
 
-                                    this.unsubscribe();
-                                }
+                                this.unsubscribe();
+                            }
 
-                                @Override
-                                public void onNext(Pair<String, List<Service>> stringListPair) {
-                                    fetchShardInfo(stringListPair);
-                                    regionSpinner.setSelection(server.getPosition());
-                                }
-                            });
+                            @Override
+                            public void onNext(Pair<String, List<Service>> stringListPair) {
+                                fetchShardInfo(stringListPair);
+                                regionSpinner.setSelection(server.getPosition());
+                            }
+                        });
 
     }
 
@@ -147,7 +145,7 @@ public class ShardFragment extends BaseFragment {
 
         this.serverName.setText(serverName);
 
-        for(int i = 0; i < serviceList.size(); i++){
+        for (int i = 0; i < serviceList.size(); i++) {
             shardBlock.getShardNameBlock().get(i).setText(serviceList.get(i).getName());
 
             String status = serviceList.get(i).getStatus().toUpperCase();

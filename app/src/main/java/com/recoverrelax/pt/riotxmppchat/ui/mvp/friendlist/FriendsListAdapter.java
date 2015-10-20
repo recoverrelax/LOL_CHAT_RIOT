@@ -1,4 +1,4 @@
-package com.recoverrelax.pt.riotxmppchat.Adapter;
+package com.recoverrelax.pt.riotxmppchat.ui.mvp.friendlist;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,7 +27,6 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,46 +41,37 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = FriendsListAdapter.class.getSimpleName();
-
-    @Inject
-    RiotApiRealmDataVersion realmData;
-
-    private List<Friend> friendsList;
     private final LayoutInflater inflater;
     private final Context context;
-    private OnAdapterChildClick onAdapterChildClickCallback;
     private final RecyclerView recyclerView;
     private final CompositeSubscription subscriptions = new CompositeSubscription();
-
-
     private final int updateInterval = 30000;
-
+    @LayoutRes
+    private final
+    int layout_online = R.layout.friends_list_child_online_layout;
+    @LayoutRes
+    private final
+    int layout_offline = R.layout.friends_list_child_offline_layout;
+    private final int VIEW_HOLDER_ONLINE_ID = 0;
+    private final int VIEW_HOLDER_OFFLINE_ID = 1;
+    private final
+    int COLOR_BLACK;
+    private final
+    int COLOR_WHITE;
+    @Inject
+    RiotApiRealmDataVersion realmData;
+    private List<Friend> friendsList;
+    private OnAdapterChildClick onAdapterChildClickCallback;
     /**
      * Adapter RecyclerGradient Object
      */
     private GradientDrawable gradientDrawable;
     private Drawable drawable;
-
-    @LayoutRes
-    private final
-    int layout_online = R.layout.friends_list_child_online_layout;
-
-    @LayoutRes
-    private final
-    int layout_offline = R.layout.friends_list_child_offline_layout;
-
-    private final int VIEW_HOLDER_ONLINE_ID = 0;
-    private final int VIEW_HOLDER_OFFLINE_ID = 1;
     private boolean showOfflineUsers;
-
-    private final
-    int COLOR_BLACK;
-
-    private final
-    int COLOR_WHITE;
 
     public FriendsListAdapter(Context context, ArrayList<Friend> friendsList, boolean showOfflineUsers, RecyclerView recyclerView) {
         this.context = context;
@@ -179,7 +169,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                  * Load Image from DD Server
                  */
 
-                if (friend.getProfileIconId().equals("")) {
+                if (friend.getProfileIconId().equals(Friend.NO_DATA)) {
                     Glide.with(context)
                             .load(R.drawable.profile_icon_example)
                             .into(holderOnline.profileIcon);
@@ -263,6 +253,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     recyclerView.scrollToPosition(0);
                 }
             } else { // NEW FRIEND OFFLINE
+                //noinspection StatementWithEmptyBody
                 if (oldFriend.isOnline()) {
                     // ONLINE - OFFLINE
                     friendsList.remove(positionFriend);
@@ -289,6 +280,26 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount() {
         return friendsList.size();
+    }
+
+    public enum SortMethod {
+        ALPHABETICALLY,
+        ONLINE_FIRST,
+        OFFLINE_FIRST;
+
+        public boolean isSortAlphabetically() {
+            return this.equals(SortMethod.ALPHABETICALLY);
+        }
+
+        public boolean isSortOnlineFirst() {
+            return this.equals(SortMethod.ONLINE_FIRST);
+        }
+    }
+
+    public interface OnAdapterChildClick {
+        void onAdapterFriendClick(String friendUsername, String friendXmppAddress);
+
+        void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername, boolean isPlaying);
     }
 
     class MyViewHolderOnline extends RecyclerView.ViewHolder {
@@ -388,26 +399,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public void onCardOptionsClick(View view) {
             if (onAdapterChildClickCallback != null)
                 onAdapterChildClickCallback.onAdapterFriendOptionsClick(view, current.getUserXmppAddress(), current.getName(), false);
-        }
-    }
-
-    public interface OnAdapterChildClick {
-        void onAdapterFriendClick(String friendUsername, String friendXmppAddress);
-
-        void onAdapterFriendOptionsClick(View view, String friendXmppAddress, String friendUsername, boolean isPlaying);
-    }
-
-    public enum SortMethod {
-        ALPHABETICALLY,
-        ONLINE_FIRST,
-        OFFLINE_FIRST;
-
-        public boolean isSortAlphabetically() {
-            return this.equals(SortMethod.ALPHABETICALLY);
-        }
-
-        public boolean isSortOnlineFirst() {
-            return this.equals(SortMethod.ONLINE_FIRST);
         }
     }
 }

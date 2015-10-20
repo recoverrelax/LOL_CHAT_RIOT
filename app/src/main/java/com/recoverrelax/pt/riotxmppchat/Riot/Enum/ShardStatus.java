@@ -10,13 +10,22 @@ public enum ShardStatus {
     OFFLINE("Offline", R.color.presence_mode_xa),
     DEPLOYING("Deploying", R.color.presence_mode_dnd);
 
-    private String descriptiveName;
-    private @ColorRes
+    private
+    @ColorRes
     final int statusColor;
+    private String descriptiveName;
 
-    ShardStatus(String descriptiveName, @ColorRes int statusColor){
+    ShardStatus(String descriptiveName, @ColorRes int statusColor) {
         this.descriptiveName = descriptiveName;
         this.statusColor = statusColor;
+    }
+
+    public static ShardStatus getByName(String name) {
+        for (ShardStatus ss : ShardStatus.values()) {
+            if (ss.getDescriptiveName().toLowerCase().equals(name.toLowerCase()))
+                return ss;
+        }
+        return ShardStatus.OFFLINE;
     }
 
     public String getDescriptiveName() {
@@ -29,13 +38,5 @@ public enum ShardStatus {
 
     public int getStatusColor() {
         return statusColor;
-    }
-
-    public static ShardStatus getByName(String name){
-        for(ShardStatus ss: ShardStatus.values()){
-            if(ss.getDescriptiveName().toLowerCase().equals(name.toLowerCase()))
-                return ss;
-        }
-        return ShardStatus.OFFLINE;
     }
 }

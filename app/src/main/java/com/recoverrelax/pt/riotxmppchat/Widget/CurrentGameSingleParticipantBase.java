@@ -47,8 +47,8 @@ public abstract class CurrentGameSingleParticipantBase extends PercentRelativeLa
         inflateLayout();
     }
 
-    public void inflateLayout(){
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public void inflateLayout() {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(getLayout(), this);
         ButterKnife.bind(this);
     }
@@ -71,19 +71,19 @@ public abstract class CurrentGameSingleParticipantBase extends PercentRelativeLa
         return summonerSpell2;
     }
 
-    public void setChampionPlayingDrawable(Drawable drawable){
+    public void setChampionPlayingDrawable(Drawable drawable) {
         this.championPlaying.setImageDrawable(drawable);
     }
 
-    public void setSpell1Drawable(Drawable drawable){
+    public void setSpell1Drawable(Drawable drawable) {
         this.summonerSpell1.setImageDrawable(drawable);
     }
 
-    public void setSpell2Drawable(Drawable drawable){
+    public void setSpell2Drawable(Drawable drawable) {
         this.summonerSpell1.setImageDrawable(drawable);
     }
 
-    public void setSummonerName(String text){
+    public void setSummonerName(String text) {
         this.playerName.setText(text);
     }
 }

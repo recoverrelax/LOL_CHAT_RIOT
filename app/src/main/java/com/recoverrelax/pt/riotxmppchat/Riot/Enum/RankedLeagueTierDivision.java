@@ -32,14 +32,36 @@ public enum RankedLeagueTierDivision {
     DIAMOND_4("Diamond IV", R.drawable.diamond_4),
     DIAMOND_5("Diamond V", R.drawable.diamond_5),
     MASTER("Master", R.drawable.master_1),
-    CHALLENGER("Challenger", R.drawable.challenger_1);
+    CHALLENGER("Challenger", R.drawable.challenger_1),
+    NON_DEFINED("", R.drawable.unknown);
 
     private String descriptiveName;
-    private @DrawableRes int iconDrawable;
+    private
+    @DrawableRes int iconDrawable;
 
-    RankedLeagueTierDivision(String descriptiveName, @DrawableRes int iconDrawable){
+    RankedLeagueTierDivision(String descriptiveName, @DrawableRes int iconDrawable) {
         this.descriptiveName = descriptiveName;
         this.iconDrawable = iconDrawable;
+    }
+
+    public static RankedLeagueTierDivision getIconDrawableByLeagueAndTier(String rankedLeagueTier, String rankedLeagueDivision) {
+        String compoundName;
+        /**
+         * Master and Challenger don't have Divisions!
+         */
+        if (rankedLeagueTier.toLowerCase().equals(RankedLeagueTierDivision.MASTER.getDescriptiveName().toLowerCase()) ||
+                rankedLeagueTier.toLowerCase().equals(RankedLeagueTierDivision.CHALLENGER.getDescriptiveName().toLowerCase())) {
+            compoundName = rankedLeagueTier.toLowerCase();
+        } else {
+            compoundName = rankedLeagueTier.toLowerCase() + " " + rankedLeagueDivision.toLowerCase();
+        }
+
+        for (RankedLeagueTierDivision rankedLdt : RankedLeagueTierDivision.values()) {
+            if (rankedLdt.getDescriptiveName().toLowerCase().equals(compoundName)) {
+                return rankedLdt;
+            }
+        }
+        return RankedLeagueTierDivision.NON_DEFINED;
     }
 
     public String getDescriptiveName() {
@@ -48,25 +70,5 @@ public enum RankedLeagueTierDivision {
 
     public @DrawableRes int getIconDrawable() {
         return iconDrawable;
-    }
-
-    public static RankedLeagueTierDivision getIconDrawableByLeagueAndTier(String rankedLeagueTier, String rankedLeagueDivision){
-        String compoundName;
-        /**
-         * Master and Challenger don't have Divisions!
-         */
-        if(rankedLeagueTier.toLowerCase().equals(RankedLeagueTierDivision.MASTER.getDescriptiveName().toLowerCase()) ||
-                rankedLeagueTier.toLowerCase().equals(RankedLeagueTierDivision.CHALLENGER.getDescriptiveName().toLowerCase())) {
-                compoundName = rankedLeagueTier.toLowerCase();
-        }else{
-            compoundName = rankedLeagueTier.toLowerCase() + " " + rankedLeagueDivision.toLowerCase();
-        }
-
-        for(RankedLeagueTierDivision rankedLdt: RankedLeagueTierDivision.values()){
-            if(rankedLdt.getDescriptiveName().toLowerCase().equals(compoundName)){
-                return rankedLdt;
-            }
-        }
-        return RankedLeagueTierDivision.BRONZE_1;
     }
 }

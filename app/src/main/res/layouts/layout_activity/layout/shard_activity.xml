@@ -1,4 +1,3 @@
-
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
@@ -6,23 +5,23 @@
     android:layout_height="match_parent"
     android:layout_below="@+id/app_bar">
 
-<android.support.design.widget.CoordinatorLayout
-       android:background="@drawable/champ_bg"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/champ_bg">
 
         <FrameLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/container"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
             style="@style/toolbarStyleLight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:id="@+id/appBarLayout">
+            android:fitsSystemWindows="true">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/app_bar"
@@ -31,14 +30,15 @@
                 app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                 <TextView
-                    style="@style/toolbarTitleStyle"
                     android:id="@+id/toolbar_title"
+                    style="@style/toolbarTitleStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"/>
+                    android:layout_gravity="start" />
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
+
     <include layout="@layout/navigation_view_layout" />
 
 </android.support.v4.widget.DrawerLayout>

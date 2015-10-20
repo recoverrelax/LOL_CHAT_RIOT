@@ -1,7 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
+
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -22,8 +24,9 @@ public class PersonalMessageImpl {
     }
 
     /**
-     *  Get the last messages for the input user
-     * @param x number of messages to return
+     * Get the last messages for the input user
+     *
+     * @param x                     number of messages to return
      * @param userToGetMessagesFrom user to get messages from
      * @return list of messages
      */
@@ -35,6 +38,7 @@ public class PersonalMessageImpl {
 
     /**
      * Get the last message from the input friend
+     *
      * @param userToGetMessagesFrom user to get last message from
      * @return the message
      */

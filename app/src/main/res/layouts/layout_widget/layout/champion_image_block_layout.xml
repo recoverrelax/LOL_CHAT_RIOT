@@ -11,9 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:gravity="end"
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp"
+        android:gravity="end"
         android:orientation="vertical">
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
@@ -91,7 +91,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan"/>
+            tools:ignore="NestedWeights"
+            tools:text="Myan" />
 
         <TextView
             android:id="@+id/summonerName2"
@@ -99,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan"/>
+            tools:text="Myan" />
 
         <TextView
             android:id="@+id/summonerName3"
@@ -107,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan"/>
+            tools:text="Myan" />
 
         <TextView
             android:id="@+id/summonerName4"
@@ -115,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan"/>
+            tools:text="Myan" />
 
         <TextView
             android:id="@+id/summonerName5"
@@ -123,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan"/>
+            tools:text="Myan" />
 
         <TextView
             android:id="@+id/summonerName6"
@@ -131,6 +132,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan"/>
+            tools:text="Myan" />
     </LinearLayout>
 </LinearLayout>

@@ -115,7 +115,7 @@ public class LoginActivity extends BaseActivity {
         logo.setScaleX(0.7f);
 
         ObjectAnimator titleSlideUp = ObjectAnimator.ofFloat(logo, "translationY", 1000, -100, 0)
-                                        .setDuration(3000);
+                .setDuration(3000);
 
         ObjectAnimator fadingBackground = ObjectAnimator.ofPropertyValuesHolder(login_main_layout.getBackground(),
                 PropertyValuesHolder.ofInt("alpha", 0))
@@ -132,9 +132,14 @@ public class LoginActivity extends BaseActivity {
                 loginBottomLayout.setVisibility(View.VISIBLE);
             }
 
-            @Override public void onAnimationEnd(Animator animator) { }
-            @Override public void onAnimationCancel(Animator animator) { }
-            @Override public void onAnimationRepeat(Animator animator) { }
+            @Override public void onAnimationEnd(Animator animator) {
+            }
+
+            @Override public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override public void onAnimationRepeat(Animator animator) {
+            }
         });
 
         final AnimatorSet animatorSetSecondPart = new AnimatorSet();
@@ -245,7 +250,7 @@ public class LoginActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if(materialDialog != null)
+        if (materialDialog != null)
             materialDialog.dismiss();
         ButterKnife.unbind(this);
     }

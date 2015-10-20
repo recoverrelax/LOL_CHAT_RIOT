@@ -7,7 +7,7 @@ public enum GameType {
 
     private String description;
 
-    GameType(String description){
+    GameType(String description) {
         this.description = description;
     }
 

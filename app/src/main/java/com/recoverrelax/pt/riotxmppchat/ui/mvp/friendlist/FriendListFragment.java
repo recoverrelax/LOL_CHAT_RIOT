@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.mvp.friendlist;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -39,7 +37,8 @@ public class FriendListFragment extends BaseFragment
 
     private FriendListPresenter presenter;
 
-    public FriendListFragment() {}
+    public FriendListFragment() {
+    }
 
     public static FriendListFragment newInstance() {
         return new FriendListFragment();
@@ -134,7 +133,8 @@ public class FriendListFragment extends BaseFragment
     }
 
     @Override
-    public void onSearchFriendListCompleted() {}
+    public void onSearchFriendListCompleted() {
+    }
 
     @Override
     public void onSingleFriendReady(int onlineFriendCount) {
@@ -147,7 +147,8 @@ public class FriendListFragment extends BaseFragment
     }
 
     @Override
-    public void onSingleFriendCompleted() {}
+    public void onSingleFriendCompleted() {
+    }
 
     @Override
     public void setRecyclerViewLayoutParams(RecyclerView.LayoutManager layoutManager) {

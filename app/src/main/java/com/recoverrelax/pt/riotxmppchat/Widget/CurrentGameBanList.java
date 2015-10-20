@@ -56,34 +56,34 @@ public class CurrentGameBanList extends PercentRelativeLayout {
         inflateLayout();
     }
 
-    public void inflateLayout(){
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public void inflateLayout() {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.current_game_ban_list_layout, this);
         ButterKnife.bind(this);
     }
 
-    public void setLeftTeamText(String text){
+    public void setLeftTeamText(String text) {
         yourTeam.setText(text);
     }
 
-    public void setRightTeamText(String text){
+    public void setRightTeamText(String text) {
         enemyTeam.setText(text);
     }
 
-    public List<ImageView> getTeam100Bans(){
+    public List<ImageView> getTeam100Bans() {
         return this.team100Bans;
     }
 
-    public List<ImageView> getTeam200Bans(){
+    public List<ImageView> getTeam200Bans() {
         return this.team200Bans;
     }
 
-    public int getSize(){
+    public int getSize() {
         return this.team100Bans.size() + this.team200Bans.size();
     }
 
-    public void enableProgressBar(boolean state){
-        progressBar.setVisibility(state? View.VISIBLE : View.GONE);
-        mainContent.setVisibility(state? View.INVISIBLE : View.VISIBLE);
+    public void enableProgressBar(boolean state) {
+        progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
+        mainContent.setVisibility(state ? View.INVISIBLE : View.VISIBLE);
     }
 }

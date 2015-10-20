@@ -10,5 +10,6 @@ public class Observer {
      */
     String encryptionKey;
 
-    public Observer() {}
+    public Observer() {
+    }
 }

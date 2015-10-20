@@ -28,9 +28,8 @@ public class SettingsGeneralFragment extends Fragment {
 //    @Bind(R.id.download)
 //    Button download;
 
-    private String connectedXmppUser;
-
     @Inject DataStorage dataStorage;
+    private String connectedXmppUser;
 
     public SettingsGeneralFragment() {
 
@@ -81,7 +80,7 @@ public class SettingsGeneralFragment extends Fragment {
                 });*/
     }
 
-    private void downloadImages(){
+    private void downloadImages() {
 
 //        ProgressDialog progressDialog = new ProgressDialog(getActivity());
 //        progressDialog.setIndeterminate(true);
@@ -116,7 +115,7 @@ public class SettingsGeneralFragment extends Fragment {
 //                });
     }
 
-    public void downloadImages2(){
+    public void downloadImages2() {
 //        downloadSingleImageObservable(championName.getText().toString(), 1)
 //                .subscribe(new Subscriber<File>() {
 //                    @Override
@@ -146,7 +145,7 @@ public class SettingsGeneralFragment extends Fragment {
 
         // Format the ChampionName
         // First all to lowerCase
-        String finalChampionString = championName.substring(0, 1).toUpperCase() + championName.substring(1).toLowerCase() + "_" + skinNumber;
+//        String finalChampionString = championName.substring(0, 1).toUpperCase() + championName.substring(1).toLowerCase() + "_" + skinNumber;
 
         return null;
     }
@@ -169,17 +168,17 @@ public class SettingsGeneralFragment extends Fragment {
             int finalWidth = maxWidth;
             int finalHeight = maxHeight;
             if (ratioMax > 1) {
-                finalWidth = (int) ((float)maxHeight * ratioBitmap);
+                finalWidth = (int) ((float) maxHeight * ratioBitmap);
             } else {
-                finalHeight = (int) ((float)maxWidth / ratioBitmap);
+                finalHeight = (int) ((float) maxWidth / ratioBitmap);
             }
             image = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
 
             Bitmap cropped = Bitmap.createBitmap(
                     image,
-                    image.getWidth()/3,
+                    image.getWidth() / 3,
                     0,
-                    image.getWidth()-(image.getWidth()/3),
+                    image.getWidth() - (image.getWidth() / 3),
                     image.getHeight());
 
             image.recycle();

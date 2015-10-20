@@ -6,7 +6,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class SquareImageViewWidth extends ImageView{
+public class SquareImageViewWidth extends ImageView {
     public SquareImageViewWidth(Context context) {
         super(context);
     }

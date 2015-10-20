@@ -1,75 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.recoverrelax.pt.riotxmppchat" >
+    package="com.recoverrelax.pt.riotxmppchat">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <supports-screens android:largestWidthLimitDp="600"/>
+    <supports-screens android:largestWidthLimitDp="600" />
 
     <application
         android:name="com.recoverrelax.pt.riotxmppchat.MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.FriendListActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/friends_online" >
-        </activity>
+            android:label="@string/friends_online"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".ui.activity.DashBoardActivity"
-            android:label="@string/log_activity" >
-        </activity>
+            android:label="@string/log_activity"></activity>
 
         <activity
             android:name=".ui.activity.LogActivity"
-            android:noHistory="true"
-            android:label="@string/dashboard" >
-        </activity>
+            android:label="@string/dashboard"
+            android:noHistory="true"></activity>
         <activity
             android:name=".ui.activity.FriendMessageListActivity"
-            android:label="@string/message_list_title" >
-        </activity>
+            android:label="@string/message_list_title"></activity>
 
         <activity
             android:name=".ui.activity.ChatActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/message_list_title" >
-        </activity>
+            android:label="@string/message_list_title"
+            android:windowSoftInputMode="adjustPan"></activity>
 
         <activity
             android:name=".ui.activity.LiveGameActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:label="@string/current_game_activity_title"
             android:noHistory="true"
-            android:label="@string/current_game_activity_title" >
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
 
         <activity
             android:name=".ui.activity.RecentGameActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:label="@string/recent_game_activity_title"
             android:noHistory="true"
-            android:label="@string/recent_game_activity_title" >
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
 
 
         <activity
             android:name=".ui.activity.ShardActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:label="@string/shard_activity_title"
             android:noHistory="true"
-            android:label="@string/shard_activity_title" >
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
 
-        <activity android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"
+        <activity
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"
             android:noHistory="true">
 
         </activity>
         <activity
             android:name=".ui.activity.SettingActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_sub" >
+            android:label="@string/title_activity_sub"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activity.FriendListActivity" />
@@ -84,7 +77,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService"/>
+        <service android:name="com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="03b822a9367abbf243c012a679a4a286e0e56c7a" />

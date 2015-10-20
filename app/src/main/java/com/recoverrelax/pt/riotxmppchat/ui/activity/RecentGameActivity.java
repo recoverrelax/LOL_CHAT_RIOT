@@ -49,7 +49,7 @@ public class RecentGameActivity extends MessageIconActivity {
             friendXmppUsername = (String) savedInstanceState.getSerializable(FRIEND_XMPP_USERNAME_INTENT);
         }
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = RecentGameFragment.newInstance(friendXmppAddress, friendXmppUsername);
             fragmentManager.beginTransaction()

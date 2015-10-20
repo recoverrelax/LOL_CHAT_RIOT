@@ -1,155 +1,162 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parentLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="10dp"
     android:layout_gravity="center"
-    android:gravity="center_vertical|center_horizontal">
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/title"
         style="@style/settings_title"
-        android:background="?attr/colorPrimary"
-        android:textColor="@color/white"
-        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        tools:text="Notify me when 2Fast4U: "/>
+        android:background="?attr/colorPrimary"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        tools:text="Notify me when 2Fast4U: " />
 
 
     <LinearLayout
-        android:paddingRight="32dp"
-        android:paddingLeft="32dp"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="vertical"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp">
 
         <LinearLayout
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <android.support.v7.widget.SwitchCompat
+                android:id="@+id/isOnline"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="15dp"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
                 android:textOff="NO"
-                android:id="@+id/isOnline" />
+                android:textOn="YES"
+                android:theme="@style/AppTheme.Base.Settings"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="@string/settings_custom_notif_online"/>
+                android:layout_weight="1"
+                android:text="@string/settings_custom_notif_online" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <android.support.v7.widget.SwitchCompat
+                android:id="@+id/isOffline"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"
                 android:layout_marginRight="15dp"
-                android:id="@+id/isOffline" />
+                android:textOff="NO"
+                android:textOn="YES"
+                android:theme="@style/AppTheme.Base.Settings"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="@string/settings_custom_notif_offline"/>
+                android:layout_weight="1"
+                android:text="@string/settings_custom_notif_offline" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <android.support.v7.widget.SwitchCompat
+                android:id="@+id/hasStartedGame"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"
                 android:layout_marginRight="15dp"
-                android:id="@+id/hasStartedGame" />
+                android:textOff="NO"
+                android:textOn="YES"
+                android:theme="@style/AppTheme.Base.Settings"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="@string/settings_custom_notif_start_game"/>
+                android:layout_weight="1"
+                android:text="@string/settings_custom_notif_start_game" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <android.support.v7.widget.SwitchCompat
+                android:id="@+id/hasLeftGame"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"
                 android:layout_marginRight="15dp"
-                android:id="@+id/hasLeftGame" />
+                android:textOff="NO"
+                android:textOn="YES"
+                android:theme="@style/AppTheme.Base.Settings"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="@string/settings_custom_notif_end_game"/>
+                android:layout_weight="1"
+                android:text="@string/settings_custom_notif_end_game" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <android.support.v7.widget.SwitchCompat
+                android:id="@+id/hasSentPm"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"
                 android:layout_marginRight="15dp"
-                android:id="@+id/hasSentPm" />
+                android:textOff="NO"
+                android:textOn="YES"
+                android:theme="@style/AppTheme.Base.Settings"
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:text="@string/settings_custom_notif_message"/>
+                android:layout_weight="1"
+                android:text="@string/settings_custom_notif_message" />
 
         </LinearLayout>
-
 
 
     </LinearLayout>

@@ -10,7 +10,8 @@ public class ItemTreeDto {
     private String header;
     private List<String> tags;
 
-    public ItemTreeDto(){}
+    public ItemTreeDto() {
+    }
 
     public String getHeader() {
         return header;

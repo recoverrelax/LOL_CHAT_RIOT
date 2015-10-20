@@ -5,9 +5,10 @@ public class TeamInfo {
     String playerName;
     long playerId;
 
-    public TeamInfo(){}
+    public TeamInfo() {
+    }
 
-    public TeamInfo(long playerId, String playerImage){
+    public TeamInfo(long playerId, String playerImage) {
         this.playerId = playerId;
         this.playerImage = playerImage;
     }

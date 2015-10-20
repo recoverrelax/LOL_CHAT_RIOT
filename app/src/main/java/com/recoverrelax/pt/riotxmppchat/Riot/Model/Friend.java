@@ -17,7 +17,6 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Comparator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,12 +24,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
-public class Friend implements Comparable<Friend>{
-    private String name;
-    private String userXmppAddress;
-    private Presence userRosterPresence;
-    private Element rootElement;
-
+public class Friend implements Comparable<Friend> {
+    public static final String PERSONAL_MESSAGE_NO_VIEW = "-1";
+    public static final String NO_DATA = "-";
     /**
      * CONSTANTS
      */
@@ -45,10 +41,10 @@ public class Friend implements Comparable<Friend>{
     private static final String TIME_STAMP = "timeStamp";
     private static final String GAME_STATUS = "gameStatus";
     private static final String GAME_STATUS_NO_VIEW = "-1";
-    public static final String PERSONAL_MESSAGE_NO_VIEW = "-1";
-
-    private static final String NO_DATA = "-";
-
+    private String name;
+    private String userXmppAddress;
+    private Presence userRosterPresence;
+    private Element rootElement;
     private String profileIconWithUrl;
     private String champIconWithUrl;
 
@@ -58,6 +54,25 @@ public class Friend implements Comparable<Friend>{
         this.userRosterPresence = userRosterPresence;
 
         rootElement = buildCustomAttrFromStatusMessage();
+    }
+
+    /**
+     * @return The extracted String or EMPTY_STRING ("")
+     */
+    private static String getStringFromXmlTag(String tagName, Element rootElement) {
+        if (rootElement == null)
+            return NO_DATA;
+        else {
+            NodeList list = rootElement.getElementsByTagName(tagName);
+            if (list != null && list.getLength() > 0) {
+                NodeList subList = list.item(0).getChildNodes();
+
+                if (subList != null && subList.getLength() > 0) {
+                    return subList.item(0).getNodeValue();
+                }
+            }
+            return NO_DATA;
+        }
     }
 
     /**
@@ -84,25 +99,6 @@ public class Friend implements Comparable<Friend>{
                 return null;
             }
             return document.getDocumentElement();
-        }
-    }
-
-    /**
-     * @return The extracted String or EMPTY_STRING ("")
-     */
-    private static String getStringFromXmlTag(String tagName, Element rootElement) {
-        if (rootElement == null)
-            return NO_DATA;
-        else {
-            NodeList list = rootElement.getElementsByTagName(tagName);
-            if (list != null && list.getLength() > 0) {
-                NodeList subList = list.item(0).getChildNodes();
-
-                if (subList != null && subList.getLength() > 0) {
-                    return subList.item(0).getNodeValue();
-                }
-            }
-            return NO_DATA;
         }
     }
 
@@ -213,12 +209,12 @@ public class Friend implements Comparable<Friend>{
         return GameStatus.getByXmppName(gameStatusXmpp);
     }
 
-    public boolean isPlaying(){
+    public boolean isPlaying() {
         GameStatus gameStatus = getGameStatus();
         return gameStatus != null && gameStatus.isPlaying();
     }
 
-    public boolean isInQueue(){
+    public boolean isInQueue() {
         GameStatus gameStatus = getGameStatus();
         return gameStatus != null && gameStatus.isInQueue();
     }
@@ -233,7 +229,7 @@ public class Friend implements Comparable<Friend>{
             case OUT_OF_GAME:
                 return GAME_STATUS_NO_VIEW;
             case CHAMPION_SELECT:
-               return formatChampionSelectText();
+                return formatChampionSelectText();
             case IN_QUEUE:
                 return formatQeueSelectText();
             case INGAME:
@@ -243,28 +239,28 @@ public class Friend implements Comparable<Friend>{
         }
     }
 
-    private String formatChampionSelectText(){
+    private String formatChampionSelectText() {
         String timeStamp = getTimeStampDifference();
         boolean noTimeStamp = timeStamp.equals(NO_DATA);
         String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
 
         StringBuilder message = new StringBuilder();
 
-        if(noTimeStamp)
+        if (noTimeStamp)
             message.append(MainApplication.getInstance().getResources().getString(R.string.in_champion_select));
         else
             message.append(MainApplication.getInstance().getResources().getString(R.string.in_champion_select_for)).append(" ").append(timeStamp).append(" ").append(minutes);
         return message.toString();
     }
 
-    private String formatQeueSelectText(){
+    private String formatQeueSelectText() {
         String timeStamp = getTimeStampDifference();
         boolean noTimeStamp = timeStamp.equals(NO_DATA);
         String minutes = MainApplication.getInstance().getResources().getString(R.string.minutes);
 
         StringBuilder message = new StringBuilder();
 
-        if(noTimeStamp)
+        if (noTimeStamp)
             message.append(MainApplication.getInstance().getResources().getString(R.string.in_queue_select));
         else
             message.append(MainApplication.getInstance().getResources().getString(R.string.in_queue_select_for)).append(" ").append(timeStamp).append(" ").append(minutes);
@@ -272,19 +268,19 @@ public class Friend implements Comparable<Friend>{
     }
 
 
-    private String getTimeStampDifference(){
+    private String getTimeStampDifference() {
         try {
             long serverTimeStamp = Long.parseLong(getTimeStamp());
             long nowTimeStamp = System.currentTimeMillis();
 
             long difference = Math.abs((nowTimeStamp - serverTimeStamp)) / 1000L / 60L;
             return String.valueOf(difference);
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             return "";
         }
     }
 
-    private String formatInGameText(){
+    private String formatInGameText() {
         String timeStamp = getTimeStampDifference();
         boolean noTimeStamp = timeStamp.equals(NO_DATA);
 
@@ -302,17 +298,17 @@ public class Friend implements Comparable<Friend>{
                 .append(MainApplication.getInstance().getResources().getString(R.string.ingame_playing_as_for))
                 .append(" ").toString();
 
-       if(noTimeStamp){
-            if(noChampionName){
+        if (noTimeStamp) {
+            if (noChampionName) {
                 // !TIMESTAMP - !CHAMPIONNAME
                 return GameStatus.INGAME.getDescriptiveText();
-            }else{
+            } else {
                 // !TIMESTAMP - CHAMPIONNAME
                 return returnString.delete(0, returnString.length())
                         .append(playingAs).append(championName).toString();
             }
-        }else{
-            if(noChampionName){
+        } else {
+            if (noChampionName) {
                 // TIMESTAMP - !CHAMPIONNAME
                 return returnString.delete(0, returnString.length())
                         .append(GameStatus.INGAME.getDescriptiveText())
@@ -322,7 +318,7 @@ public class Friend implements Comparable<Friend>{
                         .append(timeStamp)
                         .append(" ")
                         .append(minutes).toString();
-            }else{
+            } else {
                 // TIMESTAMP - CHAMPIONNAME
 //                return returnString.delete(0, returnString.length())
 //                        .append(playingAs)
@@ -332,7 +328,7 @@ public class Friend implements Comparable<Friend>{
 //                        .append(timeStamp)
 //                        .append(" ")
 //                        .append(minutes).toString();
-                        return returnString.delete(0, returnString.length())
+                return returnString.delete(0, returnString.length())
                         .append("Playing for")
                         .append(" ")
                         .append(timeStamp)
@@ -342,7 +338,7 @@ public class Friend implements Comparable<Friend>{
         }
     }
 
-    private String getChampionName(){
+    private String getChampionName() {
         return getStringFromXmlTag(CHAMPION_NAME, rootElement);
     }
 
@@ -354,10 +350,10 @@ public class Friend implements Comparable<Friend>{
     public int compareTo(@NonNull Friend friend) {
         if ((this.isOnline() && friend.isOnline()) || (!this.isOnline() && !friend.isOnline()))
             return this.getName().compareTo(friend.getName());
-                    else if (this.isOnline())
+        else if (this.isOnline())
             return -1;
-                    else
-                        return 1;
+        else
+            return 1;
     }
 
     public String getChampionNameFormatted() {
@@ -368,43 +364,6 @@ public class Friend implements Comparable<Friend>{
         championUrl = championUrl.replace(" ", "_");
 
         return championUrl;
-    }
-
-    public static class OnlineOfflineComparator implements Comparator<Friend> {
-        @Override
-        public int compare(Friend a, Friend b) {
-            if (samePresence(a, b))
-                return 0;
-            else if (a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable())
-                return -1;
-            else
-                return 1;
-        }
-
-        public boolean samePresence(Friend a, Friend b) {
-            if (a.getUserRosterPresence().isAvailable() && b.getUserRosterPresence().isAvailable())
-                return true;
-            else if (!a.getUserRosterPresence().isAvailable() && !b.getUserRosterPresence().isAvailable()) {
-                return true;
-            }
-            return false;
-        }
-    }
-
-    public static class AlphabeticComparator implements Comparator<Friend> {
-        @Override
-        public int compare(Friend a, Friend b) {
-            return a.getName().compareTo(b.getName());
-        }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof Friend) {
-            Friend f = (Friend) o;
-            return this.getUserXmppAddress().equals(f.getUserXmppAddress());
-        } else
-            return false;
     }
 
     @Override

@@ -46,59 +46,39 @@ import static junit.framework.Assert.assertTrue;
 
 public class RiotXmppService extends Service {
 
-    private static final String TAG = RiotXmppService.class.getSimpleName();
-    private static final int ONGOING_SERVICE_NOTIFICATION_ID = 12345;
-
-    private final IBinder mBinder = new MyBinder();
-
     public static final String INTENT_SERVER_HOST_CONST = "server";
     public static final String INTENT_SERVER_USERNAME = "username";
     public static final String INTENT_SERVER_PASSWORD = "password";
-
+    private static final String TAG = RiotXmppService.class.getSimpleName();
+    private static final int ONGOING_SERVICE_NOTIFICATION_ID = 12345;
     private static final long DELAY_BEFORE_ROSTER_LISTENER = 500;
-
+    private final IBinder mBinder = new MyBinder();
+    public PresenceMode myPresenceMode;
+    @Inject RiotXmppConnectionImpl connectionHelper;
+    @Inject DataStorage dataStorage;
+    @Inject RiotConnectionManager connectionManager;
+    @Inject RiotRosterManager riotRosterManager;
+    @Inject RiotChatManager riotChatManager;
+    @Inject Bus bus;
     /**
      * Server Info
      */
     private String serverHost;
-
     private int serverPort = AppGlobals.XMPP.RIOT_PORT;
     private String serverDomain = AppGlobals.XMPP.RIOT_DOMAIN;
     private String username;
     private String password;
-
     private XMPPTCPConnectionConfiguration connectionConfig;
     private AbstractXMPPConnection connection;
-
-    public PresenceMode myPresenceMode;
-
-    @Inject RiotXmppConnectionImpl connectionHelper;
-    @Inject DataStorage dataStorage;
-    @Inject RiotConnectionManager connectionManager;
-
-    @Inject RiotRosterManager riotRosterManager;
-    @Inject RiotChatManager riotChatManager;
-    @Inject Bus bus;
 
     /**
      * Callbacks
      */
 
-    /**
-     * New Message Notification
-     */
-
-    public class MyBinder extends Binder {
-        public RiotXmppService getService() {
-            return RiotXmppService.this;
-        }
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -111,6 +91,7 @@ public class RiotXmppService extends Service {
             Bundle extras = intent.getExtras();
             username = extras.getString(INTENT_SERVER_USERNAME, null);
             password = extras.getString(INTENT_SERVER_PASSWORD, null);
+            //noinspection ConstantConditions
             serverHost = (RiotServer.getRiotServerByName(extras.getString(INTENT_SERVER_HOST_CONST, null))).getServerHost();
         } else {
             /**
@@ -118,6 +99,7 @@ public class RiotXmppService extends Service {
              */
             username = dataStorage.getUsername();
             password = dataStorage.getPassword();
+            //noinspection ConstantConditions
             serverHost = (RiotServer.getRiotServerByName((dataStorage.getServer())).getServerHost());
         }
 
@@ -160,6 +142,7 @@ public class RiotXmppService extends Service {
          * OR
          * USER NOT LOGGED IN OR ANOTHER USER LOGGED IN
          */
+        //noinspection ConstantConditions
         return connection != null
                 && connection.isConnected()
                 && connection.isAuthenticated()
@@ -281,7 +264,7 @@ public class RiotXmppService extends Service {
                 });
     }
 
-    private Observable<Boolean> createListeners(AbstractXMPPConnection connection){
+    private Observable<Boolean> createListeners(AbstractXMPPConnection connection) {
         LOGI(TAG, "Enters createListeners\n");
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
@@ -299,7 +282,7 @@ public class RiotXmppService extends Service {
 
                     subscriber.onNext(true);
                     subscriber.onCompleted();
-                }catch(Exception e){
+                } catch (Exception e) {
                     LOGI(TAG, "Enters createListeners catch \n");
                     e.printStackTrace();
                     subscriber.onError(e);
@@ -307,7 +290,8 @@ public class RiotXmppService extends Service {
             }
         });
     }
-    public void swapPresenceMode(boolean firstTime){
+
+    public void swapPresenceMode(boolean firstTime) {
         /**
          * Order:
          * - available
@@ -316,7 +300,7 @@ public class RiotXmppService extends Service {
          */
 
         Presence presence = null;
-        if(connection != null) {
+        if (connection != null) {
             if (firstTime) {
                 myPresenceMode = PresenceMode.AVAILABLE;
                 presence = new Presence(Presence.Type.available);
@@ -333,7 +317,8 @@ public class RiotXmppService extends Service {
                     presence = new Presence(Presence.Type.available);
                 }
             }
-            if(presence != null)
+            //noinspection ConstantConditions
+            if (presence != null)
                 try {
                     connection.sendStanza(presence);
                 } catch (SmackException.NotConnectedException e) {
@@ -366,5 +351,15 @@ public class RiotXmppService extends Service {
 
     public RiotConnectionManager getRiotConnectionManager() {
         return connectionManager;
+    }
+
+    /**
+     * New Message Notification
+     */
+
+    public class MyBinder extends Binder {
+        public RiotXmppService getService() {
+            return RiotXmppService.this;
+        }
     }
 }

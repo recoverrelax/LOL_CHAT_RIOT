@@ -1,4 +1,5 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Static;
+
 import org.parceler.Parcel;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class RecommendedDto {
     public String title;
     public String type;
 
-    public RecommendedDto() {}
+    public RecommendedDto() {
+    }
 
 }

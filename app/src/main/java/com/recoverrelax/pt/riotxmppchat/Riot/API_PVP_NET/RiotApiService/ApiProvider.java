@@ -17,18 +17,16 @@ import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.converter.GsonConverter;
 
+@SuppressWarnings("FieldCanBeLocal")
 @Singleton
 public class ApiProvider {
     private static final String TAG = ApiProvider.class.getSimpleName();
-
-    private RestAdapter mRestAdapterSecure;
-    private RiotApiService riotApiServiceSecure;
-
-    private RestAdapter mRestAdapter;
-    private RiotApiService riotApiService;
-
     private static final Endpoint baseEndPointSecure = Endpoints.newFixedEndpoint("https://");
     private static final Endpoint baseEndPoint = Endpoints.newFixedEndpoint("http://");
+    private RestAdapter mRestAdapterSecure;
+    private RiotApiService riotApiServiceSecure;
+    private RestAdapter mRestAdapter;
+    private RiotApiService riotApiService;
 
     @Singleton
     @Inject
@@ -44,7 +42,7 @@ public class ApiProvider {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(baseEndPointSecure)
                 .setRequestInterceptor(request ->
-                        request.addQueryParam("api_key", AppGlobals.RIOT_API.API_KEY)
+                                request.addQueryParam("api_key", AppGlobals.RIOT_API.API_KEY)
                 )
                 .setConverter(new GsonConverter(gson)).build();
 

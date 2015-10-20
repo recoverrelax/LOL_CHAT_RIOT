@@ -19,15 +19,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:baselineAligned="false"
             android:orientation="horizontal"
-            android:paddingTop="10dp"
-            android:baselineAligned="false">
+            android:paddingTop="10dp">
 
             <FrameLayout
                 android:layout_width="0dp"
-                android:paddingLeft="10dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                tools:ignore="RtlHardcoded">
 
                 <ImageView
                     android:id="@+id/profileIcon"
@@ -42,15 +43,16 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
                     android:orientation="horizontal"
-                    android:gravity="bottom">
+                    tools:ignore="NestedWeights">
 
                     <!--&lt;!&ndash;<TextView&ndash;&gt;-->
                     <!--&lt;!&ndash;style="@style/friend_list_cardview_win_loss_2_textview"&ndash;&gt;-->
@@ -61,33 +63,35 @@
 
                     <TextView
                         android:id="@+id/friendPresenceMode"
-                        android:visibility="invisible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="top|center_horizontal"
                         android:layout_marginLeft="@dimen/friends_list_recycler_child_textview_margin"
                         android:background="@drawable/friend_list_status_rounded_background"
                         android:gravity="center_vertical|left"
-                        tools:background="@color/presence_mode_away"
-                        android:layout_gravity="top|center_horizontal"
                         android:paddingBottom="@dimen/friends_list_recycler_child_textview_padding_tb"
                         android:paddingLeft="@dimen/friends_list_recycler_child_textview_padding_lr"
                         android:paddingRight="@dimen/friends_list_recycler_child_textview_padding_lr"
                         android:paddingTop="@dimen/friends_list_recycler_child_textview_padding_tb"
                         android:textAppearance="?android:textAppearanceSmall"
+                        android:visibility="invisible"
+                        tools:background="@color/presence_mode_away"
+                        tools:ignore="RtlHardcoded"
                         tools:text="Away" />
                 </LinearLayout>
 
                 <FrameLayout
+                    android:id="@+id/card_more_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:id="@+id/card_more_layout"
                     android:layout_gravity="bottom|center_horizontal">
+
                     <ImageView
                         android:id="@+id/card_more"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_more_vert_white_24dp"
-                        android:layout_gravity="bottom|center_horizontal" />
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:src="@drawable/ic_more_vert_white_24dp" />
 
                 </FrameLayout>
 
@@ -127,6 +131,7 @@
             android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/white"
+            tools:ignore="RtlHardcoded"
             tools:text="2Fast4You" />
 
     </LinearLayout>

@@ -31,7 +31,8 @@ public class SummonerSpellDto {
     private String tooltip;
     private List<SpellVarsDto> vars;
 
-    public SummonerSpellDto() {}
+    public SummonerSpellDto() {
+    }
 
     public List<Double> getCooldown() {
         return cooldown;

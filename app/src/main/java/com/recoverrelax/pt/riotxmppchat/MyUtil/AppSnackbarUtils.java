@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.MessageIconActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,18 +18,12 @@ import pt.reco.myutil.MyContext;
 
 public final class AppSnackbarUtils {
 
-    @IntDef({LENGTH_SHORT, LENGTH_LONG, LENGTH_INDEFINITE})
-    @Retention(RetentionPolicy.SOURCE)
-    private @interface SnackbarDuration {}
-
     public static final int LENGTH_SHORT = Snackbar.LENGTH_SHORT;
     public static final int LENGTH_INDEFINITE = Snackbar.LENGTH_INDEFINITE;
     public static final int LENGTH_LONG = Snackbar.LENGTH_LONG;
-
     private static final int DEFAULT_BACKGROUND_COLOR = R.color.colorDark;
     private static final int DEFAULT_TEXT_COLOR = R.color.white;
     private static final int DEFAULT_ACTION_TEXT_COLOR = R.color.accentColor;
-
 
     @SnackbarDuration
     public static Snackbar showSnackBar(
@@ -41,9 +34,10 @@ public final class AppSnackbarUtils {
             Integer textColor,
             String actionText,
             Integer actionTextColor,
-            View.OnClickListener listener ){
+            View.OnClickListener listener) {
 
-        if(activity == null)
+        //noinspection ConstantConditions
+        if (activity == null)
             return null;
 
         Snackbar snackbar = Snackbar.make(
@@ -62,9 +56,9 @@ public final class AppSnackbarUtils {
         snackbarTextView.setTextColor(MyContext.getColor(activity, textColor == null ? DEFAULT_TEXT_COLOR : textColor));
 
         // set click listener
-        if(listener != null && actionText != null) {
+        if (listener != null && actionText != null) {
             snackbar.setAction(actionText, listener);
-            snackbar.setActionTextColor(MyContext.getColor(activity, actionTextColor == null ? DEFAULT_ACTION_TEXT_COLOR :actionTextColor));
+            snackbar.setActionTextColor(MyContext.getColor(activity, actionTextColor == null ? DEFAULT_ACTION_TEXT_COLOR : actionTextColor));
         }
 
         snackbar.show();
@@ -80,12 +74,12 @@ public final class AppSnackbarUtils {
             Integer textColor,
             String actionText,
             Integer actionTextColor,
-            View.OnClickListener listener ){
+            View.OnClickListener listener) {
 
         return showSnackBar(activity, activity.getResources().getString(messageStringRes), duration, backgroundColor, textColor, actionText, actionTextColor, listener);
 
     }
-    
+
     @SnackbarDuration
     public static Snackbar showSnackBar(
             @NonNull Activity activity,
@@ -95,15 +89,14 @@ public final class AppSnackbarUtils {
             Integer textColor,
             @StringRes Integer actionText,
             Integer actionTextColor,
-            View.OnClickListener listener ){
+            View.OnClickListener listener) {
 
         return showSnackBar(activity, activity.getResources().getString(messageStringRes), duration, backgroundColor, textColor, activity.getResources().getString(actionText), actionTextColor, listener);
 
     }
 
-
     @SnackbarDuration
-    public static Snackbar showSnackBar(@NonNull Activity activity,  @StringRes int stringRes, @SnackbarDuration int length) {
+    public static Snackbar showSnackBar(@NonNull Activity activity, @StringRes int stringRes, @SnackbarDuration int length) {
         return showSnackBar(activity, activity.getResources().getString(stringRes), length, null, null, null, null, null);
     }
 
@@ -120,4 +113,8 @@ public final class AppSnackbarUtils {
     public static Snackbar showSnackBar(Activity activity, String message, @SnackbarDuration int length, String buttonLabel, View.OnClickListener listener) {
         return showSnackBar(activity, message, length, null, null, buttonLabel, null, listener);
     }
+
+    @IntDef({LENGTH_SHORT, LENGTH_LONG, LENGTH_INDEFINITE})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface SnackbarDuration {}
 }

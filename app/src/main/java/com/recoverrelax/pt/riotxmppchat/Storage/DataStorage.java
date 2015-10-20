@@ -29,7 +29,7 @@ public class DataStorage {
     private static final String PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT = "backg_text";
     private static final String PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH = "backg_speech";
 
-//    private static DataStorage sInstance;
+    //    private static DataStorage sInstance;
     private final SecurePreferences mSettings;
 
 //    /**
@@ -49,80 +49,81 @@ public class DataStorage {
         mSettings = new SecurePreferences(context);
     }
 
-    public synchronized boolean isFirstRun(){
+    public synchronized boolean isFirstRun() {
         return mSettings.getBoolean(PREF_KEY_FIRST_RUN, true);
     }
 
-    public synchronized boolean userLearnedDrawer(){
+    public synchronized boolean userLearnedDrawer() {
         return mSettings.getBoolean(PREF_KEY_USER_LEARNED_DRAWER, false);
     }
 
-    public synchronized boolean setUserLearnedDrawer(){
+    public synchronized boolean setUserLearnedDrawer() {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_USER_LEARNED_DRAWER, true);
         return editor.commit();
     }
-    public synchronized boolean showOfflineUsers(){
+
+    public synchronized boolean showOfflineUsers() {
         return mSettings.getBoolean(PREF_KEY_SHOW_OFFLINE_USERS, false);
     }
 
-    public synchronized boolean showOfflineUsers(boolean state){
+    public synchronized boolean showOfflineUsers(boolean state) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_SHOW_OFFLINE_USERS, state);
         return editor.commit();
     }
 
-    public synchronized int getSortMode(){
+    public synchronized int getSortMode() {
         return mSettings.getInt(PREF_KEY_FRIEND_LIST_SORT_MODE, 1);
     }
 
-    public synchronized boolean setSortMode(int sortMode){
+    public synchronized boolean setSortMode(int sortMode) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putInt(PREF_KEY_FRIEND_LIST_SORT_MODE, sortMode);
         return editor.commit();
     }
 
-    public synchronized String getUsername(){
+    public synchronized String getUsername() {
         return mSettings.getString(PREF_KEY_USERNAME, null);
     }
 
-    public synchronized boolean setUsername(String username){
+    public synchronized boolean setUsername(String username) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putString(PREF_KEY_USERNAME, username);
         return editor.commit();
     }
 
-    public synchronized String getPassword(){
+    public synchronized String getPassword() {
         return mSettings.getString(PREF_KEY_PASSWORD, null);
     }
 
-    public synchronized boolean setPassword(String password){
+    public synchronized boolean setPassword(String password) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putString(PREF_KEY_PASSWORD, password);
         return editor.commit();
     }
 
-    public synchronized boolean getSaveLoginCredentials(){
+    public synchronized boolean getSaveLoginCredentials() {
         return mSettings.getBoolean(PREF_KEY_SAVE_LOGIN_CREDENTIALS, false);
     }
 
-    public synchronized boolean setSaveLoginCredentials(boolean state){
+    public synchronized boolean setSaveLoginCredentials(boolean state) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_SAVE_LOGIN_CREDENTIALS, state);
         return editor.commit();
     }
 
-    public synchronized String getServer(){
+    public synchronized String getServer() {
         return mSettings.getString(PREF_KEY_SERVER, RiotServer.EUW.getServerName());
     }
 
-    public synchronized boolean setServer(String serverName){
+    public synchronized boolean setServer(String serverName) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putString(PREF_KEY_SERVER, serverName);
         return editor.commit();
     }
 
-    public synchronized boolean setRunned(){
+    public synchronized boolean setRunned() {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_FIRST_RUN, false);
         return editor.commit();
@@ -133,31 +134,31 @@ public class DataStorage {
      */
 
 
-    public synchronized boolean getNotificationsAlwaysOn(){
+    public synchronized boolean getNotificationsAlwaysOn() {
         return mSettings.getBoolean(PREF_KEY_NOTIFICATION_ALWAYS_ON, true);
     }
 
-    public synchronized boolean setNotificationsAlwaysOn(boolean state){
+    public synchronized boolean setNotificationsAlwaysOn(boolean state) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_NOTIFICATION_ALWAYS_ON, state);
         return editor.commit();
     }
 
-    public synchronized boolean getGlobalNotifForegroundText(){
+    public synchronized boolean getGlobalNotifForegroundText() {
         return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_TEXT, true);
     }
 
-    public synchronized boolean setGlobalNotifForegroundText(boolean state){
+    public synchronized boolean setGlobalNotifForegroundText(boolean state) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_TEXT, state);
         return editor.commit();
     }
 
-    public synchronized boolean getGlobalNotifForegroundSpeech(){
+    public synchronized boolean getGlobalNotifForegroundSpeech() {
         return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_SPEECH, true);
     }
 
-    public synchronized boolean setGlobalNotifForegroundSpeech(boolean state){
+    public synchronized boolean setGlobalNotifForegroundSpeech(boolean state) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_NOTIFICATION_GLOBAL_FOREG_SPEECH, state);
         return editor.commit();
@@ -167,21 +168,21 @@ public class DataStorage {
      *
      */
 
-    public synchronized boolean getGlobalNotifBackgroundText(){
+    public synchronized boolean getGlobalNotifBackgroundText() {
         return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT, true);
     }
 
-    public synchronized boolean setGlobalNotifBackgroundText(boolean state){
+    public synchronized boolean setGlobalNotifBackgroundText(boolean state) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_TEXT, state);
         return editor.commit();
     }
 
-    public synchronized boolean getGlobalNotifBackgroundSpeech(){
+    public synchronized boolean getGlobalNotifBackgroundSpeech() {
         return mSettings.getBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH, true);
     }
 
-    public synchronized boolean setGlobalNotifBackgroundSpeech(boolean state){
+    public synchronized boolean setGlobalNotifBackgroundSpeech(boolean state) {
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putBoolean(PREF_KEY_NOTIFICATION_GLOBAL_BACKG_SPEECH, state);
         return editor.commit();

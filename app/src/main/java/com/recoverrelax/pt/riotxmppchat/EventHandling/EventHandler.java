@@ -45,77 +45,77 @@ public class EventHandler {
 
     @Singleton
     @Inject
-    public EventHandler(){
+    public EventHandler() {
         MainApplication.getInstance().getAppComponent().inject(this);
         bus.register(this);
     }
 
-    public void registerForNewMessageEvent(NewMessageReceivedEvent event){
-        if(!newMessageEventList.contains(event))
+    public void registerForNewMessageEvent(NewMessageReceivedEvent event) {
+        if (!newMessageEventList.contains(event))
             newMessageEventList.add(event);
     }
 
-    public void unregisterForNewMessageNotifyEvent(NewMessageReceivedNotifyEvent event){
-        if(newMessageNotifyEventList.contains(event))
+    public void unregisterForNewMessageNotifyEvent(NewMessageReceivedNotifyEvent event) {
+        if (newMessageNotifyEventList.contains(event))
             newMessageNotifyEventList.remove(event);
     }
 
-    public void registerForNewMessageNotifyEvent(NewMessageReceivedNotifyEvent event){
-        if(!newMessageNotifyEventList.contains(event))
+    public void registerForNewMessageNotifyEvent(NewMessageReceivedNotifyEvent event) {
+        if (!newMessageNotifyEventList.contains(event))
             newMessageNotifyEventList.add(event);
     }
 
-    public void unregisterForNewMessageEvent(NewMessageReceivedEvent event){
-        if(newMessageEventList.contains(event))
+    public void unregisterForNewMessageEvent(NewMessageReceivedEvent event) {
+        if (newMessageEventList.contains(event))
             newMessageEventList.remove(event);
     }
 
-    public void registerForReconnectEvent(OnReconnectEvent event){
-        if(!reconnectEventList.contains(event))
+    public void registerForReconnectEvent(OnReconnectEvent event) {
+        if (!reconnectEventList.contains(event))
             reconnectEventList.add(event);
     }
 
-    public void unregisterForReconnectEvent(OnReconnectEvent event){
-        if(reconnectEventList.contains(event))
+    public void unregisterForReconnectEvent(OnReconnectEvent event) {
+        if (reconnectEventList.contains(event))
             reconnectEventList.remove(event);
     }
 
-    public void registerForDisconnectEvent(OnDisconnectEvent event){
-        if(!disconnectEventList.contains(event))
+    public void registerForDisconnectEvent(OnDisconnectEvent event) {
+        if (!disconnectEventList.contains(event))
             disconnectEventList.add(event);
     }
 
-    public void unregisterForDisconnectEvent(OnDisconnectEvent event){
-        if(disconnectEventList.contains(event))
+    public void unregisterForDisconnectEvent(OnDisconnectEvent event) {
+        if (disconnectEventList.contains(event))
             disconnectEventList.remove(event);
     }
 
-    public void registerForFriendPlayingEvent(OnNewFriendPlayingEvent event){
-        if(!onFriendPlayingEventList.contains(event))
+    public void registerForFriendPlayingEvent(OnNewFriendPlayingEvent event) {
+        if (!onFriendPlayingEventList.contains(event))
             onFriendPlayingEventList.add(event);
     }
 
-    public void unregisterForFriendPlayingEvent(OnNewFriendPlayingEvent event){
-        if(onFriendPlayingEventList.contains(event))
+    public void unregisterForFriendPlayingEvent(OnNewFriendPlayingEvent event) {
+        if (onFriendPlayingEventList.contains(event))
             onFriendPlayingEventList.remove(event);
     }
 
-    public void registerForFriendPresenceChangedEvent(OnFriendPresenceChangedEvent event){
-        if(!onFriendPresenceChangedEventList.contains(event))
+    public void registerForFriendPresenceChangedEvent(OnFriendPresenceChangedEvent event) {
+        if (!onFriendPresenceChangedEventList.contains(event))
             onFriendPresenceChangedEventList.add(event);
     }
 
-    public void unregisterForFriendPresenceChangedEvent(OnFriendPresenceChangedEvent event){
-        if(onFriendPresenceChangedEventList.contains(event))
+    public void unregisterForFriendPresenceChangedEvent(OnFriendPresenceChangedEvent event) {
+        if (onFriendPresenceChangedEventList.contains(event))
             onFriendPresenceChangedEventList.remove(event);
     }
 
     @Subscribe
-    public void publishNewMessages(NewMessageReceivedPublish publishEvent){
-        if(!rosterManager.isConnected())
+    public void publishNewMessages(NewMessageReceivedPublish publishEvent) {
+        if (!rosterManager.isConnected())
             return;
 
-        for(NewMessageReceivedEvent event: newMessageEventList){
+        for (NewMessageReceivedEvent event : newMessageEventList) {
             event.onNewMessageReceived(publishEvent.getUserXmppAddress(),
                     publishEvent.getUsername(),
                     publishEvent.getMessage(),
@@ -124,11 +124,11 @@ public class EventHandler {
     }
 
     @Subscribe
-    public void notifyNewMessages(NewMessageReceivedNotifyPublish publishEvent){
-        if(!rosterManager.isConnected())
+    public void notifyNewMessages(NewMessageReceivedNotifyPublish publishEvent) {
+        if (!rosterManager.isConnected())
             return;
 
-        for(NewMessageReceivedNotifyEvent event: newMessageNotifyEventList){
+        for (NewMessageReceivedNotifyEvent event : newMessageNotifyEventList) {
             event.onNewMessageNotifyReceived(publishEvent.getUserXmppAddress(),
                     publishEvent.getUsername(),
                     publishEvent.getMessage(),
@@ -137,40 +137,40 @@ public class EventHandler {
     }
 
     @Subscribe
-    public void onReconnect(OnReconnectPublish recconectEvent){
-        for(OnReconnectEvent event: reconnectEventList){
+    public void onReconnect(OnReconnectPublish recconectEvent) {
+        for (OnReconnectEvent event : reconnectEventList) {
             event.onReconnect();
         }
     }
 
     @Subscribe
-    public void onDisconnect(OnDisconnectPublish disconnectEvent){
-        for(OnDisconnectEvent event: disconnectEventList){
+    public void onDisconnect(OnDisconnectPublish disconnectEvent) {
+        for (OnDisconnectEvent event : disconnectEventList) {
             event.onDisconnect();
         }
     }
 
     @Subscribe
     public void onNewFriendPlaying(final OnNewFriendPlayingPublish friendPlayingEvent) {
-        if(!rosterManager.isConnected())
+        if (!rosterManager.isConnected())
             return;
 
-        for(OnNewFriendPlayingEvent event: onFriendPlayingEventList){
+        for (OnNewFriendPlayingEvent event : onFriendPlayingEventList) {
             event.onNewFriendPlaying();
         }
     }
 
     @Subscribe
     public void OnFriendPresenceChanged(final OnFriendPresenceChangedPublish friendPresence) {
-        if(!rosterManager.isConnected())
+        if (!rosterManager.isConnected())
             return;
 
-        for(OnFriendPresenceChangedEvent event: onFriendPresenceChangedEventList){
+        for (OnFriendPresenceChangedEvent event : onFriendPresenceChangedEventList) {
             event.onFriendPresenceChanged(friendPresence.getPresence());
         }
     }
 
-    public boolean isApplicationPaused(){
+    public boolean isApplicationPaused() {
         return reconnectEventList == null || reconnectEventList.size() == 0;
     }
 }

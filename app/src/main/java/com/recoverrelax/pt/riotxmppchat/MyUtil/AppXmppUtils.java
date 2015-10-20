@@ -13,7 +13,7 @@ public class AppXmppUtils {
         }
     }
 
-    public static long getSummonerIdByXmppAddress(String userXmppAddress){
+    public static long getSummonerIdByXmppAddress(String userXmppAddress) {
         String firstPart = "sum";
         String secondPart = "@pvp.net";
         return Long.parseLong(userXmppAddress.replace(firstPart, "").replace(secondPart, ""));

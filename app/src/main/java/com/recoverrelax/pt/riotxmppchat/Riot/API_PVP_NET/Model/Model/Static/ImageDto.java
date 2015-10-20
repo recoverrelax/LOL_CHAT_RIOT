@@ -13,7 +13,8 @@ public class ImageDto {
     public int x;
     public int y;
 
-    ImageDto(){}
+    ImageDto() {
+    }
 
     public String getFull() {
         return full;

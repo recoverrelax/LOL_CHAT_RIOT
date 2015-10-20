@@ -33,7 +33,8 @@ public class ItemDto {
     private BasicDataStatsDto stats;
     private List<String> tags;
 
-    public ItemDto(){}
+    public ItemDto() {
+    }
 
     public String getColloq() {
         return colloq;

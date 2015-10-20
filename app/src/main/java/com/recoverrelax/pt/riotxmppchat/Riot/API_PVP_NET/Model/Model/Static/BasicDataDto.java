@@ -10,7 +10,7 @@ public class BasicDataDto {
 
     private String colloq;
     private boolean consumeOnFull;
-    private  boolean consumed;
+    private boolean consumed;
     private int depth;
     private String description;
     private List<String> from;
@@ -32,7 +32,8 @@ public class BasicDataDto {
     private BasicDataStatsDto stats;
     private List<String> tags;
 
-    public BasicDataDto(){}
+    public BasicDataDto() {
+    }
 
     public String getColloq() {
         return colloq;

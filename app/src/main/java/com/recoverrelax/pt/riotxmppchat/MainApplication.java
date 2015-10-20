@@ -13,12 +13,10 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnServiceBindedPub
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.squareup.otto.Bus;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
@@ -28,28 +26,17 @@ import io.fabric.sdk.android.Fabric;
 
 public class MainApplication extends Application {
     private static final String TAG = MainApplication.class.getSimpleName();
-
-    private RiotXmppService mService;
-    private boolean mBound = false;
-    private Intent intentService;
-    private DaoSession daoSession;
-
-    @Inject Bus bus;
-    @Inject EventHandler handler;
-
     /**
      * This value is stored as a buffer because its accessed many times.
      * When the app start, this value is reseted (set to null)
      */
 
     private static MainApplication instance;
-
     /**
      * Dagger Components
      */
 
     private static AppComponent appComponent;
-
     /**
      * Temporary Control Variables
      */
@@ -57,39 +44,12 @@ public class MainApplication extends Application {
     public boolean isRealScoutEnabled = true;
     public boolean isLiveGameEnabled = true;
     public boolean isRecentGameEnabled = true;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Fabric.with(this, new Crashlytics());
-        instance = this;
-
-        setupDatabase();
-        initAppComponents();
-        appComponent.inject(this);
-        File file = new File(AppMiscUtils.getAppSpecificFolder(this).getPath() + "/champion_skins/");
-
-        if(!file.exists())
-            file.mkdir();
-    }
-
-    private void initAppComponents() {
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
-    }
-
-    public AppComponent getAppComponent(){
-        return appComponent;
-    }
-
-    private void setupDatabase() {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "LolChatRiotDb", null);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        DaoMaster daoMaster = new DaoMaster(db);
-        daoSession = daoMaster.newSession();
-    }
-
+    @Inject Bus bus;
+    @Inject EventHandler handler;
+    private RiotXmppService mService;
+    private boolean mBound = false;
+    private Intent intentService;
+    private DaoSession daoSession;
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder serviceBinder) {
@@ -107,9 +67,43 @@ public class MainApplication extends Application {
         }
     };
 
+    public static MainApplication getInstance() {
+        return instance;
+    }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Fabric.with(this, new Crashlytics());
+        instance = this;
 
-    public void startRiotXmppService(String server, String username, String password){
+        setupDatabase();
+        initAppComponents();
+        appComponent.inject(this);
+        File file = new File(AppMiscUtils.getAppSpecificFolder(this).getPath() + "/champion_skins/");
+
+        if (!file.exists())
+            file.mkdir();
+    }
+
+    private void initAppComponents() {
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
+    }
+
+    public AppComponent getAppComponent() {
+        return appComponent;
+    }
+
+    private void setupDatabase() {
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "LolChatRiotDb", null);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+    }
+
+    public void startRiotXmppService(String server, String username, String password) {
         intentService = new Intent(this, RiotXmppService.class);
         intentService.putExtra(RiotXmppService.INTENT_SERVER_HOST_CONST, server);
         intentService.putExtra(RiotXmppService.INTENT_SERVER_USERNAME, username);
@@ -124,7 +118,7 @@ public class MainApplication extends Application {
 
     public void bindService() {
         LogUtils.LOGI(TAG, "Enters bindService");
-        if(!mBound)
+        if (!mBound)
             bindService(intentService, mConnection, BIND_AUTO_CREATE);
         else {
             /** callback goes to: {@link LoginActivity#onServiceBinded(OnServiceBindedPublish)}  **/
@@ -132,25 +126,18 @@ public class MainApplication extends Application {
         }
     }
 
-    public void stopService(){
+    public void stopService() {
         unbindService();
         stopService(intentService);
     }
 
-
     public void unbindService() {
-        if(mConnection != null) {
-            if(mBound) {
+        if (mConnection != null) {
+            if (mBound) {
                 unbindService(mConnection);
                 mBound = false;
             }
         }
-    }
-
-
-
-    public static MainApplication getInstance() {
-        return instance;
     }
 
     public DaoSession getDaoSession() {

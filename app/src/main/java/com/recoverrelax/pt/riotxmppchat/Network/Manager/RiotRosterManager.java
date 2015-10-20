@@ -46,18 +46,11 @@ import static junit.framework.Assert.assertTrue;
 @Singleton
 public class RiotRosterManager implements RosterListener {
 
-    private Roster roster;
-    private AbstractXMPPConnection connection;
-    private Map<String, Presence> friendList; // friendXmppAddress, Presence
-    private boolean notificationsEnabled = true;
-
     private static final int ONLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int OFFLINE_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
     private static final int START_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
-
     private static final int STATUS_NOTIFICATION_ID = 2222222;
-
     @Inject
     Bus busInstance;
     @Inject
@@ -68,6 +61,10 @@ public class RiotRosterManager implements RosterListener {
     DataStorage dataStorageInstance;
     @Inject
     MessageSpeechNotification messageSpeechNotification;
+    private Roster roster;
+    private AbstractXMPPConnection connection;
+    private Map<String, Presence> friendList; // friendXmppAddress, Presence
+    private boolean notificationsEnabled = true;
 
     @Singleton
     @Inject
@@ -244,15 +241,15 @@ public class RiotRosterManager implements RosterListener {
         FriendStates newState = getFriendState(new Friend(friendName, xmppAddress, newPresence));
 
 
-            if (oldState.isOffline() && !newState.isOffline()) {
-                sendStatusNotification(xmppAddress, friendName, Status.ONLINE);
-            } else if (!oldState.isOffline() && newState.isOffline()) {
-                sendStatusNotification(xmppAddress, friendName, Status.OFFLINE);
-            } else if (!oldState.isPlaying() && newState.isPlaying()) {
-                sendStatusNotification(xmppAddress, friendName, Status.STARTED_GAME);
-            } else if (oldState.isPlaying() && !newState.isPlaying()) {
-                sendStatusNotification(xmppAddress, friendName, Status.LEFT_GAME);
-            }
+        if (oldState.isOffline() && !newState.isOffline()) {
+            sendStatusNotification(xmppAddress, friendName, Status.ONLINE);
+        } else if (!oldState.isOffline() && newState.isOffline()) {
+            sendStatusNotification(xmppAddress, friendName, Status.OFFLINE);
+        } else if (!oldState.isPlaying() && newState.isPlaying()) {
+            sendStatusNotification(xmppAddress, friendName, Status.STARTED_GAME);
+        } else if (oldState.isPlaying() && !newState.isPlaying()) {
+            sendStatusNotification(xmppAddress, friendName, Status.LEFT_GAME);
+        }
 
         updateFriend(newPresence);
     }
@@ -295,7 +292,7 @@ public class RiotRosterManager implements RosterListener {
     }
 
     public void tryRecconect() {
-        if(connection != null)
+        if (connection != null)
             try {
                 connection.connect();
             } catch (SmackException | IOException | XMPPException e) {
@@ -304,50 +301,9 @@ public class RiotRosterManager implements RosterListener {
     }
 
     public void setEnabled(boolean state) {
-        if(state)
+        if (state)
             enableNotifications();
         else disableNotifications();
-    }
-
-    public enum FriendStates {
-        OFFLINE,
-        PLAYINNG,
-        IDLE;
-
-        public boolean isOffline() {
-            return this.equals(FriendStates.OFFLINE);
-        }
-
-        public boolean isPlaying() {
-            return this.equals(FriendStates.PLAYINNG);
-        }
-
-        public boolean isIdle() {
-            return this.equals(FriendStates.IDLE);
-        }
-    }
-
-    public enum Status {
-        ONLINE,
-        OFFLINE,
-        STARTED_GAME,
-        LEFT_GAME;
-
-        public boolean isOnline() {
-            return this.equals(Status.ONLINE);
-        }
-
-        public boolean isOffline() {
-            return this.equals(Status.OFFLINE);
-        }
-
-        public boolean isStartedGame() {
-            return this.equals(Status.STARTED_GAME);
-        }
-
-        public boolean isLeftGame() {
-            return this.equals(Status.LEFT_GAME);
-        }
     }
 
     private int getLogIdFromStatus(Status status) {
@@ -435,7 +391,7 @@ public class RiotRosterManager implements RosterListener {
         }
     }
 
-    public boolean isConnected(){
+    public boolean isConnected() {
         return this.connection != null && this.connection.isConnected();
     }
 
@@ -461,6 +417,47 @@ public class RiotRosterManager implements RosterListener {
                                 ? notificationDb.getIsOnline()
                                 : notificationDb.getIsOffline()
                         );
+        }
+    }
+
+    public enum FriendStates {
+        OFFLINE,
+        PLAYINNG,
+        IDLE;
+
+        public boolean isOffline() {
+            return this.equals(FriendStates.OFFLINE);
+        }
+
+        public boolean isPlaying() {
+            return this.equals(FriendStates.PLAYINNG);
+        }
+
+        public boolean isIdle() {
+            return this.equals(FriendStates.IDLE);
+        }
+    }
+
+    public enum Status {
+        ONLINE,
+        OFFLINE,
+        STARTED_GAME,
+        LEFT_GAME;
+
+        public boolean isOnline() {
+            return this.equals(Status.ONLINE);
+        }
+
+        public boolean isOffline() {
+            return this.equals(Status.OFFLINE);
+        }
+
+        public boolean isStartedGame() {
+            return this.equals(Status.STARTED_GAME);
+        }
+
+        public boolean isLeftGame() {
+            return this.equals(Status.LEFT_GAME);
         }
     }
 }

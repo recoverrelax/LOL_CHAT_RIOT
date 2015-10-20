@@ -13,11 +13,11 @@ public class LiveGameParticipant {
     private String spell1Image;
     private String spell2Image;
 
-    public LiveGameParticipant(){
+    public LiveGameParticipant() {
 
     }
 
-    public LiveGameParticipant(long spell1Id, long spell2Id, long championId, String summonerName, long teamId){
+    public LiveGameParticipant(long spell1Id, long spell2Id, long championId, String summonerName, long teamId) {
         this.spell1Id = spell1Id;
         this.spell2Id = spell2Id;
         this.championId = championId;
@@ -34,16 +34,16 @@ public class LiveGameParticipant {
         return spell1Id;
     }
 
+    public void setSpell1Id(long spell1Id) {
+        this.spell1Id = spell1Id;
+    }
+
     public String getChampionImage() {
         return championImage;
     }
 
     public void setChampionImage(String championImage) {
         this.championImage = championImage;
-    }
-
-    public void setSpell1Id(long spell1Id) {
-        this.spell1Id = spell1Id;
     }
 
     public long getSpell2Id() {

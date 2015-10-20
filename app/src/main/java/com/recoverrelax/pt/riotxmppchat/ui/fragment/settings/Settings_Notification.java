@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 
 import javax.inject.Inject;
 
@@ -35,16 +35,14 @@ public class Settings_Notification extends Fragment {
 
     @Bind(R.id.notificationAlwaysOn)
     SwitchCompat notificationAlwaysOn;
-
+    @Inject DataStorage dataStorage;
     private String connectedXmppUser;
 
-    @Inject DataStorage dataStorage;
-
-    public Settings_Notification(){
+    public Settings_Notification() {
 
     }
 
-    public static Settings_Notification newInstance(){
+    public static Settings_Notification newInstance() {
         return new Settings_Notification();
     }
 
@@ -68,7 +66,11 @@ public class Settings_Notification extends Fragment {
 
         MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser()
                 .subscribe(new Subscriber<String>() {
-                    @Override public void onCompleted() { } @Override public void onError(Throwable e) { }
+                    @Override public void onCompleted() {
+                    }
+
+                    @Override public void onError(Throwable e) {
+                    }
 
                     @Override
                     public void onNext(String connectedXmppUser) {
@@ -83,26 +85,26 @@ public class Settings_Notification extends Fragment {
     }
 
     @OnClick({R.id.visible_text, R.id.visible_sound, R.id.background_sound, R.id.background_text, R.id.notificationAlwaysOn})
-    public void onItemClick(SwitchCompat switchButton){
+    public void onItemClick(SwitchCompat switchButton) {
         int id = switchButton.getId();
 
-            switch (id) {
-                case R.id.background_text:
-                    dataStorage.setGlobalNotifBackgroundText(background_text.isChecked());
-                    break;
-                case R.id.background_sound:
-                    dataStorage.setGlobalNotifBackgroundSpeech(background_sound.isChecked());
-                    break;
-                case R.id.visible_text:
-                    dataStorage.setGlobalNotifForegroundText(visible_text.isChecked());
-                    break;
-                case R.id.visible_sound:
-                    dataStorage.setGlobalNotifForegroundSpeech(visible_sound.isChecked());
-                    break;
+        switch (id) {
+            case R.id.background_text:
+                dataStorage.setGlobalNotifBackgroundText(background_text.isChecked());
+                break;
+            case R.id.background_sound:
+                dataStorage.setGlobalNotifBackgroundSpeech(background_sound.isChecked());
+                break;
+            case R.id.visible_text:
+                dataStorage.setGlobalNotifForegroundText(visible_text.isChecked());
+                break;
+            case R.id.visible_sound:
+                dataStorage.setGlobalNotifForegroundSpeech(visible_sound.isChecked());
+                break;
 
-                case R.id.notificationAlwaysOn:
-                    dataStorage.setNotificationsAlwaysOn(notificationAlwaysOn.isChecked());
-                    break;
-            }
+            case R.id.notificationAlwaysOn:
+                dataStorage.setNotificationsAlwaysOn(notificationAlwaysOn.isChecked());
+                break;
+        }
     }
 }

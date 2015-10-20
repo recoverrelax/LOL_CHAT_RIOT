@@ -15,19 +15,19 @@ import java.util.Random;
 
 public class AppMiscUtils {
 
-    public static boolean isPhoneSilenced(){
+    public static boolean isPhoneSilenced() {
         AudioManager audioManager = (AudioManager) MainApplication.getInstance().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
         return !(audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0 && audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL);
     }
 
 
-    public @ColorRes static String getRandomMaterialColor(Context c){
+    public @ColorRes static String getRandomMaterialColor(Context c) {
         Random randomFunction = new Random();
         String[] materialColorList = getMaterialColorList(c);
         return materialColorList[randomFunction.nextInt(materialColorList.length)];
     }
 
-    public static String[] getMaterialColorList(Context context){
+    public static String[] getMaterialColorList(Context context) {
         return context.getResources().getStringArray(R.array.materialColorsFiltered);
     }
 

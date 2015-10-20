@@ -8,7 +8,7 @@ public enum PlayerRole {
 
     int roleId;
 
-    PlayerRole(int roleId){
+    PlayerRole(int roleId) {
         this.roleId = roleId;
     }
 

@@ -31,8 +31,7 @@ public interface RiotApiService {
      * CURRENT_GAME *********************************************************************************************
      */
 
-    @GET(BASE_REGION_PVP_NET + "/observer-mode/rest/consumer/getSpectatorGameInfo/{platformId}/{summonerId}")
-    Observable<CurrentGameInfo> getCurrentGameInfoBySummonerId_CURRENT_GAME(
+    @GET(BASE_REGION_PVP_NET + "/observer-mode/rest/consumer/getSpectatorGameInfo/{platformId}/{summonerId}") Observable<CurrentGameInfo> getCurrentGameInfoBySummonerId_CURRENT_GAME(
             @Path("region") String region,
             @Path("platformId") String platformId,
             @Path("summonerId") long summonerId);
@@ -42,31 +41,25 @@ public interface RiotApiService {
      * STATIC DATA ***********************************************************************************************
      */
 
-    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/champion?champData=all")
-    Observable<ChampionListDto> getChampionList_STATIC_DATA(
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/champion?champData=all") Observable<ChampionListDto> getChampionList_STATIC_DATA(
             @Path("region") String region
     );
 
-    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/champion?champData=image,skins")
-    Observable<ChampionListDto> getChampionListFiltered_STATIC_DATA(
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/champion?champData=image,skins") Observable<ChampionListDto> getChampionListFiltered_STATIC_DATA(
             @Path("region") String region
     );
 
-    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/realm")
-    Observable<RealmDto> getRealmData_STATIC_DATA(@Path("region") String region);
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/realm") Observable<RealmDto> getRealmData_STATIC_DATA(@Path("region") String region);
 
-    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/summoner-spell?spellData=all")
-    Observable<SummonerSpellListDto> getSummonerSpellList_STATIC_DATA(
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/summoner-spell?spellData=all") Observable<SummonerSpellListDto> getSummonerSpellList_STATIC_DATA(
             @Path("region") String region
     );
 
-    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/summoner-spell?spellData=image")
-    Observable<SummonerSpellListDto> getSummonerSpellListFiltered_STATIC_DATA(
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/summoner-spell?spellData=image") Observable<SummonerSpellListDto> getSummonerSpellListFiltered_STATIC_DATA(
             @Path("region") String region
     );
 
-    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/item?itemListData=image")
-    Observable<ItemListDto> getItemListFiltered_STATIC_DATA(
+    @GET(BASE_GLOBAL_PVP_NET + "/api/lol/static-data/{region}/" + STATIC_DATA_V + "/item?itemListData=image") Observable<ItemListDto> getItemListFiltered_STATIC_DATA(
             @Path("region") String region
     );
 
@@ -75,8 +68,7 @@ public interface RiotApiService {
      * STATUS
      */
 
-    @GET(BASE_STATUS_LOL + "/shards/{region}")
-    Observable<ShardStatus> getShardStatus_STATUS(
+    @GET(BASE_STATUS_LOL + "/shards/{region}") Observable<ShardStatus> getShardStatus_STATUS(
             @Path("region") String region
     );
 
@@ -84,8 +76,7 @@ public interface RiotApiService {
      * GAME
      */
 
-    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + GAME_DATA_V + "/game/by-summoner/{summonerId}/recent")
-    Observable<RecentGamesDto> getRecentMatchList_GAME(
+    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + GAME_DATA_V + "/game/by-summoner/{summonerId}/recent") Observable<RecentGamesDto> getRecentMatchList_GAME(
             @Path("region") String region,
             @Path("summonerId") String summonerId
     );
@@ -94,8 +85,7 @@ public interface RiotApiService {
      * SUMMONER
      */
 
-    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + SUMMONER_DATA_V + "/summoner/{summonerIdList}")
-    Observable<Map<String, SummonerDto>> getSummonerListByIds_SUMMONER(
+    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + SUMMONER_DATA_V + "/summoner/{summonerIdList}") Observable<Map<String, SummonerDto>> getSummonerListByIds_SUMMONER(
             @Path("region") String region,
             @Path("summonerIdList") String summonerIdList
     );
@@ -104,8 +94,7 @@ public interface RiotApiService {
      * CHAMPION
      */
 
-    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + CHAMPION_DATA_V + "/champion/")
-    Observable<Champion_ChampionListDto> getAllChampion_CHAMPION(
+    @GET(BASE_REGION_PVP_NET + "/api/lol/{region}/" + CHAMPION_DATA_V + "/champion/") Observable<Champion_ChampionListDto> getAllChampion_CHAMPION(
             @Path("region") String region,
             @Query("freeToPlay") boolean freeToPlay
     );

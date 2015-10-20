@@ -10,5 +10,6 @@ public class LevelTipDto {
     public List<String> effect;
     public List<String> label;
 
-    public LevelTipDto() {}
+    public LevelTipDto() {
+    }
 }

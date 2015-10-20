@@ -1,8 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game;
 
 
-import android.support.annotation.Size;
-
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -146,7 +144,8 @@ public class RawStatsDto {
 
     private boolean win; // Flag specifying whether or not this game was won.
 
-    public RawStatsDto() {}
+    public RawStatsDto() {
+    }
 
     public int getAssists() {
         return assists;
@@ -456,12 +455,12 @@ public class RawStatsDto {
         return win;
     }
 
-    public void setItemsImage(String ... strings) {
+    public List<String> getItemsImage() {
+        return this.itemImageList;
+    }
+
+    public void setItemsImage(String... strings) {
         this.itemImageList = new ArrayList<>();
         this.itemImageList.addAll(Arrays.asList(strings));
-     }
-
-    public List<String> getItemsImage(){
-        return this.itemImageList;
     }
 }

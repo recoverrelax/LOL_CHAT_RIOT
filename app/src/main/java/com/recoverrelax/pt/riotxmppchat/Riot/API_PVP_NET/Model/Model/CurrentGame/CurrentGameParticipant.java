@@ -18,7 +18,7 @@ public class CurrentGameParticipant {
     /**
      * The masteries used by this participant
      */
-    Mastery [] masteries;
+    Mastery[] masteries;
 
     /**
      * The ID of the profile icon used by this participant
@@ -28,7 +28,7 @@ public class CurrentGameParticipant {
     /**
      * The runes used by this participant
      */
-    Rune [] runes;
+    Rune[] runes;
 
     /**
      * The ID of the first summoner spell used by this participant
@@ -63,7 +63,8 @@ public class CurrentGameParticipant {
     String spell1Image;
     String spell2Image;
 
-    public CurrentGameParticipant() {}
+    public CurrentGameParticipant() {
+    }
 
     public boolean isBot() {
         return bot;

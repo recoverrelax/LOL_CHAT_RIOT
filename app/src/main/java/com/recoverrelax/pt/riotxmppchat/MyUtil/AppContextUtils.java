@@ -3,28 +3,17 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.StringRes;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity;
 
 public class AppContextUtils {
 
     public static void setBlinkAnimation(final View view, boolean state) {
-        if(view == null)
+        if (view == null)
             return;
 
         if (!state)
@@ -52,15 +41,15 @@ public class AppContextUtils {
         }
     }
 
-    public static void overridePendingTransitionAppDefault(Activity activity){
+    public static void overridePendingTransitionAppDefault(Activity activity) {
         activity.overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
     }
 
-    public static void overridePendingTransitionBackAppDefault(Activity activity){
+    public static void overridePendingTransitionBackAppDefault(Activity activity) {
         activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    public static void startChatActivity(Context context, String friendName, String friendXmppAddress){
+    public static void startChatActivity(Context context, String friendName, String friendXmppAddress) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -70,12 +59,12 @@ public class AppContextUtils {
         AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
     }
 
-    public static void startPersonalMessageActivity(Context context, String friendName, String friendXmppAddress){
-        startPersonalMessageActivityNoTransiction(context, friendName, friendXmppAddress);
+    public static void startPersonalMessageActivity(Context context, String friendName, String friendXmppAddress) {
+        startPersonalMessageActivityNoTransition(context, friendName, friendXmppAddress);
         AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
     }
 
-    public static void startPersonalMessageActivityNoTransiction(Context context, String friendName, String friendXmppAddress){
+    public static void startPersonalMessageActivityNoTransition(Context context, String friendName, String friendXmppAddress) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);

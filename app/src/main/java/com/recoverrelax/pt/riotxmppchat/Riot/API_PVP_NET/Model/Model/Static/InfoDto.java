@@ -9,6 +9,7 @@ public class InfoDto {
     public int defense;
     public int difficulty;
     public int magic;
-    
-    public InfoDto() {}
+
+    public InfoDto() {
+    }
 }

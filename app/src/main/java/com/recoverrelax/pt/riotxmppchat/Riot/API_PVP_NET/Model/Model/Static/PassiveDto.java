@@ -10,6 +10,7 @@ public class PassiveDto {
     public String name;
     public String sanitizedDescription;
 
-    public PassiveDto() {}
+    public PassiveDto() {
+    }
 
 }

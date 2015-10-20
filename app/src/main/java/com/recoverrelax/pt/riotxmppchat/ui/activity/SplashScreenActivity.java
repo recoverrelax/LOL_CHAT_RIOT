@@ -17,22 +17,26 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class SplashScreenActivity extends AppCompatActivity {
     // Splash screen timer
     static int SPLASH_TIME_OUT = 3000;
     private static String TIMER_KEY = "splashScheduled";
-    private boolean isSplashScheduled;
-
     @Bind(R.id.lol_logo)
     ImageView logo;
-
+    private boolean isSplashScheduled;
     private Handler splashHandler = new Handler();
+    /*
+    * Showing splash screen with a timer. This will be useful when
+    * you want to show case your app logo / company
+    */
+    private Runnable splashRunnable = this::showAfterSplashIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getResources().getBoolean(R.bool.isTablet))
+        if (getResources().getBoolean(R.bool.isTablet))
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         else
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -71,17 +75,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    /*
-    * Showing splash screen with a timer. This will be useful when
-    * you want to show case your app logo / company
-    */
-    private Runnable splashRunnable = this::showAfterSplashIntent;
-
     private void showAfterSplashIntent() {
         finish();
-        Intent it = new Intent(SplashScreenActivity.this,LoginActivity.class);
+        Intent it = new Intent(SplashScreenActivity.this, LoginActivity.class);
         it.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(it);
-        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }

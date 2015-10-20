@@ -11,59 +11,60 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_weight="1"
         android:layout_marginBottom="5dp"
+        android:layout_weight="1"
         android:baselineAligned="false"
         android:gravity="center"
         android:orientation="vertical">
 
-            <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:src="@mipmap/ic_score2" />
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:src="@mipmap/ic_score2"
+            tools:ignore="NestedWeights" />
 
-            <TextView
-                android:id="@+id/kda"
-                style="@style/recent_games_kda_textview"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                tools:text="11/12/13" />
+        <TextView
+            android:id="@+id/kda"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            tools:text="11/12/13" />
 
-            <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:src="@mipmap/ic_gold2" />
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:src="@mipmap/ic_gold2" />
 
-            <TextView
-                android:id="@+id/gold"
-                style="@style/recent_games_kda_textview"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                tools:text="11K" />
+        <TextView
+            android:id="@+id/gold"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            tools:text="11K" />
 
-            <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:src="@mipmap/ic_minion2" />
+        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:src="@mipmap/ic_minion2" />
 
-            <TextView
-                android:id="@+id/cs"
-                style="@style/recent_games_kda_textview"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                tools:text="450" />
+        <TextView
+            android:id="@+id/cs"
+            style="@style/recent_games_kda_textview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            tools:text="450" />
     </LinearLayout>
 
     <LinearLayout

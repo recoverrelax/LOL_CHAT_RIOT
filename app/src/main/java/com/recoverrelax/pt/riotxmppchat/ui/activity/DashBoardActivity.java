@@ -28,7 +28,7 @@ public class DashBoardActivity extends MessageIconActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = DashBoardFragment.newInstance();
             fragmentManager.beginTransaction()
@@ -61,9 +61,9 @@ public class DashBoardActivity extends MessageIconActivity {
 
     @Override
     public void onBackPressed() {
-            Intent i = new Intent(Intent.ACTION_MAIN);
-            i.addCategory(Intent.CATEGORY_HOME);
-            startActivity(i);
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.addCategory(Intent.CATEGORY_HOME);
+        startActivity(i);
     }
 
     @Override

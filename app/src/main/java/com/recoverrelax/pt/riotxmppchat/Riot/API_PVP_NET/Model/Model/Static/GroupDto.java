@@ -8,7 +8,8 @@ public class GroupDto {
     private String MaxGroupOwnable;
     private String key;
 
-    public GroupDto(){}
+    public GroupDto() {
+    }
 
     public String getMaxGroupOwnable() {
         return MaxGroupOwnable;

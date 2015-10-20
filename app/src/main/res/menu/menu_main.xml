@@ -3,59 +3,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:visible="false"
         android:id="@+id/action_settings"
-        android:title="@string/action_settings"/>
+        android:title="@string/action_settings"
+        android:visible="false" />
 
-    <item android:id="@+id/navigate"
-        android:visible="false"
-        android:title="@string/next"
+    <item
+        android:id="@+id/navigate"
         android:icon="@drawable/ic_action_next_item"
+        android:title="@string/next"
+        android:visible="false"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
 
-    <item android:id="@+id/refresh"
-        android:visible="false"
-        android:title="@string/refresh"
-        android:orderInCategory="1100"
+    <item
+        android:id="@+id/refresh"
         android:icon="@drawable/ic_cached_white_24dp"
-        app:showAsAction="never"/>
-
-
-    <item android:id="@+id/newMessage"
+        android:orderInCategory="1100"
+        android:title="@string/refresh"
         android:visible="false"
-        android:title="@string/new_message"
-        android:orderInCategory="900"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/newMessage"
         android:icon="@drawable/ic_action_question_answer_green"
-        app:showAsAction="always"/>
-
-    <item android:id="@+id/search"
+        android:orderInCategory="900"
+        android:title="@string/new_message"
         android:visible="false"
-        android:title="@string/search_friend"
-        android:orderInCategory="1000"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/search"
         android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="1000"
+        android:title="@string/search_friend"
+        android:visible="false"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView"/>
+        app:showAsAction="ifRoom|collapseActionView" />
 
-    <item android:id="@+id/addFriend"
-        android:visible="false"
-        android:title="@string/add_friend"
-        android:orderInCategory="800"
+    <item
+        android:id="@+id/addFriend"
         android:icon="@drawable/ic_perm_identity_white_24dp"
-        app:showAsAction="never"/>
+        android:orderInCategory="800"
+        android:title="@string/add_friend"
+        android:visible="false"
+        app:showAsAction="never" />
 
     <item
-        android:visible="false"
         android:id="@+id/show_hide_offline"
-        android:title="@string/settings_show_hide_offline"/>
+        android:title="@string/settings_show_hide_offline"
+        android:visible="false" />
 
     <item
-        android:visible="false"
         android:id="@+id/order_alphabetically"
-        android:title="@string/settings_order_alphabetically"/>
+        android:title="@string/settings_order_alphabetically"
+        android:visible="false" />
 
     <item
-        android:visible="false"
         android:id="@+id/order_status"
-        android:title="@string/settings_order_status"/>
+        android:title="@string/settings_order_status"
+        android:visible="false" />
 </menu>

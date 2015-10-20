@@ -22,12 +22,12 @@ public class RiotApiRealmDataVersion {
 
     @Singleton
     @Inject
-    public RiotApiRealmDataVersion(){
+    public RiotApiRealmDataVersion() {
         MainApplication.getInstance().getAppComponent().inject(this);
         realmData = riotApiServiceImpl.getRealmData().cache();
     }
 
-    public Observable<String> getChampionDDBaseUrl(){
+    public Observable<String> getChampionDDBaseUrl() {
         return realmData
                 .map(realmDto -> realmDto.getN().get(AppGlobals.DD_VERSION.CHAMPION_JSON_ID))
                 .map(ddVersion -> AppGlobals.DD_VERSION.CHAMPION_SQUARE.replace(AppGlobals.DD_VERSION.DD_VERSION, ddVersion))
@@ -35,13 +35,13 @@ public class RiotApiRealmDataVersion {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<String> getSkinDDBaseUrl(){
+    public Observable<String> getSkinDDBaseUrl() {
         return Observable.just(AppGlobals.DD_VERSION.SKIN_BASE_URL)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<String> getItemDDBaseUrl(){
+    public Observable<String> getItemDDBaseUrl() {
         return realmData
                 .map(realmDto -> realmDto.getN().get(AppGlobals.DD_VERSION.ITEM_JSON_ID))
                 .map(ddVersion -> AppGlobals.DD_VERSION.ITEM_SQUARE.replace(AppGlobals.DD_VERSION.DD_VERSION, ddVersion))
@@ -49,7 +49,7 @@ public class RiotApiRealmDataVersion {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<String> getSummonerSpellDDBaseUrl(){
+    public Observable<String> getSummonerSpellDDBaseUrl() {
         return realmData
                 .map(realmDto -> realmDto.getN().get(AppGlobals.DD_VERSION.SUMMONER_SPELL_JSON_ID_JSON))
                 .map(ddVersion -> AppGlobals.DD_VERSION.SUMMONER_SPELL_SQUARE.replace(AppGlobals.DD_VERSION.DD_VERSION, ddVersion))
@@ -57,7 +57,7 @@ public class RiotApiRealmDataVersion {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<String> getProfileIconBaseUrl(){
+    public Observable<String> getProfileIconBaseUrl() {
         return realmData
                 .map(realmDto -> realmDto.getN().get(AppGlobals.DD_VERSION.PROFILEICON_JSON_ID))
                 .map(ddVersion -> AppGlobals.DD_VERSION.PROFILE_SQUARE.replace(AppGlobals.DD_VERSION.DD_VERSION, ddVersion))

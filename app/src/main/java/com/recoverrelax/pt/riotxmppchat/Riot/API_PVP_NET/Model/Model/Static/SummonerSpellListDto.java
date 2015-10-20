@@ -11,7 +11,8 @@ public class SummonerSpellListDto {
     private String type;
     private String version;
 
-    public SummonerSpellListDto() {}
+    public SummonerSpellListDto() {
+    }
 
     public Map<String, SummonerSpellDto> getData() {
         return data;

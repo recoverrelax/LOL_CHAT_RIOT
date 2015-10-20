@@ -13,11 +13,11 @@ import butterknife.ButterKnife;
 
 public class Settings_Alert extends Fragment {
 
-    public Settings_Alert(){
+    public Settings_Alert() {
 
     }
 
-    public static Settings_Alert newInstance(){
+    public static Settings_Alert newInstance() {
         return new Settings_Alert();
     }
 

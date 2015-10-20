@@ -11,15 +11,16 @@ import android.graphics.Typeface;
 import android.support.v7.internal.widget.ThemeUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.R.attr;
 import com.recoverrelax.pt.riotxmppchat.R.id;
 import com.recoverrelax.pt.riotxmppchat.R.styleable;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class AppProgressBar extends RelativeLayout {
     private static final String EMPTY = "";
     private int mProgressBarTintColor;
@@ -41,7 +42,7 @@ public class AppProgressBar extends RelativeLayout {
     private void init(AttributeSet attrs, Context ctx) {
         this.mTextView = new TextView(ctx);
         this.mTextView.setId(id.textprogressbar_text);
-        this.mProgressBar = new ProgressBar(ctx, (AttributeSet) null, 16842874);
+        this.mProgressBar = new ProgressBar(ctx, null, 16842874);
         this.mProgressBar.setId(id.textprogressbar_progressbar);
         this.mProgressBar.setIndeterminate(true);
         LayoutParams pgbParam = new LayoutParams(-2, -2);

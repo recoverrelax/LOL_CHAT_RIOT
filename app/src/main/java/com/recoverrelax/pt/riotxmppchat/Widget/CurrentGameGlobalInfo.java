@@ -12,10 +12,10 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CurrentGameGlobalInfo extends PercentRelativeLayout{
+public class CurrentGameGlobalInfo extends PercentRelativeLayout {
 
-     @Bind(R.id.mapName)
-     TextView mapName;
+    @Bind(R.id.mapName)
+    TextView mapName;
 
     @Bind(R.id.gameQueueType)
     TextView gameQueueType;
@@ -56,8 +56,8 @@ public class CurrentGameGlobalInfo extends PercentRelativeLayout{
         inflateLayout();
     }
 
-    public void inflateLayout(){
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public void inflateLayout() {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.current_game_global_info_layout, this);
         ButterKnife.bind(this);
     }
@@ -82,8 +82,8 @@ public class CurrentGameGlobalInfo extends PercentRelativeLayout{
         this.gameDurationLabel.setText(gameDurationLabel);
     }
 
-    public void enableProgressBar(boolean state){
-        progressBar.setVisibility(state? View.VISIBLE : View.GONE);
-        mainContent.setVisibility(state? View.INVISIBLE : View.VISIBLE);
+    public void enableProgressBar(boolean state) {
+        progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
+        mainContent.setVisibility(state ? View.INVISIBLE : View.VISIBLE);
     }
 }

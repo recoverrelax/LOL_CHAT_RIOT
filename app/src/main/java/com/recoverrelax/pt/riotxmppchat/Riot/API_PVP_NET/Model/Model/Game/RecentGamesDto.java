@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * /api/lol/{region}/v1.3/game/by-summoner/{summonerId}/recent
- *
+ * <p>
  * Get recent games by summoner ID. (REST)
  */
 @Parcel
@@ -21,7 +21,8 @@ public class RecentGamesDto {
      */
     private long summonerId;
 
-    public RecentGamesDto() {}
+    public RecentGamesDto() {
+    }
 
     public List<GameDto> getGames() {
         return games;

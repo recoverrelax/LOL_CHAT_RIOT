@@ -1,20 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
         android:id="@+id/notifications"
-        android:title="Notifications"/>
+        android:title="@string/friendlist_child_menu_notification" />
 
     <item
         android:id="@+id/other_1"
-        android:title="CHAT"/>
+        android:title="@string/friendlist_child_menu_chat" />
 
     <!--<item-->
-        <!--android:id="@+id/current_game"-->
-        <!--android:title="Live Game Scout"/>-->
+    <!--android:id="@+id/current_game"-->
+    <!--android:title="Live Game Scout"/>-->
 
     <!--<item-->
-        <!--android:id="@+id/recent_game"-->
-        <!--android:title="Recent Games"/>-->
+    <!--android:id="@+id/recent_game"-->
+    <!--android:title="Recent Games"/>-->
 </menu>

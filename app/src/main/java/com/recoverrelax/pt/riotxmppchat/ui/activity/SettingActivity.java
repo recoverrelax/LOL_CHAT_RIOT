@@ -76,9 +76,15 @@ public class SettingActivity extends MessageIconActivity {
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AppContextUtils.overridePendingTransitionBackAppDefault(this);
+    }
+
     private class SettingsPagerAdapter extends FragmentStatePagerAdapter {
 
-        private final String [] TITLES = {"Notification", "General", "Alert"};
+        private final String[] TITLES = {"Notification", "General", "Alert"};
 
         public SettingsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -86,7 +92,7 @@ public class SettingActivity extends MessageIconActivity {
 
         @Override
         public Fragment getItem(int position) {
-            switch(position) {
+            switch (position) {
                 case 0:
                     return Settings_Notification.newInstance();
                 case 1:
@@ -105,12 +111,6 @@ public class SettingActivity extends MessageIconActivity {
         public int getCount() {
             return TITLES.length;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        AppContextUtils.overridePendingTransitionBackAppDefault(this);
     }
 
 //    @Subscribe

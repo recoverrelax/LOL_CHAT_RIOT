@@ -16,8 +16,6 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
-
 @Singleton
 public class RiotXmppConnectionImpl {
 
@@ -33,7 +31,7 @@ public class RiotXmppConnectionImpl {
         return Observable.defer(() -> {
                     try {
                         AbstractXMPPConnection connect = connection.connect();
-                        if(connection.isConnected())
+                        if (connection.isConnected())
                             return Observable.just(connect);
                         else
                             return Observable.error(new Exception("Connected but for some reason disconnected just after that"));
@@ -45,13 +43,13 @@ public class RiotXmppConnectionImpl {
     }
 
     public Observable<AbstractXMPPConnection> connectWithRetry(final AbstractXMPPConnection connection) {
-       return connect(connection)
-               .retryWhen(attempts -> attempts.zipWith(Observable.range(1, MAX_CONNECTION_TRIES), (throwable, integer) -> new Pair<>(throwable, integer))
-                       .flatMap(pair -> {
-                           if (pair.second == MAX_LOGIN_TRIES)
-                               return Observable.error(pair.first);
-                           return Observable.timer(pair.second, TimeUnit.SECONDS);
-                       }));
+        return connect(connection)
+                .retryWhen(attempts -> attempts.zipWith(Observable.range(1, MAX_CONNECTION_TRIES), (throwable, integer) -> new Pair<>(throwable, integer))
+                        .flatMap(pair -> {
+                            if (pair.second == MAX_LOGIN_TRIES)
+                                return Observable.error(pair.first);
+                            return Observable.timer(pair.second, TimeUnit.SECONDS);
+                        }));
     }
 
     public Observable<AbstractXMPPConnection> login(final AbstractXMPPConnection connection) {

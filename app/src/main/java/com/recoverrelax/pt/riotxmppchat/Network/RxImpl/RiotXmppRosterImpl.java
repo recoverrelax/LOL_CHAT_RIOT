@@ -1,20 +1,18 @@
 package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 
 import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
-import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+
 import org.jivesoftware.smack.packet.Presence;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,25 +20,19 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 @Singleton
 public class RiotXmppRosterImpl {
 
-    @Inject RiotRosterManager riotRosterManager;
-    @Inject RiotApiRealmDataVersion realmData;
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({SORT_MODE_NAME, SORT_MODE_STATUS})
-    public @interface FriendListSortMode {}
     public static final int SORT_MODE_NAME = 0;
     public static final int SORT_MODE_STATUS = 1;
-
+    @Inject RiotRosterManager riotRosterManager;
+    @Inject RiotApiRealmDataVersion realmData;
     @Singleton
     @Inject
-    public RiotXmppRosterImpl() {}
+    public RiotXmppRosterImpl() {
+    }
 
     public Observable<List<Friend>> getFullFriendsList(final boolean getOffline, final int sortMode) {
         return riotRosterManager.getRosterEntries()
@@ -103,7 +95,7 @@ public class RiotXmppRosterImpl {
         return friendListSorted;
     }
 
-    public List<Friend> sortByName(List<Friend> friends){
+    public List<Friend> sortByName(List<Friend> friends) {
         List<Friend> online = new ArrayList<>();
         List<Friend> offline = new ArrayList<>();
 
@@ -134,7 +126,7 @@ public class RiotXmppRosterImpl {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Observable<List<Friend>> updateFriendListWithChampAndProfileUrl(List<Friend> friends){
+    public Observable<List<Friend>> updateFriendListWithChampAndProfileUrl(List<Friend> friends) {
         return Observable.zip(realmData.getProfileIconBaseUrl(), realmData.getChampionDDBaseUrl(), (profileUrl, championUrl) -> {
 
             for (Friend f : friends) {
@@ -148,14 +140,14 @@ public class RiotXmppRosterImpl {
         });
     }
 
-    public Observable<Friend> updateFriendWithChampAndProfileUrl(Friend f){
+    public Observable<Friend> updateFriendWithChampAndProfileUrl(Friend f) {
         return Observable.zip(realmData.getProfileIconBaseUrl(), realmData.getChampionDDBaseUrl(), (profileUrl, championUrl) -> {
 
-                String profileIconId = f.getProfileIconId();
-                f.setProfileIconWithUrl(profileUrl + profileIconId + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION);
+            String profileIconId = f.getProfileIconId();
+            f.setProfileIconWithUrl(profileUrl + profileIconId + AppGlobals.DD_VERSION.PROFILEICON_EXTENSION);
 
-                String champNameId = f.getChampionNameFormatted();
-                f.setChampIconWithUrl(championUrl + champNameId + AppGlobals.DD_VERSION.CHAMPION_EXTENSION);
+            String champNameId = f.getChampionNameFormatted();
+            f.setChampIconWithUrl(championUrl + champNameId + AppGlobals.DD_VERSION.CHAMPION_EXTENSION);
 
             return f;
         });
@@ -165,5 +157,10 @@ public class RiotXmppRosterImpl {
         return riotRosterManager.getFriendFromXmppAddress(presence.getFrom())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({SORT_MODE_NAME, SORT_MODE_STATUS})
+    public @interface FriendListSortMode {
     }
 }

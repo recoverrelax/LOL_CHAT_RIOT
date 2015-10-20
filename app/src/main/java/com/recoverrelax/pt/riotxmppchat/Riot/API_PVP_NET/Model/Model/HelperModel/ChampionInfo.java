@@ -11,7 +11,8 @@ public class ChampionInfo {
     private String championName;
     private long championId;
 
-    public ChampionInfo(){}
+    public ChampionInfo() {
+    }
 
     public String getChampionImage() {
         return championImage;
@@ -25,13 +26,13 @@ public class ChampionInfo {
         return championSkinImage;
     }
 
+    public void setChampionSkinImage(List<String> championSkinImage) {
+        this.championSkinImage = championSkinImage;
+    }
+
     public void addChampionSkinsImage(List<String> skinList) {
         this.championSkinImage = new ArrayList<>();
         this.championSkinImage.addAll(skinList);
-    }
-
-    public void setChampionSkinImage(List<String> championSkinImage) {
-        this.championSkinImage = championSkinImage;
     }
 
     public String getChampionName() {

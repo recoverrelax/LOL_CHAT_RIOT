@@ -19,19 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.recoverrelax.pt.riotxmppchat.Adapter.DashBoardLogAdapter;
-import com.recoverrelax.pt.riotxmppchat.Adapter.FriendsListAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
-import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiOperations;
-import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.RiotApiRealmDataVersion;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
@@ -45,8 +40,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -66,7 +59,7 @@ public class FriendListPresenterImpl implements
     private boolean SHOW_OFFLINE_USERS;
     private int SORT_MODE = RiotXmppRosterImpl.SORT_MODE_STATUS;
 
-    public FriendListPresenterImpl(FriendListPresenterCallbacks view, Context context){
+    public FriendListPresenterImpl(FriendListPresenterCallbacks view, Context context) {
         this.view = view;
         this.context = context;
         MainApplication.getInstance().getAppComponent().inject(this);
@@ -78,7 +71,7 @@ public class FriendListPresenterImpl implements
     @Override
     public void getFullFriendList(boolean showOffline, int sortMode) {
 
-        if(!rosterManager.isConnected())
+        if (!rosterManager.isConnected())
             return;
 
         subscriptions.add(
@@ -108,36 +101,36 @@ public class FriendListPresenterImpl implements
     @Override
     public void getSearchFriendsList(String s) {
 
-        if(!rosterManager.isConnected())
+        if (!rosterManager.isConnected())
             return;
 
         subscriptions.add(
                 riotXmppRosterImpl.searchFriendsList(s)
-                .flatMap(riotXmppRosterImpl::updateFriendListWithChampAndProfileUrl)
-                .subscribeOn(Schedulers.computation())
-                .subscribe(new Subscriber<List<Friend>>() {
-                    @Override
-                    public void onCompleted() {
-                        view.onSearchFriendListCompleted();
-                    }
+                        .flatMap(riotXmppRosterImpl::updateFriendListWithChampAndProfileUrl)
+                        .subscribeOn(Schedulers.computation())
+                        .subscribe(new Subscriber<List<Friend>>() {
+                            @Override
+                            public void onCompleted() {
+                                view.onSearchFriendListCompleted();
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        view.onSearchFriendListFailed(e);
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                view.onSearchFriendListFailed(e);
+                            }
 
-                    @Override
-                    public void onNext(List<Friend> friends) {
-                        setAdapterItems(friends);
-                        view.onSearchFriendListReady(adapter.getOnlineFriendsCount());
-                    }
-                })
+                            @Override
+                            public void onNext(List<Friend> friends) {
+                                setAdapterItems(friends);
+                                view.onSearchFriendListReady(adapter.getOnlineFriendsCount());
+                            }
+                        })
         );
     }
 
     public void getSingleFriend(Presence presence) {
 
-        if(!rosterManager.isConnected())
+        if (!rosterManager.isConnected())
             return;
 
         subscriptions.add(
@@ -186,7 +179,7 @@ public class FriendListPresenterImpl implements
                 getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
                 return true;
             case R.id.addFriend:
-                AppSnackbarUtils.showSnackBar((Activity)context, R.string.add_friend_soon, AppSnackbarUtils.LENGTH_LONG);
+                AppSnackbarUtils.showSnackBar((Activity) context, R.string.add_friend_soon, AppSnackbarUtils.LENGTH_LONG);
                 return true;
             case R.id.show_hide_offline:
                 SHOW_OFFLINE_USERS = !mDataStorage.showOfflineUsers();
@@ -243,7 +236,7 @@ public class FriendListPresenterImpl implements
         searchView = (SearchView) search.getActionView();
 
         if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(((Activity)context).getComponentName()));
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(((Activity) context).getComponentName()));
 
             MenuItemCompat.setOnActionExpandListener(search, new MenuItemCompat.OnActionExpandListener() {
                 @Override
@@ -258,7 +251,7 @@ public class FriendListPresenterImpl implements
                 public boolean onMenuItemActionCollapse(MenuItem item) {
                     if (modifiedOriginal[0])
                         getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
-                    ((Activity)context).invalidateOptionsMenu();
+                    ((Activity) context).invalidateOptionsMenu();
                     return true;
                 }
             });
@@ -305,12 +298,12 @@ public class FriendListPresenterImpl implements
         });
     }
 
-    public void setAdapterItems(List<Friend> friends){
+    public void setAdapterItems(List<Friend> friends) {
         if (adapter != null)
             adapter.setItems(friends);
     }
 
-    public void setAdapterSingleItem(Friend friend){
+    public void setAdapterSingleItem(Friend friend) {
         if (adapter != null)
             if (friend != null)
                 adapter.setFriendChanged(friend);
@@ -318,13 +311,13 @@ public class FriendListPresenterImpl implements
 
 
     @Override
-    public void onResume(){
+    public void onResume() {
         handler.registerForFriendPresenceChangedEvent(this);
         getFullFriendList(SHOW_OFFLINE_USERS, SORT_MODE);
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         handler.unregisterForFriendPresenceChangedEvent(this);
 
         if (adapter != null)
@@ -354,7 +347,7 @@ public class FriendListPresenterImpl implements
 
             switch (menuItem.getItemId()) {
                 case R.id.notifications:
-                    FragmentManager manager = ((Activity)context).getFragmentManager();
+                    FragmentManager manager = ((Activity) context).getFragmentManager();
                     NotificationCustomDialogFragment myDialog = NotificationCustomDialogFragment.newInstance(friendXmppAddress);
 
                     new Handler().postDelayed(

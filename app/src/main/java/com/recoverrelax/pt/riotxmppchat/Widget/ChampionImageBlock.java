@@ -54,7 +54,7 @@ public class ChampionImageBlock extends LinearLayout {
 
     public void setChampionImagesAndNames(List<TeamInfo> teamUrlList3) {
 
-        if(teamUrlList3 == null || teamUrlList3.size() == 0)
+        if (teamUrlList3 == null || teamUrlList3.size() == 0)
             return;
 
         List<TeamInfo> teamUrlList = new ArrayList<>();
@@ -67,7 +67,7 @@ public class ChampionImageBlock extends LinearLayout {
             final ImageView target = this.championTeam.get(i);
             final TextView target2 = this.summonerNameTeam.get(i);
 
-            if(i < dataSize) {
+            if (i < dataSize) {
                 Glide.with(context)
                         .load(teamUrlList.get(i).getPlayerImage())
                         .into(target);
@@ -75,7 +75,7 @@ public class ChampionImageBlock extends LinearLayout {
                 target2.setText(teamUrlList.get(i).getPlayerName());
                 target.setVisibility(View.VISIBLE);
                 target2.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 target.setVisibility(View.INVISIBLE);
                 target2.setVisibility(View.INVISIBLE);
             }

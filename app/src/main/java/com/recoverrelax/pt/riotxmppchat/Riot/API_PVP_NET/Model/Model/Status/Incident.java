@@ -12,7 +12,7 @@ public class Incident {
     private long id;
     private List<Message> updates;
 
-    public Incident(){
+    public Incident() {
 
     }
 

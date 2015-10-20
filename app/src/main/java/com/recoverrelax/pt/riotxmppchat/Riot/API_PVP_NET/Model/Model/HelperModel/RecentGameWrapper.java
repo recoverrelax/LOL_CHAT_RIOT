@@ -38,7 +38,8 @@ public class RecentGameWrapper {
     private String playerPosition;
     private String gameWhen;
 
-    public RecentGameWrapper(){}
+    public RecentGameWrapper() {
+    }
 
     public String getMyChampionUrl() {
         return myChampionUrl;
@@ -88,10 +89,10 @@ public class RecentGameWrapper {
         this.itemList = itemList;
     }
 
-    public void addPlayer(long playerId, String playerImage, int teamId){
-        if(teamUrlMap.containsKey(teamId)){
+    public void addPlayer(long playerId, String playerImage, int teamId) {
+        if (teamUrlMap.containsKey(teamId)) {
             teamUrlMap.get(teamId).add(new TeamInfo(playerId, playerImage));
-        }else{
+        } else {
             List<TeamInfo> teamInfo = new ArrayList<>();
             teamInfo.add(new TeamInfo(playerId, playerImage));
 
@@ -99,15 +100,15 @@ public class RecentGameWrapper {
         }
     }
 
-    public List<TeamInfo> getTeam100(){
-        if(teamUrlMap.containsKey(TeamCode.TEAM1.id))
+    public List<TeamInfo> getTeam100() {
+        if (teamUrlMap.containsKey(TeamCode.TEAM1.id))
             return teamUrlMap.get(TeamCode.TEAM1.id);
         else
             return null;
     }
 
-    public List<TeamInfo> getTeam200(){
-        if(teamUrlMap.containsKey(TeamCode.TEAM2.id))
+    public List<TeamInfo> getTeam200() {
+        if (teamUrlMap.containsKey(TeamCode.TEAM2.id))
             return teamUrlMap.get(TeamCode.TEAM2.id);
         else
             return null;
@@ -158,7 +159,7 @@ public class RecentGameWrapper {
         this.skinList.addAll(skinList);
     }
 
-    public String getRamdomSkin(Random r){
+    public String getRamdomSkin(Random r) {
         return this.skinList.get(r.nextInt(this.skinList.size()));
     }
 
@@ -193,6 +194,6 @@ public class RecentGameWrapper {
     }
 
     public void setPlayerPosition(int playerPosition) {
-        this.playerPosition =  PlayerPosition.getPositionName(playerPosition).toUpperCase();
+        this.playerPosition = PlayerPosition.getPositionName(playerPosition).toUpperCase();
     }
 }

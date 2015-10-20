@@ -26,7 +26,7 @@ public class NotificationHelper {
     @Inject Bus bus;
 
     public static Observable<Boolean> sendSystemNotification(@NonNull String title, @NonNull String message, @DrawableRes int systemNotifId, int notificationId,
-                                                         boolean hasPermissions){
+                                                             boolean hasPermissions) {
         return Observable.create(new Observable.OnSubscribe<Boolean>() {
             @Override
             public void call(Subscriber<? super Boolean> subscriber) {
@@ -51,7 +51,6 @@ public class NotificationHelper {
         })
                 .subscribeOn(Schedulers.io());
     }
-
 
 
 }

@@ -24,13 +24,12 @@ public class ShardActivity extends MessageIconActivity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = ShardFragment.newInstance();
             fragmentManager.beginTransaction()

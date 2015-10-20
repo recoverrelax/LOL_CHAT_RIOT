@@ -35,117 +35,8 @@ public class RiotApiOperations {
 
     @Singleton
     @Inject
-    public RiotApiOperations(){
+    public RiotApiOperations() {
         MainApplication.getInstance().getAppComponent().inject(this);
-    }
-
-    public Observable<Map<Integer, ChampionInfo>> getChampionsImage(){
-       return riotApiServiceImpl.getAllChampionBasicInfoFiltered()
-                .flatMap(championListDto -> Observable.just(championListDto.getChampionList()))
-                .flatMap(mapStringChamp -> {
-                    Map<Integer, ChampionInfo> newMap = new HashMap<>();
-
-                    for (Map.Entry<String, ChampionDto> entry : mapStringChamp.entrySet()) {
-
-                        int mapKey = entry.getValue().getId();
-                        ChampionInfo mapValue = new ChampionInfo();
-                        mapValue.setChampionImage(entry.getValue().getImage().getFull());
-                        mapValue.addChampionSkinsImage(entry.getValue().getSkinnImageList(entry.getKey()));
-                        mapValue.setChampionName(entry.getValue().getName());
-                        newMap.put(mapKey, mapValue);
-
-                    }
-                    return Observable.just(newMap);
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<Map<Integer, String>> getSummonerSpellImage(){
-        return riotApiServiceImpl.getAllSummonerSpellBasicInfoFiltered()
-                .flatMap(summonerSpellListDto -> Observable.just(summonerSpellListDto.getData()))
-                .flatMap(mapStringSummonerSpell -> {
-                    Map<Integer, String> newMap = new HashMap<>();
-
-                    for (Map.Entry<String, SummonerSpellDto> entry : mapStringSummonerSpell.entrySet())
-                        newMap.put(entry.getValue().getId(), entry.getValue().getImage().getFull());
-
-                    return Observable.just(newMap);
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<Map<Integer, String>> getItemImage(){
-        return riotApiServiceImpl.getItemListBasicInfoFiltered()
-                .map(ItemListDto::getData)
-                .map(mapStringItemList -> {
-                    Map<Integer, String> newMap = new HashMap<>();
-
-                    for (Map.Entry<String, ItemDto> entry : mapStringItemList.entrySet()) {
-                        newMap.put(entry.getValue().getId(), entry.getValue().getImage().getFull());
-                    }
-
-                    return newMap;
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<Pair<String, List<Service>>> getShardIncidents(@Nullable String region){
-        return riotApiServiceImpl.getShardStatus(region)
-                .flatMap(shardStatus -> Observable.just(shardStatus.getName())
-                                .map(shardRegionName -> new Pair<>(
-                                                shardRegionName,
-                                                shardStatus.getServices()
-                                        )
-                                )
-                )
-                .take(4)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Observable<RecentGamesDto> getRecentGamesList(@Nullable String summonerId){
-        return riotApiServiceImpl.getRecentMatchList(summonerId)
-               .subscribeOn(Schedulers.computation());
-    }
-
-    public Observable<List<Integer>> getFreeChampRotation() {
-        return riotApiServiceImpl.getFreeChampRotation()
-                    .flatMap(champList -> Observable.from(champList)
-                        .map(Champion_ChampionDto::getId)
-                        .toList());
-    }
-
-    public Observable<Map<String, SummonerDto>> getSummonerListByIds(List<String> summonerIdList){
-        int size = summonerIdList.size();
-        int division = size / 39;
-        int finalSize = size % 39 == 0 ? division : division+1;
-
-        List<List<String>> split = split(summonerIdList, finalSize);
-        List<Observable<?>> observableList = new ArrayList<>();
-
-        for(List<String> listStr: split){
-            observableList.add(riotApiServiceImpl.getSummonerListByIds(listStr));
-        }
-
-        return Observable.zip(observableList, RiotApiOperations::mergeMaps);
-//
-//
-//
-//        return riotApiServiceImpl.getSummonerListByIds(summonerIdList)
-//                .map(mapStringSummonerList -> {
-//                    Map<Integer, String> newMap = new HashMap<>();
-//
-//                    for (Map.Entry<String, SummonerDto> entry : mapStringSummonerList.entrySet()) {
-//                        newMap.put((int)entry.getValue().getId(), entry.getValue().getName());
-//                    }
-//
-//                    return newMap;
-//                })
-//                .subscribeOn(Schedulers.computation())
-//                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public static List<List<String>> split(List<String> list, int size)
@@ -177,12 +68,121 @@ public class RiotApiOperations {
 
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> mergeMaps(Object... maps) {
-        final Map<K, V> result = new HashMap<K, V>();
-        for (Object map: maps) {
+        final Map<K, V> result = new HashMap<>();
+        for (Object map : maps) {
             // unchecked <K,V> require @SuppressWarnings
-            result.putAll((Map<K,V>)map);
+            result.putAll((Map<K, V>) map);
         }
         return result;
+    }
+
+    public Observable<Map<Integer, ChampionInfo>> getChampionsImage() {
+        return riotApiServiceImpl.getAllChampionBasicInfoFiltered()
+                .flatMap(championListDto -> Observable.just(championListDto.getChampionList()))
+                .flatMap(mapStringChamp -> {
+                    Map<Integer, ChampionInfo> newMap = new HashMap<>();
+
+                    for (Map.Entry<String, ChampionDto> entry : mapStringChamp.entrySet()) {
+
+                        int mapKey = entry.getValue().getId();
+                        ChampionInfo mapValue = new ChampionInfo();
+                        mapValue.setChampionImage(entry.getValue().getImage().getFull());
+                        mapValue.addChampionSkinsImage(entry.getValue().getSkinnImageList(entry.getKey()));
+                        mapValue.setChampionName(entry.getValue().getName());
+                        newMap.put(mapKey, mapValue);
+
+                    }
+                    return Observable.just(newMap);
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Map<Integer, String>> getSummonerSpellImage() {
+        return riotApiServiceImpl.getAllSummonerSpellBasicInfoFiltered()
+                .flatMap(summonerSpellListDto -> Observable.just(summonerSpellListDto.getData()))
+                .flatMap(mapStringSummonerSpell -> {
+                    Map<Integer, String> newMap = new HashMap<>();
+
+                    for (Map.Entry<String, SummonerSpellDto> entry : mapStringSummonerSpell.entrySet())
+                        newMap.put(entry.getValue().getId(), entry.getValue().getImage().getFull());
+
+                    return Observable.just(newMap);
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Map<Integer, String>> getItemImage() {
+        return riotApiServiceImpl.getItemListBasicInfoFiltered()
+                .map(ItemListDto::getData)
+                .map(mapStringItemList -> {
+                    Map<Integer, String> newMap = new HashMap<>();
+
+                    for (Map.Entry<String, ItemDto> entry : mapStringItemList.entrySet()) {
+                        newMap.put(entry.getValue().getId(), entry.getValue().getImage().getFull());
+                    }
+
+                    return newMap;
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<Pair<String, List<Service>>> getShardIncidents(@Nullable String region) {
+        return riotApiServiceImpl.getShardStatus(region)
+                .flatMap(shardStatus -> Observable.just(shardStatus.getName())
+                                .map(shardRegionName -> new Pair<>(
+                                                shardRegionName,
+                                                shardStatus.getServices()
+                                        )
+                                )
+                )
+                .take(4)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Observable<RecentGamesDto> getRecentGamesList(@Nullable String summonerId) {
+        return riotApiServiceImpl.getRecentMatchList(summonerId)
+                .subscribeOn(Schedulers.computation());
+    }
+
+    public Observable<List<Integer>> getFreeChampRotation() {
+        return riotApiServiceImpl.getFreeChampRotation()
+                .flatMap(champList -> Observable.from(champList)
+                        .map(Champion_ChampionDto::getId)
+                        .toList());
+    }
+
+    public Observable<Map<String, SummonerDto>> getSummonerListByIds(List<String> summonerIdList) {
+        int size = summonerIdList.size();
+        int division = size / 39;
+        int finalSize = size % 39 == 0 ? division : division + 1;
+
+        List<List<String>> split = split(summonerIdList, finalSize);
+        List<Observable<?>> observableList = new ArrayList<>();
+
+        for (List<String> listStr : split) {
+            observableList.add(riotApiServiceImpl.getSummonerListByIds(listStr));
+        }
+
+        return Observable.zip(observableList, RiotApiOperations::mergeMaps);
+//
+//
+//
+//        return riotApiServiceImpl.getSummonerListByIds(summonerIdList)
+//                .map(mapStringSummonerList -> {
+//                    Map<Integer, String> newMap = new HashMap<>();
+//
+//                    for (Map.Entry<String, SummonerDto> entry : mapStringSummonerList.entrySet()) {
+//                        newMap.put((int)entry.getValue().getId(), entry.getValue().getName());
+//                    }
+//
+//                    return newMap;
+//                })
+//                .subscribeOn(Schedulers.computation())
+//                .observeOn(AndroidSchedulers.mainThread());
     }
 
 

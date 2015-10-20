@@ -45,9 +45,9 @@ public enum GameQueueConfigId {
         this.name = name;
     }
 
-    public static GameQueueConfigId getByQueueType(long queueType){
-        for(GameQueueConfigId q: GameQueueConfigId.values()){
-            if(q.getQueueType() == queueType)
+    public static GameQueueConfigId getByQueueType(long queueType) {
+        for (GameQueueConfigId q : GameQueueConfigId.values()) {
+            if (q.getQueueType() == queueType)
                 return q;
         }
         return null;

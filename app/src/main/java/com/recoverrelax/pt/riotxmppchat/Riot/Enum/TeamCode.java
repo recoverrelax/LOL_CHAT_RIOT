@@ -6,7 +6,7 @@ public enum TeamCode {
 
     public int id;
 
-    TeamCode(int id){
+    TeamCode(int id) {
         this.id = id;
     }
 }

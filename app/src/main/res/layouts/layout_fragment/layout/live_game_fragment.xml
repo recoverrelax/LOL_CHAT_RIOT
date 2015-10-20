@@ -5,75 +5,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.LiveGameActivity">
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.LiveGameActivity">
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/current_game_general_info"
+            android:textColor="@color/black" />
 
-            <TextView
-                android:gravity="center"
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo
+            android:id="@+id/currentGameGlobalInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+
+        <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameBanList
+            android:id="@+id/banList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/current_game_ban_info"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/current_game_summoners"
+            android:textColor="@color/black" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
+                android:id="@+id/progressBarPicks"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_height="match_parent"
                 android:background="@color/white"
-                android:text="@string/current_game_general_info"
-                android:textColor="@color/black" />
+                android:visibility="invisible" />
 
-            <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameGlobalInfo
-                android:id="@+id/currentGameGlobalInfo"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <include layout="@layout/current_game_picks_layout" />
 
-
-                <com.recoverrelax.pt.riotxmppchat.Widget.CurrentGameBanList
-                    android:id="@+id/banList"
-                    android:layout_marginTop="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:background="@color/white"
-                    android:text="@string/current_game_ban_info"
-                    android:textColor="@color/black" />
-
-                <TextView
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:background="@color/white"
-                    android:text="@string/current_game_summoners"
-                    android:textColor="@color/black" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
-                        android:id="@+id/progressBarPicks"
-                        android:visibility="invisible"
-                        android:background="@color/white"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-
-                    <include
-                        layout="@layout/current_game_picks_layout"/>
-
-                </FrameLayout>
-            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

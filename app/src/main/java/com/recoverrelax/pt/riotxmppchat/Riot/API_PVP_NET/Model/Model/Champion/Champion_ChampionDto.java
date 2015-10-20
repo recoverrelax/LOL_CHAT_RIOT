@@ -38,7 +38,8 @@ public class Champion_ChampionDto {
      */
     boolean rankedPlayEnabled;
 
-    public Champion_ChampionDto() {}
+    public Champion_ChampionDto() {
+    }
 
     public boolean isActive() {
         return active;

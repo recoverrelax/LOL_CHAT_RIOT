@@ -13,5 +13,6 @@ public class SpellVarsDto {
     public String link;
     public String ranksWith;
 
-    public SpellVarsDto() {}
+    public SpellVarsDto() {
+    }
 }

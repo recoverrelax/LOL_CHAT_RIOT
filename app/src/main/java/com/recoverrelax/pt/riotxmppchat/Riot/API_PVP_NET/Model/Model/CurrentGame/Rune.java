@@ -15,5 +15,6 @@ public class Rune {
      */
     long runeId;
 
-    public Rune() {}
+    public Rune() {
+    }
 }

@@ -7,7 +7,6 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.recoverrelax.pt.riotxmppchat.Adapter.DashBoardLogAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChangedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnNewFriendPlayingEvent;
@@ -38,7 +37,7 @@ public class DashBoardPresenterImpl implements
         DashBoardPresenter,
         NewMessageReceivedNotifyEvent,
         OnNewFriendPlayingEvent,
-        OnFriendPresenceChangedEvent    {
+        OnFriendPresenceChangedEvent {
 
     @Inject
     RiotXmppDashboardImpl dashboardImpl;
@@ -50,11 +49,11 @@ public class DashBoardPresenterImpl implements
     EventHandler eventHandler;
 
     private DashBoardPresenterCallbacks view;
-    private DashBoardLogAdapter adapter;
+    private DashBoardAdapter adapter;
     private CompositeSubscription subscriptions = new CompositeSubscription();
     private Context context;
 
-    public DashBoardPresenterImpl(DashBoardPresenterCallbacks view, Context context){
+    public DashBoardPresenterImpl(DashBoardPresenterCallbacks view, Context context) {
         this.view = view;
         this.context = context;
         MainApplication.getInstance().getAppComponent().inject(this);
@@ -86,25 +85,25 @@ public class DashBoardPresenterImpl implements
     public void getFriendStatusInfo() {
         subscriptions.add(
                 dashboardImpl.getFriendStatusInfo()
-                .subscribe(new Subscriber<RiotXmppDashboardImpl.FriendStatusInfo>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+                        .subscribe(new Subscriber<RiotXmppDashboardImpl.FriendStatusInfo>() {
+                            @Override
+                            public void onCompleted() {
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        view.onFriendStatusInfoFailed("?", "?", "?");
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                view.onFriendStatusInfoFailed("?", "?", "?");
+                            }
 
-                    @Override
-                    public void onNext(RiotXmppDashboardImpl.FriendStatusInfo friendStatusInfo) {
-                        view.onFriendStatusInfoReady(
-                                String.valueOf(friendStatusInfo.getFriendsOnline()),
-                                String.valueOf(friendStatusInfo.getFriendsOffline()),
-                                String.valueOf(friendStatusInfo.getFriendsPlaying())
-                        );
-                    }
-                })
+                            @Override
+                            public void onNext(RiotXmppDashboardImpl.FriendStatusInfo friendStatusInfo) {
+                                view.onFriendStatusInfoReady(
+                                        String.valueOf(friendStatusInfo.getFriendsOnline()),
+                                        String.valueOf(friendStatusInfo.getFriendsOffline()),
+                                        String.valueOf(friendStatusInfo.getFriendsPlaying())
+                                );
+                            }
+                        })
         );
     }
 
@@ -112,39 +111,40 @@ public class DashBoardPresenterImpl implements
     public void getFreeChampRotationList(int size) {
         subscriptions.add(
                 Observable.zip(
-                riotApiOperations.getFreeChampRotation(),
-                riotApiOperations.getChampionsImage(),
-                riotApiRealm.getChampionDDBaseUrl(),
-                (freechampIds, champImages, champBaseUrl) -> {
+                        riotApiOperations.getFreeChampRotation(),
+                        riotApiOperations.getChampionsImage(),
+                        riotApiRealm.getChampionDDBaseUrl(),
+                        (freechampIds, champImages, champBaseUrl) -> {
 
-                    List<ChampionInfo> championInfoList = new ArrayList<>();
+                            List<ChampionInfo> championInfoList = new ArrayList<>();
 
-                    for (Integer champId : freechampIds) {
-                        ChampionInfo ci = new ChampionInfo();
-                        ci.setChampionId(champId);
-                        ci.setChampionName(champImages.get(champId).getChampionName());
-                        ci.setChampionImage(champBaseUrl + champImages.get(champId).getChampionImage());
+                            for (Integer champId : freechampIds) {
+                                ChampionInfo ci = new ChampionInfo();
+                                ci.setChampionId(champId);
+                                ci.setChampionName(champImages.get(champId).getChampionName());
+                                ci.setChampionImage(champBaseUrl + champImages.get(champId).getChampionImage());
 
-                        championInfoList.add(ci);
-                    }
-                    return championInfoList.subList(0, size);
-                }
-        )
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> view.onFreeChampionRotationLoading(true))
-                .doOnUnsubscribe(() -> view.onFreeChampionRotationLoading(false))
-                .subscribe(new Subscriber<List<ChampionInfo>>() {
-                    @Override public void onCompleted() { }
+                                championInfoList.add(ci);
+                            }
+                            return championInfoList.subList(0, size);
+                        }
+                )
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe(() -> view.onFreeChampionRotationLoading(true))
+                        .doOnUnsubscribe(() -> view.onFreeChampionRotationLoading(false))
+                        .subscribe(new Subscriber<List<ChampionInfo>>() {
+                            @Override public void onCompleted() {
+                            }
 
-                    @Override public void onError(Throwable e) {
-                        view.onFreeChampionRotationFailed();
-                    }
+                            @Override public void onError(Throwable e) {
+                                view.onFreeChampionRotationFailed();
+                            }
 
-                    @Override
-                    public void onNext(List<ChampionInfo> championInfos) {
-                        view.onFreeChampionRotationReady(championInfos, size);
-                    }
-                })
+                            @Override
+                            public void onNext(List<ChampionInfo> championInfos) {
+                                view.onFreeChampionRotationReady(championInfos, size);
+                            }
+                        })
         );
     }
 
@@ -152,16 +152,19 @@ public class DashBoardPresenterImpl implements
     public void getLogLast20() {
         subscriptions.add(
                 dashboardImpl.getLogLast20List()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<InAppLogDb>>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<List<InAppLogDb>>() {
+                            @Override public void onCompleted() {
+                            }
 
-                    @Override
-                    public void onNext(List<InAppLogDb> inAppLogDbs) {
-                        setAdapterItems(inAppLogDbs);
-                    }
-                })
+                            @Override public void onError(Throwable e) {
+                            }
+
+                            @Override
+                            public void onNext(List<InAppLogDb> inAppLogDbs) {
+                                setAdapterItems(inAppLogDbs);
+                            }
+                        })
         );
     }
 
@@ -169,26 +172,27 @@ public class DashBoardPresenterImpl implements
     public void getLogSingleItem() {
         subscriptions.add(
                 dashboardImpl.getLogSingleItem()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<InAppLogDb>() {
-                    @Override public void onCompleted() { }
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<InAppLogDb>() {
+                            @Override public void onCompleted() {
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        onLogSingleItemFailed();
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                onLogSingleItemFailed();
+                            }
 
-                    @Override
-                    public void onNext(InAppLogDb inAppLogDb) {
-                        setAdapterSingleItem(inAppLogDb);
-                    }
-                })
+                            @Override
+                            public void onNext(InAppLogDb inAppLogDb) {
+                                setAdapterSingleItem(inAppLogDb);
+                            }
+                        })
         );
     }
 
     private void onLogSingleItemFailed() {
         AppSnackbarUtils.showSnackBar(
-                (Activity)context,
+                (Activity) context,
                 R.string.service_currently_unavailable,
                 AppSnackbarUtils.LENGTH_INDEFINITE,
                 R.string.webservice_failed_retry,
@@ -204,7 +208,7 @@ public class DashBoardPresenterImpl implements
         }
     }
 
-    private void setAdapterItems(List<InAppLogDb> inAppLogDbs){
+    private void setAdapterItems(List<InAppLogDb> inAppLogDbs) {
         if (adapter != null && inAppLogDbs != null) {
             adapter.setItems(inAppLogDbs);
         }
@@ -226,12 +230,12 @@ public class DashBoardPresenterImpl implements
 
     @Override
     public void configAdapter(RecyclerView rv) {
-        adapter = new DashBoardLogAdapter(context, new ArrayList<>(), rv, R.layout.dashboard_log_layout_white);
+        adapter = new DashBoardAdapter(context, new ArrayList<>(), rv, R.layout.dashboard_log_layout_white);
         view.setRecyclerViewAdapter(adapter);
     }
 
     @Override
-    public void onResume(int champSize){
+    public void onResume(int champSize) {
         eventHandler.registerForNewMessageNotifyEvent(this);
         eventHandler.registerForFriendPlayingEvent(this);
         eventHandler.registerForFriendPresenceChangedEvent(this);
@@ -243,7 +247,7 @@ public class DashBoardPresenterImpl implements
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         adapter.removeSubscriptions();
 
         eventHandler.unregisterForNewMessageNotifyEvent(this);

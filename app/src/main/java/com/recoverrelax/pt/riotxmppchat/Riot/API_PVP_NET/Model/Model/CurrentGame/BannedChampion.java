@@ -11,7 +11,7 @@ public class BannedChampion {
     long championId;
 
     /**
-     *The turn during which the champion was banned
+     * The turn during which the champion was banned
      */
     int pickTurn;
 
@@ -26,7 +26,8 @@ public class BannedChampion {
 
     String championImage;
 
-    public BannedChampion() {}
+    public BannedChampion() {
+    }
 
     public long getChampionId() {
         return championId;

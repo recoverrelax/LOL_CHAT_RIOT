@@ -26,7 +26,8 @@ public class ChampionDto {
     public List<String> tags;
     public String title;
 
-    ChampionDto(){}
+    ChampionDto() {
+    }
 
     @Override
     public String toString() {
@@ -55,11 +56,11 @@ public class ChampionDto {
         return image;
     }
 
-    public List<String> getSkinnImageList(String championName){
+    public List<String> getSkinnImageList(String championName) {
         List<String> finalSkinList = new ArrayList<>();
         List<SkinDto> skins = getSkins();
 
-        for(SkinDto skin: skins){
+        for (SkinDto skin : skins) {
             finalSkinList.add(championName + "_" + skin.num);
         }
         return finalSkinList;

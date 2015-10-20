@@ -1,66 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
-        <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
-            android:id="@+id/championPlaying"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            app:layout_widthPercent="35%"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:scaleType="fitStart"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_cross"/>
+    <!--suppress AndroidDomInspection -->
+    <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+        android:id="@+id/championPlaying"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart"
+        android:src="@drawable/ic_cross"
+        app:layout_widthPercent="35%"
+        tools:ignore="RtlHardcoded" />
 
-        <TextView
-            android:id="@+id/playerName"
-            android:layout_marginBottom="5dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_toLeftOf="@+id/championPlaying"
-            android:paddingRight="5dp"
-            android:textColor="@color/white"
-            android:gravity="right"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="MyanMarking"/>
+    <TextView
+        android:id="@+id/playerName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_toLeftOf="@+id/championPlaying"
+        android:gravity="right"
+        android:paddingRight="5dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/white"
+        tools:ignore="RtlHardcoded,RtlSymmetry"
+        tools:text="MyanMarking" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/championPlaying"
+        android:layout_below="@+id/playerName"
+        android:layout_toLeftOf="@+id/championPlaying"
+        android:orientation="vertical"
+        tools:ignore="RtlHardcoded">
 
         <LinearLayout
-            android:layout_alignBottom="@+id/championPlaying"
-            android:layout_below="@+id/playerName"
-            android:layout_toLeftOf="@+id/championPlaying"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded,UselessParent">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_toLeftOf="@+id/championPlaying"
-                android:layout_gravity="right"
-                android:gravity="right"
-                android:layout_weight="1"
-                android:layout_height="0dp">
+            <ImageView
+                android:id="@+id/summonerSpell1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="fitStart"
+                android:src="@drawable/ic_cross"
+                tools:src="@drawable/summoner_example" />
 
-                <ImageView
-                    android:id="@+id/summonerSpell1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitStart"
-                    tools:src="@drawable/summoner_example"
-                    android:src="@drawable/ic_cross"/>
-
-                <ImageView
-                    android:id="@+id/summonerSpell2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitStart"
-                    tools:src="@drawable/summoner_example"
-                    android:src="@drawable/ic_cross"/>
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/summonerSpell2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="fitStart"
+                android:src="@drawable/ic_cross"
+                tools:src="@drawable/summoner_example" />
         </LinearLayout>
+    </LinearLayout>
 
-    </android.support.percent.PercentRelativeLayout>
+</android.support.percent.PercentRelativeLayout>

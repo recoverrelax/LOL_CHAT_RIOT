@@ -10,7 +10,7 @@ public class GoldDto {
     private int sell;
     private int total;
 
-    public GoldDto(){
+    public GoldDto() {
 
     }
 

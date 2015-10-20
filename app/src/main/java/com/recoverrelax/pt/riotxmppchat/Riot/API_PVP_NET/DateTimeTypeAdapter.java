@@ -16,8 +16,8 @@ import java.util.Locale;
 
 public class DateTimeTypeAdapter implements JsonDeserializer<Date>, JsonSerializer<Date> {
     private static final String DATE_TIME_DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private static final String DATE_ONLY_DEFAULT_FORMAT = "yyyy-MM-dd";
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
     private final SimpleDateFormat dateOnlyFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     public DateTimeTypeAdapter() {
@@ -30,10 +30,11 @@ public class DateTimeTypeAdapter implements JsonDeserializer<Date>, JsonSerializ
         try {
             mDate = this.formatter.parse(date);
         } catch (ParseException var9) {
+            //noinspection EmptyCatchBlock
             try {
                 mDate = this.dateOnlyFormatter.parse(date);
             } catch (ParseException var8) {
-                ;
+
             }
         }
 

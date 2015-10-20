@@ -13,7 +13,8 @@ public class ChampionListDto {
     public String version;
     public String format;
 
-    public ChampionListDto(){}
+    public ChampionListDto() {
+    }
 
     public Map<String, ChampionDto> getChampionList() {
         return data;

@@ -1,9 +1,9 @@
 package com.recoverrelax.pt.riotxmppchat.Network.RxImpl;
 
-import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
-import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
 
 import java.util.List;
 
@@ -40,24 +40,25 @@ public class RiotXmppDashboardImpl {
     public Observable<FriendStatusInfo> getFriendStatusInfo() {
         final FriendStatusInfo friendStatusInfo = new FriendStatusInfo();
 
-            return riotRosterManager.getRosterEntries()
-                   .flatMap(riotRosterManager::getFriendFromRosterEntry)
-                   .doOnNext(friend -> {
-                       if (friend.isPlaying())
-                           friendStatusInfo.addFriendPlaying();
-                       if (friend.isOnline())
-                           friendStatusInfo.addFriendOnline();
-                       if (friend.isOffline())
-                           friendStatusInfo.addFriendOffline();
-            })
-                    .toList()
-                    .map(friends -> friendStatusInfo)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.computation());
+        return riotRosterManager.getRosterEntries()
+                .flatMap(riotRosterManager::getFriendFromRosterEntry)
+                .doOnNext(friend -> {
+                    if (friend.isPlaying())
+                        friendStatusInfo.addFriendPlaying();
+                    if (friend.isOnline())
+                        friendStatusInfo.addFriendOnline();
+                    if (friend.isOffline())
+                        friendStatusInfo.addFriendOffline();
+                })
+                .toList()
+                .map(friends -> friendStatusInfo)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.computation());
 
 
     }
 
+    @SuppressWarnings("unchecked")
     public Observable<InAppLogDb> getLogSingleItem() {
         return riotXmppService.getRiotConnectionManager().getConnectedUser()
                 .map(connectedUser -> {

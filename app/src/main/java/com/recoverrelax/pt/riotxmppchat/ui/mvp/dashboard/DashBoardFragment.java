@@ -14,9 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.recoverrelax.pt.riotxmppchat.Adapter.DashBoardLogAdapter;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.KamehameUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.ChampionInfo;
 import com.recoverrelax.pt.riotxmppchat.Widget.FreeChampionRotation;
@@ -35,6 +33,7 @@ import butterknife.OnTouch;
  */
 public class DashBoardFragment extends BaseFragment implements DashBoardPresenterCallbacks {
 
+    private final String TAG = DashBoardFragment.this.getClass().getSimpleName();
     @Bind(R.id.message_number) TextView message_number;
     @Bind(R.id.playing_number) TextView playing_number;
     @Bind(R.id.online_number) TextView online_number;
@@ -42,8 +41,6 @@ public class DashBoardFragment extends BaseFragment implements DashBoardPresente
     @Bind(R.id.freeChampRotation1) FreeChampionRotation freeChampRotation1;
     @Bind(R.id.messagesIcon) ImageView messagesIcon;
     @Bind(R.id.recyclerView) RecyclerView recyclerView;
-
-    private final String TAG = DashBoardFragment.this.getClass().getSimpleName();
     private DashBoardPresenter presenter;
 
     public DashBoardFragment() {
@@ -179,7 +176,7 @@ public class DashBoardFragment extends BaseFragment implements DashBoardPresente
     }
 
     @Override
-    public void setRecyclerViewAdapter(DashBoardLogAdapter adapter) {
+    public void setRecyclerViewAdapter(DashBoardAdapter adapter) {
         recyclerView.setAdapter(adapter);
     }
 }

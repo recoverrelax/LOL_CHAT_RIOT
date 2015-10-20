@@ -9,6 +9,7 @@ public class BlockDto {
     public boolean recMath;
     public String type;
 
-    public BlockDto() {}
+    public BlockDto() {
+    }
 }
 

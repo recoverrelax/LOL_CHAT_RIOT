@@ -9,6 +9,7 @@ public class SkinDto {
     public String name;
     public int num;
 
-    public SkinDto() {}
+    public SkinDto() {
+    }
 
 }

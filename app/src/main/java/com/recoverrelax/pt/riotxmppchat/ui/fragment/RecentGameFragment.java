@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,6 @@ import android.widget.FrameLayout;
 
 import com.recoverrelax.pt.riotxmppchat.Adapter.RecentGameAdapter;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
@@ -52,32 +50,23 @@ import rx.subscriptions.CompositeSubscription;
 public class RecentGameFragment extends BaseFragment {
 
     private final String TAG = RecentGameFragment.this.getClass().getSimpleName();
-    private String friendXmppAddress;
-    private String friendUsername;
-
     @Bind(R.id.recentGameParentLayout)
     FrameLayout recentGameParentLayout;
-
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
-
     @Bind(R.id.progressBar)
     AppProgressBar progressBar;
-
     @Bind(R.id.myRecyclerView)
     RecyclerView myRecyclerView;
-
-    private long userId_riotApi;
-
     @Inject
     RiotApiOperations riotApiOperation;
-
     @Inject
     RiotApiRealmDataVersion realmData;
-
     @Inject
     RiotApiServiceImpl riotApiImpl;
-
+    private String friendXmppAddress;
+    private String friendUsername;
+    private long userId_riotApi;
     /**
      * Adapter
      */
@@ -114,7 +103,7 @@ public class RecentGameFragment extends BaseFragment {
             friendXmppAddress = (String) savedInstanceState.getSerializable(LiveGameActivity.FRIEND_XMPP_ADDRESS_INTENT);
             friendUsername = (String) savedInstanceState.getSerializable(LiveGameActivity.FRIEND_XMPP_USERNAME_INTENT);
         }
-        if( friendUsername != null && friendUsername.equals(LiveGameActivity.FRIEND_XMPP_USERNAME_ME))
+        if (friendUsername != null && friendUsername.equals(LiveGameActivity.FRIEND_XMPP_USERNAME_ME))
             setToolbarTitle(getActivity().getResources().getString(R.string.recent_game_me_fragment_title));
         else
             setToolbarTitle(getActivity().getResources().getString(R.string.recent_game__fragment_title, friendUsername));
@@ -187,6 +176,7 @@ public class RecentGameFragment extends BaseFragment {
         doWsCall(finalGameList, observableList);
     }
 
+    @SuppressWarnings("unchecked")
     private void doWsCall(List<RecentGameWrapper> finalGameList, List<Observable<?>> observableList) {
         subscriptions.add(
                 Observable.zip(observableList, args -> {
@@ -199,7 +189,6 @@ public class RecentGameFragment extends BaseFragment {
                     String skinUrl = (String) args[6];
 
                     final long[] mySummonerId = new long[1];
-                    final long[] gameType = new long[1];
 
                     return riotApiOperation.getRecentGamesList(String.valueOf(userId_riotApi))
                             .map((RecentGamesDto recentGamesDto) -> {
@@ -280,11 +269,8 @@ public class RecentGameFragment extends BaseFragment {
                                             R.string.service_currently_unavailable,
                                             AppSnackbarUtils.LENGTH_INDEFINITE,
                                             R.string.webservice_failed_retry,
-                                            new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    doWsCall(finalGameList, observableList);
-                                                }
+                                            v -> {
+                                                doWsCall(finalGameList, observableList);
                                             }
                                     );
                                 }
@@ -300,8 +286,6 @@ public class RecentGameFragment extends BaseFragment {
     }
 
 
-
-
     public Observable<List<RecentGameWrapper>> updateWithSummonerNames(List<RecentGameWrapper> gameList) {
 
         List<String> summonerIdList = new ArrayList<>();
@@ -310,12 +294,12 @@ public class RecentGameFragment extends BaseFragment {
                 .flatMap(recentGameWrapper -> {
                     List<TeamInfo> sumList = new ArrayList<>();
                     List<TeamInfo> team100 = recentGameWrapper.getTeam100();
-                    if(team100 != null)
-                    sumList.addAll(team100);
+                    if (team100 != null)
+                        sumList.addAll(team100);
 
                     List<TeamInfo> team200 = recentGameWrapper.getTeam200();
-                    if(team200 != null)
-                    sumList.addAll(team200);
+                    if (team200 != null)
+                        sumList.addAll(team200);
                     return Observable.from(sumList)
                             .map(TeamInfo::getPlayerId)
                             .map(String::valueOf)

@@ -96,7 +96,7 @@ public class GameDto {
      */
     private int teamId;
 
-    public GameDto(){
+    public GameDto() {
 
     }
 
@@ -115,8 +115,8 @@ public class GameDto {
     public List<PlayerDto> getFellowPlayersTeam100() {
         List<PlayerDto> fellowPlayersTeam100 = new ArrayList<>();
 
-        for(PlayerDto p: fellowPlayers)
-            if(p.getTeamId() == TeamCode.TEAM1.id)
+        for (PlayerDto p : fellowPlayers)
+            if (p.getTeamId() == TeamCode.TEAM1.id)
                 fellowPlayersTeam100.add(p);
         return fellowPlayersTeam100;
     }
@@ -124,8 +124,8 @@ public class GameDto {
     public List<PlayerDto> getFellowPlayersTeam200() {
         List<PlayerDto> fellowPlayersTeam200 = new ArrayList<>();
 
-        for(PlayerDto p: fellowPlayers)
-            if(p.getTeamId() == TeamCode.TEAM2.id)
+        for (PlayerDto p : fellowPlayers)
+            if (p.getTeamId() == TeamCode.TEAM2.id)
                 fellowPlayersTeam200.add(p);
         return fellowPlayersTeam200;
     }
@@ -174,6 +174,10 @@ public class GameDto {
         return subType;
     }
 
+    public void setSubType(String subType) {
+        this.subType = subType;
+    }
+
     public int getTeamId() {
         return teamId;
     }
@@ -183,7 +187,8 @@ public class GameDto {
     }
 
     public void setChampionImage(String championImageSquareUrl) {
-        this.championImage = championImageSquareUrl;    }
+        this.championImage = championImageSquareUrl;
+    }
 
     public String getSpell1Image() {
         return spell1Image;
@@ -199,9 +204,5 @@ public class GameDto {
 
     public void setSpell2Image(String spell2Image) {
         this.spell2Image = spell2Image;
-    }
-
-    public void setSubType(String subType) {
-        this.subType = subType;
     }
 }

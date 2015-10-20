@@ -3,20 +3,19 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.recoverrelax.pt.riotxmppchat.Adapter.DashBoardLogAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar;
+import com.recoverrelax.pt.riotxmppchat.ui.mvp.dashboard.DashBoardAdapter;
 
 import java.util.ArrayList;
 
@@ -34,22 +33,17 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class LogFragment extends BaseFragment implements NewMessageReceivedNotifyEvent {
 
+    private final String TAG = LogFragment.this.getClass().getSimpleName();
     @Bind(R.id.logRecyclerView)
     RecyclerView logRecyclerView;
-
     @Bind(R.id.progressBar)
     AppProgressBar progressBar;
-
-    private final String TAG = LogFragment.this.getClass().getSimpleName();
-    private DashBoardLogAdapter adapter;
-
-    private CompositeSubscription subscriptions = new CompositeSubscription();
-
     @Inject
     EventHandler eventHandler;
-
     @Inject
     RiotXmppDashboardImpl dashboardImpl;
+    private DashBoardAdapter adapter;
+    private CompositeSubscription subscriptions = new CompositeSubscription();
 
     public LogFragment() {
         // Required empty public constructor
@@ -81,22 +75,22 @@ public class LogFragment extends BaseFragment implements NewMessageReceivedNotif
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         logRecyclerView.setLayoutManager(layoutManager);
 
-        adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), logRecyclerView, R.layout.dashboard_log_layout_black);
+        adapter = new DashBoardAdapter(getActivity(), new ArrayList<>(), logRecyclerView, R.layout.dashboard_log_layout_black);
         logRecyclerView.setAdapter(adapter);
         getLogLast20();
     }
 
     private void getLogLast20() {
         subscriptions.add(
-                 dashboardImpl.getLogLast20List()
-                .doOnUnsubscribe(() -> progressBar.setVisibility(View.GONE))
-                         .observeOn(AndroidSchedulers.mainThread())
-                         .subscribe(inAppLogDbs -> {
-                             if (adapter != null && inAppLogDbs != null) {
-                                 adapter.setItems(inAppLogDbs);
-                             }
-                             progressBar.setVisibility(View.VISIBLE);
-                         })
+                dashboardImpl.getLogLast20List()
+                        .doOnUnsubscribe(() -> progressBar.setVisibility(View.GONE))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(inAppLogDbs -> {
+                            if (adapter != null && inAppLogDbs != null) {
+                                adapter.setItems(inAppLogDbs);
+                            }
+                            progressBar.setVisibility(View.VISIBLE);
+                        })
         );
     }
 

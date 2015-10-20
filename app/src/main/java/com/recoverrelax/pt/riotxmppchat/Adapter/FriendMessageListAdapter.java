@@ -33,14 +33,15 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
 
-    private List<FriendListChat> friendMessageList;
     private final LayoutInflater inflater;
     private final Context context;
     private final Random random;
-    private OnRowClick clickCallback;
     private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private List<FriendListChat> friendMessageList;
+    private OnRowClick clickCallback;
 
     public FriendMessageListAdapter(Context context, ArrayList<FriendListChat> friendMessageList) {
         inflater = LayoutInflater.from(context);
@@ -67,17 +68,17 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
          */
         final Date friendLastMessageDate = holder.friendListChat.getFriendLastMessageDate();
 
-        if(friendLastMessageDate != null) {
+        if (friendLastMessageDate != null) {
             holder.startTimestampUpdate();
-        }else
+        } else
             holder.stopTimestampUpdate();
 
         Boolean wasRead = holder.friendListChat.getLastMessage().getWasRead();
 
-        if(!wasRead && holder.friendListChat.getLastMessage().getDirection() == MessageDirection.FROM.getId()){
+        if (!wasRead && holder.friendListChat.getLastMessage().getDirection() == MessageDirection.FROM.getId()) {
             holder.wasRead.setVisibility(View.VISIBLE);
             AppContextUtils.setBlinkAnimation(holder.wasRead, true);
-        }else{
+        } else {
             holder.wasRead.setVisibility(View.INVISIBLE);
             AppContextUtils.setBlinkAnimation(holder.wasRead, false);
         }
@@ -92,19 +93,19 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         String userXmppAddress = AppXmppUtils.parseXmppAddress(item.getFriend().getUserXmppAddress());
 
         int position = getFriendMessageListPositionByFriendName(userXmppAddress);
-        if(position != -1){
+        if (position != -1) {
             friendMessageList.get(position).setMessage(item.getLastMessage());
             notifyItemChanged(position);
         }
     }
 
-    public void setRowClickListener(OnRowClick clickCallback){
+    public void setRowClickListener(OnRowClick clickCallback) {
         this.clickCallback = clickCallback;
     }
 
-    public boolean contains(String userXmppAddress){
-        for(FriendListChat flc: friendMessageList){
-            if(flc.getFriend().getUserXmppAddress().equals(userXmppAddress))
+    public boolean contains(String userXmppAddress) {
+        for (FriendListChat flc : friendMessageList) {
+            if (flc.getFriend().getUserXmppAddress().equals(userXmppAddress))
                 return true;
         }
         return false;
@@ -112,20 +113,21 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
 
     /**
      * Get the array position corresponding to the given xmppName of the user
-     * @param xmppName
+     *
+     * @param xmppName xmppName
      * @return the position or -1 for cudn't find
      */
-    private int getFriendMessageListPositionByFriendName(String xmppName){
+    private int getFriendMessageListPositionByFriendName(String xmppName) {
         int friendMessageListSize = friendMessageList.size();
 
-        for(int i = 0 ; i < friendMessageListSize; i++){
-            if(friendMessageList.get(i).getFriend().getUserXmppAddress().equals(xmppName))
+        for (int i = 0; i < friendMessageListSize; i++) {
+            if (friendMessageList.get(i).getFriend().getUserXmppAddress().equals(xmppName))
                 return i;
         }
         return -1;
     }
 
-    public void removeSubscriptions(){
+    public void removeSubscriptions() {
         subscriptions.clear();
     }
 
@@ -134,38 +136,36 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
         return friendMessageList.size();
     }
 
+    public interface OnRowClick {
+        void onRowClick(View view, String friendName, String friendXmppAddress);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        private final int updateInterval = 10000;
         @Bind(R.id.name)
         TextView name;
-
         @Bind(R.id.lastMessage)
         TextView lastMessage;
-
         @Bind(R.id.date)
         TextView date;
-
         @Bind(R.id.friends_list_cardview)
         CardView friends_list_cardview;
-
         @Bind(R.id.wasRead)
         ImageView wasRead;
-
         FriendListChat friendListChat;
-
         private Subscription subscription;
-        private final int updateInterval = 10000;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            if(itemView instanceof CardView) {
+            if (itemView instanceof CardView) {
                 friends_list_cardview.setCardBackgroundColor(MyContext.getColor(context, R.color.primaryColor120));
             }
         }
 
-        public void startTimestampUpdate(){
+        public void startTimestampUpdate() {
             // The initialValue, the Observable delay applies in the firstTime
             date.setText(MyDate.getFormatedDate(friendListChat.getFriendLastMessageDate()));
 
@@ -174,8 +174,11 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<String>() {
-                        @Override public void onCompleted() { }
-                        @Override public void onError(Throwable e) { }
+                        @Override public void onCompleted() {
+                        }
+
+                        @Override public void onError(Throwable e) {
+                        }
 
                         @Override
                         public void onNext(String formattedDate) {
@@ -185,18 +188,14 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
             subscriptions.add(subscription);
         }
 
-        public void stopTimestampUpdate(){
+        public void stopTimestampUpdate() {
             subscriptions.remove(subscription);
         }
 
         @OnClick(R.id.friends_list_cardview)
         public void onClick(View view) {
-            if(clickCallback != null)
+            if (clickCallback != null)
                 clickCallback.onRowClick(view, friendListChat.getFriendName(), friendListChat.getUserXmppAddress());
         }
-    }
-
-    public interface OnRowClick{
-        void onRowClick(View view, String friendName, String friendXmppAddress);
     }
 }

@@ -29,7 +29,7 @@ public class FriendMessageListActivity extends MessageIconActivity {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = FriendMessageListFragment.newInstance();
             fragmentManager.beginTransaction()

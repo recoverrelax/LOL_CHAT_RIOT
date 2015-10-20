@@ -15,7 +15,8 @@ public class ItemListDto {
     private String type;
     private String version;
 
-    public ItemListDto(){}
+    public ItemListDto() {
+    }
 
     public BasicDataDto getBasic() {
         return basic;

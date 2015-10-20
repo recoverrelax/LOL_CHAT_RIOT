@@ -74,7 +74,6 @@ public class CurrentGameInfo {
      */
 
 
-
     public CurrentGameInfo() {
     }
 
@@ -130,10 +129,10 @@ public class CurrentGameInfo {
     }
 
     public String getGameStartTimeFormatted() {
-        if(gameStartTime == 0)
+        if (gameStartTime == 0)
             return "Now";
         else
-        return MyDate.getFormatedDate(new Date(gameStartTime));
+            return MyDate.getFormatedDate(new Date(gameStartTime));
     }
 
     private Observer getObservers() {

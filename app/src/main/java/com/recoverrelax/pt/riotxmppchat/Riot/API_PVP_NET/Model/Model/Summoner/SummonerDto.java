@@ -10,7 +10,8 @@ public class SummonerDto {
     private long revisionDate;
     private long summonerLevel;
 
-    public SummonerDto(){}
+    public SummonerDto() {
+    }
 
     public long getId() {
         return id;

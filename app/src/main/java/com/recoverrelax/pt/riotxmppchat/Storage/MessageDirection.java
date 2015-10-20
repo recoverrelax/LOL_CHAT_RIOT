@@ -6,7 +6,7 @@ public enum MessageDirection {
 
     private int id;
 
-    MessageDirection(int id){
+    MessageDirection(int id) {
         this.id = id;
     }
 
@@ -14,9 +14,9 @@ public enum MessageDirection {
         return id;
     }
 
-    public MessageDirection getById(int id){
-        for(MessageDirection mtf: MessageDirection.values()){
-            if(mtf.getId() == id)
+    public MessageDirection getById(int id) {
+        for (MessageDirection mtf : MessageDirection.values()) {
+            if (mtf.getId() == id)
                 return mtf;
         }
         return null;

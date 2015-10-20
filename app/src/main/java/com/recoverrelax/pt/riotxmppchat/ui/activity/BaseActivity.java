@@ -51,47 +51,38 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     //http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kalista_2.jpg
 
+    // delay to launch nav drawer item, to allow close animation to play
+    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
     @Nullable
     @Bind(R.id.app_bar)
     protected Toolbar toolbar;
-
     @Nullable
     @Bind(R.id.appBarLayout)
     AppBarLayout appBarLayout;
-
     @Nullable
     @Bind(R.id.navigationView)
     NavigationView navigationView;
-
     @Nullable
     @Bind(R.id.drawer_layout)
     DrawerLayout drawer_layout;
-
     @Nullable
     @Bind(R.id.toolbar_title)
     TextView toolbar_title;
-
     TextView drawer_username;
     ImageView statusIcon;
-
-    private boolean userLearnedDrawer;
-    private boolean fromSavedInstanceState;
-    private @ColorInt Integer toolbarColor;
-
     @Inject DataStorage mDataStorage;
     @Inject RiotXmppDBRepository riotRepository;
     @Inject EventHandler handler;
     @Inject
     RiotRosterManager rosterManager;
-
     @Inject
     Bus bus;
-
+    private boolean userLearnedDrawer;
+    private boolean fromSavedInstanceState;
+    private
+    @ColorInt Integer toolbarColor;
     private Snackbar connectionSnackbar;
-
     private Handler mHandler;
-    // delay to launch nav drawer item, to allow close animation to play
-    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,16 +93,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         toolbarColor = ContextCompat.getColor(this, R.color.primaryColor);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             fromSavedInstanceState = true;
         }
 
         userLearnedDrawer = mDataStorage.userLearnedDrawer();
 
-        if(getResources().getBoolean(R.bool.isTablet)){
+        if (getResources().getBoolean(R.bool.isTablet)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        }
-        else {
+        } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
         }
 
@@ -123,7 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             setSupportActionBar(toolbar);
             ActionBar supportActionBar = getSupportActionBar();
 
-            if(supportActionBar != null)
+            if (supportActionBar != null)
                 supportActionBar.setDisplayShowTitleEnabled(false);
 
             setTitle(getToolbarTitle());
@@ -132,11 +122,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         }
 
-        if(navigationView != null){
+        if (navigationView != null) {
             setupDrawerContent();
-        }else{
+        } else {
             ActionBar supportActionBar = getSupportActionBar();
-            if(supportActionBar != null) {
+            if (supportActionBar != null) {
                 supportActionBar.setDisplayHomeAsUpEnabled(true);
                 supportActionBar.setHomeButtonEnabled(true);
             }
@@ -162,34 +152,31 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }
     }
 
-    public @ColorInt int getToobarColor(){
+    public @ColorInt int getToobarColor() {
         return this.toolbarColor;
     }
 
-    public void setToolbarTitleColor(@ColorInt Integer toolbarTitleColor){
-        if(toolbarTitleColor == null) return;
-
-        if(toolbar_title != null)
-            toolbar_title.setTextColor(toolbarTitleColor);
-    }
-
     /**
-     *
      * @return NULL FOR NO TITLE
      */
     public abstract @StringRes CharSequence getToolbarTitle();
 
     /**
-     *
      * @return NULL FOR DEFAULT_COLOR
      */
     public abstract @ColorInt Integer getToolbarColor();
 
     /**
-     *
      * @return NULL FOR DEFAULT COLOR
      */
     public abstract @ColorInt Integer getToolbarTitleColor();
+
+    public void setToolbarTitleColor(@ColorInt Integer toolbarTitleColor) {
+        if (toolbarTitleColor == null) return;
+
+        if (toolbar_title != null)
+            toolbar_title.setTextColor(toolbarTitleColor);
+    }
 
     @Override
     protected void onDestroy() {
@@ -200,36 +187,38 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     private void setupDrawerContent() {
         mHandler = new Handler();
 
-            @SuppressLint("InflateParams")
-            View header = LayoutInflater.from(this).inflate(R.layout.drawer_header_layout, null);
-            navigationView.addHeaderView(header);
+        @SuppressLint("InflateParams")
+        View header = LayoutInflater.from(this).inflate(R.layout.drawer_header_layout, null);
 
-            drawer_username = ButterKnife.findById(header, R.id.drawer_username);
-            statusIcon = ButterKnife.findById(header, R.id.statusIcon);
+        //noinspection ConstantConditions
+        navigationView.addHeaderView(header);
 
-            if (drawer_username != null) {
-                drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix, mDataStorage.getUsername()));
-            }
+        drawer_username = ButterKnife.findById(header, R.id.drawer_username);
+        statusIcon = ButterKnife.findById(header, R.id.statusIcon);
 
-            if (statusIcon != null) {
-                Drawable drawable = statusIcon.getDrawable();
-                drawable.mutate();
+        if (drawer_username != null) {
+            drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix, mDataStorage.getUsername()));
+        }
 
-                drawable.setColorFilter(MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()), PorterDuff.Mode.SRC_IN);
+        if (statusIcon != null) {
+            Drawable drawable = statusIcon.getDrawable();
+            drawable.mutate();
 
-                statusIcon.setImageDrawable(drawable);
+            drawable.setColorFilter(MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()), PorterDuff.Mode.SRC_IN);
 
-                statusIcon.setOnClickListener(view -> {
-                    if (MainApplication.getInstance().getRiotXmppService().getConnection() != null) {
-                        MainApplication.getInstance().getRiotXmppService().swapPresenceMode(false);
+            statusIcon.setImageDrawable(drawable);
 
-                        drawable.setColorFilter(
-                                MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()),
-                                PorterDuff.Mode.SRC_IN);
+            statusIcon.setOnClickListener(view -> {
+                if (MainApplication.getInstance().getRiotXmppService().getConnection() != null) {
+                    MainApplication.getInstance().getRiotXmppService().swapPresenceMode(false);
 
-                        statusIcon.setImageDrawable(drawable);
-                    }
-                });
+                    drawable.setColorFilter(
+                            MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()),
+                            PorterDuff.Mode.SRC_IN);
+
+                    statusIcon.setImageDrawable(drawable);
+                }
+            });
         }
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
@@ -248,7 +237,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             }
         };
 
-        if(!userLearnedDrawer && !fromSavedInstanceState){
+        if (!userLearnedDrawer && !fromSavedInstanceState) {
             if (drawer_layout != null) {
                 if (navigationView != null) {
                     drawer_layout.openDrawer(navigationView);
@@ -273,12 +262,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         setNavigationViewPosition(getNavigationViewPosition());
     }
 
+    @SuppressWarnings("NullableProblems")
     @OnClick(R.id.logout)
     @Nullable
-    public void onDrawerLogout(View view){
+    public void onDrawerLogout(View view) {
         this.finishAffinity();
 
-        if(!mDataStorage.getNotificationsAlwaysOn())
+        if (!mDataStorage.getNotificationsAlwaysOn())
             MainApplication.getInstance().stopService();
     }
 
@@ -290,12 +280,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected abstract int getNavigationViewPosition();
 
 
-    private void setNavigationViewPosition(int menuItemId){
+    private void setNavigationViewPosition(int menuItemId) {
         MenuItem item = null;
         if (navigationView != null) {
             item = navigationView.getMenu().findItem(menuItemId);
         }
-        if(item != null && drawer_layout!=null)
+        if (item != null && drawer_layout != null)
             item.setChecked(true);
     }
 
@@ -316,31 +306,32 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if(id == android.R.id.home){
+        } else if (id == android.R.id.home) {
             onBackPressed();
         }
-                return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    @SuppressLint("RtlHardcoded")
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                Intent intent = null;
-                int itemId = menuItem.getItemId();
+        Intent intent = null;
+        int itemId = menuItem.getItemId();
 
-                switch(itemId){
-                    case R.id.navigation_item_0:
-                        intent = new Intent(BaseActivity.this, DashBoardActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        break;
-                    case R.id.navigation_item_1:
-                        intent = new Intent(BaseActivity.this, FriendListActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        break;
-                    case R.id.navigation_item_2:
-                        intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        break;
+        switch (itemId) {
+            case R.id.navigation_item_0:
+                intent = new Intent(BaseActivity.this, DashBoardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            case R.id.navigation_item_1:
+                intent = new Intent(BaseActivity.this, FriendListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                break;
+            case R.id.navigation_item_2:
+                intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                break;
 
 //                    case R.id.navigation_item_3:
 //
@@ -355,65 +346,63 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 //                        break;
 
 
-                    case R.id.navigation_item_4:
-                        if(MainApplication.getInstance().isRealScoutEnabled) {
-                            intent = new Intent(BaseActivity.this, ShardActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        } else
-                        AppSnackbarUtils.showSnackBar(this, R.string.feature_coming, AppSnackbarUtils.LENGTH_LONG);
+            case R.id.navigation_item_4:
+                if (MainApplication.getInstance().isRealScoutEnabled) {
+                    intent = new Intent(BaseActivity.this, ShardActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                } else
+                    AppSnackbarUtils.showSnackBar(this, R.string.feature_coming, AppSnackbarUtils.LENGTH_LONG);
 
-                        break;
+                break;
 
-                    case R.id.navigation_item_5:
-                        intent = new Intent(BaseActivity.this, SettingActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        break;
-                }
+            case R.id.navigation_item_5:
+                intent = new Intent(BaseActivity.this, SettingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                break;
+        }
 
-                final Intent finalIntent = intent;
-                mHandler.postDelayed(() -> {
-                    if (finalIntent != null) {
-                        startActivity(finalIntent);
-                        AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
-                    }
-                }, NAVDRAWER_LAUNCH_DELAY);
+        final Intent finalIntent = intent;
+        mHandler.postDelayed(() -> {
+            if (finalIntent != null) {
+                startActivity(finalIntent);
+                AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
+            }
+        }, NAVDRAWER_LAUNCH_DELAY);
         if (drawer_layout != null) {
             drawer_layout.closeDrawer(Gravity.LEFT);
         }
         return true;
     }
 
-    public void goToMessageActivity(String username, String userXmppName){
+    public void goToMessageActivity(String username, String userXmppName) {
         AppContextUtils.startChatActivity(this, username, userXmppName);
     }
 
-    public void goToMessageListActivity(){
-        if(getNavigationViewPosition() != -1)
+    public void goToMessageListActivity() {
+        if (getNavigationViewPosition() != -1)
             if (navigationView != null) {
                 onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
+            } else {
+                Intent intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
+                this.finish();
             }
-        else {
-            Intent intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
-            this.finish();
-        }
     }
 
-    public void goToFriendListActivity(){
-        if(getNavigationViewPosition() != -1)
+    public void goToFriendListActivity() {
+        if (getNavigationViewPosition() != -1)
             if (navigationView != null) {
                 onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_1));
+            } else {
+                Intent intent = new Intent(BaseActivity.this, FriendListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
+                this.finish();
             }
-        else {
-            Intent intent = new Intent(BaseActivity.this, FriendListActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
-            this.finish();
-        }
     }
 
     @Override
@@ -435,7 +424,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     @Override
     public void onReconnect() {
-        if(connectionSnackbar != null)
+        if (connectionSnackbar != null)
             connectionSnackbar.dismiss();
     }
 

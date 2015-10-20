@@ -2,7 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.MyUtil;
 
 public class AppGlobals {
 
-    public static class Message{
+    public static class Message {
         public static final int DEFAULT_MESSAGES_RETURNED = 20;
     }
 
@@ -50,10 +50,6 @@ public class AppGlobals {
 
         public static final String PROFILE_SQUARE =
                 "http://ddragon.leagueoflegends.com/cdn/" + DD_VERSION + "/img/" + PROFILEICON_JSON_ID + "/";
-
-
-
-
 
 
     }

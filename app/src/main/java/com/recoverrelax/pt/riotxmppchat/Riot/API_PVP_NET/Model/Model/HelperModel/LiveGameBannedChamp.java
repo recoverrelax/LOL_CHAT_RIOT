@@ -6,11 +6,11 @@ public class LiveGameBannedChamp {
     private String championImage;
     private int teamId;
 
-    public LiveGameBannedChamp(){
+    public LiveGameBannedChamp() {
 
     }
 
-    public LiveGameBannedChamp(int championID, int teamId){
+    public LiveGameBannedChamp(int championID, int teamId) {
         this.championID = championID;
         this.teamId = teamId;
     }
@@ -41,7 +41,7 @@ public class LiveGameBannedChamp {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null || ! (o instanceof LiveGameBannedChamp))
+        if (o == null || !(o instanceof LiveGameBannedChamp))
             return false;
 
         LiveGameBannedChamp bci = (LiveGameBannedChamp) o;

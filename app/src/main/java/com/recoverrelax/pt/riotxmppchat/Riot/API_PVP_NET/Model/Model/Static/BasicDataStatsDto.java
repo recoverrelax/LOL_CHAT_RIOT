@@ -71,7 +71,8 @@ public class BasicDataStatsDto {
     private double rPercentTimeDeadMod;
     private double rPercentTimeDeadModPerLevel;
 
-    public BasicDataStatsDto(){}
+    public BasicDataStatsDto() {
+    }
 
     public double getFlatArmorMod() {
         return FlatArmorMod;

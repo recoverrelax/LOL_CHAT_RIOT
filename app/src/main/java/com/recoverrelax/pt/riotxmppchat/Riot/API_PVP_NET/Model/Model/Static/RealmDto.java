@@ -17,7 +17,8 @@ public class RealmDto {
     private String store;
     private String v;
 
-    public RealmDto(){}
+    public RealmDto() {
+    }
 
     public String getCdn() {
         return cdn;

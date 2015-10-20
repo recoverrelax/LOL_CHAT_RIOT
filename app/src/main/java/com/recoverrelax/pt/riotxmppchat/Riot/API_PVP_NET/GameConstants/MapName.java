@@ -17,16 +17,16 @@ public enum MapName {
     private long mapId;
     private String mapNotes;
 
-    MapName(long mapId, String mapName, String mapNotes){
+    MapName(long mapId, String mapName, String mapNotes) {
         this.mapId = mapId;
         this.mapName = mapName;
         this.mapNotes = mapNotes;
     }
 
     @Nullable
-    public static MapName getById(long mapId){
-        for(MapName map: MapName.values()){
-            if(map.getMapId() == mapId)
+    public static MapName getById(long mapId) {
+        for (MapName map : MapName.values()) {
+            if (map.getMapId() == mapId)
                 return map;
         }
         return null;

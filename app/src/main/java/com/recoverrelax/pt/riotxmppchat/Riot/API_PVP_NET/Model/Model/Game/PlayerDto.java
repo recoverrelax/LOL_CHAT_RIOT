@@ -3,7 +3,7 @@ package com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.Game;
 import org.parceler.Parcel;
 
 /**
- *  This object contains player information.
+ * This object contains player information.
  */
 @Parcel
 public class PlayerDto {
@@ -13,7 +13,7 @@ public class PlayerDto {
      */
     private int championId;
 
-     /**
+    /**
      * Summoner id associated with player.
      */
     private long summonerId;
@@ -29,7 +29,8 @@ public class PlayerDto {
      */
     private int teamId;
 
-    public PlayerDto() {}
+    public PlayerDto() {
+    }
 
     public int getChampionId() {
         return championId;

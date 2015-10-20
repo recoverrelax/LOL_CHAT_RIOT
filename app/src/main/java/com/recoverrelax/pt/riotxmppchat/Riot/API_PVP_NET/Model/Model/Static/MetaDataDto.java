@@ -9,7 +9,8 @@ public class MetaDataDto {
     private String tier;
     private String type;
 
-    public MetaDataDto(){}
+    public MetaDataDto() {
+    }
 
     public boolean isRune() {
         return isRune;

@@ -1,57 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/blackT150"
     android:orientation="vertical"
     tools:context=".DashBoardFragment">
 
     <TextView
         android:layout_width="wrap_content"
-        android:gravity="center"
-        android:paddingRight="10dp"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="left"
         android:fontFamily="sans-serif-light"
-        android:textStyle="bold"
-        android:textColor="@color/white"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/dashboard_fragment_free_champion_rotation"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Free Champion Rotation"
-        android:layout_gravity="left" />
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        tools:ignore="RtlHardcoded" />
 
     <com.recoverrelax.pt.riotxmppchat.Widget.FreeChampionRotation
         android:id="@+id/freeChampRotation1"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:gravity="center"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="10dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:fontFamily="sans-serif-light"
-        android:textStyle="bold"
-        android:textColor="@color/white"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:text="@string/dashboard_fragment_latest_activity"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Latest Activity"
-        android:layout_gravity="center_horizontal" />
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
     <LinearLayout
         android:id="@+id/dashboard_main"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,51 +62,50 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/dashboard_1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:id="@+id/dashboard_1"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
                     android:id="@+id/messagesIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:backgroundTint="@color/white"
                     tools:src="@drawable/dashboard_new_message" />
 
                 <TextView
                     android:id="@+id/message_number"
                     style="@style/dashboardItem"
                     android:layout_width="wrap_content"
-                    tools:text="2"
                     android:layout_height="match_parent"
-                    android:text="" />
+                    android:text=""
+                    tools:text="2" />
             </LinearLayout>
 
 
             <LinearLayout
+                android:id="@+id/dashboard_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:id="@+id/dashboard_2"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+                    android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/dashboard_play"
-                    android:id="@+id/imageView" />
+                    android:src="@drawable/dashboard_play" />
 
                 <TextView
-                    style="@style/dashboardItem"
                     android:id="@+id/playing_number"
-                    tools:text="2"
+                    style="@style/dashboardItem"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="" />
+                    android:text=""
+                    tools:text="2" />
             </LinearLayout>
         </LinearLayout>
         <!--SecondRow-->
@@ -116,12 +117,12 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/dashboard_3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:id="@+id/dashboard_3"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
                     android:layout_width="wrap_content"
@@ -130,32 +131,32 @@
                     android:src="@drawable/dashboard_online" />
 
                 <TextView
+                    android:id="@+id/online_number"
                     style="@style/dashboardItem"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    tools:text="1"
-                    android:id="@+id/online_number" />
+                    tools:text="1" />
             </LinearLayout>
 
 
             <LinearLayout
+                android:id="@+id/dashboard_4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:id="@+id/dashboard_4"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
+                    android:id="@+id/imageView2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:src="@drawable/dashboard_offline"
-                    android:id="@+id/imageView2" />
+                    android:src="@drawable/dashboard_offline" />
 
                 <TextView
-                    style="@style/dashboardItem"
                     android:id="@+id/offline_number"
+                    style="@style/dashboardItem"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     tools:text="4" />
@@ -165,11 +166,11 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </LinearLayout>

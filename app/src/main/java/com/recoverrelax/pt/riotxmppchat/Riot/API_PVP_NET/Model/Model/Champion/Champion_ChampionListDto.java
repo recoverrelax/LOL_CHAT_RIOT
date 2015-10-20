@@ -6,9 +6,9 @@ import java.util.List;
 
 /**
  * This object contains a collection of champion information.
- *
+ * <p>
  * /api/lol/{region}/v1.2/champion
- *
+ * <p>
  * Retrieve all champions. (REST)
  */
 @Parcel
@@ -16,7 +16,8 @@ public class Champion_ChampionListDto {
 
     List<Champion_ChampionDto> champions;
 
-    public Champion_ChampionListDto() {}
+    public Champion_ChampionListDto() {
+    }
 
     public List<Champion_ChampionDto> getChampions() {
         return champions;

@@ -28,23 +28,21 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<MessageDb> personalMessageList;
     private final LayoutInflater inflater;
     private final Context context;
     private final RecyclerView recyclerView;
-
+    private final int VIEW_HOLDER_FROM_ID = 0;
+    private final int VIEW_HOLDER_TO_ID = 1;
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
+    private final int updateInterval = 10000;
     @LayoutRes
     int layout_from = R.layout.personal_message_from_layout;
     @LayoutRes
     int layout_to = R.layout.personal_message_to_layout;
-
-    private final int VIEW_HOLDER_FROM_ID = 0;
-    private final int VIEW_HOLDER_TO_ID = 1;
-
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
-    private final int updateInterval = 10000;
+    private List<MessageDb> personalMessageList;
 
     public PersonalMessageAdapter(Context context, ArrayList<MessageDb> personalMessageList, int layout_from, int layout_to, RecyclerView recycler) {
         inflater = LayoutInflater.from(context);
@@ -64,7 +62,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return VIEW_HOLDER_TO_ID;
     }
 
-    public List<MessageDb> getAllMessages(){
+    public List<MessageDb> getAllMessages() {
         return personalMessageList;
     }
 
@@ -114,8 +112,8 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         sizeDifference = personalMessageList.size() - sizeDifference;
         notifyDataSetChanged();
 
-        if(scrollTo != null)
-            this.recyclerView.scrollToPosition(scrollTo.equals(ScrollTo.FIRST_ITEM) ? 0 : personalMessageList.size()-1);
+        if (scrollTo != null)
+            this.recyclerView.scrollToPosition(scrollTo.equals(ScrollTo.FIRST_ITEM) ? 0 : personalMessageList.size() - 1);
         else
             this.recyclerView.scrollToPosition(sizeDifference);
     }
@@ -127,18 +125,18 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.recyclerView.scrollToPosition(0);
     }
 
-    public enum ScrollTo{
-        LAST_ITEM,
-        FIRST_ITEM
-    }
-
     @Override
     public int getItemCount() {
         return personalMessageList.size();
     }
 
-    public void removeSubscriptions(){
+    public void removeSubscriptions() {
         subscriptions.clear();
+    }
+
+    public enum ScrollTo {
+        LAST_ITEM,
+        FIRST_ITEM
     }
 
     class MyViewHolderFrom extends RecyclerView.ViewHolder {
@@ -157,7 +155,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ButterKnife.bind(this, itemView);
         }
 
-        public void startUpdatingTimeStamp(){
+        public void startUpdatingTimeStamp() {
             date.setText(MyDate.getFormatedDate(messageDb.getDate()));
 
             subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
@@ -165,8 +163,13 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<String>() {
-                        @Override public void onCompleted() { }
-                        @Override public void onError(Throwable e) { }
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
 
                         @Override
                         public void onNext(String formattedDate) {
@@ -194,7 +197,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ButterKnife.bind(this, itemView);
         }
 
-        public void startUpdatingTimeStamp(){
+        public void startUpdatingTimeStamp() {
             date.setText(MyDate.getFormatedDate(messageDb.getDate()));
 
             subscription = Observable.interval(updateInterval, TimeUnit.MILLISECONDS)
@@ -202,8 +205,13 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Subscriber<String>() {
-                        @Override public void onCompleted() { }
-                        @Override public void onError(Throwable e) { }
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
 
                         @Override
                         public void onNext(String formattedDate) {

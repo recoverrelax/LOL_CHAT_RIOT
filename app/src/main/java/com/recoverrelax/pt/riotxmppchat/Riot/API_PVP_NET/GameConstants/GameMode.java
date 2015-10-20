@@ -13,13 +13,13 @@ public enum GameMode {
 
     private String gameMode;
 
-    GameMode(String gameMode){
+    GameMode(String gameMode) {
         this.gameMode = gameMode;
     }
 
-    public static GameMode getBySelf(String gameMode){
-        for(GameMode gm: GameMode.values()){
-            if(gm.toString().equals(gameMode))
+    public static GameMode getBySelf(String gameMode) {
+        for (GameMode gm : GameMode.values()) {
+            if (gm.toString().equals(gameMode))
                 return gm;
         }
         return null;

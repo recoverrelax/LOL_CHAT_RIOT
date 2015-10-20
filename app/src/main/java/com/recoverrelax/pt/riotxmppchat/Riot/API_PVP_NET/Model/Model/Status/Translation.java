@@ -9,7 +9,8 @@ public class Translation {
     private String locale;
     private String updated_at;
 
-    public Translation(){}
+    public Translation() {
+    }
 
     public String getContent() {
         return content;

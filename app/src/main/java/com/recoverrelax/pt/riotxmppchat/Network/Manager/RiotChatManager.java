@@ -39,23 +39,16 @@ import rx.schedulers.Schedulers;
 @Singleton
 public class RiotChatManager implements ChatManagerListener, ChatMessageListener {
 
+    private static final int MESSAGE_NOTIFICATION_DRAWABLE = R.drawable.ic_action_question_answer_green;
+    private static final int MESSAGE_NOTIFICATION_ID = 1111111;
+    @Inject RiotXmppDBRepository riotXmppDBRepository;
+    @Inject RiotRosterManager riotRosterManager;
+    @Inject MessageSpeechNotification messageSpeechNotification;
+    @Inject DataStorage dataStorageInstance;
+    @Inject Bus bus;
     private ChatManager chatManager;
     private String connectedXmppUser = null;
     private Map<String, Chat> chatList;
-
-    private static final int MESSAGE_NOTIFICATION_DRAWABLE = R.drawable.ic_action_question_answer_green;
-    private static final int MESSAGE_NOTIFICATION_ID = 1111111;
-
-    @Inject
-    RiotXmppDBRepository riotXmppDBRepository;
-    @Inject
-    RiotRosterManager riotRosterManager;
-    @Inject
-    MessageSpeechNotification messageSpeechNotification;
-    @Inject
-    DataStorage dataStorageInstance;
-    @Inject
-    Bus bus;
 
     @Singleton
     @Inject
@@ -122,6 +115,10 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
      * Notify all Observers of new messages
      */
     public void notifyNewMessage(Message message, String userXmppAddress) {
+
+        if (messageHasNoProperContent(message.getBody()))
+            return;
+
         NotificationDb notification = riotXmppDBRepository.getNotificationByUser(userXmppAddress).toBlocking().single();
         String targetUserName = riotRosterManager.getFriendNameFromXmppAddress(userXmppAddress).toBlocking().single();
 
@@ -147,6 +144,10 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
                 bus.post(new NewMessageReceivedPublish(userXmppAddress, targetUserName, messageFinal, buttonLabel));
             bus.post(new NewMessageReceivedNotifyPublish(userXmppAddress, targetUserName, messageFinal, buttonLabel));
         }
+    }
+
+    private boolean messageHasNoProperContent(String body) {
+        return body.contains("<body>");
     }
 
 

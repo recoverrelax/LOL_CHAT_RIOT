@@ -2,7 +2,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
@@ -52,45 +50,33 @@ import rx.subscriptions.CompositeSubscription;
 public class LiveGameFragment extends BaseFragment {
 
     private final String TAG = LiveGameFragment.this.getClass().getSimpleName();
-    private String friendXmppAddress;
-    private String friendUsername;
-
-//    @Bind(R.id.progressBar)
-//    AppProgressBar progressBar;
-
     @Bind(R.id.nestedScrollView)
     NestedScrollView nestedScrollView;
-
     @Bind(R.id.currentGameGlobalInfo)
     CurrentGameGlobalInfo currentGameGlobalInfo;
 
+//    @Bind(R.id.progressBar)
+//    AppProgressBar progressBar;
     @Bind(R.id.banList)
     CurrentGameBanList banList;
-
     @Bind(R.id.progressBar)
     AppProgressBar progressBar;
-
     @Bind(R.id.currentGameParticipantMainContent)
     LinearLayout currentGameParticipantMainContent;
-
     @Bind(R.id.progressBarPicks)
     AppProgressBar progressBarPicksAndBans;
-
     @Inject
     RiotApiServiceImpl riotApiServiceImpl;
-
     @Inject
     RiotApiOperations riotApiOperations;
-
     @Inject
     RiotApiRealmDataVersion realmData;
-
     @Bind({R.id.team100_player1, R.id.team100_player2, R.id.team100_player3, R.id.team100_player4, R.id.team100_player5})
     List<CurrentGameSingleParticipantBase> team100;
-
     @Bind({R.id.team200_player1, R.id.team200_player2, R.id.team200_player3, R.id.team200_player4, R.id.team200_player5})
     List<CurrentGameSingleParticipantBase> team200;
-
+    private String friendXmppAddress;
+    private String friendUsername;
     private CompositeSubscription subscriptions = new CompositeSubscription();
 
     public LiveGameFragment() {
@@ -191,20 +177,20 @@ public class LiveGameFragment extends BaseFragment {
                         .doOnSubscribe(() -> currentGameGlobalInfo.enableProgressBar(true))
                         .doOnUnsubscribe(() -> currentGameGlobalInfo.enableProgressBar(false))
                         .subscribe(currentGameInfo -> {
-                            currentGameGlobalInfo.setMapName(currentGameInfo.getMapName());
-                            currentGameGlobalInfo.setGameQueueType(currentGameInfo.getGameQueueFormatted());
-                            currentGameGlobalInfo.setGameMode(currentGameInfo.getGameMode());
-                            currentGameGlobalInfo.setGameDuration(currentGameInfo.getGameStartTimeFormatted());
-                        }, throwable -> {
-                                     AppSnackbarUtils.showSnackBar(
+                                    currentGameGlobalInfo.setMapName(currentGameInfo.getMapName());
+                                    currentGameGlobalInfo.setGameQueueType(currentGameInfo.getGameQueueFormatted());
+                                    currentGameGlobalInfo.setGameMode(currentGameInfo.getGameMode());
+                                    currentGameGlobalInfo.setGameDuration(currentGameInfo.getGameStartTimeFormatted());
+                                }, throwable -> {
+                                    AppSnackbarUtils.showSnackBar(
                                             LiveGameFragment.this.getBaseActivity(),
                                             R.string.service_currently_unavailable,
                                             AppSnackbarUtils.LENGTH_INDEFINITE,
                                             R.string.webservice_failed_retry,
-                                             v -> getGeneralLiveData(
-                                                     obsCurrentGameInfoBySummonerId
-                                             )
-                                     );
+                                            v -> getGeneralLiveData(
+                                                    obsCurrentGameInfoBySummonerId
+                                            )
+                                    );
                                 }
                         )
         );

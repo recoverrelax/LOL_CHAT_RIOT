@@ -26,7 +26,8 @@ public class StatsDto {
     public double spellblock;
     public double spellblockperlevel;
 
-    public StatsDto() {}
+    public StatsDto() {
+    }
 
 
 }

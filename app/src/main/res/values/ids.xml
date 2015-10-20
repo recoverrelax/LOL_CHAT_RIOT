@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--TextProgressBar Id's-->
-    <item name="textprogressbar_text" type="id"/>
-    <item name="textprogressbar_progressbar" type="id"/>
+    <item name="textprogressbar_text" type="id" />
+    <item name="textprogressbar_progressbar" type="id" />
 </resources>

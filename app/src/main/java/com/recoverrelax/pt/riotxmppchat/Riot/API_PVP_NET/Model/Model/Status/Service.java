@@ -12,7 +12,8 @@ public class Service {
     private String slug;
     private String status;
 
-    public Service(){}
+    public Service() {
+    }
 
     public List<Incident> getIncidents() {
         return incidents;

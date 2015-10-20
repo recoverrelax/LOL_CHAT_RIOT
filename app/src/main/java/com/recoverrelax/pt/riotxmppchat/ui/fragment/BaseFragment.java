@@ -24,7 +24,7 @@ public class BaseFragment extends Fragment {
 
 
     // stuff
-    public void setToolbarTitle(CharSequence title){
+    public void setToolbarTitle(CharSequence title) {
         getBaseActivity().setTitle(title);
     }
 
@@ -34,7 +34,7 @@ public class BaseFragment extends Fragment {
         MainApplication.getInstance().getAppComponent().inject(this);
     }
 
-    public BaseActivity getBaseActivity(){
+    public BaseActivity getBaseActivity() {
         return (BaseActivity) getActivity();
     }
 

@@ -4,7 +4,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,7 +23,6 @@ import com.recoverrelax.pt.riotxmppchat.Adapter.PersonalMessageAdapter;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppGlobals;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
@@ -39,7 +37,6 @@ import com.squareup.otto.Bus;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -48,7 +45,6 @@ import LolChatRiotDb.MessageDb;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pt.reco.myutil.MyContext;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -63,45 +59,36 @@ import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_F
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class ChatFragment extends BaseFragment implements NewMessageReceivedNotifyEvent {
 
+    private static final String TAG = ChatFragment.class.getSimpleName();
+    private final CompositeSubscription subscriptions = new CompositeSubscription();
     @Bind(R.id.messageRecyclerView)
     RecyclerView messageRecyclerView;
-
     @Bind(R.id.chatEditText)
     EditText chatEditText;
-
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
-
     @Bind(R.id.expandButton)
     ImageView expandButton;
-
     @Bind(R.id.message_layout)
     RelativeLayout message_layout;
-
     @Bind(R.id.uselessShape)
     FrameLayout uselessShape;
-
-    private static final String TAG = ChatFragment.class.getSimpleName();
-
-    /**
-     * Adapter
-     */
-    private PersonalMessageAdapter adapter;
     @Inject PersonalMessageImpl personalMessageImpl;
     @Inject RiotRosterManager riotRosterManager;
 
     @Inject Bus bus;
     @Inject EventHandler handler;
-
+    /**
+     * Adapter
+     */
+    private PersonalMessageAdapter adapter;
     private String friendXmppName;
     private String friendUsername;
-
     private SwipeRefreshLayout.OnRefreshListener swipeRefreshListener;
-
     private int defaultMessageNrReturned = AppGlobals.Message.DEFAULT_MESSAGES_RETURNED;
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
 
 
     public ChatFragment() {
@@ -119,6 +106,10 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
         return chatFragment;
     }
 
+    public static int convertDIPToPixels(Context context, int dip) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, displayMetrics);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -164,7 +155,7 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
         }
     }
 
-    public void getLastXPersonalMessageList(int itemQtt, String friendXmppName){
+    public void getLastXPersonalMessageList(int itemQtt, String friendXmppName) {
         Subscription subscribe = personalMessageImpl.getLastXPersonalMessageList(itemQtt, friendXmppName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<MessageDb>>() {
@@ -203,14 +194,9 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
         super.onPause();
         subscriptions.clear();
 
-        if(adapter != null)
+        if (adapter != null)
             adapter.removeSubscriptions();
         handler.unregisterForNewMessageNotifyEvent(this);
-    }
-
-    public static int convertDIPToPixels(Context context, int dip) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, displayMetrics);
     }
 
     public int doubleLoadedItems() {
@@ -227,24 +213,27 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Boolean>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
+                    @Override public void onCompleted() {
+                    }
+
+                    @Override public void onError(Throwable e) {
+                    }
 
                     @Override
                     public void onNext(Boolean isAvailable) {
-                        if(isAvailable && !message.equals(""))
+                        if (isAvailable && !message.equals(""))
                             sendMessage(message);
                         else
-                        AppSnackbarUtils.showSnackBar(
-                                ChatFragment.this.getActivity(),
-                                R.string.your_friend_is_offline,
-                                AppSnackbarUtils.LENGTH_LONG
-                        );
+                            AppSnackbarUtils.showSnackBar(
+                                    ChatFragment.this.getActivity(),
+                                    R.string.your_friend_is_offline,
+                                    AppSnackbarUtils.LENGTH_LONG
+                            );
                     }
                 });
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         MainApplication.getInstance().getRiotXmppService().getRiotChatManager().sendMessage(message, friendXmppName)
                 .flatMap(sentMessageId -> MainApplication.getInstance().getRiotXmppService().getRiotConnectionManager().getConnectedUser())
                 .flatMap(connectedUser -> riotXmppDBRepository.insertMessage(new MessageDb(null,
@@ -254,7 +243,7 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                                 new Date(),
                                 message,
                                 false))
-                        .map(aLong -> connectedUser)
+                                .map(aLong -> connectedUser)
                 )
                 .flatMap(connectedUser -> riotXmppDBRepository.insertOrReplaceInappLog(new InAppLogDb(null,
                         InAppLogIds.FRIEND_PM.getOperationId(),
@@ -264,8 +253,11 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Long>() {
-                    @Override public void onCompleted() { }
-                    @Override public void onError(Throwable e) { }
+                    @Override public void onCompleted() {
+                    }
+
+                    @Override public void onError(Throwable e) {
+                    }
 
                     @Override
                     public void onNext(Long aLong) {
@@ -297,10 +289,11 @@ public class ChatFragment extends BaseFragment implements NewMessageReceivedNoti
                 });
     }
 
-    public void getLastPersonalMessage(String friendXmppName){
+    public void getLastPersonalMessage(String friendXmppName) {
         Subscription subscribe = personalMessageImpl.getLastPersonalMessage(friendXmppName)
                 .subscribe(new Subscriber<MessageDb>() {
-                    @Override public void onCompleted() { }
+                    @Override public void onCompleted() {
+                    }
 
                     @Override
                     public void onError(Throwable e) {

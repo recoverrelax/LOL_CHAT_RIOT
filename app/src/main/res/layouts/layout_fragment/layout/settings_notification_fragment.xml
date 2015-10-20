@@ -1,121 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        style="@style/settings_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/settings_global_notifications_title" />
+        android:orientation="vertical">
 
-    <View android:layout_width="match_parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_height="2dp"
-        android:background="@color/primaryColorDark"
-        android:layout_marginBottom="16dp"/>
+        <TextView
+            style="@style/settings_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_global_notifications_title" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/primaryColorDark" />
 
-
-    <LinearLayout
-        android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/visible_sound_layout">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical" >
+            android:id="@+id/visible_sound_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-            <TextView
-                style="@style/settings_child"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_global_always_receive_notifications"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_child"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_global_always_receive_notifications" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/notificationAlwaysOn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="NO"
+                    android:textOn="YES"
+                    android:theme="@style/AppTheme.Base.Settings" />
+
+                <!--<CheckBox-->
+                <!--android:focusable="false"-->
+                <!--android:clickable="false"-->
+                <!--android:background="@color/transparent"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/notificationAlwaysOn"-->
+                <!--android:layout_gravity="center_horizontal" />-->
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="match_parent"
-            android:gravity="center">
+        <TextView
+            style="@style/settings_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_when_app_visible" />
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/notificationAlwaysOn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/primaryColorDark" />
 
-            <!--<CheckBox-->
-            <!--android:focusable="false"-->
-            <!--android:clickable="false"-->
-            <!--android:background="@color/transparent"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/notificationAlwaysOn"-->
-            <!--android:layout_gravity="center_horizontal" />-->
-        </LinearLayout>
-    </LinearLayout>
-
-    <TextView
-        style="@style/settings_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_when_app_visible" />
-
-    <View android:layout_width="match_parent"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_height="2dp"
-        android:background="@color/primaryColorDark"
-        android:layout_marginBottom="16dp"/>
-
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-            <TextView
-                style="@style/settings_child"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_new_message_sound_notification"/>
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="match_parent"
-            android:gravity="center">
+                <TextView
+                    style="@style/settings_child"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_new_message_sound_notification" />
+            </LinearLayout>
 
-           <!--<CheckBox-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <!--<CheckBox-->
                 <!--android:focusable="false"-->
                 <!--android:clickable="false"-->
                 <!--android:background="@color/transparent"-->
@@ -124,46 +123,46 @@
                 <!--android:id="@+id/visible_sound"-->
                 <!--android:layout_gravity="center_horizontal"  />-->
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/visible_sound"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/visible_sound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="NO"
+                    android:textOn="YES"
+                    android:theme="@style/AppTheme.Base.Settings" />
 
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/visible_text_layout">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical" >
-
-            <TextView
-                style="@style/settings_child"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_new_message_text_notification" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="match_parent"
-            android:gravity="center">
+            android:id="@+id/visible_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-            <!--<CheckBox-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_child"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_new_message_text_notification" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <!--<CheckBox-->
                 <!--android:focusable="false"-->
                 <!--android:clickable="false"-->
                 <!--android:background="@color/transparent"-->
@@ -172,59 +171,60 @@
                 <!--android:id="@+id/visible_text"-->
                 <!--android:layout_gravity="center_horizontal" />-->
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/visible_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <TextView
-        style="@style/settings_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_when_app_background"
-        android:id="@+id/textView2" />
-
-    <View android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
-        android:background="@color/primaryColorDark"
-        android:layout_marginBottom="16dp"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/background_sound_layout">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical" >
-
-            <TextView
-                style="@style/settings_child"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_new_message_sound_notification" />
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/visible_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="NO"
+                    android:textOn="YES"
+                    android:theme="@style/AppTheme.Base.Settings" />
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="match_parent"
-            android:gravity="center">
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/settings_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_when_app_background" />
 
-            <!--<CheckBox-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/primaryColorDark" />
+
+        <LinearLayout
+            android:id="@+id/background_sound_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/settings_child"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_new_message_sound_notification" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <!--<CheckBox-->
                 <!--android:focusable="false"-->
                 <!--android:clickable="false"-->
                 <!--android:background="@color/transparent"-->
@@ -233,54 +233,54 @@
                 <!--android:id="@+id/background_sound"-->
                 <!--android:layout_gravity="center_horizontal" />-->
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/background_sound"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"/>
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/background_sound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="NO"
+                    android:textOn="YES"
+                    android:theme="@style/AppTheme.Base.Settings" />
 
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:id="@+id/background_text_layout">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical" >
-
-            <TextView
-                style="@style/settings_child"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_new_message_text_notification" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="match_parent"
-            android:gravity="center">
+            android:id="@+id/background_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
-            <android.support.v7.widget.SwitchCompat
-                android:id="@+id/background_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.Base.Settings"
-                android:textOn="YES"
-                android:textOff="NO"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
+                <TextView
+                    style="@style/settings_child"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_new_message_text_notification" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/background_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="NO"
+                    android:textOn="YES"
+                    android:theme="@style/AppTheme.Base.Settings" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-    </ScrollView>
+</ScrollView>
