@@ -24,7 +24,7 @@ public class BaseFragment extends Fragment {
 
 
     // stuff
-    void setToolbarTitle(CharSequence title){
+    public void setToolbarTitle(CharSequence title){
         getBaseActivity().setTitle(title);
     }
 

@@ -59,7 +59,7 @@
     <string name="ingame_playing_as_for">for</string>
     <string name="minutes">minutes</string>
     <string name="friends_list_recycler_child_ranked_wins">Ranked\nWins</string>
-    <string name="friends_online">Friends Online:</string>
+    <string name="friends_online">"Friends Online: %s"</string>
     <string name="dashboard">Dashboard</string>
     <string name="log_activity">Latest Friend Activity</string>
     <string name="chatting_with">"Chatting with: %s"</string>

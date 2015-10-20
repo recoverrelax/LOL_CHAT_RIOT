@@ -200,7 +200,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 if (friend.isPlaying()) {
                     Glide.with(context)
-                            .load(friend.getChampionNameFormatted())
+                            .load(friend.getChampIconWithUrl())
                             .into(holderOnline.championSquare);
                 } else
                     holderOnline.championSquare.setImageDrawable(null);

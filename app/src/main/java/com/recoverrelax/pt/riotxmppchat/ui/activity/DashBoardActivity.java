@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.mvp.dashboard.DashBoardFragment;
 
 import butterknife.ButterKnife;
 import pt.reco.myutil.MyContext;

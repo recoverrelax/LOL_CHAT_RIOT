@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.mvp.friendlist.FriendListFragment;
 
 import butterknife.ButterKnife;
 import pt.reco.myutil.MyContext;
