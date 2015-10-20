@@ -1,5 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PorterDuff;
@@ -13,12 +14,14 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,12 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Bind(R.id.toolbar_title)
     TextView toolbar_title;
 
-    @Nullable
-    @Bind(R.id.drawer_username)
     TextView drawer_username;
-
-    @Nullable
-    @Bind(R.id.statusIcon)
     ImageView statusIcon;
 
     private boolean userLearnedDrawer;
@@ -102,7 +100,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         ButterKnife.bind(this);
         MainApplication.getInstance().getAppComponent().inject(this);
 
-        toolbarColor = getResources().getColor(R.color.primaryColor);
+        toolbarColor = ContextCompat.getColor(this, R.color.primaryColor);
 
         if(savedInstanceState != null){
             fromSavedInstanceState = true;
@@ -202,30 +200,36 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     private void setupDrawerContent() {
         mHandler = new Handler();
 
-        if (drawer_username != null) {
-            drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix) + " " +
-                    mDataStorage.getUsername());
-        }
+            @SuppressLint("InflateParams")
+            View header = LayoutInflater.from(this).inflate(R.layout.drawer_header_layout, null);
+            navigationView.addHeaderView(header);
 
-        if(statusIcon != null){
-            Drawable drawable = statusIcon.getDrawable();
-            drawable.mutate();
+            drawer_username = ButterKnife.findById(header, R.id.drawer_username);
+            statusIcon = ButterKnife.findById(header, R.id.statusIcon);
 
-            drawable.setColorFilter(MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()), PorterDuff.Mode.SRC_IN);
+            if (drawer_username != null) {
+                drawer_username.setText(getResources().getString(R.string.drawer_default_username_prefix, mDataStorage.getUsername()));
+            }
 
-            statusIcon.setImageDrawable(drawable);
+            if (statusIcon != null) {
+                Drawable drawable = statusIcon.getDrawable();
+                drawable.mutate();
 
-            statusIcon.setOnClickListener(view -> {
-                if(MainApplication.getInstance().getRiotXmppService().getConnection() != null) {
-                    MainApplication.getInstance().getRiotXmppService().swapPresenceMode(false);
+                drawable.setColorFilter(MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()), PorterDuff.Mode.SRC_IN);
 
-                    drawable.setColorFilter(
-                            MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()),
-                            PorterDuff.Mode.SRC_IN);
+                statusIcon.setImageDrawable(drawable);
 
-                    statusIcon.setImageDrawable(drawable);
-                }
-            });
+                statusIcon.setOnClickListener(view -> {
+                    if (MainApplication.getInstance().getRiotXmppService().getConnection() != null) {
+                        MainApplication.getInstance().getRiotXmppService().swapPresenceMode(false);
+
+                        drawable.setColorFilter(
+                                MyContext.getColor(this, MainApplication.getInstance().getRiotXmppService().getPresenceMode().getStatusColor2()),
+                                PorterDuff.Mode.SRC_IN);
+
+                        statusIcon.setImageDrawable(drawable);
+                    }
+                });
         }
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_opened, R.string.drawer_closed) {
@@ -269,8 +273,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         setNavigationViewPosition(getNavigationViewPosition());
     }
 
-    @Nullable
     @OnClick(R.id.logout)
+    @Nullable
     public void onDrawerLogout(View view){
         this.finishAffinity();
 

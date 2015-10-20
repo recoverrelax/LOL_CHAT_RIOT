@@ -49,7 +49,7 @@
     <string name="activity_login_progress_dialog_title">Attempting to Login</string>
     <string name="activity_login_progress_dialog_message">Please wait …</string>
     <string name="drawer_default_title">League of Legends \nFriends Alerter</string>
-    <string name="drawer_default_username_prefix">Logged in as: </string>
+    <string name="drawer_default_username_prefix">Logged in as: %s</string>
     <string name="in_champion_select_for">In champion select for </string>
     <string name="in_champion_select">In champion select</string>
 

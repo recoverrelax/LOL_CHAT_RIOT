@@ -12,6 +12,7 @@ import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.MessageIconActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.BaseFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardPresenterImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.LiveGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.DashBoardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendListFragment;
@@ -51,7 +52,7 @@ public interface AppComponent {
      * Fragments
      */
 
-    void inject(DashBoardFragment frag);
+
     void inject(LogFragment frag);
     void inject(FriendListFragment frag);
     void inject(FriendMessageListFragment frag);
@@ -86,6 +87,8 @@ public interface AppComponent {
     void inject(EventHandler eventHandler);
 
     void inject(MessageSpeechNotification messageSpeechNotification);
+
+    void inject(DashBoardPresenterImpl dashBoardPresenter);
 
 
     /**

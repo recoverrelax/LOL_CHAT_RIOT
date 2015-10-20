@@ -4,7 +4,6 @@ package com.recoverrelax.pt.riotxmppchat.ui.fragment;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +22,6 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChan
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
-import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
@@ -56,54 +54,20 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayingEvent, OnFriendPresenceChangedEvent, NewMessageReceivedNotifyEvent {
+public class DashBoardFragment extends BaseFragment implements DashBoardPresenterCallbacks {
 
-    @Bind(R.id.message_number)
-    TextView message_number;
-
-    @Bind(R.id.playing_number)
-    TextView playing_number;
-    @Bind(R.id.online_number)
-    TextView online_number;
-
-    @Bind(R.id.offline_number)
-    TextView offline_number;
-
-    @Bind(R.id.freeChampRotation1)
-    FreeChampionRotation freeChampRotation1;
-
-    @Bind(R.id.messagesIcon)
-    ImageView messagesIcon;
-
-    @Bind(R.id.recyclerView)
-    RecyclerView recyclerView;
-//
-//    @Bind(R.id.progressBar)
-//    ProgressBar progressBar;
-
-
-    private boolean firstTimeOnCreate = true;
-
-    private DashBoardLogAdapter adapter;
-
-    @Inject
-    RiotXmppRosterImpl rosterImpl;
-    @Inject
-    RiotXmppDashboardImpl dashboardImpl;
-    @Inject
-    EventHandler eventHandler;
-    @Inject
-    RiotApiOperations riotApiOperations;
-    @Inject
-    RiotApiRealmDataVersion riotApiRealm;
-
-    private final CompositeSubscription subscriptions = new CompositeSubscription();
-
+    @Bind(R.id.message_number) TextView message_number;
+    @Bind(R.id.playing_number) TextView playing_number;
+    @Bind(R.id.online_number) TextView online_number;
+    @Bind(R.id.offline_number) TextView offline_number;
+    @Bind(R.id.freeChampRotation1) FreeChampionRotation freeChampRotation1;
+    @Bind(R.id.messagesIcon) ImageView messagesIcon;
+    @Bind(R.id.recyclerView) RecyclerView recyclerView;
 
     private final String TAG = DashBoardFragment.this.getClass().getSimpleName();
+    private DashBoardPresenter presenter;
 
     public DashBoardFragment() {
-        // Required empty public constructor
     }
 
     public static DashBoardFragment newInstance() {
@@ -113,19 +77,43 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainApplication.getInstance().getAppComponent().inject(this);
+        presenter = new DashBoardPresenterImpl(this, this.getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.dashboard_fragment, container, false);
 
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
-//        showProgressBar(true);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        presenter.getMessageIconDrawable();
+        presenter.configRecyclerView();
+        presenter.configAdapter(recyclerView);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResume();
+
+        presenter.getLogLast20();
+        presenter.getUnreadedMessageCount();
+        presenter.getFriendStatusInfo();
+        presenter.getFreeChampRotationList(freeChampRotation1.getGetFreeChamps().size());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onPause();
     }
 
     @OnTouch({R.id.dashboard_1, R.id.dashboard_2, R.id.dashboard_3, R.id.dashboard_4})
@@ -140,7 +128,7 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
     }
 
     @OnTouch(R.id.recyclerView)
-    public boolean onLogClick(View view, MotionEvent event){
+    public boolean onLogClick(View view, MotionEvent event) {
         startActivity(new Intent(this.getActivity(), LogActivity.class));
         return false;
     }
@@ -156,191 +144,68 @@ public class DashBoardFragment extends BaseFragment implements OnNewFriendPlayin
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        Drawable drawable = MyContext.getDrawable(this.getActivity(), R.drawable.dashboard_new_message);
-        drawable = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(drawable.mutate(), MyContext.getColor(this.getActivity(), R.color.white));
-        messagesIcon.setBackground(drawable);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setOnTouchListener((view, motionEvent) -> {
-            startActivity(new Intent(DashBoardFragment.this.getActivity(), LogActivity.class));
-            return true;
-        });
-
-        adapter = new DashBoardLogAdapter(getActivity(), new ArrayList<>(), recyclerView, R.layout.dashboard_log_layout_white);
-        recyclerView.setAdapter(adapter);
-
-        getWsInfo();
+    public void onUnreadedMessagesReady(String um) {
+        message_number.setText(um);
     }
 
-    private void getWsInfo() {
-        subscriptions.add(
-                Observable.merge(
-                        getUnreadedMessageCount(),
-                        getFriendStatusInfo(),
-                        getFreeChampRotationList(),
-                        getLogLast20()
-                ).subscribe(new Subscriber<Object>() {
-                    @Override
-                    public void onCompleted() {
+    @Override
+    public void onUnreadedMessagesFailed(String um) {
+        message_number.setText(um);
+    }
 
-                    }
+    @Override
+    public void onFriendStatusInfoReady(String online, String offline, String playing) {
+        playing_number.setText(playing);
+        offline_number.setText(offline);
+        online_number.setText(online);
+    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        AppSnackbarUtils.showSnackBar(
-                                DashBoardFragment.this.getActivity(),
-                                R.string.service_currently_unavailable,
-                                AppSnackbarUtils.LENGTH_INDEFINITE,
-                                R.string.webservice_failed_retry,
-                                v -> {
-                                    subscriptions.clear();
-                                    getWsInfo();
-                                }
-                        );
-                    }
+    @Override
+    public void onFriendStatusInfoFailed(String online, String offline, String playing) {
+        playing_number.setText("?");
+        offline_number.setText("?");
+        online_number.setText("?");
+    }
 
-                    @Override
-                    public void onNext(Object o) {}
-                })
+    @Override
+    public void onFreeChampionRotationReady(List<ChampionInfo> championInfo, int size) {
+        for (int i = 0; i < size; i++) {
+            Glide.with(this)
+                    .load(championInfo.get(i).getChampionImage())
+                    .into(freeChampRotation1.getGetFreeChamps().get(i));
+        }
+    }
+
+    @Override
+    public void onFreeChampionRotationFailed() {
+        AppSnackbarUtils.showSnackBar(
+                DashBoardFragment.this.getActivity(),
+                R.string.service_currently_unavailable,
+                AppSnackbarUtils.LENGTH_INDEFINITE,
+                R.string.webservice_failed_retry,
+                v -> {
+                    presenter.getFreeChampRotationList(freeChampRotation1.getGetFreeChamps().size());
+                }
         );
     }
 
-    private Observable<RiotXmppDashboardImpl.FriendStatusInfo> getFriendStatusInfo() {
-        return dashboardImpl.getFriendStatusInfo()
-                .doOnError(throwable -> {
-                    playing_number.setText("?");
-                    offline_number.setText("?");
-                    online_number.setText("?");
-                })
-                .doOnNext(friendStatusInfo -> {
-                    playing_number.setText(String.valueOf(friendStatusInfo.getFriendsPlaying()));
-                    offline_number.setText(String.valueOf(friendStatusInfo.getFriendsOffline()));
-                    online_number.setText(String.valueOf(friendStatusInfo.getFriendsOnline()));
-                });
-    }
-
-    private Observable<String> getUnreadedMessageCount() {
-        return dashboardImpl.getUnreadedMessagesCount()
-                .doOnError(throwable -> message_number.setText("?"))
-                .doOnNext(message_number::setText);
-    }
-
-    private Observable<List<InAppLogDb>> getLogLast20() {
-        return dashboardImpl.getLogLast20List()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(inAppLogDbs -> {
-                    if (adapter != null && inAppLogDbs != null) {
-                        adapter.setItems(inAppLogDbs);
-                    }
-//                    showProgressBar(false);
-                });
-    }
-
-    private void getLogSingleItem() {
-        Subscription subscribe = dashboardImpl.getLogSingleItem()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<InAppLogDb>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(InAppLogDb inAppLogDb) {
-                        if (adapter != null && inAppLogDb != null) {
-                            adapter.setSingleItem(inAppLogDb);
-                        }
-                    }
-                });
-        subscriptions.add(subscribe);
-    }
-
-    private Observable<List<ChampionInfo>> getFreeChampRotationList() {
-        return Observable.zip(
-                riotApiOperations.getFreeChampRotation(),
-                riotApiOperations.getChampionsImage(),
-                riotApiRealm.getChampionDDBaseUrl(),
-                (freechampIds, champImages, champBaseUrl) -> {
-
-                    List<ChampionInfo> championInfoList = new ArrayList<>();
-
-                    for (Integer champId : freechampIds) {
-                        ChampionInfo ci = new ChampionInfo();
-                        ci.setChampionId(champId);
-                        ci.setChampionName(champImages.get(champId).getChampionName());
-                        ci.setChampionImage(champBaseUrl + champImages.get(champId).getChampionImage());
-
-                        championInfoList.add(ci);
-                    }
-
-                    return championInfoList;
-                }
-        )
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(() -> freeChampRotation1.showProgressBar(true))
-                .doOnUnsubscribe(() -> freeChampRotation1.showProgressBar(false))
-                .doOnNext(champInfo -> {
-
-                    // just to make sure, take at most the ImageView List Size
-                    int size = freeChampRotation1.getGetFreeChamps().size();
-                    List<ChampionInfo> championInfos1 = champInfo.subList(0, size);
-
-                    for (int i = 0; i < size; i++) {
-                        Glide.with(this)
-                                .load(championInfos1.get(i).getChampionImage())
-                                .into(freeChampRotation1.getGetFreeChamps().get(i));
-                    }
-                });
+    @Override
+    public void onFreeChampionRotationLoading(boolean state) {
+        freeChampRotation1.showProgressBar(state);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (!firstTimeOnCreate) {
-            getWsInfo();
-        }
-//        showProgressBar(false);
-        firstTimeOnCreate = false;
-        eventHandler.registerForNewMessageNotifyEvent(this);
-        eventHandler.registerForFriendPlayingEvent(this);
-        eventHandler.registerForFriendPresenceChangedEvent(this);
+    public void setMessageIconDrawable(Drawable drawable) {
+        messagesIcon.setBackground(drawable);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        subscriptions.clear();
-        eventHandler.unregisterForNewMessageNotifyEvent(this);
-        eventHandler.unregisterForFriendPlayingEvent(this);
-        eventHandler.unregisterForFriendPresenceChangedEvent(this);
-        adapter.removeSubscriptions();
-    }
-
-//    private void showProgressBar(boolean state){
-//        progressBar.setVisibility(state ? View.VISIBLE : View.GONE);
-//    }
-
-    @Override
-    public void onNewFriendPlaying() {
-        getFriendStatusInfo().subscribe();
+    public void setRecyclerViewLayoutParams(RecyclerView.LayoutManager layoutManager) {
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
-    public void onFriendPresenceChanged(Presence presence) {
-        getFriendStatusInfo().subscribe();
-    }
-
-    @Override
-    public void onNewMessageNotifyReceived(String userXmppAddress, String username, String message, String buttonLabel) {
-        getLogSingleItem();
-        getUnreadedMessageCount().subscribe();
+    public void setRecyclerViewAdapter(DashBoardLogAdapter adapter) {
+        recyclerView.setAdapter(adapter);
     }
 }

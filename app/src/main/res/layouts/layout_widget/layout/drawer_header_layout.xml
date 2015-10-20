@@ -4,17 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/containerDrawerImage"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
+    android:layout_height="@dimen/header_layout_height"
     android:background="@drawable/latest_skin"
     android:paddingTop="5dp"
-    android:paddingBottom="16dp"
     android:paddingRight="16dp"
     android:paddingLeft="16dp"
     android:gravity="bottom"
     android:orientation="vertical"
     tools:ignore="RtlHardcoded">
-
-
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -35,8 +32,9 @@
         <TextView
             android:id="@+id/drawer_username"
             app:layout_widthPercent="70%"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:gravity="center_vertical"
             tools:text="recover.relax@gmail.com"
@@ -45,8 +43,9 @@
 
         <ImageView
             android:id="@+id/statusIcon"
+            android:layout_width="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
             android:src="@drawable/ic_account_white_48dp"
             android:adjustViewBounds="true"
             app:layout_widthPercent="30%"
