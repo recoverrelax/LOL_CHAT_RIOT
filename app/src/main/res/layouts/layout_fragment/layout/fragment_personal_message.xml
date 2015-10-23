@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.activity.PersonalMessageActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:context=".ui.activity.PersonalMessageActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -14,7 +14,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/messageRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
@@ -35,7 +35,7 @@
             android:clickable="true"
             android:focusable="true"
             tools:ignore="RtlHardcoded,TextFields"
-            tools:text="Olá tudo bem?" />
+            tools:text="Olá tudo bem?"/>
 
 
     </RelativeLayout>
@@ -82,7 +82,7 @@
             android:layout_gravity="center"
             android:contentDescription="Click Here to Send Message"
             android:src="@drawable/ic_teemo"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"/>
     </FrameLayout>
 
 </RelativeLayout>

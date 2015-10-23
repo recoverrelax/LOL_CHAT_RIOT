@@ -1,4 +1,4 @@
 package com.recoverrelax.pt.riotxmppchat.EventHandling.Publish;
 
-public class OnReconnectPublish {
+public class OnReconnectPublish extends AbstractPublish {
 }

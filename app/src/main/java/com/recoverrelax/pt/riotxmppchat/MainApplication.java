@@ -13,8 +13,8 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnServiceBindedPub
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
+import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
-import com.squareup.otto.Bus;
 
 import java.io.File;
 
@@ -44,7 +44,7 @@ public class MainApplication extends Application {
     public boolean isRealScoutEnabled = true;
     public boolean isLiveGameEnabled = true;
     public boolean isRecentGameEnabled = true;
-    @Inject Bus bus;
+    @Inject BusHandler bus;
     @Inject EventHandler handler;
     private RiotXmppService mService;
     private boolean mBound = false;

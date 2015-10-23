@@ -29,6 +29,7 @@ public class RiotXmppRosterImpl {
     public static final int SORT_MODE_STATUS = 1;
     @Inject RiotRosterManager riotRosterManager;
     @Inject RiotApiRealmDataVersion realmData;
+
     @Singleton
     @Inject
     public RiotXmppRosterImpl() {

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
 
-    <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/mainContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryColorDark"
-        android:orientation="vertical"
-        android:padding="15dp"
-        android:paddingBottom="10dp">
+    <android.support.percent.PercentRelativeLayout android:id="@+id/mainContent"
+                                                   xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:background="@color/primaryColorDark"
+                                                   android:orientation="vertical"
+                                                   android:padding="15dp"
+                                                   android:paddingBottom="10dp">
 
         <!--suppress AndroidDomInspection -->
         <TextView
@@ -22,7 +22,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/white"
             app:layout_widthPercent="50%"
-            tools:text="Summoners Rift" />
+            tools:text="Summoners Rift"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/gameQueueType"
@@ -31,7 +31,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/white"
             app:layout_widthPercent="50%"
-            tools:text="Normal 5v5 Blind Pick games" />
+            tools:text="Normal 5v5 Blind Pick games"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/gameMode"
@@ -40,7 +40,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/white"
             app:layout_widthPercent="50%"
-            tools:text="Classic" />
+            tools:text="Classic"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/gameDurationLabel"
@@ -53,7 +53,7 @@
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_widthPercent="50%"
-            tools:ignore="RtlHardcoded" />
+            tools:ignore="RtlHardcoded"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/gameDuration"
@@ -65,7 +65,7 @@
             android:textColor="@color/white"
             app:layout_widthPercent="50%"
             tools:ignore="RtlHardcoded"
-            tools:text="15 minutes" />
+            tools:text="15 minutes"/>
     </android.support.percent.PercentRelativeLayout>
 
     <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
@@ -73,5 +73,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/primaryColorDark"
-        android:visibility="visible" />
+        android:visibility="visible"/>
 </FrameLayout>

@@ -1,8 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.ui.mvp.friendlist;
 
-import android.support.v7.widget.RecyclerView;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMVPHelper;
 
-public interface FriendListPresenterCallbacks {
+public interface FriendListPresenterCallbacks extends AppMVPHelper.RecyclerViewPresenterCallbacks<FriendsListAdapter> {
 
     void onFriendListReady(int onlineFriendCount);
 
@@ -21,8 +21,4 @@ public interface FriendListPresenterCallbacks {
     void onSingleFriendFailed(Throwable e);
 
     void onSingleFriendCompleted();
-
-    void setRecyclerViewLayoutParams(RecyclerView.LayoutManager layoutManager);
-
-    void setRecyclerViewAdapter(FriendsListAdapter adapter);
 }

@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 public class FreeChampionRotation extends FrameLayout {
 
     @Bind({R.id.champ1, R.id.champ2, R.id.champ3, R.id.champ4, R.id.champ5,
-                  R.id.champ6, R.id.champ7, R.id.champ8, R.id.champ9, R.id.champ10})
+            R.id.champ6, R.id.champ7, R.id.champ8, R.id.champ9, R.id.champ10})
     List<SquareImageViewWidth> getFreeChamps;
 
     @Bind(R.id.championRotationProgressBar)

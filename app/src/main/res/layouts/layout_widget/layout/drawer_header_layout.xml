@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/containerDrawerImage"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/header_layout_height"
-    android:background="@drawable/latest_skin"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="5dp"
-    tools:ignore="RtlHardcoded">
+<LinearLayout android:id="@+id/containerDrawerImage"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/header_layout_height"
+              android:background="@drawable/latest_skin"
+              android:gravity="bottom"
+              android:orientation="vertical"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:paddingTop="5dp"
+              tools:ignore="RtlHardcoded">
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
         <View
             android:layout_width="@dimen/drawer_image_width"
             android:layout_height="match_parent"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"/>
 
     </FrameLayout>
 
@@ -41,7 +41,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_medium"
             app:layout_widthPercent="70%"
-            tools:text="recover.relax@gmail.com" />
+            tools:text="recover.relax@gmail.com"/>
 
         <ImageView
             android:id="@+id/statusIcon"
@@ -50,7 +50,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_account_box_white_36dp" />
+            android:src="@drawable/ic_account_box_white_36dp"/>
 
     </android.support.percent.PercentRelativeLayout>
 </LinearLayout>

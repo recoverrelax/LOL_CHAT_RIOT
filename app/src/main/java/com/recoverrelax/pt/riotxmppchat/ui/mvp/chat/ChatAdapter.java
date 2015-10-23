@@ -1,4 +1,4 @@
-package com.recoverrelax.pt.riotxmppchat.Adapter;
+package com.recoverrelax.pt.riotxmppchat.ui.mvp.chat;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -29,7 +29,7 @@ import rx.subscriptions.CompositeSubscription;
 import static com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils.LOGI;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final LayoutInflater inflater;
     private final Context context;
@@ -44,7 +44,7 @@ public class PersonalMessageAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     int layout_to = R.layout.personal_message_to_layout;
     private List<MessageDb> personalMessageList;
 
-    public PersonalMessageAdapter(Context context, ArrayList<MessageDb> personalMessageList, int layout_from, int layout_to, RecyclerView recycler) {
+    public ChatAdapter(Context context, ArrayList<MessageDb> personalMessageList, int layout_from, int layout_to, RecyclerView recycler) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.layout_from = layout_from;

@@ -1,6 +1,7 @@
 package com.recoverrelax.pt.riotxmppchat.EventHandling;
 
 
+import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.Event;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.NewMessageReceivedNotifyEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnDisconnectEvent;
@@ -15,11 +16,13 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnNewFriendPlaying
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnReconnectPublish;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
-import com.squareup.otto.Bus;
+import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,7 +31,7 @@ import javax.inject.Singleton;
 public class EventHandler {
 
     @Inject
-    Bus bus;
+    BusHandler bus;
 
     @Inject
     RiotRosterManager rosterManager;
@@ -39,9 +42,10 @@ public class EventHandler {
     private List<OnReconnectEvent> reconnectEventList = new ArrayList<>();
     private List<OnDisconnectEvent> disconnectEventList = new ArrayList<>();
 
-
     private List<OnNewFriendPlayingEvent> onFriendPlayingEventList = new ArrayList<>();
     private List<OnFriendPresenceChangedEvent> onFriendPresenceChangedEventList = new ArrayList<>();
+
+    private Map<Class<?>, List<? extends Event>> eventList = new HashMap<>();
 
     @Singleton
     @Inject
@@ -49,6 +53,24 @@ public class EventHandler {
         MainApplication.getInstance().getAppComponent().inject(this);
         bus.register(this);
     }
+
+//    @SuppressWarnings("unchecked")
+//    public <T extends Event> void registerForEvent(T event) {
+//
+//        String eventListKey = event.getClass().getSimpleName();
+//        if(eventListKey.equals("")) // empty string means anonymous class
+//            return;
+//
+//
+//        if(!eventList.containsKey(eventListKey)){ // first time adding to the list, must create first
+//           eventList.put(eventListKey, new ArrayList<T>());
+//        }
+//
+//        List<T> events = (List<T>) (List<?>)eventList.get(eventListKey);
+//        if(events.contains())
+//        eventList.get(eventListKey).add(eventValue);
+//
+//    }
 
     public void registerForNewMessageEvent(NewMessageReceivedEvent event) {
         if (!newMessageEventList.contains(event))

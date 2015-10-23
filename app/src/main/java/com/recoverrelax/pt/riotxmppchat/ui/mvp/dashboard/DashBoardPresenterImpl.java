@@ -12,6 +12,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChan
 import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnNewFriendPlayingEvent;
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMVPHelper;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppDashboardImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
@@ -31,31 +32,23 @@ import pt.reco.myutil.MyContext;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
-public class DashBoardPresenterImpl implements
+public class DashBoardPresenterImpl extends AppMVPHelper.BasePresenterImpl<DashBoardPresenterCallbacks, DashBoardAdapter>
+        implements
         DashBoardPresenter,
         NewMessageReceivedNotifyEvent,
         OnNewFriendPlayingEvent,
         OnFriendPresenceChangedEvent {
 
-    @Inject
-    RiotXmppDashboardImpl dashboardImpl;
-    @Inject
-    RiotApiOperations riotApiOperations;
-    @Inject
-    RiotApiRealmDataVersion riotApiRealm;
-    @Inject
-    EventHandler eventHandler;
+    private final String TAG = DashBoardPresenterImpl.this.getClass().getSimpleName();
 
-    private DashBoardPresenterCallbacks view;
-    private DashBoardAdapter adapter;
-    private CompositeSubscription subscriptions = new CompositeSubscription();
-    private Context context;
+    @Inject RiotXmppDashboardImpl dashboardImpl;
+    @Inject RiotApiOperations riotApiOperations;
+    @Inject RiotApiRealmDataVersion riotApiRealm;
+    @Inject EventHandler eventHandler;
 
-    public DashBoardPresenterImpl(DashBoardPresenterCallbacks view, Context context) {
-        this.view = view;
-        this.context = context;
+    public DashBoardPresenterImpl(DashBoardPresenterCallbacks model, Context context) {
+        super(model, context);
         MainApplication.getInstance().getAppComponent().inject(this);
     }
 
@@ -70,12 +63,12 @@ public class DashBoardPresenterImpl implements
 
                             @Override
                             public void onError(Throwable e) {
-                                view.onUnreadedMessagesFailed("?");
+                                model.onUnreadedMessagesFailed("?");
                             }
 
                             @Override
                             public void onNext(String s) {
-                                view.onUnreadedMessagesReady(s);
+                                model.onUnreadedMessagesReady(s);
                             }
                         })
         );
@@ -92,12 +85,12 @@ public class DashBoardPresenterImpl implements
 
                             @Override
                             public void onError(Throwable e) {
-                                view.onFriendStatusInfoFailed("?", "?", "?");
+                                model.onFriendStatusInfoFailed("?", "?", "?");
                             }
 
                             @Override
                             public void onNext(RiotXmppDashboardImpl.FriendStatusInfo friendStatusInfo) {
-                                view.onFriendStatusInfoReady(
+                                model.onFriendStatusInfoReady(
                                         String.valueOf(friendStatusInfo.getFriendsOnline()),
                                         String.valueOf(friendStatusInfo.getFriendsOffline()),
                                         String.valueOf(friendStatusInfo.getFriendsPlaying())
@@ -130,19 +123,19 @@ public class DashBoardPresenterImpl implements
                         }
                 )
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe(() -> view.onFreeChampionRotationLoading(true))
-                        .doOnUnsubscribe(() -> view.onFreeChampionRotationLoading(false))
+                        .doOnSubscribe(() -> model.onFreeChampionRotationLoading(true))
+                        .doOnUnsubscribe(() -> model.onFreeChampionRotationLoading(false))
                         .subscribe(new Subscriber<List<ChampionInfo>>() {
                             @Override public void onCompleted() {
                             }
 
                             @Override public void onError(Throwable e) {
-                                view.onFreeChampionRotationFailed();
+                                model.onFreeChampionRotationFailed();
                             }
 
                             @Override
                             public void onNext(List<ChampionInfo> championInfos) {
-                                view.onFreeChampionRotationReady(championInfos, size);
+                                model.onFreeChampionRotationReady(championInfos, size);
                             }
                         })
         );
@@ -219,31 +212,33 @@ public class DashBoardPresenterImpl implements
         Drawable drawable = MyContext.getDrawable(context, R.drawable.dashboard_new_message);
         drawable = DrawableCompat.wrap(drawable);
         DrawableCompat.setTint(drawable.mutate(), MyContext.getColor(context, R.color.white));
-        view.setMessageIconDrawable(drawable);
+        model.setMessageIconDrawable(drawable);
     }
 
     @Override
     public void configRecyclerView() {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        view.setRecyclerViewLayoutParams(layoutManager);
+        model.setRecyclerViewLayoutParams(layoutManager);
     }
 
     @Override
     public void configAdapter(RecyclerView rv) {
         adapter = new DashBoardAdapter(context, new ArrayList<>(), rv, R.layout.dashboard_log_layout_white);
-        view.setRecyclerViewAdapter(adapter);
+        model.setRecyclerViewAdapter(adapter);
     }
 
     @Override
-    public void onResume(int champSize) {
+    public void onResume() {
         eventHandler.registerForNewMessageNotifyEvent(this);
         eventHandler.registerForFriendPlayingEvent(this);
         eventHandler.registerForFriendPresenceChangedEvent(this);
 
+        eventHandler.registerForEvent(this);
+
         getLogLast20();
         getUnreadedMessageCount();
         getFriendStatusInfo();
-        getFreeChampRotationList(champSize);
+        getFreeChampRotationList(model.getNrChampionsNeeded());
     }
 
     @Override

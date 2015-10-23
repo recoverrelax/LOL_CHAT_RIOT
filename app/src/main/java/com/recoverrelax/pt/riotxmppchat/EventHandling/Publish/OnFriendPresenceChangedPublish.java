@@ -2,7 +2,7 @@ package com.recoverrelax.pt.riotxmppchat.EventHandling.Publish;
 
 import org.jivesoftware.smack.packet.Presence;
 
-public class OnFriendPresenceChangedPublish {
+public class OnFriendPresenceChangedPublish extends AbstractPublish {
 
     private Presence presence;
 

@@ -1,12 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_base_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/champ_bg"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity">
+<LinearLayout android:id="@+id/login_base_layout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/champ_bg"
+              android:gravity="center_vertical"
+              android:orientation="vertical"
+              tools:context="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity">
 
 
     <LinearLayout
@@ -28,7 +28,7 @@
             android:layout_margin="20dp"
             android:layout_marginBottom="30dp"
             android:layout_weight="1"
-            android:src="@drawable/chat_logo" />
+            android:src="@drawable/chat_logo"/>
 
         <LinearLayout
             android:id="@+id/login_bottom_layout"
@@ -50,7 +50,7 @@
                 android:layout_marginTop="@dimen/activity_login_button_margin_tp"
                 android:gravity="center_horizontal"
                 android:hint="@string/acitivty_login_username_hint"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"/>
 
             <EditText
                 android:id="@+id/password"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:hint="@string/activity_login_password_hint"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"/>
 
             <Spinner
                 android:id="@+id/serverSpinner"
@@ -70,7 +70,7 @@
                 android:alpha="0.8"
                 android:background="@color/white"
                 android:spinnerMode="dialog"
-                tools:listitem="@layout/spinner_layout" />
+                tools:listitem="@layout/spinner_layout"/>
 
             <CheckBox
                 android:id="@+id/checkBox"
@@ -81,7 +81,7 @@
                 android:background="@color/white"
                 android:paddingRight="10dp"
                 android:text="@string/activity_login_checkbox_label"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"/>
 
             <Button
                 android:id="@+id/connect"
@@ -92,7 +92,7 @@
                 android:layout_marginBottom="@dimen/activity_login_button_margin_tp"
                 android:layout_marginTop="@dimen/activity_login_button_margin_tp"
                 android:alpha="0.8"
-                android:text="@string/activity_login_label_connect_button" />
+                android:text="@string/activity_login_label_connect_button"/>
 
         </LinearLayout>
     </LinearLayout>

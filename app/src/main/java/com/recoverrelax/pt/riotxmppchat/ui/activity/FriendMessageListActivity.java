@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.mvp.messagelist.MessageListFragment;
 
 import butterknife.ButterKnife;
 import pt.reco.myutil.MyContext;
@@ -31,7 +31,7 @@ public class FriendMessageListActivity extends MessageIconActivity {
 
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = FriendMessageListFragment.newInstance();
+            Fragment fragment = MessageListFragment.newInstance();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .commit();

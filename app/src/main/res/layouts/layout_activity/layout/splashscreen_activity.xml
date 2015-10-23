@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/primaryColor">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/primaryColor">
 
     <ImageView
         android:id="@+id/splash_logo_app"
@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@color/primaryColor"
-        tools:ignore="contentDescription" />
+        tools:ignore="contentDescription"/>
 
     <TextView
         android:id="@+id/textView"
@@ -20,7 +20,7 @@
         android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="35sp"
-        tools:text="SPLASH SCREEN" />
+        tools:text="SPLASH SCREEN"/>
 
     <!--android:background="@color/transparent"-->
 </FrameLayout>

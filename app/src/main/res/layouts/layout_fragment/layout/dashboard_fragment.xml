@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/blackT150"
-    android:orientation="vertical"
-    tools:context=".DashBoardFragment">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/blackT150"
+              android:orientation="vertical"
+              tools:context=".DashBoardFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,14 +22,14 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white"
         android:textStyle="bold"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"/>
 
     <com.recoverrelax.pt.riotxmppchat.Widget.FreeChampionRotation
         android:id="@+id/freeChampRotation1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+        android:layout_marginRight="20dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
         android:text="@string/dashboard_fragment_latest_activity"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:id="@+id/dashboard_main"
@@ -73,7 +73,7 @@
                     android:id="@+id/messagesIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    tools:src="@drawable/dashboard_new_message" />
+                    tools:src="@drawable/dashboard_new_message"/>
 
                 <TextView
                     android:id="@+id/message_number"
@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text=""
-                    tools:text="2" />
+                    tools:text="2"/>
             </LinearLayout>
 
 
@@ -97,7 +97,7 @@
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/dashboard_play" />
+                    android:src="@drawable/dashboard_play"/>
 
                 <TextView
                     android:id="@+id/playing_number"
@@ -105,7 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text=""
-                    tools:text="2" />
+                    tools:text="2"/>
             </LinearLayout>
         </LinearLayout>
         <!--SecondRow-->
@@ -128,14 +128,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:src="@drawable/dashboard_online" />
+                    android:src="@drawable/dashboard_online"/>
 
                 <TextView
                     android:id="@+id/online_number"
                     style="@style/dashboardItem"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    tools:text="1" />
+                    tools:text="1"/>
             </LinearLayout>
 
 
@@ -152,14 +152,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:src="@drawable/dashboard_offline" />
+                    android:src="@drawable/dashboard_offline"/>
 
                 <TextView
                     android:id="@+id/offline_number"
                     style="@style/dashboardItem"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    tools:text="4" />
+                    tools:text="4"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -171,6 +171,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </LinearLayout>

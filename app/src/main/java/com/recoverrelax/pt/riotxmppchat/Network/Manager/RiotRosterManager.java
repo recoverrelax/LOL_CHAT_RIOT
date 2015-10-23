@@ -11,9 +11,9 @@ import com.recoverrelax.pt.riotxmppchat.NotificationCenter.NotificationHelper;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
-import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
@@ -51,16 +51,10 @@ public class RiotRosterManager implements RosterListener {
     private static final int START_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_online;
     private static final int LEFT_GAME_NOTIFICATION_DRAWABLE = R.drawable.ic_offline;
     private static final int STATUS_NOTIFICATION_ID = 2222222;
-    @Inject
-    Bus busInstance;
-    @Inject
-    RiotXmppDBRepository riotXmppDBRepository;
-    @Inject
-    Bus bus;
-    @Inject
-    DataStorage dataStorageInstance;
-    @Inject
-    MessageSpeechNotification messageSpeechNotification;
+    @Inject RiotXmppDBRepository riotXmppDBRepository;
+    @Inject BusHandler bus;
+    @Inject DataStorage dataStorageInstance;
+    @Inject MessageSpeechNotification messageSpeechNotification;
     private Roster roster;
     private AbstractXMPPConnection connection;
     private Map<String, Presence> friendList; // friendXmppAddress, Presence
@@ -204,7 +198,7 @@ public class RiotRosterManager implements RosterListener {
     public void presenceChanged(Presence presence) {
         if (connection != null && connection.isConnected() && notificationsEnabled) {
             checkForFriendNotificationToSend(presence);
-            busInstance.post(new OnFriendPresenceChangedPublish(presence));
+            bus.post(new OnFriendPresenceChangedPublish(presence));
         }
     }
 

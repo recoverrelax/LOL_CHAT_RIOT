@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
             style="@style/settings_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_global_notifications_title" />
+            android:text="@string/settings_global_notifications_title"/>
 
         <View
             android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/primaryColorDark" />
+            android:background="@color/primaryColorDark"/>
 
 
         <LinearLayout
@@ -43,7 +43,7 @@
                     style="@style/settings_child"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_global_always_receive_notifications" />
+                    android:text="@string/settings_global_always_receive_notifications"/>
             </LinearLayout>
 
             <LinearLayout
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:textOff="NO"
                     android:textOn="YES"
-                    android:theme="@style/AppTheme.Base.Settings" />
+                    android:theme="@style/AppTheme.Base.Settings"/>
 
                 <!--<CheckBox-->
                 <!--android:focusable="false"-->
@@ -76,7 +76,7 @@
             style="@style/settings_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_when_app_visible" />
+            android:text="@string/settings_when_app_visible"/>
 
         <View
             android:layout_width="match_parent"
@@ -84,7 +84,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/primaryColorDark" />
+            android:background="@color/primaryColorDark"/>
 
 
         <LinearLayout
@@ -104,7 +104,7 @@
                     style="@style/settings_child"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_new_message_sound_notification" />
+                    android:text="@string/settings_new_message_sound_notification"/>
             </LinearLayout>
 
             <LinearLayout
@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:textOff="NO"
                     android:textOn="YES"
-                    android:theme="@style/AppTheme.Base.Settings" />
+                    android:theme="@style/AppTheme.Base.Settings"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -152,7 +152,7 @@
                     style="@style/settings_child"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_new_message_text_notification" />
+                    android:text="@string/settings_new_message_text_notification"/>
             </LinearLayout>
 
             <LinearLayout
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:textOff="NO"
                     android:textOn="YES"
-                    android:theme="@style/AppTheme.Base.Settings" />
+                    android:theme="@style/AppTheme.Base.Settings"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -186,7 +186,7 @@
             style="@style/settings_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_when_app_background" />
+            android:text="@string/settings_when_app_background"/>
 
         <View
             android:layout_width="match_parent"
@@ -194,7 +194,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@color/primaryColorDark" />
+            android:background="@color/primaryColorDark"/>
 
         <LinearLayout
             android:id="@+id/background_sound_layout"
@@ -214,7 +214,7 @@
                     style="@style/settings_child"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_new_message_sound_notification" />
+                    android:text="@string/settings_new_message_sound_notification"/>
             </LinearLayout>
 
             <LinearLayout
@@ -239,7 +239,7 @@
                     android:layout_height="wrap_content"
                     android:textOff="NO"
                     android:textOn="YES"
-                    android:theme="@style/AppTheme.Base.Settings" />
+                    android:theme="@style/AppTheme.Base.Settings"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -262,7 +262,7 @@
                     style="@style/settings_child"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_new_message_text_notification" />
+                    android:text="@string/settings_new_message_text_notification"/>
             </LinearLayout>
 
             <LinearLayout
@@ -278,7 +278,7 @@
                     android:layout_height="wrap_content"
                     android:textOff="NO"
                     android:textOn="YES"
-                    android:theme="@style/AppTheme.Base.Settings" />
+                    android:theme="@style/AppTheme.Base.Settings"/>
 
             </LinearLayout>
         </LinearLayout>

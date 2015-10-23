@@ -55,7 +55,7 @@ public class LiveGameFragment extends BaseFragment {
     @Bind(R.id.currentGameGlobalInfo)
     CurrentGameGlobalInfo currentGameGlobalInfo;
 
-//    @Bind(R.id.progressBar)
+    //    @Bind(R.id.progressBar)
 //    AppProgressBar progressBar;
     @Bind(R.id.banList)
     CurrentGameBanList banList;

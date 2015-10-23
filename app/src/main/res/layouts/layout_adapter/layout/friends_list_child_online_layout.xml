@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/friends_list_cardview"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="5dp"
-    card_view:cardBackgroundColor="@color/whiteT"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="10dp">
+<android.support.v7.widget.CardView android:id="@+id/friends_list_cardview"
+                                    xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_margin="5dp"
+                                    card_view:cardBackgroundColor="@color/whiteT"
+                                    card_view:cardCornerRadius="4dp"
+                                    card_view:cardElevation="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,14 +36,14 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    tools:src="@drawable/profile_icon_example" />
+                    tools:src="@drawable/profile_icon_example"/>
 
                 <com.recoverrelax.pt.riotxmppchat.Widget.AppProgressBar
                     android:id="@+id/progressBarProfileIcon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="visible"
-                    tools:visibility="gone" />
+                    tools:visibility="gone"/>
             </FrameLayout>
 
             <LinearLayout
@@ -72,7 +72,7 @@
                         android:singleLine="true"
                         android:textColor="@color/black"
                         tools:ignore="NestedWeights"
-                        tools:text="Silver I" />
+                        tools:text="Silver I"/>
 
                     <TextView
                         android:id="@+id/wins"
@@ -83,7 +83,7 @@
                         android:gravity="center"
                         android:textColor="@color/win_color"
                         android:textStyle="bold"
-                        tools:text="1945" />
+                        tools:text="1945"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -104,7 +104,7 @@
                             android:layout_gravity="center_horizontal|top"
                             android:adjustViewBounds="true"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/master_1" />
+                            android:src="@drawable/master_1"/>
                     </FrameLayout>
                     <!--&lt;!&ndash;<TextView&ndash;&gt;-->
                     <!--&lt;!&ndash;style="@style/friend_list_cardview_win_loss_2_textview"&ndash;&gt;-->
@@ -118,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_horizontal|center"
-                        android:text="@string/friends_list_recycler_child_ranked_wins" />
+                        android:text="@string/friends_list_recycler_child_ranked_wins"/>
 
                 </LinearLayout>
 
@@ -173,7 +173,7 @@
                     android:paddingLeft="@dimen/friends_list_recycler_child_textview_margin"
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:ignore="RtlHardcoded"
-                    tools:text="2Fast4You" />
+                    tools:text="2Fast4You"/>
 
                 <TextView
                     android:id="@+id/friendPresenceMode"
@@ -189,7 +189,7 @@
                     android:textAppearance="?android:textAppearanceSmall"
                     tools:background="@color/presence_mode_away"
                     tools:ignore="RtlHardcoded"
-                    tools:text="Away" />
+                    tools:text="Away"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -210,14 +210,14 @@
                         android:lines="2"
                         android:textSize="@dimen/text_size_micro"
                         tools:ignore="RtlHardcoded"
-                        tools:text="Playing as Ashe for 45 minutes" />
+                        tools:text="Playing as Ashe for 45 minutes"/>
 
                     <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
                         android:id="@+id/champion_square"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
-                        tools:src="@drawable/profile_icon_example" />
+                        tools:src="@drawable/profile_icon_example"/>
 
 
                 </LinearLayout>
@@ -235,7 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:src="@drawable/ic_more_vert_white_24dp" />
+                    android:src="@drawable/ic_more_vert_white_24dp"/>
 
             </FrameLayout>
         </LinearLayout>

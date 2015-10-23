@@ -1,13 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MainActivity">
     <item
         android:id="@+id/notifications"
-        android:title="@string/friendlist_child_menu_notification" />
+        android:title="@string/friendlist_child_menu_notification"/>
 
     <item
         android:id="@+id/other_1"
-        android:title="@string/friendlist_child_menu_chat" />
+        android:title="@string/friendlist_child_menu_chat"/>
 
     <!--<item-->
     <!--android:id="@+id/current_game"-->

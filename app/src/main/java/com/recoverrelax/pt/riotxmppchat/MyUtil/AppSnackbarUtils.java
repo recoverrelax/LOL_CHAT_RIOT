@@ -116,5 +116,6 @@ public final class AppSnackbarUtils {
 
     @IntDef({LENGTH_SHORT, LENGTH_LONG, LENGTH_INDEFINITE})
     @Retention(RetentionPolicy.SOURCE)
-    private @interface SnackbarDuration {}
+    private @interface SnackbarDuration {
+    }
 }

@@ -1,4 +1,4 @@
-package com.recoverrelax.pt.riotxmppchat.Adapter;
+package com.recoverrelax.pt.riotxmppchat.ui.mvp.messagelist;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessageListAdapter.ViewHolder> {
+public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.ViewHolder> {
 
     private final LayoutInflater inflater;
     private final Context context;
@@ -43,7 +43,7 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
     private List<FriendListChat> friendMessageList;
     private OnRowClick clickCallback;
 
-    public FriendMessageListAdapter(Context context, ArrayList<FriendListChat> friendMessageList) {
+    public MessageListAdapter(Context context, ArrayList<FriendListChat> friendMessageList) {
         inflater = LayoutInflater.from(context);
         this.context = context;
         this.friendMessageList = friendMessageList;
@@ -51,13 +51,13 @@ public class FriendMessageListAdapter extends RecyclerView.Adapter<FriendMessage
     }
 
     @Override
-    public FriendMessageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.friend_message_list_child_layout, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final FriendMessageListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final MessageListAdapter.ViewHolder holder, int position) {
         holder.friendListChat = friendMessageList.get(position);
 
         holder.name.setText(holder.friendListChat.getFriendName());

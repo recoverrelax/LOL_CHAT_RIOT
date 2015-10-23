@@ -1,13 +1,13 @@
 package com.recoverrelax.pt.riotxmppchat.ui.mvp.dashboard;
 
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.RecyclerView;
 
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMVPHelper;
 import com.recoverrelax.pt.riotxmppchat.Riot.API_PVP_NET.Model.Model.HelperModel.ChampionInfo;
 
 import java.util.List;
 
-public interface DashBoardPresenterCallbacks {
+public interface DashBoardPresenterCallbacks extends AppMVPHelper.RecyclerViewPresenterCallbacks<DashBoardAdapter> {
     void onUnreadedMessagesReady(String um);
 
     void onUnreadedMessagesFailed(String um);
@@ -24,7 +24,5 @@ public interface DashBoardPresenterCallbacks {
 
     void setMessageIconDrawable(Drawable drawable);
 
-    void setRecyclerViewLayoutParams(RecyclerView.LayoutManager layoutManager);
-
-    void setRecyclerViewAdapter(DashBoardAdapter adapter);
+    int getNrChampionsNeeded();
 }

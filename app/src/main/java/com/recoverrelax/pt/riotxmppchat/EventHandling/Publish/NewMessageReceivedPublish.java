@@ -1,6 +1,6 @@
 package com.recoverrelax.pt.riotxmppchat.EventHandling.Publish;
 
-public class NewMessageReceivedPublish {
+public class NewMessageReceivedPublish extends AbstractPublish {
 
     String userXmppAddress;
     String username;

@@ -11,8 +11,6 @@ import com.recoverrelax.pt.riotxmppchat.ui.activity.BaseActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.MessageIconActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.BaseFragment;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.ChatFragment;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.FriendMessageListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.LiveGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.LogFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
@@ -20,10 +18,11 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.ShardFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.SettingsGeneralFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.settings.Settings_Notification;
+import com.recoverrelax.pt.riotxmppchat.ui.mvp.chat.ChatPresenterImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.mvp.dashboard.DashBoardPresenterImpl;
-import com.recoverrelax.pt.riotxmppchat.ui.mvp.friendlist.FriendListFragment;
 import com.recoverrelax.pt.riotxmppchat.ui.mvp.friendlist.FriendListPresenterImpl;
 import com.recoverrelax.pt.riotxmppchat.ui.mvp.friendlist.FriendsListAdapter;
+import com.recoverrelax.pt.riotxmppchat.ui.mvp.messagelist.MessageListPresenterImpl;
 
 import javax.inject.Singleton;
 
@@ -54,12 +53,6 @@ public interface AppComponent {
 
 
     void inject(LogFragment frag);
-
-    void inject(FriendListFragment frag);
-
-    void inject(FriendMessageListFragment frag);
-
-    void inject(ChatFragment fragment);
 
     void inject(SettingsGeneralFragment settings_generalFragment);
 
@@ -98,6 +91,10 @@ public interface AppComponent {
     void inject(DashBoardPresenterImpl dashBoardPresenter);
 
     void inject(FriendListPresenterImpl friendListPresenter);
+
+    void inject(ChatPresenterImpl chatPresenter);
+
+    void inject(MessageListPresenterImpl messageListPresenter);
 
 
     /**

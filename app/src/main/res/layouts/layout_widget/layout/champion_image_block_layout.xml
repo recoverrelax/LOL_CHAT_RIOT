@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="end|center_vertical"
-    android:baselineAligned="false"
-    android:orientation="horizontal">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="end|center_vertical"
+              android:baselineAligned="false"
+              android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:visibility="invisible"
             tools:src="@drawable/champion_example"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
             android:id="@+id/championSummoner2"
@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:visibility="invisible"
             tools:src="@drawable/champion_example"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
             android:id="@+id/championSummoner3"
@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:visibility="invisible"
             tools:src="@drawable/champion_example"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
             android:id="@+id/championSummoner4"
@@ -54,7 +54,7 @@
             android:layout_weight="1"
             android:visibility="invisible"
             tools:src="@drawable/champion_example"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
             android:id="@+id/championSummoner5"
@@ -64,7 +64,7 @@
             android:layout_weight="1"
             android:visibility="invisible"
             tools:src="@drawable/champion_example"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
             android:id="@+id/championSummoner6"
@@ -74,7 +74,7 @@
             android:layout_weight="1"
             android:visibility="invisible"
             tools:src="@drawable/champion_example"
-            tools:visibility="visible" />
+            tools:visibility="visible"/>
 
     </LinearLayout>
 
@@ -92,7 +92,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             tools:ignore="NestedWeights"
-            tools:text="Myan" />
+            tools:text="Myan"/>
 
         <TextView
             android:id="@+id/summonerName2"
@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan" />
+            tools:text="Myan"/>
 
         <TextView
             android:id="@+id/summonerName3"
@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan" />
+            tools:text="Myan"/>
 
         <TextView
             android:id="@+id/summonerName4"
@@ -116,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan" />
+            tools:text="Myan"/>
 
         <TextView
             android:id="@+id/summonerName5"
@@ -124,7 +124,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan" />
+            tools:text="Myan"/>
 
         <TextView
             android:id="@+id/summonerName6"
@@ -132,6 +132,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            tools:text="Myan" />
+            tools:text="Myan"/>
     </LinearLayout>
 </LinearLayout>

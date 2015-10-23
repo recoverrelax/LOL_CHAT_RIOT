@@ -81,6 +81,7 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void speak(String from, String message) {
         tts.setSpeechRate(0.8f);
         if (from == null)
@@ -105,6 +106,7 @@ public class MessageSpeechNotification implements TextToSpeech.OnInitListener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void speak(String message) {
         tts.setSpeechRate(0.8f);
 

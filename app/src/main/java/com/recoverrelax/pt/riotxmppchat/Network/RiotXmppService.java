@@ -20,9 +20,9 @@ import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppConnectionImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
+import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
-import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -54,12 +54,13 @@ public class RiotXmppService extends Service {
     private static final long DELAY_BEFORE_ROSTER_LISTENER = 500;
     private final IBinder mBinder = new MyBinder();
     public PresenceMode myPresenceMode;
+
     @Inject RiotXmppConnectionImpl connectionHelper;
     @Inject DataStorage dataStorage;
     @Inject RiotConnectionManager connectionManager;
     @Inject RiotRosterManager riotRosterManager;
     @Inject RiotChatManager riotChatManager;
-    @Inject Bus bus;
+    @Inject BusHandler bus;
     /**
      * Server Info
      */

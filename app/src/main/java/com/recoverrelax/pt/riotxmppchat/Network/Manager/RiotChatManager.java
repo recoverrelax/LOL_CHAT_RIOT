@@ -9,10 +9,10 @@ import com.recoverrelax.pt.riotxmppchat.NotificationCenter.MessageSpeechNotifica
 import com.recoverrelax.pt.riotxmppchat.NotificationCenter.NotificationHelper;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.InAppLogIds;
+import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.MessageDirection;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
-import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
@@ -45,7 +45,7 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
     @Inject RiotRosterManager riotRosterManager;
     @Inject MessageSpeechNotification messageSpeechNotification;
     @Inject DataStorage dataStorageInstance;
-    @Inject Bus bus;
+    @Inject BusHandler bus;
     private ChatManager chatManager;
     private String connectedXmppUser = null;
     private Map<String, Chat> chatList;
@@ -84,31 +84,12 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
             if (connectedXmppUser != null) {
                 MessageDb message1 = new MessageDb(null, connectedXmppUser, messageFrom, MessageDirection.FROM.getId(), new Date(), message.getBody(), false);
 
-                riotXmppDBRepository.insertMessage(message1)
-                        .subscribe();
+                if (!messageHasNoProperContent(message.getBody()))
+                    riotXmppDBRepository.insertMessage(message1)
+                            .subscribe();
             }
             notifyNewMessage(message, messageFrom);
         }
-    }
-
-    public void addChat(Chat chat, String messageFrom) {
-        if (this.chatList == null) {
-            this.chatList = new HashMap<>();
-        }
-
-        if (!this.chatList.containsKey(messageFrom)) {
-            this.chatList.put(messageFrom, chat);
-        }
-    }
-
-    public Chat getChat(String userXmppName) {
-        /**
-         * At this step means, there's no active chat for that user so it means you are starting the conversation
-         * and need to start a new chat  as well.
-         */
-        Chat chat = this.chatManager.createChat(userXmppName, this);
-        addChat(chat, userXmppName);
-        return chat;
     }
 
     /**
@@ -144,6 +125,26 @@ public class RiotChatManager implements ChatManagerListener, ChatMessageListener
                 bus.post(new NewMessageReceivedPublish(userXmppAddress, targetUserName, messageFinal, buttonLabel));
             bus.post(new NewMessageReceivedNotifyPublish(userXmppAddress, targetUserName, messageFinal, buttonLabel));
         }
+    }
+
+    public void addChat(Chat chat, String messageFrom) {
+        if (this.chatList == null) {
+            this.chatList = new HashMap<>();
+        }
+
+        if (!this.chatList.containsKey(messageFrom)) {
+            this.chatList.put(messageFrom, chat);
+        }
+    }
+
+    public Chat getChat(String userXmppName) {
+        /**
+         * At this step means, there's no active chat for that user so it means you are starting the conversation
+         * and need to start a new chat  as well.
+         */
+        Chat chat = this.chatManager.createChat(userXmppName, this);
+        addChat(chat, userXmppName);
+        return chat;
     }
 
     private boolean messageHasNoProperContent(String body) {

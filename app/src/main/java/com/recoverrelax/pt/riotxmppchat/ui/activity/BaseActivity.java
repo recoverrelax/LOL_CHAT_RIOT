@@ -36,9 +36,9 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.Storage.RiotXmppDBRepository;
-import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -76,7 +76,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Inject
     RiotRosterManager rosterManager;
     @Inject
-    Bus bus;
+    BusHandler bus;
     private boolean userLearnedDrawer;
     private boolean fromSavedInstanceState;
     private
@@ -409,7 +409,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected void onResume() {
         super.onResume();
         setNavigationViewPosition(getNavigationViewPosition());
-        bus.register(this);
         handler.registerForReconnectEvent(this);
         handler.registerForDisconnectEvent(this);
     }
@@ -417,7 +416,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void onPause() {
         super.onPause();
-        bus.unregister(this);
         handler.unregisterForReconnectEvent(this);
         handler.unregisterForDisconnectEvent(this);
     }

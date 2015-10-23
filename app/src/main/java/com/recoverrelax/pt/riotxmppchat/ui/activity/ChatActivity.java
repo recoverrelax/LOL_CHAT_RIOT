@@ -7,7 +7,7 @@ import android.widget.RelativeLayout;
 
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.fragment.ChatFragment;
+import com.recoverrelax.pt.riotxmppchat.ui.mvp.chat.ChatFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -1,12 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parentLayout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center_vertical|center_horizontal"
-    android:orientation="vertical"
-    android:paddingBottom="10dp">
+<LinearLayout android:id="@+id/parentLayout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:gravity="center_vertical|center_horizontal"
+              android:orientation="vertical"
+              android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/title"
@@ -17,7 +17,7 @@
         android:background="?attr/colorPrimary"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
-        tools:text="Notify me when 2Fast4U: " />
+        tools:text="Notify me when 2Fast4U: "/>
 
 
     <LinearLayout
@@ -43,14 +43,14 @@
                 android:textOff="NO"
                 android:textOn="YES"
                 android:theme="@style/AppTheme.Base.Settings"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"/>
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/settings_custom_notif_online" />
+                android:text="@string/settings_custom_notif_online"/>
 
         </LinearLayout>
 
@@ -69,14 +69,14 @@
                 android:textOff="NO"
                 android:textOn="YES"
                 android:theme="@style/AppTheme.Base.Settings"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"/>
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/settings_custom_notif_offline" />
+                android:text="@string/settings_custom_notif_offline"/>
 
         </LinearLayout>
 
@@ -95,14 +95,14 @@
                 android:textOff="NO"
                 android:textOn="YES"
                 android:theme="@style/AppTheme.Base.Settings"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"/>
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/settings_custom_notif_start_game" />
+                android:text="@string/settings_custom_notif_start_game"/>
 
         </LinearLayout>
 
@@ -121,14 +121,14 @@
                 android:textOff="NO"
                 android:textOn="YES"
                 android:theme="@style/AppTheme.Base.Settings"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"/>
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/settings_custom_notif_end_game" />
+                android:text="@string/settings_custom_notif_end_game"/>
 
         </LinearLayout>
 
@@ -147,14 +147,14 @@
                 android:textOff="NO"
                 android:textOn="YES"
                 android:theme="@style/AppTheme.Base.Settings"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"/>
 
             <TextView
                 style="@style/settings_notif_child"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/settings_custom_notif_message" />
+                android:text="@string/settings_custom_notif_message"/>
 
         </LinearLayout>
 

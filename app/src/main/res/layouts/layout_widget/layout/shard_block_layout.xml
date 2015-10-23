@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
 
-    <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/mainContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primaryColorDark"
-        android:orientation="vertical"
-        android:padding="15dp"
-        android:paddingBottom="10dp">
+    <android.support.percent.PercentRelativeLayout android:id="@+id/mainContent"
+                                                   xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:background="@color/primaryColorDark"
+                                                   android:orientation="vertical"
+                                                   android:padding="15dp"
+                                                   android:paddingBottom="10dp">
 
         <!--suppress AndroidDomInspection -->
         <TextView
@@ -22,7 +22,7 @@
             android:layout_marginBottom="5dp"
             android:text="@string/shard_game"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            app:layout_widthPercent="50%" />
+            app:layout_widthPercent="50%"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/shardName2"
@@ -31,7 +31,7 @@
             android:layout_marginBottom="5dp"
             android:text="@string/shard_store"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            app:layout_widthPercent="50%" />
+            app:layout_widthPercent="50%"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/shardName3"
@@ -40,7 +40,7 @@
             android:layout_marginBottom="5dp"
             android:text="@string/shard_website"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            app:layout_widthPercent="50%" />
+            app:layout_widthPercent="50%"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/shardName4"
@@ -49,7 +49,7 @@
             android:layout_marginBottom="5dp"
             android:text="@string/shard_forum"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            app:layout_widthPercent="50%" />
+            app:layout_widthPercent="50%"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/shardStatus1"
@@ -61,7 +61,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             app:layout_widthPercent="50%"
             tools:ignore="RtlHardcoded"
-            tools:text="ONLINE" />
+            tools:text="ONLINE"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/shardStatus2"
@@ -73,7 +73,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             app:layout_widthPercent="50%"
             tools:ignore="RtlHardcoded"
-            tools:text="ONLINE" />
+            tools:text="ONLINE"/>
         <!--suppress AndroidDomInspection -->
         <TextView
             android:id="@+id/shardStatus3"
@@ -85,7 +85,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             app:layout_widthPercent="50%"
             tools:ignore="RtlHardcoded"
-            tools:text="OFFLINE" />
+            tools:text="OFFLINE"/>
 
         <!--suppress AndroidDomInspection -->
         <TextView
@@ -98,7 +98,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             app:layout_widthPercent="50%"
             tools:ignore="RtlHardcoded"
-            tools:text="ONLINE" />
+            tools:text="ONLINE"/>
 
 
     </android.support.percent.PercentRelativeLayout>
@@ -109,5 +109,5 @@
         android:layout_height="match_parent"
         android:background="@color/primaryColorDark"
         android:visibility="visible"
-        tools:visibility="invisible" />
+        tools:visibility="invisible"/>
 </FrameLayout>

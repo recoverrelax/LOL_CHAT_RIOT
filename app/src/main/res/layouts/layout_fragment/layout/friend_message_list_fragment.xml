@@ -1,9 +1,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.recoverrelax.pt.riotxmppchat.ui.fragment.ChatFragment">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             tools:context="com.recoverrelax.pt.riotxmppchat.ui.mvp.chat.ChatFragment">
 
     <ProgressBar
         android:id="@+id/progressBarCircularIndeterminate"
@@ -12,10 +12,10 @@
         android:layout_gravity="center_vertical|center_horizontal"
         android:background="@color/transparent"
         android:gravity="center_vertical|center_horizontal"
-        tools:visibility="invisible" />
+        tools:visibility="invisible"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/friendMessageListRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 </FrameLayout>

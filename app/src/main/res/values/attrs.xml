@@ -2,18 +2,18 @@
 <resources>
 
     <declare-styleable name="MultiSwipeRefreshLayout">
-        <attr name="foreground" format="reference" />
+        <attr name="foreground" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="TextProgressBar">
-        <attr name="text" format="string" />
-        <attr name="textColor" format="color" />
-        <attr name="textSize" format="dimension" />
-        <attr name="textAppearence" format="reference" />
-        <attr name="fontFamily" format="string" />
-        <attr name="progressBarTintColor" format="color" />
+        <attr name="text" format="string"/>
+        <attr name="textColor" format="color"/>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textAppearence" format="reference"/>
+        <attr name="fontFamily" format="string"/>
+        <attr name="progressBarTintColor" format="color"/>
     </declare-styleable>
 
     <!--Generic-->
-    <attr name="textProgressBarTintColor" format="reference|color" />
+    <attr name="textProgressBarTintColor" format="reference|color"/>
 </resources>

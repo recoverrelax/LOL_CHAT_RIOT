@@ -1,12 +1,8 @@
 package com.recoverrelax.pt.riotxmppchat.ui.mvp.dashboard;
 
-import android.support.v7.widget.RecyclerView;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMVPHelper;
 
-public interface DashBoardPresenter {
-
-    void onResume(int size);
-
-    void onPause();
+public interface DashBoardPresenter extends AppMVPHelper.RecyclerViewPresenter {
 
     void getUnreadedMessageCount();
 
@@ -19,8 +15,4 @@ public interface DashBoardPresenter {
     void getLogSingleItem();
 
     void getMessageIconDrawable();
-
-    void configRecyclerView();
-
-    void configAdapter(RecyclerView recyclerView);
 }

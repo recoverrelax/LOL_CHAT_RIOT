@@ -5,8 +5,8 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Publish.OnReconnectPublish
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppXmppUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
+import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
-import com.squareup.otto.Bus;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionListener;
@@ -27,7 +27,7 @@ import static junit.framework.Assert.assertTrue;
 public class RiotConnectionManager implements ConnectionListener {
     @Inject RiotRosterManager riotRosterManager;
     @Inject RiotXmppRosterImpl rosterImpl;
-    @Inject Bus bus;
+    @Inject BusHandler bus;
     @Inject DataStorage dataStorage;
     private AbstractXMPPConnection connection;
 

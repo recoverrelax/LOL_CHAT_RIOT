@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
+                                               xmlns:app="http://schemas.android.com/apk/res-auto"
+                                               xmlns:tools="http://schemas.android.com/tools"
+                                               android:layout_width="match_parent"
+                                               android:layout_height="wrap_content"
+                                               android:background="@color/white">
 
     <!--suppress AndroidDomInspection -->
     <TextView
@@ -18,7 +18,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white"
         app:layout_widthPercent="50%"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"/>
     <!--suppress AndroidDomInspection -->
     <TextView
         android:id="@+id/enemyTeam"
@@ -31,7 +31,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white"
         app:layout_widthPercent="50%"
-        tools:ignore="RtlHardcoded" />
+        tools:ignore="RtlHardcoded"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:visibility="visible"
-            tools:visibility="invisible" />
+            tools:visibility="invisible"/>
 
         <LinearLayout
             android:id="@+id/mainContent"
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_cross" />
+                android:src="@drawable/ic_cross"/>
 
             <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
                 android:id="@+id/ban2"
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_cross" />
+                android:src="@drawable/ic_cross"/>
 
             <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
                 android:id="@+id/ban3"
@@ -73,11 +73,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_cross" />
+                android:src="@drawable/ic_cross"/>
 
             <Space
                 android:layout_width="20dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
             <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
                 android:id="@+id/ban4"
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_cross" />
+                android:src="@drawable/ic_cross"/>
 
             <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
                 android:id="@+id/ban5"
@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_cross" />
+                android:src="@drawable/ic_cross"/>
 
             <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
                 android:id="@+id/ban6"
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_cross" />
+                android:src="@drawable/ic_cross"/>
         </LinearLayout>
 
 

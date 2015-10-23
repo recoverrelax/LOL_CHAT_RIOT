@@ -78,7 +78,11 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable
+                             ViewGroup container,
+                             @Nullable
+                             Bundle savedInstanceState) {
         ScrollView scroller = new ScrollView(getActivity());
         View view = inflater.inflate(R.layout.notification_custom_dialog_fragment, container, false);
         ButterKnife.bind(this, view);
@@ -135,7 +139,9 @@ public class NotificationCustomDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view,
+                              @Nullable
+                              Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         String backgroundColor = AppMiscUtils.getRandomMaterialColor(this.getActivity());
         title.setBackgroundColor(Color.parseColor(backgroundColor));

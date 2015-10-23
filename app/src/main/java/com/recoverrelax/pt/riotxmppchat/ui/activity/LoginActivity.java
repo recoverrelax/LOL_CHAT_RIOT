@@ -26,13 +26,12 @@ import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
-import com.squareup.otto.Bus;
+import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
@@ -40,35 +39,17 @@ public class LoginActivity extends BaseActivity {
 
     private final String TAG = "LoginActivity";
 
-    @Bind(R.id.username)
-    EditText username;
-    @Bind(R.id.password)
-    EditText password;
-    @Bind(R.id.serverSpinner)
-    Spinner serverSpinner;
-    @Bind(R.id.connect)
-    Button connectbutton;
-
-    @Bind(R.id.checkBox)
-    CheckBox checkBox;
-
-    @Bind(R.id.lol_logo)
-    ImageView logo;
-
-    @Bind(R.id.login_bottom_layout)
-    LinearLayout loginBottomLayout;
-
-    @Bind(R.id.login_base_layout)
-    LinearLayout login_base_layout;
-
-    @Bind(R.id.login_main_layout)
-    LinearLayout login_main_layout;
-
-    @Inject
-    MainApplication mainApplication;
-
-    @Inject
-    Bus bus;
+    @Bind(R.id.username) EditText username;
+    @Bind(R.id.password) EditText password;
+    @Bind(R.id.serverSpinner) Spinner serverSpinner;
+    @Bind(R.id.connect) Button connectbutton;
+    @Bind(R.id.checkBox) CheckBox checkBox;
+    @Bind(R.id.lol_logo) ImageView logo;
+    @Bind(R.id.login_bottom_layout) LinearLayout loginBottomLayout;
+    @Bind(R.id.login_base_layout) LinearLayout login_base_layout;
+    @Bind(R.id.login_main_layout) LinearLayout login_main_layout;
+    @Inject MainApplication mainApplication;
+    @Inject BusHandler bus;
 
     private boolean usernameLengthControl = false;
     private boolean passwordLengthControl = false;
@@ -92,6 +73,16 @@ public class LoginActivity extends BaseActivity {
             connectbutton.setEnabled(false);
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        bus.unregister(this);
+    }
+
     @Override
     public CharSequence getToolbarTitle() {
         return null;
@@ -113,6 +104,15 @@ public class LoginActivity extends BaseActivity {
          */
         logo.setScaleY(0.7f);
         logo.setScaleX(0.7f);
+
+        /**
+         * EXPERIMENTAL!
+         */
+
+        loginBottomLayout.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        login_main_layout.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        logo.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
 
         ObjectAnimator titleSlideUp = ObjectAnimator.ofFloat(logo, "translationY", 1000, -100, 0)
                 .setDuration(3000);
@@ -144,7 +144,24 @@ public class LoginActivity extends BaseActivity {
 
         final AnimatorSet animatorSetSecondPart = new AnimatorSet();
         animatorSetSecondPart.setDuration(1000);
+        animatorSetSecondPart.addListener(new Animator.AnimatorListener() {
+            @Override public void onAnimationStart(Animator animation) {
+            }
+
+            @Override public void onAnimationEnd(Animator animation) {
+                loginBottomLayout.setLayerType(View.LAYER_TYPE_NONE, null);
+                logo.setLayerType(View.LAYER_TYPE_NONE, null);
+                login_main_layout.setLayerType(View.LAYER_TYPE_NONE, null);
+            }
+
+            @Override public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override public void onAnimationRepeat(Animator animation) {
+            }
+        });
         animatorSetSecondPart.playTogether(scalingTitleX, scalingTitleY, credentialsFade);
+
 
         titleSlideUp.start();
         fadingBackground.start();
@@ -252,6 +269,14 @@ public class LoginActivity extends BaseActivity {
 
         if (materialDialog != null)
             materialDialog.dismiss();
-        ButterKnife.unbind(this);
+    }
+
+    @Override public void onBackPressed() {
+        super.onBackPressed();
+
+        if (materialDialog != null && materialDialog.isShowing()) {
+            materialDialog.dismiss();
+            LoginActivity.this.finish();
+        }
     }
 }

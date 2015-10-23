@@ -23,6 +23,7 @@ import com.recoverrelax.pt.riotxmppchat.EventHandling.Event.OnFriendPresenceChan
 import com.recoverrelax.pt.riotxmppchat.EventHandling.EventHandler;
 import com.recoverrelax.pt.riotxmppchat.MainApplication;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppContextUtils;
+import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMVPHelper;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.Manager.RiotRosterManager;
 import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
@@ -41,27 +42,20 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 import rx.Subscriber;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
-public class FriendListPresenterImpl implements
-        FriendListPresenter, OnFriendPresenceChangedEvent, FriendsListAdapter.OnAdapterChildClick {
+public class FriendListPresenterImpl extends AppMVPHelper.BasePresenterImpl<FriendListPresenterCallbacks, FriendsListAdapter>
+        implements FriendListPresenter, OnFriendPresenceChangedEvent, FriendsListAdapter.OnAdapterChildClick {
 
     @Inject RiotXmppRosterImpl riotXmppRosterImpl;
     @Inject RiotRosterManager rosterManager;
     @Inject EventHandler handler;
     @Inject DataStorage mDataStorage;
 
-    private FriendsListAdapter adapter;
-    private FriendListPresenterCallbacks view;
-    private CompositeSubscription subscriptions = new CompositeSubscription();
-    private Context context;
-
     private boolean SHOW_OFFLINE_USERS;
     private int SORT_MODE = RiotXmppRosterImpl.SORT_MODE_STATUS;
 
-    public FriendListPresenterImpl(FriendListPresenterCallbacks view, Context context) {
-        this.view = view;
-        this.context = context;
+    public FriendListPresenterImpl(FriendListPresenterCallbacks model, Context context) {
+        super(model, context);
         MainApplication.getInstance().getAppComponent().inject(this);
 
         SHOW_OFFLINE_USERS = mDataStorage.showOfflineUsers();
@@ -81,18 +75,18 @@ public class FriendListPresenterImpl implements
                         .subscribe(new Subscriber<List<Friend>>() {
                             @Override
                             public void onCompleted() {
-                                view.onFriendListCompleted();
+                                model.onFriendListCompleted();
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                view.onFriendListFailed(e);
+                                model.onFriendListFailed(e);
                             }
 
                             @Override
                             public void onNext(List<Friend> friends) {
                                 setAdapterItems(friends);
-                                view.onFriendListReady(adapter.getOnlineFriendsCount());
+                                model.onFriendListReady(adapter.getOnlineFriendsCount());
                             }
                         })
         );
@@ -111,18 +105,18 @@ public class FriendListPresenterImpl implements
                         .subscribe(new Subscriber<List<Friend>>() {
                             @Override
                             public void onCompleted() {
-                                view.onSearchFriendListCompleted();
+                                model.onSearchFriendListCompleted();
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                view.onSearchFriendListFailed(e);
+                                model.onSearchFriendListFailed(e);
                             }
 
                             @Override
                             public void onNext(List<Friend> friends) {
                                 setAdapterItems(friends);
-                                view.onSearchFriendListReady(adapter.getOnlineFriendsCount());
+                                model.onSearchFriendListReady(adapter.getOnlineFriendsCount());
                             }
                         })
         );
@@ -139,18 +133,18 @@ public class FriendListPresenterImpl implements
                         .subscribe(new Subscriber<Friend>() {
                             @Override
                             public void onCompleted() {
-                                view.onSingleFriendCompleted();
+                                model.onSingleFriendCompleted();
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                view.onSingleFriendFailed(e);
+                                model.onSingleFriendFailed(e);
                             }
 
                             @Override
                             public void onNext(Friend friend) {
                                 setAdapterSingleItem(friend);
-                                view.onSingleFriendReady(adapter.getOnlineFriendsCount());
+                                model.onSingleFriendReady(adapter.getOnlineFriendsCount());
                             }
                         })
         );
@@ -159,7 +153,7 @@ public class FriendListPresenterImpl implements
     @Override
     public void configRecyclerView() {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false);
-        view.setRecyclerViewLayoutParams(layoutManager);
+        model.setRecyclerViewLayoutParams(layoutManager);
     }
 
     @Override
@@ -167,7 +161,7 @@ public class FriendListPresenterImpl implements
         adapter = new FriendsListAdapter(context, new ArrayList<>(), mDataStorage.showOfflineUsers(), recyclerView);
         adapter.setAdapterClickListener(this);
 
-        view.setRecyclerViewAdapter(adapter);
+        model.setRecyclerViewAdapter(adapter);
     }
 
     @Override

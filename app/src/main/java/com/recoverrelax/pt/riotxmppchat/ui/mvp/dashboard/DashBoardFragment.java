@@ -78,7 +78,7 @@ public class DashBoardFragment extends BaseFragment implements DashBoardPresente
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume(freeChampRotation1.getGetFreeChamps().size());
+        presenter.onResume();
     }
 
     @Override
@@ -168,6 +168,10 @@ public class DashBoardFragment extends BaseFragment implements DashBoardPresente
     @Override
     public void setMessageIconDrawable(Drawable drawable) {
         messagesIcon.setBackground(drawable);
+    }
+
+    @Override public int getNrChampionsNeeded() {
+        return freeChampRotation1.getGetFreeChamps().size();
     }
 
     @Override

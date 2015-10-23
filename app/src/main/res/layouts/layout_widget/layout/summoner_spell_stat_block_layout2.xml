@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="start|center_vertical"
-    android:gravity="center"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="start|center_vertical"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:src="@mipmap/ic_score2"
-            tools:ignore="NestedWeights" />
+            tools:ignore="NestedWeights"/>
 
         <TextView
             android:id="@+id/kda"
@@ -32,14 +32,14 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            tools:text="11/12/13" />
+            tools:text="11/12/13"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:src="@mipmap/ic_gold2" />
+            android:src="@mipmap/ic_gold2"/>
 
         <TextView
             android:id="@+id/gold"
@@ -48,14 +48,14 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            tools:text="11K" />
+            tools:text="11K"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewHeight
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:src="@mipmap/ic_minion2" />
+            android:src="@mipmap/ic_minion2"/>
 
         <TextView
             android:id="@+id/cs"
@@ -64,7 +64,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
-            tools:text="450" />
+            tools:text="450"/>
     </LinearLayout>
 
     <LinearLayout
@@ -77,21 +77,21 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/champion_example" />
+            android:src="@drawable/champion_example"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
             android:id="@+id/summonerItem2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/champion_example" />
+            android:src="@drawable/champion_example"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
             android:id="@+id/summonerItem3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/champion_example" />
+            android:src="@drawable/champion_example"/>
 
     </LinearLayout>
 
@@ -105,21 +105,21 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/champion_example" />
+            android:src="@drawable/champion_example"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
             android:id="@+id/summonerItem5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/champion_example" />
+            android:src="@drawable/champion_example"/>
 
         <com.recoverrelax.pt.riotxmppchat.Widget.SquareImageViewWidth
             android:id="@+id/summonerItem6"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/champion_example" />
+            android:src="@drawable/champion_example"/>
 
     </LinearLayout>
 </LinearLayout>
