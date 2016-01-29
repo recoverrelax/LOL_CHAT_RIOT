@@ -22,7 +22,6 @@ import com.recoverrelax.pt.riotxmppchat.Riot.Enum.PresenceMode;
 import com.recoverrelax.pt.riotxmppchat.Riot.Enum.RiotServer;
 import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;

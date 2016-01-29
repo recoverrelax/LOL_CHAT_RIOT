@@ -52,19 +52,19 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     //http://ddragon.leagueoflegends.com/cdn/img/champion/splash/Kalista_2.jpg
 
     // delay to launch nav drawer item, to allow close animation to play
-    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
-    @Nullable
-    @Bind(R.id.app_bar)
-    protected Toolbar toolbar;
-    @Nullable
-    @Bind(R.id.appBarLayout)
-    AppBarLayout appBarLayout;
-    @Nullable
-    @Bind(R.id.navigationView)
-    NavigationView navigationView;
-    @Nullable
-    @Bind(R.id.drawer_layout)
-    DrawerLayout drawer_layout;
+//    private static final int NAVDRAWER_LAUNCH_DELAY = 250;
+//    @Nullable
+//    @Bind(R.id.app_bar)
+//    protected Toolbar toolbar;
+//    @Nullable
+//    @Bind(R.id.appBarLayout)
+//    AppBarLayout appBarLayout;
+//    @Nullable
+//    @Bind(R.id.navigationView)
+//    NavigationView navigationView;
+//    @Nullable
+//    @Bind(R.id.drawer_layout)
+//    DrawerLayout drawer_layout;
     @Nullable
     @Bind(R.id.toolbar_title)
     TextView toolbar_title;
@@ -88,8 +88,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResources());
-        ButterKnife.bind(this);
         MainApplication.getInstance().getAppComponent().inject(this);
+        ButterKnife.bind(this);
 
         toolbarColor = ContextCompat.getColor(this, R.color.primaryColor);
 
@@ -320,16 +320,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         switch (itemId) {
             case R.id.navigation_item_0:
-                intent = new Intent(BaseActivity.this, DashBoardActivity.class);
+                intent = new Intent(BaseActivity.this, DashboardActivityKt.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             case R.id.navigation_item_1:
-                intent = new Intent(BaseActivity.this, FriendListActivity.class);
+                intent = new Intent(BaseActivity.this, FriendListActivityKt.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 break;
             case R.id.navigation_item_2:
-                intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
+                intent = new Intent(BaseActivity.this, FriendMessageListActivityKt.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 break;
 
@@ -347,16 +347,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
 
             case R.id.navigation_item_4:
-                if (MainApplication.getInstance().isRealScoutEnabled) {
-                    intent = new Intent(BaseActivity.this, ShardActivity.class);
+                    intent = new Intent(BaseActivity.this, ShardActivityKt.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                } else
-                    AppSnackbarUtils.showSnackBar(this, R.string.feature_coming, AppSnackbarUtils.LENGTH_LONG);
+
 
                 break;
 
             case R.id.navigation_item_5:
-                intent = new Intent(BaseActivity.this, SettingActivity.class);
+                intent = new Intent(BaseActivity.this, SettingsActivityKt.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 break;
@@ -384,7 +382,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             if (navigationView != null) {
                 onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_2));
             } else {
-                Intent intent = new Intent(BaseActivity.this, FriendMessageListActivity.class);
+                Intent intent = new Intent(BaseActivity.this, FriendMessageListActivityKt.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);
@@ -397,7 +395,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             if (navigationView != null) {
                 onNavigationItemSelected(navigationView.getMenu().findItem(R.id.navigation_item_1));
             } else {
-                Intent intent = new Intent(BaseActivity.this, FriendListActivity.class);
+                Intent intent = new Intent(BaseActivity.this, FriendListActivityKt.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
                 AppContextUtils.overridePendingTransitionBackAppDefault(BaseActivity.this);

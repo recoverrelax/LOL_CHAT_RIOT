@@ -8,7 +8,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
 import com.recoverrelax.pt.riotxmppchat.R;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivityKt;
 
 public class AppContextUtils {
 
@@ -50,11 +50,11 @@ public class AppContextUtils {
     }
 
     public static void startChatActivity(Context context, String friendName, String friendXmppAddress) {
-        Intent intent = new Intent(context, ChatActivity.class);
+        Intent intent = new Intent(context, ChatActivityKt.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.putExtra(ChatActivity.INTENT_FRIEND_NAME, friendName);
-        intent.putExtra(ChatActivity.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
+        intent.putExtra(ChatActivityKt.INTENT_FRIEND_NAME, friendName);
+        intent.putExtra(ChatActivityKt.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
         context.startActivity(intent);
         AppContextUtils.overridePendingTransitionBackAppDefault((Activity) context);
     }
@@ -65,11 +65,11 @@ public class AppContextUtils {
     }
 
     public static void startPersonalMessageActivityNoTransition(Context context, String friendName, String friendXmppAddress) {
-        Intent intent = new Intent(context, ChatActivity.class);
+        Intent intent = new Intent(context, ChatActivityKt.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        intent.putExtra(ChatActivity.INTENT_FRIEND_NAME, friendName);
-        intent.putExtra(ChatActivity.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
+        intent.putExtra(ChatActivityKt.INTENT_FRIEND_NAME, friendName);
+        intent.putExtra(ChatActivityKt.INTENT_FRIEND_XMPPNAME, friendXmppAddress);
         context.startActivity(intent);
 
     }

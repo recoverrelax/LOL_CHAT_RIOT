@@ -24,14 +24,13 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.AppSnackbarUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.R;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivityKt;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.BaseFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_FRIEND_NAME;
-import static com.recoverrelax.pt.riotxmppchat.ui.activity.ChatActivity.INTENT_FRIEND_XMPPNAME;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,8 +71,8 @@ public class ChatFragment extends BaseFragment implements ChatPresenterCallbacks
         ChatFragment chatFragment = new ChatFragment();
 
         Bundle args = new Bundle();
-        args.putString(INTENT_FRIEND_NAME, friendUsername);
-        args.putString(INTENT_FRIEND_XMPPNAME, friendXmppName);
+        args.putString(ChatActivityKt.INTENT_FRIEND_NAME, friendUsername);
+        args.putString(ChatActivityKt.INTENT_FRIEND_XMPPNAME, friendXmppName);
         chatFragment.setArguments(args);
 
         return chatFragment;
@@ -103,11 +102,11 @@ public class ChatFragment extends BaseFragment implements ChatPresenterCallbacks
         super.onActivityCreated(savedInstanceState);
 
         Bundle extras = getArguments();
-        if (extras == null || !extras.containsKey(INTENT_FRIEND_NAME) || !extras.containsKey(INTENT_FRIEND_XMPPNAME)) {
+        if (extras == null || !extras.containsKey(ChatActivityKt.INTENT_FRIEND_NAME) || !extras.containsKey(ChatActivityKt.INTENT_FRIEND_XMPPNAME)) {
             LogUtils.LOGE(TAG, "Something went wrong, we haven't got a xmppName");
         } else {
-            friendUsername = extras.getString(INTENT_FRIEND_NAME);
-            friendXmppName = extras.getString(INTENT_FRIEND_XMPPNAME);
+            friendUsername = extras.getString(ChatActivityKt.INTENT_FRIEND_NAME);
+            friendXmppName = extras.getString(ChatActivityKt.INTENT_FRIEND_XMPPNAME);
 
             presenter.configRecyclerView();
             presenter.configAdapter(messageRecyclerView);

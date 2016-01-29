@@ -14,7 +14,6 @@ import com.recoverrelax.pt.riotxmppchat.MyUtil.AppMiscUtils;
 import com.recoverrelax.pt.riotxmppchat.MyUtil.LogUtils;
 import com.recoverrelax.pt.riotxmppchat.Network.RiotXmppService;
 import com.recoverrelax.pt.riotxmppchat.Storage.BusHandler;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity;
 
 import java.io.File;
 
@@ -41,9 +40,6 @@ public class MainApplication extends Application {
      * Temporary Control Variables
      */
 
-    public boolean isRealScoutEnabled = true;
-    public boolean isLiveGameEnabled = true;
-    public boolean isRecentGameEnabled = true;
     @Inject BusHandler bus;
     @Inject EventHandler handler;
     private RiotXmppService mService;

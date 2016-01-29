@@ -28,6 +28,7 @@ public class RiotXmppDashboardImpl {
     @Singleton
     @Inject
     public RiotXmppDashboardImpl() {
+        MainApplication.getInstance().getAppComponent().inject(this);
     }
 
     public Observable<String> getUnreadedMessagesCount() {

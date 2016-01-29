@@ -12,7 +12,7 @@ public class AppGlobals {
     }
 
     public static class RIOT_API {
-        public static final String API_KEY = "3b04be4c-ff07-445e-8aa6-a5c99ea2aa64";
+        public static final String API_KEY = "a4426067-5e18-4802-8386-8276c93757d6";
     }
 
     public static class DD_VERSION {

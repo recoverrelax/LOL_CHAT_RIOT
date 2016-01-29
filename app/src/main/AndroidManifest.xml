@@ -15,64 +15,57 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activity.FriendListActivity"
+            android:name=".ui.activity.FriendListActivityKt"
             android:label="@string/friends_online"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".ui.activity.DashBoardActivity"
-            android:label="@string/log_activity"></activity>
+            android:name=".ui.activity.DashboardActivityKt"
+            android:label="@string/log_activity"/>
 
         <activity
-            android:name=".ui.activity.LogActivity"
+            android:name=".ui.activity.LogActivityKt"
             android:label="@string/dashboard"
-            android:noHistory="true"></activity>
+            android:noHistory="true"/>
         <activity
             android:name=".ui.activity.FriendMessageListActivity"
-            android:label="@string/message_list_title"></activity>
+            android:label="@string/message_list_title"/>
 
         <activity
-            android:name=".ui.activity.ChatActivity"
+            android:name=".ui.activity.ChatActivityKt"
             android:label="@string/message_list_title"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
-            android:name=".ui.activity.LiveGameActivity"
+            android:name=".ui.activity.LiveGameActivityKt"
             android:label="@string/current_game_activity_title"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name=".ui.activity.RecentGameActivity"
             android:label="@string/recent_game_activity_title"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan"/>
 
 
         <activity
-            android:name=".ui.activity.ShardActivity"
+            android:name=".ui.activity.ShardActivityKt"
             android:label="@string/shard_activity_title"
             android:noHistory="true"
-            android:windowSoftInputMode="adjustPan"></activity>
-
-        <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.SplashScreenActivity"
-            android:noHistory="true">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.activity.SettingActivity"
             android:label="@string/title_activity_sub"
             android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activity.FriendListActivity"/>
+                android:value=".ui.activity.FriendListActivityKt"/>
         </activity>
         <activity
-            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivity"
+            android:name="com.recoverrelax.pt.riotxmppchat.ui.activity.LoginActivityKt"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,6 +31,8 @@ import com.recoverrelax.pt.riotxmppchat.Network.RxImpl.RiotXmppRosterImpl;
 import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.LiveGameActivityKt;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivity;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
 
 import org.jivesoftware.smack.packet.Presence;
@@ -356,32 +359,29 @@ public class FriendListPresenterImpl extends AppMVPHelper.BasePresenterImpl<Frie
                             });
                     break;
 
-//                case R.id.current_game:
-//
-//                    if (MainApplication.getInstance().isRecentGameEnabled) {
-//                        Intent intent = new Intent(this.getActivity(), LiveGameActivity.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                        intent.putExtra(LiveGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-//                        intent.putExtra(LiveGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
-//                        startActivity(intent);
-//                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
-//                    } else
-//                        AppContextUtils.showSnackbar(this.getBaseActivity(), R.string.feature_coming, Snackbar.LENGTH_LONG, null);
-//
-//                    break;
+                case R.id.current_game:
 
-//                case R.id.recent_game:
-//
-//                    if (MainApplication.getInstance().isLiveGameEnabled) {
-//                        Intent intent2 = new Intent(this.getActivity(), RecentGameActivity.class);
-//                        intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-//                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
-//                        startActivity(intent2);
+                        Intent intent = new Intent(context, LiveGameActivityKt.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.putExtra(LiveGameActivityKt.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent.putExtra(LiveGameActivityKt.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+                        context.startActivity(intent);
+//                        ((Activity)context).overridePendingTransition(); overridePendingTransitionBackAppDefault(this.getActivity());
+
+
+                    break;
+
+                case R.id.recent_game:
+
+
+                        Intent intent2 = new Intent(context, RecentGameActivity.class);
+                        intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+                        context.startActivity(intent2);
 //                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
-//                    } else
-//                        AppContextUtils.showSnackbar(this.getBaseActivity(), R.string.feature_coming, Snackbar.LENGTH_LONG, null);
-//                    break;
+
+                    break;
                 default:
                     break;
             }
