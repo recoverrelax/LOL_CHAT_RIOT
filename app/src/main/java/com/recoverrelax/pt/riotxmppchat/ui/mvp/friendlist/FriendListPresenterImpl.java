@@ -32,7 +32,7 @@ import com.recoverrelax.pt.riotxmppchat.R;
 import com.recoverrelax.pt.riotxmppchat.Riot.Model.Friend;
 import com.recoverrelax.pt.riotxmppchat.Storage.DataStorage;
 import com.recoverrelax.pt.riotxmppchat.ui.activity.LiveGameActivityKt;
-import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivity;
+import com.recoverrelax.pt.riotxmppchat.ui.activity.RecentGameActivityKt;
 import com.recoverrelax.pt.riotxmppchat.ui.fragment.NotificationCustomDialogFragment;
 
 import org.jivesoftware.smack.packet.Presence;
@@ -372,12 +372,10 @@ public class FriendListPresenterImpl extends AppMVPHelper.BasePresenterImpl<Frie
                     break;
 
                 case R.id.recent_game:
-
-
-                        Intent intent2 = new Intent(context, RecentGameActivity.class);
+                        Intent intent2 = new Intent(context, RecentGameActivityKt.class);
                         intent2.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
-                        intent2.putExtra(RecentGameActivity.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
+                        intent2.putExtra(RecentGameActivityKt.FRIEND_XMPP_ADDRESS_INTENT, friendXmppAddress);
+                        intent2.putExtra(RecentGameActivityKt.FRIEND_XMPP_USERNAME_INTENT, friendUsername);
                         context.startActivity(intent2);
 //                        AppContextUtils.overridePendingTransitionBackAppDefault(this.getActivity());
 

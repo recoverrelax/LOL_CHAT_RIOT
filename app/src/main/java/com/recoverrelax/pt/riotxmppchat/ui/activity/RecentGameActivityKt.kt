@@ -11,8 +11,8 @@ import com.recoverrelax.pt.riotxmppchat.ui.fragment.RecentGameFragment
 class RecentGameActivityKt: MessageIconActivityKt(){
 
     companion object{
-        val FRIEND_XMPP_ADDRESS_INTENT = "friend_xmpp_address_intent"
-        val FRIEND_XMPP_USERNAME_INTENT = "friend_xmpp_username"
+        @JvmField val FRIEND_XMPP_ADDRESS_INTENT = "friend_xmpp_address_intent"
+        @JvmField val FRIEND_XMPP_USERNAME_INTENT = "friend_xmpp_username"
     }
 
     override fun getLayoutResources() = R.layout.recent_game_activity
